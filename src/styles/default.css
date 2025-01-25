@@ -1,0 +1,14 @@
+:root {
+  --font-common: -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    Segoe UI Symbol;
+  font-family: var(--font-common);
+}

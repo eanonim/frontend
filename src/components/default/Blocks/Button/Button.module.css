@@ -1,0 +1,130 @@
+.Button {
+  position  : relative;
+  appearance: none;
+  background: transparent;
+  border    : none;
+  outline   : none;
+  overflow  : hidden;
+  box-sizing: border-box;
+
+  padding: var(--button__padding-vertical) var(--button__padding-horizontal);
+  color  : var(--button_title);
+}
+
+.Button--stretched {
+  width: 100%;
+}
+
+.Button__in {
+  position: relative;
+  z-index : 2;
+  gap     : var(--button__gap);
+}
+
+/* Type */
+.Button__type--default {}
+
+.Button__type--icon {}
+
+/* Size */
+.Button__size--small {}
+
+.Button__size--medium {}
+
+.Button__size--large {}
+
+/* Appearance */
+.Button__appearance--accent {
+  --button_background: var(--accent_color);
+  --button_title     : var(--accent_color--text);
+}
+
+.Button__appearance--primary {
+  --button_background: var(--primary_color);
+  --button_title     : var(--primary_color--text);
+}
+
+.Button__appearance--red {
+  --button_background: var(--red_color);
+  --button_title     : var(--red_color--text);
+}
+
+.Button__appearance--green {
+  --button_background: var(--green_color);
+  --button_title     : var(--green_color--text);
+}
+
+.Button__appearance--secondary {
+  --button_background: var(--secondary_color);
+  --button_title     : var(--secondary_color--text);
+}
+
+/* Mode */
+.Button__mode--filled {}
+
+.Button__mode--transparent {
+  --button_title: var(--button_background);
+}
+
+.Button__mode--transparent>.Button__background {
+  background-color: transparent;
+}
+
+.Button__mode--outline {
+  --button_title: var(--button_background);
+}
+
+.Button__mode--outline>.Button__background {
+  background-color: transparent;
+  border          : solid 1px var(--button_background);
+}
+
+.Button__mode--merges>.Button__background {
+  opacity: var(--opacity_merges);
+}
+
+
+.Button__background {
+  position        : absolute;
+  left            : 0;
+  right           : 0;
+  top             : 0;
+  bottom          : 0;
+  z-index         : 1;
+  background-color: var(--button_background);
+  border-radius   : inherit;
+
+  transition: 0.3;
+}
+
+.Button__title {
+  color: var(--button_title);
+}
+
+.Button__subtitle {
+  color  : var(--button_title);
+  opacity: 0.8;
+}
+
+
+.Button--loading .Button__in {
+  opacity: 0;
+}
+
+.Button__spinner {
+  z-index   : 2;
+  position  : absolute;
+  left      : 0;
+  right     : 0;
+  top       : 0;
+  bottom    : 0;
+  width     : 100%;
+  height    : 100%;
+  overflow  : hidden;
+  box-sizing: border-box;
+  padding   : var(--button__padding-vertical) var(--button__padding-horizontal);
+}
+
+.Button__type--icon .Button__spinner {
+  padding: 6px 0px;
+}

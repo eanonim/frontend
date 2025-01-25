@@ -1,0 +1,13 @@
+.Chevron__type--up {}
+
+.Chevron__type--down {
+  transform: rotate(180deg);
+}
+
+.Chevron__type--left {
+  transform: rotate(-90deg);
+}
+
+.Chevron__type--right {
+  transform: rotate(90deg);
+}

@@ -1,0 +1,9 @@
+.Tabbar {
+  position: sticky;
+
+  border-top      : solid 0.5px var(--separator_secondary);
+  background-color: var(--section_bg_color);
+
+  padding-bottom: var(--safe-area-inset-bottom);
+  transition    : padding 0.3s;
+}

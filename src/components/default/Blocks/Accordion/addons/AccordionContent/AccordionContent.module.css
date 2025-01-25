@@ -1,0 +1,25 @@
+/* @import "./styles/iOS.module.css";
+@import "./styles/android.module.css";
+@import "./styles/windows.module.css";
+@import "./styles/macOS.module.css";
+@import "./styles/others.module.css"; */
+
+.AccordionContent {
+  position  : relative;
+  width     : 100%;
+  overflow  : hidden;
+  color     : var(--text_secondary);
+  box-sizing: border-box;
+}
+
+.AccordionContent--anim {
+  transition: 0.2s;
+}
+
+.AccordionContent__content {
+  display: block;
+}
+
+.AccordionContent__height--inherit {
+  height: inherit;
+}

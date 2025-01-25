@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "strict": true,
+    "target": "esnext",
+    "module": "esnext",
+    "baseUrl": "../src",
+    "outDir": "static",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "root/*": ["../*"],
+      "@component/*": ["../src/components/*"],
+      "@ui/*": ["../src/components/*"],
+      "@ui/Types": ["../src/components/Types/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "static"],
+  "types": ["*.d.ts"]
+}

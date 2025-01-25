@@ -1,0 +1,5 @@
+.Icon {
+  position  : relative;
+  color     : var(--text_primary);
+  min-height: var(--min_height_input);
+}

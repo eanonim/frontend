@@ -1,0 +1,23 @@
+.Drag {
+  position  : relative;
+  display   : block;
+  box-sizing: border-box;
+
+  background-color: orange;
+  z-index         : 2;
+
+}
+
+.Drag--hidden {
+  pointer-events: none;
+  z-index       : 1;
+}
+
+.Drag--anim,
+.Drag--hidden {
+  transition: transform 0.3s;
+}
+
+.Drag--anim {
+  z-index: 3;
+}

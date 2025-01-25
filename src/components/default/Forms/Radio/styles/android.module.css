@@ -1,0 +1,59 @@
+html[platform="android"] .Radio {
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+html[platform="android"] .Radio._active::after,
+html[platform="android"] .Radio:checked._active::after {
+  opacity: 0.12;
+}
+
+html[platform="android"] .Radio._hover::after,
+html[platform="android"] .Radio:checked._hover::after {
+  opacity: 0.08;
+}
+
+
+html[platform="android"] .Radio._hover::after {
+  background-color: var(--radio_color-active);
+}
+
+html[platform="android"] .Radio._active::after {
+  background-color: var(--radio_color-hover);
+}
+
+html[platform="android"] .Radio:checked._hover::after {
+  background-color: var(--radio_color-hover);
+}
+
+html[platform="android"] .Radio:checked._active::after {
+  background-color: var(--radio_color-active);
+}
+
+html[platform="android"] .Radio__input {
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  border: solid 2px var(--radio_color);
+}
+
+html[platform="android"] .Radio__circle {
+  border-radius: 20px;
+  margin: 5px;
+}
+
+html[platform="android"] .Radio__input:checked {
+  border: solid 2px var(--radio_color--selected);
+}
+
+html[platform="android"] .Radio__input:disabled {
+  border: solid 2px var(--radio_color--disabled);
+}
+
+html[platform="android"] .Radio__input:checked~.Radio__circle {
+  background-color: var(--radio_color--selected);
+}
+
+html[platform="android"] .Radio__input:disabled~.Radio__circle {
+  background-color: var(--radio_color--disabled);
+}

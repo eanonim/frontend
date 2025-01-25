@@ -1,0 +1,26 @@
+.Cell {
+  padding-left: 6px;
+}
+
+.Cell--selected>.Cell__background {
+  border-radius: 13px;
+  overflow     : hidden;
+}
+
+.Cell__before {
+  padding: 6px 8px 6px 0px;
+}
+
+.Cell__container {
+  padding   : 6px 6px 6px 0px;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.Cell__title {}
+
+.Cell__subtitle {}
+
+.Cell__after {
+  padding-left: 8px;
+}

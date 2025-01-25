@@ -1,0 +1,7 @@
+.Group {
+  position: relative;
+  overflow: hidden;
+
+  box-sizing: border-box;
+  width     : 100%;
+}

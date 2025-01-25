@@ -1,0 +1,84 @@
+.Cell {
+  position  : relative;
+  color     : var(--text_primary);
+  transition: 0.3s;
+
+  width     : 100%;
+  box-sizing: border-box;
+}
+
+.Cell__container {
+  display    : flex;
+  align-items: center;
+}
+
+.Cell._disabled {
+  opacity: var(--opacity_disable);
+}
+
+.Cell__content {
+  position      : relative;
+  width         : 100%;
+  z-index       : 2;
+  display       : flex;
+  flex-direction: column;
+}
+
+.Cell__in {
+  position: relative;
+  z-index : 2;
+}
+
+.Cell .Cell__before {
+  position: relative;
+}
+
+.Cell__title {}
+
+.Cell__subtitle {}
+
+.Cell__after {
+  position: relative;
+}
+
+.Cell__background {
+  transition: 0.3s;
+  position  : absolute;
+  left      : 0;
+  right     : 0;
+  top       : 0;
+  bottom    : 0;
+  opacity   : 0;
+  z-index   : 1;
+}
+
+.Cell._hover .Cell__background {
+  background-color: var(--cell--hover);
+  opacity         : 0.3;
+}
+
+.Cell._active .Cell__background {
+  background-color: var(--cell--active);
+  opacity         : 0.6;
+}
+
+.Cell--selected>.Cell__background {
+  background-color: var(--cell--select);
+  overflow        : hidden;
+  opacity         : 1;
+}
+
+.Cell__separator {
+  position: absolute !important;
+  bottom  : 0;
+  left    : 0;
+  right   : 0;
+}
+
+.Cell:only-child .Cell__separator {
+  opacity: 0;
+}
+
+.Cell:not(:only-child):last-child .Cell__separator {
+  opacity: 0;
+}

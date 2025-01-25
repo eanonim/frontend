@@ -1,0 +1,9 @@
+.Container {
+  position: relative;
+  width   : 100%;
+}
+
+.Container:has(> *:nth-child(2)) {
+  --container_margin: calc(var(--button__padding-vertical) / 2 * -1);
+  margin            : var(--container_margin) 0px var(--container_margin) 0px;
+}

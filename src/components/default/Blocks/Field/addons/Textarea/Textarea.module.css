@@ -1,0 +1,33 @@
+.Textarea {
+  position  : relative;
+  display   : block;
+  width     : 100%;
+  min-height: var(--min_height_input);
+  max-width : 100%;
+  resize    : none;
+
+  appearance   : none;
+  border       : none;
+  outline      : 0;
+  margin       : 0;
+  padding      : 8px;
+  border-radius: inherit;
+  box-sizing   : border-box;
+
+  color      : var(--text_primary);
+  font-size  : var(--font_size--medium);
+  line-height: var(--font_height--medium);
+
+  background-color: transparent;
+  overflow        : hidden;
+}
+
+.Textarea--resize {
+  resize: both
+}
+
+.Textarea::placeholder {
+  color      : var(--text_secondary);
+  font-size  : inherit;
+  line-height: inherit;
+}

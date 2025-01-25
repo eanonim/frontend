@@ -1,0 +1,10 @@
+.WriteBar {
+  position  : relative;
+  gap       : 10px;
+  padding   : 10px;
+  box-sizing: border-box;
+
+  background-color: var(--section_bg_color);
+}
+
+.WriteBar__separator {}

@@ -1,0 +1,30 @@
+{
+    "name": "@minsize/ui",
+    "version": "0.0.4-beta",
+    "description": "Library of UI components for solidJS",
+    "license": "MIT",
+    "types": "index.ts",
+    "sideEffects": [
+        "./index.ts"
+    ],
+    "author": {
+        "name": "Egor Kytyukov",
+        "url": "https://t.me/xuserz"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/minsize/utils"
+    },
+    "contributors": [],
+    "keywords": [
+        "ui",
+        "solid-js",
+        "solid js",
+        "frontend"
+    ],
+    "dependencies": {
+        "@minsize/utils": "^0.0.5",
+        "@solid-primitives/scheduled": "^1.4.4",
+        "solid-js": "^1.8.16"
+    }
+}

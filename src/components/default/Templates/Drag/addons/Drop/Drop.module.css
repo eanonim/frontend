@@ -1,0 +1,6 @@
+.Drop {
+  position  : relative;
+  display   : block;
+  border    : dashed 2px red;
+  box-sizing: border-box;
+}

@@ -1,0 +1,51 @@
+@import "./styles/iOS.module.css";
+@import "./styles/android.module.css";
+@import "./styles/windows.module.css";
+@import "./styles/macOS.module.css";
+@import "./styles/others.module.css";
+
+.Radio {
+  position: relative;
+  z-index: 1;
+}
+
+.Radio::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  border-radius: 100%;
+  opacity: 0;
+}
+
+.Radio__in {
+  position: relative;
+  z-index: 2;
+}
+
+.Radio__input {
+  appearance: none;
+
+  display: block;
+  box-sizing: border-box;
+  position: relative;
+  margin: 0px;
+}
+
+.Radio__circle {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  box-sizing: border-box;
+}
+
+.Radio__input,
+.Radio__circle,
+.Radio::after {
+  transition: 0.3s;
+}

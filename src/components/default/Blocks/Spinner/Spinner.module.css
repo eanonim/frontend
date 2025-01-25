@@ -1,0 +1,60 @@
+.Spinner {
+  display        : flex;
+  transition     : .4s;
+  justify-content: center;
+  align-items    : center;
+}
+
+.Spinner svg {
+  animation: _SpinnerRotateDefault 2s linear infinite;
+  z-index  : 2;
+}
+
+.Spinner circle {
+  stroke        : currentColor;
+  stroke-linecap: round;
+  animation     : _SpinnerDashDefault 2s ease-in-out infinite;
+}
+
+@keyframes _SpinnerRotateDefault {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes _SpinnerDashDefault {
+  0% {
+    stroke-dasharray : 1, 150;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray : 90, 150;
+    stroke-dashoffset: -35;
+  }
+
+  100% {
+    stroke-dasharray : 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+/* Size */
+.Spinner__size--auto svg {}
+
+.Spinner__size--small svg {}
+
+.Spinner__size--regular svg {}
+
+.Spinner__size--medium svg {}
+
+.Spinner__size--large svg {}
+
+/* Colors */
+.Spinner__color--secondary svg {
+  color: var(--secondary_bg_color);
+}
+
+.Spinner__color--inherit svg {
+  color: inherit;
+}

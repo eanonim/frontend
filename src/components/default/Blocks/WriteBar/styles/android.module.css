@@ -1,0 +1,6 @@
+.WriteBar {
+  gap    : 8px;
+  padding: 8px;
+
+  background-color: var(--section_bg_color);
+}

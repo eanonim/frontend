@@ -1,0 +1,39 @@
+.Swipe {
+  overflow: hidden;
+  position: relative;
+}
+
+.Swipe__in {
+  pointer-events: none;
+  z-index: 2;
+  position: unset !important;
+}
+
+.Swipe--anim>.Swipe__in {
+  transition: 0.3s;
+}
+
+.Swipe__before {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  transform: translateX(-100%);
+}
+
+.Swipe__after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  transform: translateX(100%);
+}
+
+.Swipe__closed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+}

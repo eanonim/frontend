@@ -1,0 +1,30 @@
+.Link {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--link_color);
+
+  position: relative;
+  box-sizing: border-box;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.Link::after {
+  transition: 0.1s;
+  content: " ";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: transparent;
+  opacity: 0;
+}
+
+.Link._hover::after {}
+
+.Link._active::after {}

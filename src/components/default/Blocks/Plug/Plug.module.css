@@ -1,0 +1,21 @@
+.Plug {
+  display           : flex;
+  position          : relative;
+  /* overflow       : hidden; */
+  width             : 100%;
+  max-width         : 480px;
+  box-sizing        : border-box;
+  flex-direction    : column;
+  align-items       : center;
+  justify-content   : center;
+  align-content     : center;
+  margin            : 0 auto;
+  padding           : 24px;
+  justify-content   : end;
+
+  --plug_padding: 12px
+}
+
+.Plug--full {
+  height: 100%;
+}

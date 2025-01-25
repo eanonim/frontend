@@ -1,0 +1,12 @@
+.Button {
+  padding: 6px 2px 2px;
+  color  : var(--text_secondary);
+}
+
+.Button__title {
+  color: currentColor;
+}
+
+.Button--selected {
+  color: var(--accent_color);
+}

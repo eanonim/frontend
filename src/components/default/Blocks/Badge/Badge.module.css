@@ -1,0 +1,94 @@
+.Badge {
+  position: relative;
+  overflow: hidden;
+  color   : var(--badge_text);
+}
+
+.Badge__title {
+  color: var(--badge_text)
+}
+
+.Badge__subtitle {
+  color  : var(--badge_text);
+  opacity: 0.8;
+}
+
+.Badge__background {
+  content         : " ";
+  position        : absolute;
+  left            : 0;
+  right           : 0;
+  top             : 0;
+  bottom          : 0;
+  z-index         : -1;
+  background-color: var(--badge_background);
+}
+
+/* Type */
+.Badge__type--text {}
+
+.Badge__type--icon {}
+
+/* Size */
+.Badge__size--small {}
+
+.Badge__size--medium {}
+
+.Badge__size--large {}
+
+/* Mode */
+.Badge__mode--filled {}
+
+.Badge__mode--merges {}
+
+.Badge__mode--outline {}
+
+/* Appearance */
+.Badge__appearance--accent {}
+
+.Badge__appearance--green {}
+
+.Badge__appearance--red {}
+
+
+/* !Style */
+
+/* Type */
+.Badge__type--text {}
+
+.Badge__type--icon {
+  border-radius: 100px;
+}
+
+/* Appearance */
+.Badge__appearance--accent {
+  --badge_background: var(--accent_color);
+  --badge_text      : var(--accent_color--text);
+}
+
+.Badge__appearance--green {
+  --badge_background: var(--green_color);
+  --badge_text      : var(--green_color--text);
+}
+
+
+.Badge__appearance--red {
+  --badge_background: var(--red_color);
+  --badge_text      : var(--red_color--text);
+}
+
+/* Mode */
+.Badge__mode--filled {}
+
+.Badge__mode--merges::before {
+  opacity: var(--opacity_merges);
+}
+
+.Badge__mode--outline {
+  border: solid 1px var(--badge_background);
+  color : var(--badge_background);
+}
+
+.Badge__mode--outline::before {
+  background-color: transparent;
+}

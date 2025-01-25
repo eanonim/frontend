@@ -1,0 +1,105 @@
+/* default colors */
+:root {
+  --text_primary       : #ffffff;
+  --text_secondary     : #858585;
+  --separator_primary  : #2b2f35;
+  --separator_secondary: #3B3B3D;
+  --bg_selected        : #1d2936;
+  --bg_color           : #000000;
+
+  --section_bg_color: #1C1C1C;
+
+  --bg_layout_shadow: black;
+
+  --bg_input: #243443;
+
+  --min_height_input: 34px;
+
+  --link_color: #5470C3;
+
+  --primary_color      : #FFFFFF;
+  --primary_color--text: #000000;
+  --accent_color       : #5470C3;
+  --accent_color--text : #FFFFFF;
+  --red_color          : #b80000;
+  --red_color--text    : #FFFFFF;
+
+  --secondary_color      : #14161A;
+  --secondary_color--text: #ffffff;
+
+  --green_color      : #0cb800;
+  --green_color--text: #FFFFFF;
+
+  --opacity_merges : 0.34;
+  --opacity_disable: 0.64;
+
+  --cell--hover : #424a52;
+  --cell--active: #0D0E0F;
+  --cell--select: #0D0E0F;
+
+  --radio_color          : #AEAEB2;
+  --radio_color--disabled: #8E8E93;
+  --radio_color--selected: #007AFF;
+  --radio_color-hover    : #007AFF;
+  --radio_color-active   : #000000;
+}
+
+html[platform="macOS"] {
+  --font_size--x-small  : 10px;
+  --font_height--x-small: 14px;
+
+  --font_size--small  : 13px;
+  --font_height--small: 17px;
+
+  --font_size--medium  : 14px;
+  --font_height--medium: 18px;
+
+  --font_size--large  : 16px;
+  --font_height--large: 20px;
+
+  --font_size--x-large  : 18px;
+  --font_height--x-large: 22px;
+
+  --font_size--xx-large  : 20px;
+  --font_height--xx-large: 24px;
+}
+
+html[platform="iOS"] {
+  --font_size--x-small  : 10px;
+  --font_height--x-small: 14px;
+
+  --font_size--small  : 13px;
+  --font_height--small: 17px;
+
+  --font_size--medium  : 14px;
+  --font_height--medium: 18px;
+
+  --font_size--large  : 16px;
+  --font_height--large: 20px;
+
+  --font_size--x-large  : 18px;
+  --font_height--x-large: 22px;
+
+  --font_size--xx-large  : 20px;
+  --font_height--xx-large: 24px;
+}
+
+html[platform="android"] {
+  --font_size--x-small  : 10px;
+  --font_height--x-small: 14px;
+
+  --font_size--small  : 14px;
+  --font_height--small: 18px;
+
+  --font_size--medium  : 16px;
+  --font_height--medium: 20px;
+
+  --font_size--large  : 18px;
+  --font_height--large: 22px;
+
+  --font_size--x-large  : 20px;
+  --font_height--x-large: 24px;
+
+  --font_size--xx-large  : 22px;
+  --font_height--xx-large: 26px;
+}

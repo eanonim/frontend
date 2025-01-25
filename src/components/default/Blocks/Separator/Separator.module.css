@@ -1,0 +1,40 @@
+.Separator {
+  display : block;
+  position: relative;
+  width   : 100%;
+  height  : 1px;
+}
+
+.Separator::after {
+  content   : " ";
+  position  : absolute;
+  left      : 0;
+  right     : 0;
+  top       : 0;
+  bottom    : 0;
+  height    : inherit;
+  box-sizing: border-box;
+  margin    : auto;
+}
+
+/* Color */
+.Separator__color--accent::after {
+  background-color: var(--accent_color);
+}
+
+.Separator__color--primary::after {
+  background-color: var(--separator_primary);
+}
+
+.Separator__color--secondary::after {
+  background-color: var(--separator_secondary);
+}
+
+/* Size */
+.Separator__size--full::after {
+  width: 100%;
+}
+
+.Separator__size--indent::after {
+  width: 80%;
+}

@@ -1,0 +1,22 @@
+.Badge {
+  font-weight: 400;
+}
+
+/* Size */
+.Badge__size--small {
+  padding      : 4px 6px;
+  gap          : 4px;
+  border-radius: 6px;
+}
+
+.Badge__size--medium {
+  padding      : 6px 8px;
+  gap          : 6px;
+  border-radius: 8px;
+}
+
+.Badge__size--large {
+  padding      : 8px 10px;
+  gap          : 8px;
+  border-radius: 10px;
+}

@@ -1,0 +1,55 @@
+.ImageOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.ImageOverlay::after {
+  content: " ";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.ImageOverlay__theme--dark::after {
+  background-color: black;
+}
+
+.ImageOverlay__theme--light::after {
+  background-color: white;
+}
+
+.ImageOverlay__visibility--always::after,
+.ImageOverlay__visibility--hover._hover::after {
+  opacity: 0.7;
+}
+
+.ImageOverlay__content {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.ImageOverlay__visibility--always .ImageOverlay__content {
+  opacity: 1;
+}
+
+.ImageOverlay__visibility--hover._hover .ImageOverlay__content {
+  opacity: 1;
+}

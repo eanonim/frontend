@@ -5,6 +5,8 @@ import { type JSX, type Component } from "solid-js"
 
 import SearchDefault from "app/pages/Search/Default/Default"
 import ProfileDefault from "app/pages/Profile/Default/Default"
+import ChatsDefault from "app/pages/Chats/Default/Default"
+
 import { IconArchiveFilled, IconMessageCircleFilled } from "source"
 import { createSmartData, USER_ATOM } from "engine/state"
 
@@ -14,6 +16,7 @@ interface Action extends JSX.HTMLAttributes<HTMLDivElement> {
 
 const getView = (nav: string) =>
   ({
+    [panels.CHATS]: views.CHATS,
     [panels.SEARCH]: views.SEARCH,
     [panels.PROFILE]: views.PROFILE,
   }[nav] || "")
@@ -24,6 +27,7 @@ const Action: Component<Action> = (props) => {
 
   const [user] = createSmartData(USER_ATOM, {}, {})
 
+  const handlerChats = () => swipeView({ viewId: views.CHATS })
   const handlerSearch = () => swipeView({ viewId: views.SEARCH })
   const handlerProfile = () => swipeView({ viewId: views.PROFILE })
 
@@ -33,7 +37,10 @@ const Action: Component<Action> = (props) => {
       activePanel={activePanel()}
       bar={
         <Tabbar>
-          <Tabbar.Button selected={false}>
+          <Tabbar.Button
+            onClick={handlerChats}
+            selected={activeView() === views.CHATS}
+          >
             <Gap direction={"column"}>
               <IconArchiveFilled width={28} height={28} />
               <Title>Чаты</Title>
@@ -62,6 +69,7 @@ const Action: Component<Action> = (props) => {
     >
       <Path nav={panels.SEARCH} component={SearchDefault} />
       <Path nav={panels.PROFILE} component={ProfileDefault} />
+      <Path nav={panels.CHATS} component={ChatsDefault} />
     </EAction>
   )
 }

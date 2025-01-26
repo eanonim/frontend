@@ -27,7 +27,7 @@
 }
 
 .Cell__size--default .Cell__before {
-  padding: 8px 8px 8px 0px;
+  padding: 8px 16px 8px 0px;
 }
 
 .Cell__size--default .Cell__container {

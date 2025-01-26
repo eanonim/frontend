@@ -16,7 +16,7 @@ export interface Flex<T extends ValidComponent>
   /**
    * Выравнивание элементов по вертикальной оси.
    */
-  alignItems?: "start" | "center" | "end" | "baseline" | "stretch"
+  alignItems?: "start" | "center" | "end" | "baseline" | "stretch" | "normal"
   /**
    * Выравнивание элементов по горизонтальной оси.
    */

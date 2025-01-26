@@ -15,6 +15,7 @@
         "@apiteam/twa-bridge": "^8.0.2-beta",
         "@elum/router": "^0.0.13",
         "@minsize/ui": "^0.0.5-beta",
+        "@minsize/utils": "^0.0.5",
         "@solidjs/router": "^0.15.1",
         "autoprefixer": "^10.4.20",
         "elum-router": "^0.0.20",

@@ -122,7 +122,11 @@ const Cell: ComponentCell = (props) => {
           }}
           {...others}
         >
-          <Align component={"article"} class={style.Cell__in}>
+          <Align
+            alignItems={"normal"}
+            component={"article"}
+            class={style.Cell__in}
+          >
             {local.children}
           </Align>
           <Separator

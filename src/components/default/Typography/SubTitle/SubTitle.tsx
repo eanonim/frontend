@@ -42,10 +42,10 @@ const SubTitle: Component<SubTitle> = (props) => {
         [`${local.class}`]: !!local.class,
         ...local.classList,
       }}
-      {...others}
       {...(context?.subTitle
         ? (context.subTitle as any)
         : modes[local.mode as NonNullable<SubTitle["mode"]>])}
+      {...others}
     >
       {local.children}
     </Text>

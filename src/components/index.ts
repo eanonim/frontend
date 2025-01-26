@@ -55,6 +55,8 @@ export { default as WriteBar } from "./default/Blocks/WriteBar/WriteBar"
 export { type ITextarea } from "./default/Blocks/Field/addons"
 export { default as Separator } from "./default/Blocks/Separator/Separator"
 export { default as Size } from "./default/Blocks/Size/Size"
+export { default as IconBackground } from "./default/Blocks/IconBackground/IconBackground"
+export { default as UserName } from "./default/Blocks/UserName/UserName"
 
 /* Inputs */
 export { default as Radio } from "./default/Forms/Radio/Radio"

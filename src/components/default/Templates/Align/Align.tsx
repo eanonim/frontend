@@ -1,13 +1,13 @@
 import style from "./Align.module.css"
 import { Before, Children, After } from "./addons"
 
+import { type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
 
 import { type JSX, mergeProps, splitProps, ValidComponent } from "solid-js"
 import { DynamicProps } from "solid-js/web"
 
-interface Align<T extends ValidComponent>
-  extends JSX.HTMLAttributes<DynamicProps<T>> {
+interface Align<T extends ValidComponent> extends TypeFlex<T> {
   /**
    * Компонент, который будет использоваться для рендеринга Flexbox.
    * По умолчанию используется `span`.

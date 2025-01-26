@@ -7,12 +7,18 @@ import { getLastPage } from "router/src/utils"
 import Startup from "./pages/Startup/Startup"
 import Search from "./pages/Search/Search"
 import Profile from "./pages/Profile/Profile"
+import Chats from "./pages/Chats/Chats"
 
 const App: Component = () => {
   const activeView = useRouter("view")
 
   return (
     <Root activeView={activeView()}>
+      <Path
+        tabbar={[`${pages.CHATS}`].includes(getLastPage(views.CHATS) || "")}
+        nav={views.CHATS}
+        component={Chats}
+      />
       <Path
         tabbar={[`${pages.SEARCH}`].includes(getLastPage(views.SEARCH) || "")}
         nav={views.SEARCH}

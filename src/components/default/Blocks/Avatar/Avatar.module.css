@@ -1,4 +1,5 @@
 .Avatar {
-  border-radius: 1000px;
-  overflow     : hidden;
+  border-radius   : 1000px;
+  overflow        : hidden;
+  background-color: var(--secondary_color);
 }

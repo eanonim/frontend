@@ -3,6 +3,10 @@
 }
 
 /* Items */
+.Flex__alignItems--normal {
+  align-items: normal;
+}
+
 .Flex__alignItems--start {
   align-items: flex-start;
 }

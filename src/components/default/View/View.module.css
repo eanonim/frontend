@@ -6,6 +6,18 @@
 }
 
 
+.View__Container {}
+
+.View__keyboard .View__Container {
+  /* transform           : translateY(calc(var(--keyboard-safe-area-inset-bottom, 0px) - var(--safe-area-inset-bottom))); */
+  /* padding-bottom         : calc(var(--keyboard-safe-area-inset-bottom, 0px)); */
+
+  transform: translateY(calc(var(--keyboard-safe-area-inset-bottom, 0px) * -1));
+
+  /* max-height          : calc(var(--app-height) + var(--safe-area-inset-bottom)); */
+  /* transition          : all 0.2s ease-out; */
+}
+
 .View__Container,
 .View--to-next::before,
 .View--to-back::before {

@@ -1,17 +1,15 @@
+import { KEYBOARD_ATOM } from "engine/state"
 import style from "./Panel.module.css"
 
-import {
-  Component,
-  createEffect,
-  mergeProps,
-  onMount,
-  splitProps,
-} from "solid-js"
+import { Component, mergeProps, splitProps } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
 
 interface Panel extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
   fixed?: boolean
+
+  safeContentTop?: boolean
+
   safeTop?: boolean
   safeBottom?: boolean
   blurSafeTop?: boolean
@@ -38,6 +36,7 @@ const Panel: Component<Panel> = (props) => {
 
   const merged = mergeProps(
     {
+      safeContentTop: true,
       blurSafeTop: false,
       safeTop: true,
       safeBottom: true,
@@ -57,37 +56,38 @@ const Panel: Component<Panel> = (props) => {
     "header",
     "footer",
     "classList",
+    "safeContentTop",
   ])
 
-  let ref: HTMLDivElement
+  // let ref: HTMLDivElement
 
-  createEffect(() => {
-    function ensureDocumentIsScrollable() {
-      const isScrollable =
-        document.documentElement.scrollHeight > window.innerHeight
-      if (!isScrollable) {
-        document.documentElement.style.setProperty(
-          "height",
-          "calc(100vh + 1px)",
-          "important",
-        )
-      }
-    }
-    function preventCollapse() {
-      if (window.scrollY === 0) {
-        window.scrollTo(0, 1)
-      }
-    }
+  // createEffect(() => {
+  //   function ensureDocumentIsScrollable() {
+  //     const isScrollable =
+  //       document.documentElement.scrollHeight > window.innerHeight
+  //     if (!isScrollable) {
+  //       document.documentElement.style.setProperty(
+  //         "height",
+  //         "calc(100vh + 1px)",
+  //         "important",
+  //       )
+  //     }
+  //   }
+  //   function preventCollapse() {
+  //     if (window.scrollY === 0) {
+  //       window.scrollTo(0, 1)
+  //     }
+  //   }
 
-    ref?.addEventListener("touchstart", preventCollapse)
+  //   ref?.addEventListener("touchstart", preventCollapse)
 
-    window.addEventListener("load", ensureDocumentIsScrollable)
+  //   window.addEventListener("load", ensureDocumentIsScrollable)
 
-    return () => {
-      ref?.removeEventListener("touchstart", preventCollapse)
-      window.removeEventListener("load", ensureDocumentIsScrollable)
-    }
-  })
+  //   return () => {
+  //     ref?.removeEventListener("touchstart", preventCollapse)
+  //     window.removeEventListener("load", ensureDocumentIsScrollable)
+  //   }
+  // })
 
   return (
     <div
@@ -95,19 +95,20 @@ const Panel: Component<Panel> = (props) => {
       class={style.Panel}
       classList={{
         [`${local.class}`]: !!local.class,
+        [style.Panel__safeContentTop]: !!local.safeContentTop,
+        [style.Panel__safeTop]: !!local.safeTop,
         [style.Panel__blurSafeTop]: !!local.blurSafeTop,
         [style.Panel__before]: !!local.safeTop,
         [style.Panel__after]: !!local.safeBottom,
         [style.Panel__overflow]: !local.fixed,
+
         ...local.classList,
       }}
       {...others}
     >
       <div class={style.Panel__header}>{local.header}</div>
       <div class={style.Panel__outer}>
-        <div ref={ref!} class={style.Panel__inner}>
-          {local.children}
-        </div>
+        <div class={style.Panel__inner}>{local.children}</div>
       </div>
       <div class={style.Panel__footer}>{local.footer}</div>
     </div>

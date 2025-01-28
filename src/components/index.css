@@ -1,5 +1,7 @@
 /* default colors */
 :root {
+  --safe-area-inset-bottom: 0px;
+
   --text_primary       : #ffffff;
   --text_secondary     : #858585;
   --separator_primary  : #2b2f35;
@@ -9,9 +11,9 @@
 
   --section_bg_color: #1C1C1C;
 
-  --bg_layout_shadow: black;
+  --bg_layout_shadow: #000000;
 
-  --bg_input: #243443;
+  --bg_input: #000000;
 
   --min_height_input: 34px;
 

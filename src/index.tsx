@@ -8,10 +8,20 @@ import "styles/system.css"
  * Блокировка контекстного меню
  */
 document.addEventListener("contextmenu", (e) => e.preventDefault())
-document.addEventListener("touchstart", (e) => {
-  e.preventDefault()
-  e.stopPropagation()
-})
+// document.addEventListener("touchstart", (e) => {
+//   e.preventDefault()
+//   e.stopPropagation()
+
+//   window.document.body.scrollIntoView({ behavior: "smooth", block: "start" })
+// })
+
+// document.addEventListener("touchend", (e) => {
+//   window.document.body.scrollIntoView({ behavior: "smooth", block: "start" })
+// })
+
+// document.addEventListener("resize", () => {
+//   console.log("resize", window.innerHeight, window.outerHeight)
+// })
 
 render(
   () => (

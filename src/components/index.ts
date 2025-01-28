@@ -57,6 +57,7 @@ export { default as Separator } from "./default/Blocks/Separator/Separator"
 export { default as Size } from "./default/Blocks/Size/Size"
 export { default as IconBackground } from "./default/Blocks/IconBackground/IconBackground"
 export { default as UserName } from "./default/Blocks/UserName/UserName"
+export { default as FixedLayout } from "./default/Blocks/FixedLayout/FixedLayout"
 
 /* Inputs */
 export { default as Radio } from "./default/Forms/Radio/Radio"
@@ -94,3 +95,7 @@ export { default as generateGap } from "./default/utils/generateGap"
 export { default as combineStyle } from "./default/utils/combineStyle"
 
 export { default as Action } from "./default/Action/Action"
+
+/* project */
+export { default as Message } from "./project/Message/Message"
+export { default as Background } from "./project/Background/Background"

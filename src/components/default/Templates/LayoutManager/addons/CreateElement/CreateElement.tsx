@@ -55,7 +55,6 @@ const CreateElement: Component<CreateElement> = (props) => {
       {(child) => {
         return (
           <div
-            nav={child.nav}
             ref={ref!}
             classList={{
               [`${local.class}`]: !!local.class,

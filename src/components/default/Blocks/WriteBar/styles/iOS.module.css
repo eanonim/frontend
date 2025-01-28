@@ -1,8 +1,8 @@
 .WriteBar {
   gap    : 10px;
-  padding: 10px;
+  padding: 6px 10px 10px 10px;
 
-  background-color: var(--bg_color);
+  padding-bottom: calc(var(--safe-area-inset-bottom) + 10px);
 }
 
 .WriteBar__separator {

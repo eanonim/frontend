@@ -1,7 +1,8 @@
 import { Action as EAction, Tabbar, Path, Title, Gap, Avatar } from "components"
 import { panels, swipeView, useRouter, useRouterPanel, views } from "router"
 
-import { type JSX, type Component } from "solid-js"
+import { type JSX, type Component, createEffect } from "solid-js"
+import { createStore } from "solid-js/store"
 
 import SearchDefault from "app/pages/Search/Default/Default"
 import ProfileDefault from "app/pages/Profile/Default/Default"
@@ -25,6 +26,16 @@ const Action: Component<Action> = (props) => {
   const activeView = useRouter("view")
   const activePanel = useRouterPanel(() => getView(props.nav))
 
+  const [store, setStore] = createStore({ panel: "" })
+
+  createEffect(() => {
+    if (
+      [`${panels.CHATS}`, panels.SEARCH, panels.PROFILE].includes(activePanel())
+    ) {
+      setStore("panel", activePanel())
+    }
+  })
+
   const [user] = createSmartData(USER_ATOM, {}, {})
 
   const handlerChats = () => swipeView({ viewId: views.CHATS })
@@ -34,7 +45,7 @@ const Action: Component<Action> = (props) => {
   return (
     <EAction
       {...props}
-      activePanel={activePanel()}
+      activePanel={store.panel}
       bar={
         <Tabbar>
           <Tabbar.Button

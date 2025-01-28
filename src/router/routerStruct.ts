@@ -20,6 +20,7 @@ export enum panels {
   SEARCH = "panel_search",
 
   CHATS = "panel_chats",
+  CHAT = "panel_chat",
 }
 
 export enum pages {
@@ -31,6 +32,7 @@ export enum pages {
   SEARCH = "/search",
 
   CHATS = "/chats",
+  CHAT = "/chat",
 }
 
 export enum modals {
@@ -93,6 +95,7 @@ export const routerStruct: RouterStruct = [
     default: pages.CHATS,
     panels: {
       [pages.CHATS]: panels.CHATS,
+      [pages.CHAT]: panels.CHAT,
     },
   },
 ]

@@ -4,6 +4,7 @@ import {
   Cell,
   Gap,
   IconCheck,
+  Message,
   SubTitle,
   Title,
   UserName,
@@ -12,6 +13,7 @@ import { IconChecks, Logo, LogoElumTeam } from "source"
 
 import { type JSX, type Component, For, Show, Switch, Match } from "solid-js"
 import { timeAgo } from "@minsize/utils"
+import { pages, pushPage } from "router"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -79,11 +81,15 @@ const Content: Component<Content> = (props) => {
     },
   ]
 
+  const handlerChat = () => {
+    pushPage({ pageId: pages.CHAT })
+  }
+
   return (
     <Cell.List>
       <For each={history}>
         {(chat, index) => (
-          <Cell data-index={index()} separator>
+          <Cell data-index={index()} separator onClick={handlerChat}>
             <Cell.Before>
               <Avatar src={chat.photo} size={"48px"} />
             </Cell.Before>
@@ -109,40 +115,17 @@ const Content: Component<Content> = (props) => {
                         {message}
                       </SubTitle>
 
-                      <Switch
-                        fallback={
-                          <IconCheck
-                            width={16}
-                            height={16}
-                            color={"var(--accent_color)"}
-                          />
+                      <Message.Badge
+                        isNew={
+                          chat.id === chat.last_message.id &&
+                          !chat.last_message.check
                         }
-                      >
-                        <Match
-                          when={
-                            chat.id === chat.last_message.id &&
-                            !chat.last_message.check
-                          }
-                        >
-                          <span
-                            style={{
-                              width: "8px",
-                              height: "8px",
-                              "min-width": "8px",
-                              "background-color": "var(--accent_color)",
-                              "border-radius": "8px",
-                            }}
-                            // ПЕРЕДЕЛАТЬ
-                          />
-                        </Match>
-                        <Match when={chat.last_message.check}>
-                          <IconChecks
-                            width={16}
-                            height={16}
-                            color={"var(--accent_color)"}
-                          />
-                        </Match>
-                      </Switch>
+                        isRead={chat.last_message.check}
+                        isNotRead={
+                          chat.id !== chat.last_message.id &&
+                          !chat.last_message.check
+                        }
+                      />
                     </Gap>
                   )}
                 </Show>

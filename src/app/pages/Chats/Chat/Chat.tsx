@@ -1,6 +1,6 @@
 import { Panel } from "components"
 
-import { Content } from "./fragment"
+import { Content, Footer, Header } from "./fragment"
 
 import { type JSX, type Component, onMount } from "solid-js"
 import { setHeaderColor } from "engine"
@@ -16,7 +16,9 @@ const Default: Component<Default> = (props) => {
 
   return (
     <Panel {...props}>
+      <Header />
       <Content />
+      <Footer />
     </Panel>
   )
 }

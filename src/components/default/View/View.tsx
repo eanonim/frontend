@@ -4,7 +4,9 @@ import { type HTMLAttributes } from "@ui/Types"
 import useStyle from "@ui/default/utils/useStyle"
 import LayoutManager from "@ui/default/Templates/LayoutManager/LayoutManager"
 
-import { type Component, splitProps } from "solid-js"
+import { type Component, createEffect, splitProps } from "solid-js"
+import { globalSignal, setter } from "elum-state/solid"
+import { KEYBOARD_ATOM } from "engine/state"
 
 interface View extends HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -12,6 +14,7 @@ interface View extends HTMLAttributes<HTMLDivElement> {
 }
 
 const View: Component<View> = (props) => {
+  const [keyboard] = globalSignal(KEYBOARD_ATOM)
   const style = useStyle(styles, props.platform)
   const [local, others] = splitProps(props, [
     "class",
@@ -26,6 +29,8 @@ const View: Component<View> = (props) => {
     <LayoutManager
       class={style.View}
       classList={{
+        [style.View__keyboard]: keyboard().touch,
+
         [`${local.class}`]: !!local.class,
         ...local.classList,
       }}

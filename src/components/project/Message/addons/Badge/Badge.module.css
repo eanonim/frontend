@@ -1,0 +1,11 @@
+.Badge__new {
+  display   : block;
+  width     : 8px;
+  height    : 8px;
+  min-width : 8px;
+  min-height: 8px;
+
+  border-radius: 8px;
+
+  background-color: var(--accent_color);
+}

@@ -14,7 +14,7 @@ interface UserName<T extends ValidComponent = "span"> extends TypeFlex<T> {
 const UserName: Component<UserName> = (props) => {
   const [local, others] = splitProps(props, ["first_name", "last_name", "icon"])
   return (
-    <Flex justifyContent={"start"}>
+    <Flex justifyContent={"start"} {...others}>
       {local.first_name} {local.last_name} {local.icon}
     </Flex>
   )

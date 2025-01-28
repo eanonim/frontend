@@ -1,0 +1,11 @@
+.FixedLayout {
+  position: sticky;
+}
+
+.FixedLayout__position--top {
+  top: 0;
+}
+
+.FixedLayout__position--bottom {
+  bottom: 0;
+}

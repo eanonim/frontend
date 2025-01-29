@@ -15,3 +15,12 @@
 .FixedLayout__background--section_bg_color {
   background-color: var(--section_bg_color);
 }
+
+/* safe */
+.FixedLayout__position--top.FixedLayout--safe {
+  padding-top: var(--safe-area-inset-top);
+}
+
+.FixedLayout__position--bottom.FixedLayout--safe {
+  padding-bottom: var(--safe-area-inset-bottom);
+}

@@ -1,35 +1,52 @@
-import { Background, Gap, Group, IconBackground, Ratio } from "components"
+import { Background, Flex, Gap, Group, Link, SubTitle } from "components"
 
 import { chunks } from "@minsize/utils"
 
-import { type JSX, type Component, For } from "solid-js"
+import { type JSX, type Component, For, Show } from "solid-js"
+import { pages, pushPage } from "router"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
+const backgrounds = chunks(
+  3,
+  Array.from(Array(30)).map((x, index) => index + 2),
+)
+
 const Content: Component<Content> = (props) => {
+  const handlerOpen = (type: number) => {
+    pushPage({ pageId: pages.BACKGROUND_EDIT, params: { backgroundId: type } })
+  }
+
   return (
     <Group>
       <Group.Container>
         <Gap count={"6px"} direction={"column"} style={{ padding: "6px" }}>
-          <For each={chunks(3, Array(30))}>
+          <For each={backgrounds}>
             {(chunk, chunkIndex) => (
               <Gap data-index={chunkIndex()} count={"6px"}>
                 <For each={chunk}>
-                  {(background, index) => (
-                    <IconBackground
+                  {(backgroundId, index) => (
+                    <Background.Preview
+                      onClick={() => handlerOpen(backgroundId)}
                       data-index={index()}
-                      border-radius={"8px"}
-                      color={"var(--bg_color)"}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                      }}
+                      selected={backgroundId === 2}
                     >
                       <Background
                         color={"#3F3F3F"}
-                        type={chunkIndex() + index() + 2}
+                        type={backgroundId}
+                        quality={1}
                       />
-                    </IconBackground>
+
+                      <Show when={backgroundId >= 11}>
+                        <Background.Overlay>
+                          <Flex height={"100%"}>
+                            <SubTitle align={"center"}>
+                              Только по <Link>подписке</Link>
+                            </SubTitle>
+                          </Flex>
+                        </Background.Overlay>
+                      </Show>
+                    </Background.Preview>
                   )}
                 </For>
               </Gap>

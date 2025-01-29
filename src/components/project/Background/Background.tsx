@@ -1,4 +1,6 @@
 import { createStore } from "solid-js/store"
+import { Overlay, Preview } from "./addons"
+
 import style from "./Background.module.css"
 
 import {
@@ -6,12 +8,14 @@ import {
   type Component,
   splitProps,
   mergeProps,
-  lazy,
   createEffect,
   on,
   onMount,
   onCleanup,
+  untrack,
 } from "solid-js"
+import { clamp } from "@minsize/utils"
+import { Mutex } from "@minsize/mutex"
 
 const backgroundFiles = [
   {
@@ -145,78 +149,144 @@ const backgroundFiles = [
 ]
 
 const cache = new Map<number, string>()
+const mutex = Mutex({ globalLimit: 1 })
+
+const preload = async (type: number) => {
+  const response = await fetch(
+    `/backgrounds/${backgroundFiles.find((x) => x.id === type)?.name}`,
+  )
+  const svgString = await response.text()
+
+  cache.set(type, svgString)
+
+  return svgString
+}
 
 interface Background extends JSX.HTMLAttributes<HTMLDivElement> {
   type: number
   color?: string
   fixed?: boolean
+  quality?: number
+}
+
+type ComponentBackground = Component<Background> & {
+  Preview: typeof Preview
+  Overlay: typeof Overlay
+  preload: typeof preload
 }
 
 type Store = {
   isVisible: boolean
+  isHidden: boolean
 }
 
-const Background: Component<Background> = (props) => {
-  const merged = mergeProps({ color: "#222222" }, props)
+const Background: ComponentBackground = (props) => {
+  const merged = mergeProps(
+    { color: "#222222", quality: window.devicePixelRatio || 1 },
+    props,
+  )
   const [local, others] = splitProps(merged, [
     "class",
     "classList",
     "type",
     "color",
     "fixed",
+    "quality",
   ])
 
   const [store, setStore] = createStore<Store>({
     isVisible: !!cache.has(local.type),
+    isHidden: false,
   })
 
   let ref: HTMLCanvasElement
   const handlerRender = async () => {
-    if (!ref!) return
-    if (!local.type) return
-    const context = ref.getContext("2d")
-    if (!context) return
+    const release = await mutex.wait()
+    try {
+      if (!ref!) return
+      if (!local.type) return
 
-    let svgString = cache.get(local.type)
+      const context = ref.getContext("2d")
+      if (!context) return
 
-    if (!svgString) {
-      // Загружаем SVG
-      const response = await fetch(
-        `/backgrounds/${
-          backgroundFiles.find((x) => x.id === local.type)?.name
-        }`,
-      )
-      svgString = await response.text()
+      let svgString = cache.get(local.type)
 
-      cache.set(local.type, svgString)
-    }
-    svgString = svgString.replaceAll(`"currentColor"`, `"${local.color}"`)
-
-    // Создаем изображение
-    const img = new Image()
-    img.onload = () => {
-      const dpr = window.devicePixelRatio || 1
-      ref.width = window.innerWidth * dpr
-      ref.height = window.innerHeight * dpr
-      context.scale(dpr, dpr)
-
-      // Создаем паттерн
-      const pattern = context.createPattern(img, "repeat")
-      if (pattern) {
-        context.fillStyle = pattern
-        context.fillRect(0, 0, window.innerWidth, window.innerHeight)
+      if (!svgString) {
+        svgString = await preload(local.type)
       }
 
-      setStore("isVisible", true)
-    }
+      svgString = svgString.replaceAll(
+        `"currentColor"`,
+        `"${untrack(() => local.color)}"`,
+      )
 
-    img.src = `data:image/svg+xml;utf8,${encodeURIComponent(svgString).replace(
-      /'/g,
-      "%27",
-    )}`
+      const match = svgString.match(/width="([^"]*)" height="([^"]*)"/)
+
+      if (match) {
+        const originalWidth = parseFloat(match[1])
+        const originalHeight = parseFloat(match[2])
+
+        // Проверяем, удалось ли получить значения ширины и высоты
+        if (!isNaN(originalWidth) && !isNaN(originalHeight)) {
+          const newWidth = originalWidth * local.quality
+          const newHeight = originalHeight * local.quality
+
+          svgString = svgString.replace(
+            /width="[^"]*" height="[^"]*"/g,
+            `width="${newWidth}" height="${newHeight}"`,
+          )
+        }
+      }
+
+      // Создаем изображение
+      const img = new Image()
+      img.onload = () => {
+        context.imageSmoothingEnabled = false
+
+        ref.width = window.innerWidth * local.quality
+        ref.height = window.innerHeight * local.quality
+
+        const pattern = context.createPattern(img, "repeat")
+        if (pattern) {
+          context.fillStyle = pattern
+
+          context.fillRect(
+            0,
+            0,
+            window.innerWidth * local.quality,
+            window.innerHeight * local.quality,
+          )
+        }
+
+        setStore("isVisible", true)
+        setStore("isHidden", false)
+      }
+
+      img.src = `data:image/svg+xml;utf8,${encodeURIComponent(
+        svgString,
+      ).replace(/'/g, "%27")}`
+    } finally {
+      release()
+    }
   }
 
-  createEffect(on([() => local.color, () => local.type], handlerRender))
+  onMount(() => {
+    handlerRender()
+  })
+
+  createEffect(
+    on(
+      [() => local.color, () => local.type],
+      () => {
+        setStore("isHidden", true)
+
+        setTimeout(handlerRender, 250)
+      },
+      {
+        defer: true,
+      },
+    ),
+  )
 
   onMount(() => {
     window.addEventListener("resize", handlerRender)
@@ -240,112 +310,23 @@ const Background: Component<Background> = (props) => {
     >
       <canvas
         ref={ref!}
+        data-color={local.color}
         width={window.innerWidth}
         height={window.innerHeight}
         class={style.Background__item}
       />
-      {/* <Suspense>
-        <Switch>
-          <Match when={local.type === "1"}>
-            <Background1 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "2"}>
-            <Background2 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "3"}>
-            <Background3 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "4"}>
-            <Background4 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "5"}>
-            <Background5 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "6"}>
-            <Background6 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "7"}>
-            <Background7 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "8"}>
-            <Background8 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "9"}>
-            <Background9 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "10"}>
-            <Background10 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "11"}>
-            <Background11 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "12"}>
-            <Background12 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "13"}>
-            <Background13 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "14"}>
-            <Background14 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "15"}>
-            <Background15 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "16"}>
-            <Background16 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "17"}>
-            <Background17 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "18"}>
-            <Background18 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "19"}>
-            <Background19 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "20"}>
-            <Background20 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "21"}>
-            <Background21 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "22"}>
-            <Background22 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "23"}>
-            <Background23 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "24"}>
-            <Background24 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "25"}>
-            <Background25 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "26"}>
-            <Background26 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "27"}>
-            <Background27 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "28"}>
-            <Background28 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "29"}>
-            <Background29 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "30"}>
-            <Background30 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "31"}>
-            <Background31 class={style.Background__item} color={local.color} />
-          </Match>
-          <Match when={local.type === "32"}>
-            <Background32 class={style.Background__item} color={local.color} />
-          </Match>
-        </Switch>
-      </Suspense> */}
+      <span
+        class={style.Background__show}
+        classList={{
+          [style[`Background__show--hidden`]]: store.isHidden,
+        }}
+      />
     </div>
   )
 }
+
+Background.Preview = Preview
+Background.preload = preload
+Background.Overlay = Overlay
 
 export default Background

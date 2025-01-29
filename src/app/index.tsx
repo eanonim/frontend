@@ -33,7 +33,6 @@ const App: Component = () => {
 
   createEffect(() => {
     if (!keyboard().open) {
-      console.log("ASF", keyboard().open)
       window.document.body.scrollIntoView({
         behavior: "smooth",
         block: "start",
@@ -87,7 +86,7 @@ const App: Component = () => {
         /** Открытие клавиатуры */
         document.body.style.setProperty(
           "--safe-area-inset-bottom",
-          `${store.bottom + 10}px`,
+          `${store.bottom + store.bottom ? 10 : 0}px`,
         )
         document.body.style.setProperty(
           "--keyboard-safe-area-inset-bottom",

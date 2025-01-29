@@ -18,6 +18,7 @@ export enum panels {
   SETTINGS = "panel_settings",
   FONTSIZE = "panel_fontsize",
   BACKGROUNDS = "panel_backgrounds",
+  BACKGROUND_EDIT = "panel_background_edit",
 
   SEARCH = "panel_search",
 
@@ -32,6 +33,7 @@ export enum pages {
   SETTINGS = "/profile/settings",
   FONTSIZE = "/settings/fontsize",
   BACKGROUNDS = "/settings/backgrounds",
+  BACKGROUND_EDIT = "/settings/background",
 
   SEARCH = "/search",
 
@@ -87,6 +89,7 @@ export const routerStruct: RouterStruct = [
       [pages.SETTINGS]: panels.SETTINGS,
       [pages.FONTSIZE]: panels.FONTSIZE,
       [pages.BACKGROUNDS]: panels.BACKGROUNDS,
+      [pages.BACKGROUND_EDIT]: panels.BACKGROUND_EDIT,
     },
   },
   {

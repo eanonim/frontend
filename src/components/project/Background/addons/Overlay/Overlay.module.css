@@ -1,0 +1,23 @@
+.Overlay,
+.Overlay::before {
+  position: absolute;
+  left    : 0;
+  right   : 0;
+  top     : 0;
+  bottom  : 0;
+
+  border-radius: inherit;
+  overflow     : hidden;
+
+  backdrop-filter: blur(1px);
+  color          : var(--secondary_color--text);
+
+  padding   : 8px;
+  box-sizing: border-box;
+}
+
+.Overlay::before {
+  content         : " ";
+  background-color: var(--secondary_color);
+  opacity         : 0.4;
+}

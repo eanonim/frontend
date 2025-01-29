@@ -14,7 +14,7 @@ const Content: Component<Content> = (props) => {
         "margin-top": "auto",
       }}
     >
-      <Background fixed type={2} />
+      <Background fixed type={2} quality={2} />
       <Message.Group>
         <Message
           type={"out"}

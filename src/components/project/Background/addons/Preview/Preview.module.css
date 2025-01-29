@@ -1,0 +1,10 @@
+.Preview {
+  position: relative;
+  overflow: hidden;
+  width   : 100%;
+  height  : 100%;
+}
+
+.Preview--selected {
+  border: solid 2px white
+}

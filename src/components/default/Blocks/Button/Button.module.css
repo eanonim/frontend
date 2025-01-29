@@ -16,9 +16,10 @@
 }
 
 .Button__in {
-  position: relative;
-  z-index : 2;
-  gap     : var(--button__gap);
+  border-radius: inherit;
+  position     : relative;
+  z-index      : 2;
+  gap          : var(--button__gap);
 }
 
 /* Type */

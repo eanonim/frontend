@@ -70,6 +70,7 @@ const Content: Component<Content> = (props) => {
         icon: IconMoodEdit,
         title: "Фон бесед",
         color: "#A2845E",
+        handler: () => pushPage({ pageId: pages.BACKGROUNDS }),
       },
       {
         icon: IconCameraPlus,

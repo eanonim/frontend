@@ -87,9 +87,9 @@ const Message: ComponentMessage = (props) => {
           )}
         </Show>
       </span>
-      <span class={style.Message__end}>
+      {/* <span class={style.Message__end}>
         <IconMessageEnd />
-      </span>
+      </span> */}
     </Flex>
   )
 }

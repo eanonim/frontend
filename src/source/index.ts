@@ -10,6 +10,4 @@ export { default as IconMoodEdit } from "./MoodEdit.svg"
 export { default as IconCameraPlus } from "./CameraPlus.svg"
 export { default as IconCheck } from "./Check.svg"
 export { default as IconChecks } from "./Checks.svg"
-
-/* Backgrounds */
-export { default as Background1 } from "./Backgrounds/1.svg"
+export { default as IconLetterCase } from "./LetterCase.svg"

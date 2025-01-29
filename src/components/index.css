@@ -1,5 +1,8 @@
 /* default colors */
 :root {
+  --message_font_size  : 14px;
+  --message_line_height: 18px;
+
   --safe-area-inset-bottom: 0px;
 
   --text_primary       : #ffffff;

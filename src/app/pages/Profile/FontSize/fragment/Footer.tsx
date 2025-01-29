@@ -1,22 +1,49 @@
-import { Control, FixedLayout, Plug, Separator, Title } from "components"
-import { Logo, LogoElumTeam } from "source"
+import { Control, FixedLayout, Range, Separator, Title } from "components"
+import { IconLetterCase } from "source"
 
-import { type JSX, type Component } from "solid-js"
+import { type JSX, type Component, createSignal } from "solid-js"
 import { backPage } from "router"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Footer: Component<Footer> = (props) => {
+  const [value, setValue] = createSignal(14)
   const handlerCancel = () => {}
 
   const handlerAccept = () => {
     backPage()
   }
 
+  const onInput = (value: number) => {
+    setValue(value)
+    document.body.style.setProperty("--message_font_size", `${value}px`)
+    document.body.style.setProperty("--message_line_height", `${value + 4}px`)
+  }
+
   return (
     <FixedLayout position={"bottom"} background={"section_bg_color"}>
       <Separator />
-      <span style={{ height: "48px" }} />
+      <Range>
+        <Range.Icon>
+          <IconLetterCase
+            width={28}
+            height={28}
+            color={"var(--text_primary)"}
+            style={{
+              transform: "scale(0.7)",
+              "-webkit-transform": "scale(0.7)",
+            }}
+          />
+        </Range.Icon>
+        <Range.Input onRange={onInput} min={14} max={20} value={value()} />
+        <Range.Icon>
+          <IconLetterCase
+            width={28}
+            height={28}
+            color={"var(--text_primary)"}
+          />
+        </Range.Icon>
+      </Range>
       <Separator />
       <Control safeBottom>
         <Control.Button onClick={handlerCancel}>

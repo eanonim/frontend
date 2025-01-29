@@ -61,11 +61,12 @@ export { default as UserName } from "./default/Blocks/UserName/UserName"
 export { default as FixedLayout } from "./default/Blocks/FixedLayout/FixedLayout"
 export { default as Control } from "./default/Blocks/Control/Control"
 
-/* Inputs */
+/* Forms */
 export { default as Radio } from "./default/Forms/Radio/Radio"
 export { default as CheckBox } from "./default/Forms/CheckBox/CheckBox"
 export { default as Select } from "./default/Forms/Select/Select"
 export { default as Input } from "./default/Forms/Input/Input"
+export { default as Range } from "./default/Forms/Range/Range"
 
 /* Icons */
 export { default as IconCheck } from "./default/Icons/Check.svg"

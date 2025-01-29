@@ -1,6 +1,7 @@
 import style from "./Gap.module.css"
 import GapContext from "./context"
 
+import combineStyle from "@ui/default/utils/combineStyle"
 import Flex, { type Flex as TypeFlex } from "@ui/default/Blocks/Flex/Flex"
 
 import {
@@ -25,6 +26,7 @@ const Gap: Component<Gap> = (props) => {
     "classList",
     "children",
     "count",
+    "style",
   ])
 
   return (
@@ -34,9 +36,12 @@ const Gap: Component<Gap> = (props) => {
         [`${local.class}`]: !!local.class,
         ...local.classList,
       }}
-      style={{
-        gap: local.count,
-      }}
+      style={combineStyle(
+        {
+          gap: local.count,
+        },
+        local.style,
+      )}
       {...others}
     >
       {local.children}

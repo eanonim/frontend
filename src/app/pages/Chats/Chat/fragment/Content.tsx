@@ -42,7 +42,7 @@ const Content: Component<Content> = (props) => {
         "margin-top": "auto",
       }}
     >
-      <Background fixed type={"1"} />
+      <Background fixed type={2} />
 
       <Message.Group ref={ref!}>
         <For each={store.messages}>

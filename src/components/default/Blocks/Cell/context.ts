@@ -3,7 +3,7 @@ import { createContext } from "solid-js"
 
 export const CellStore = createContext<{
   getPlatform: () => Platform
-  isSeparator: () => boolean
+  isSeparator: () => boolean | "auto"
   getStyle: () => {
     container: string
     content: string

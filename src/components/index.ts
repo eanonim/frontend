@@ -19,6 +19,7 @@ export { default as Around } from "./default/Templates/Around/Around"
 export { default as Gap } from "./default/Templates/Gap/Gap"
 export { default as GapContext } from "./default/Templates/Gap/context"
 export { default as Drag } from "./default/Templates/Drag/Drag"
+export { default as Swipe } from "./default/Templates/Swipe/Swipe"
 
 /* Typography */
 export { default as Title } from "./default/Typography/Title/Title"
@@ -58,6 +59,7 @@ export { default as Size } from "./default/Blocks/Size/Size"
 export { default as IconBackground } from "./default/Blocks/IconBackground/IconBackground"
 export { default as UserName } from "./default/Blocks/UserName/UserName"
 export { default as FixedLayout } from "./default/Blocks/FixedLayout/FixedLayout"
+export { default as Control } from "./default/Blocks/Control/Control"
 
 /* Inputs */
 export { default as Radio } from "./default/Forms/Radio/Radio"

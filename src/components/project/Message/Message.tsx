@@ -1,5 +1,5 @@
 import style from "./Message.module.css"
-import { Badge } from "./addons"
+import { Badge, Group } from "./addons"
 
 import { type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
@@ -7,6 +7,7 @@ import formatTime from "engine/utils/formatTime"
 import Gap from "@ui/default/Templates/Gap/Gap"
 
 import { type Component, Show, type ValidComponent, splitProps } from "solid-js"
+import { IconMessageEnd } from "source"
 
 interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   text?: string
@@ -29,6 +30,7 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
 
 type ComponentMessage = Component<Message> & {
   Badge: typeof Badge
+  Group: typeof Group
 }
 
 const Message: ComponentMessage = (props) => {
@@ -70,24 +72,29 @@ const Message: ComponentMessage = (props) => {
         <Show keyed when={local.time}>
           {(time) => (
             <Gap class={style.Message__time} count={"2px"}>
-              {formatTime(time)}
+              <span class={style.Message__time_text}>{formatTime(time)}</span>
               <Show when={local.type === "out"}>
                 <Badge
+                  class={style.Message__time_badge}
                   isRead={local.isRead}
                   isNew={local.isNew}
                   isNotRead={local.isNotRead}
                   color={"inherit"}
-                  size={12}
+                  size={"inherit"}
                 />
               </Show>
             </Gap>
           )}
         </Show>
       </span>
+      <span class={style.Message__end}>
+        <IconMessageEnd />
+      </span>
     </Flex>
   )
 }
 
 Message.Badge = Badge
+Message.Group = Group
 
 export default Message

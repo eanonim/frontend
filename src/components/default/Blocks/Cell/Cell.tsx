@@ -42,7 +42,7 @@ interface Cell extends HTMLAttributes<DynamicProps<"article">> {
   /**
    * Указывает, должен ли быть отображен разделитель под ячейкой.
    */
-  separator?: boolean
+  separator?: boolean | "auto"
   /**
    * Указывает, является ли ячейка неактивной.
    */
@@ -101,7 +101,7 @@ const Cell: ComponentCell = (props) => {
       <CellStore.Provider
         value={{
           getPlatform: platform,
-          isSeparator: () => local.separator,
+          isSeparator: () => local.separator as NonNullable<Cell["separator"]>,
           getStyle: () => ({
             container: style.Cell__container,
             content: style.Cell__content,
@@ -117,6 +117,7 @@ const Cell: ComponentCell = (props) => {
             ...local.classList,
             [`${local.class}`]: !!local.class,
 
+            [style[`Cell__Separator--always`]]: local.separator === true,
             [style[`Cell__size--${local.size}`]]: !!local.size,
             [style[`Cell--selected`]]: local.selected,
           }}
@@ -132,7 +133,7 @@ const Cell: ComponentCell = (props) => {
           <Separator
             when={
               ["android", "windows", "others"].indexOf(platform()) !== -1 &&
-              local.separator
+              !!local.separator
             }
           />
           <span class={style.Cell__background} />

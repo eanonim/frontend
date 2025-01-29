@@ -1,8 +1,6 @@
 .Separator {
   display : block;
   position: relative;
-  width   : 100%;
-  height  : 1px;
 }
 
 .Separator::after {
@@ -37,4 +35,15 @@
 
 .Separator__size--indent::after {
   width: 80%;
+}
+
+/* Type */
+.Separator__type--horizontal {
+  width : 100%;
+  height: 1px;
+}
+
+.Separator__type--vertical {
+  width : 1px;
+  height: 100%;
 }

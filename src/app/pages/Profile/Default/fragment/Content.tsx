@@ -15,6 +15,7 @@ import {
 } from "source"
 
 import { type JSX, type Component, For, Switch, Match, Show } from "solid-js"
+import { pages, pushPage } from "router"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -40,6 +41,7 @@ const Content: Component<Content> = (props) => {
     title: string
     isAccent?: boolean
     color?: string
+    handler?: () => void
   }[][] = [
     [
       {
@@ -73,6 +75,7 @@ const Content: Component<Content> = (props) => {
         icon: IconCameraPlus,
         title: "Размер текста",
         color: "#5CA19A",
+        handler: () => pushPage({ pageId: pages.FONTSIZE }),
       },
     ],
     [
@@ -102,7 +105,7 @@ const Content: Component<Content> = (props) => {
             <Cell.List>
               <For each={group}>
                 {(cell, index) => (
-                  <Cell data-index={index()} separator>
+                  <Cell data-index={index()} separator onClick={cell.handler}>
                     <Cell.Before>
                       <Switch
                         fallback={

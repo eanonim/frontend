@@ -1,0 +1,45 @@
+.Button {
+  position        : relative;
+  width           : 100%;
+  appearance      : none;
+  background-color: transparent;
+  border          : none;
+  outline         : none;
+
+  cursor: pointer;
+
+  min-height: 48px;
+
+
+  padding: 16px 8px;
+
+  transition: 0.3s;
+}
+
+.Button::after {
+  content         : " ";
+  position        : absolute;
+  left            : 0;
+  right           : 0;
+  top             : 0;
+  bottom          : 0;
+  pointer-events  : none;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.Button._active {
+  background-color: var(--section_bg_color--active);
+}
+
+.Button__safeBottom {
+  padding-bottom: calc(var(--safe-area-inset-bottom) + 16px);
+}
+
+.Button__title {
+  color: var(--primary_color);
+}
+
+.Button__subtitle {
+  color  : var(--primary_color);
+  opacity: 0.8;
+}

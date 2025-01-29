@@ -16,6 +16,7 @@ export enum panels {
 
   PROFILE = "panel_profile",
   SETTINGS = "panel_settings",
+  FONTSIZE = "panel_fontsize",
 
   SEARCH = "panel_search",
 
@@ -28,6 +29,7 @@ export enum pages {
 
   PROFILE = "/profile",
   SETTINGS = "/profile/settings",
+  FONTSIZE = "/settings/fontsize",
 
   SEARCH = "/search",
 
@@ -81,6 +83,7 @@ export const routerStruct: RouterStruct = [
     panels: {
       [pages.PROFILE]: panels.PROFILE,
       [pages.SETTINGS]: panels.SETTINGS,
+      [pages.FONTSIZE]: panels.FONTSIZE,
     },
   },
   {

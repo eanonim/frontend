@@ -9,3 +9,9 @@
 .FixedLayout__position--bottom {
   bottom: 0;
 }
+
+/* Background */
+
+.FixedLayout__background--section_bg_color {
+  background-color: var(--section_bg_color);
+}

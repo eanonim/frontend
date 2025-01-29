@@ -7,6 +7,7 @@ import { type ValidComponent, type Component, splitProps } from "solid-js"
 
 interface FixedLayout<T extends ValidComponent = "div"> extends TypeFlex<T> {
   position: "top" | "bottom"
+  background?: "none" | "section_bg_color"
 }
 
 const FixedLayout: Component<FixedLayout> = (props) => {
@@ -15,12 +16,15 @@ const FixedLayout: Component<FixedLayout> = (props) => {
     "classList",
     "children",
     "position",
+    "background",
   ])
 
   return (
     <Flex
       class={style.FixedLayout}
       classList={{
+        [style[`FixedLayout__background--${local.background}`]]:
+          !!local.background,
         [style[`FixedLayout__position--${local.position}`]]: !!local.position,
 
         [`${local.class}`]: !!local.class,

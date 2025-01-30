@@ -77,9 +77,7 @@ const System: Component<System> = (props) => {
         {...others}
       >
         <span class={style.System__in}>
-          <span class={style.System__text}>
-            {local.children} {local.key}
-          </span>
+          <span class={style.System__text}>{local.children}</span>
         </span>
       </Flex>
     </FixedLayout>

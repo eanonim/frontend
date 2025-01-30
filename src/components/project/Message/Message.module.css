@@ -151,6 +151,7 @@
 }
 
 .Message--out:not(:not(.Message--out+.Message--out):not(:has(~.Message--out):has(+.Message--out))):has(+.Message--in) .Message__in,
+.Message--out:not(:not(.Message--out+.Message--out):not(:has(~.Message--out):has(+.Message--out))):has(+._system) .Message__in,
 .Message--out:not(:not(.Message--out+.Message--out):not(:has(~.Message--out):has(+.Message--out))):last-child .Message__in {
   border-radius: 13px 6px 13px 13px;
 }
@@ -176,6 +177,7 @@
 }
 
 .Message--in:not(:not(.Message--in+.Message--in):not(:has(~.Message--in):has(+.Message--in))):has(+.Message--out) .Message__in,
+.Message--in:not(:not(.Message--in+.Message--in):not(:has(~.Message--in):has(+.Message--in))):has(+._system) .Message__in,
 .Message--in:not(:not(.Message--in+.Message--in):not(:has(~.Message--in):has(+.Message--in))):last-child .Message__in {
   border-radius: 6px 13px 13px 13px;
 }

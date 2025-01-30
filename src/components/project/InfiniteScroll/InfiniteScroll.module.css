@@ -1,0 +1,15 @@
+.InfiniteScroll {
+  position: relative;
+  height: inherit;
+  z-index: 1;
+}
+
+/* .InfiniteScroll__in {
+  position: relative;
+  height: 100%;
+} */
+
+.InfiniteScroll__observe {
+  z-index: -999;
+  position: relative;
+}

@@ -1,0 +1,62 @@
+.System {
+  position  : relative;
+  padding   : 10px;
+  box-sizing: border-box;
+
+  opacity   : 1;
+  transition: 0.2s;
+  transform : scale(1);
+}
+
+.System--hidden {
+  opacity  : 0;
+  transform: scale(0.8) translateY(-100%);
+}
+
+.System__FixedLayout {
+  z-index: 10;
+}
+
+
+.System__in {
+  position     : relative;
+  padding      : 2px 10px;
+  border-radius: 20px;
+  width        : auto;
+  display      : block;
+  box-sizing   : border-box;
+
+  overflow: hidden;
+
+  color: var(--text_primary);
+
+  font-size  : calc(var(--message_font_size) - 2px);
+  line-height: calc(var(--message_line_height) - 2px);
+}
+
+.System__text {
+  position: relative;
+  z-index : 2;
+  display : block;
+}
+
+.System__in::after,
+.System__in::before {
+  content : " ";
+  position: absolute;
+  left    : 0;
+  right   : 0;
+  top     : 0;
+  bottom  : 0;
+  z-index : 1;
+}
+
+.System__in::after {
+  background-color: var(--section_bg_color);
+  opacity         : 0.7;
+}
+
+.System__in::before {
+  opacity         : 0.3;
+  background-color: var(--bg_color);
+}

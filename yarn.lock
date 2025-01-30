@@ -518,6 +518,13 @@
   dependencies:
     "@solid-primitives/utils" "^6.2.3"
 
+"@solid-primitives/intersection-observer@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/intersection-observer/-/intersection-observer-2.2.0.tgz#1019162228c2b464e82d24b76082a863bec73c22"
+  integrity sha512-Y0+1PpK0s5kvQT/0OUHWD39GPuELSke2YxXdTRADyN+KaBgDwBAjIwfVWfv3cCDP65VDlt0Cn1PHCYyqNzdirw==
+  dependencies:
+    "@solid-primitives/utils" "^6.3.0"
+
 "@solid-primitives/keyboard@^1.2.5":
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/@solid-primitives/keyboard/-/keyboard-1.2.8.tgz#99a695deede1724e03ce415ebdf5969c174fa398"
@@ -571,6 +578,11 @@
   resolved "https://registry.yarnpkg.com/@solid-primitives/scheduled/-/scheduled-1.4.4.tgz#539210eb1af7ce448764ad1fc7b9c2de42e7a56b"
   integrity sha512-BTGdFP7t+s7RSak+s1u0eTix4lHP23MrbGkgQTFlt1E+4fmnD/bEx3ZfNW7Grylz3GXgKyXrgDKA7jQ/wuWKgA==
 
+"@solid-primitives/scheduled@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/scheduled/-/scheduled-1.5.0.tgz#a4f0977549df4a946f42c3131b9545fb721dccde"
+  integrity sha512-RVw24IRNh1FQ4DCMb3OahB70tXIwc5vH8nhR4nNPsXwUPQeuOkLsDI5BlxaPk0vyZgqw9lDpufgI3HnPwplgDw==
+
 "@solid-primitives/static-store@^0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@solid-primitives/static-store/-/static-store-0.0.5.tgz#ed3e5be8e72121f92fac54e7cfd4ed81aa2e29cd"
@@ -597,6 +609,11 @@
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/@solid-primitives/utils/-/utils-6.2.3.tgz#1abed4c74a2696e08bd2e49cf2b86fc8b87a32bd"
   integrity sha512-CqAwKb2T5Vi72+rhebSsqNZ9o67buYRdEJrIFzRXz3U59QqezuuxPsyzTSVCacwS5Pf109VRsgCJQoxKRoECZQ==
+
+"@solid-primitives/utils@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/utils/-/utils-6.3.0.tgz#5659e9788e8fe385c75c78c2f12a5e7bcc9f448d"
+  integrity sha512-e7hTlJ1Ywh2+g/Qug+n4L1mpfxsikoIS4/sHE2EK9WatQt8UJqop/vE6bsLnXlU1xuhb/jo94Ah5Y27rd4wP7A==
 
 "@solidjs/router@^0.15.1":
   version "0.15.1"

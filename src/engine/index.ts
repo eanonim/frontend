@@ -1,3 +1,6 @@
 export { toArray, toChilds } from "./utils/parse"
 export { default as formatTime } from "./utils/formatTime"
 export { default as setHeaderColor } from "./utils/setHeaderColor"
+export { default as findUniqueDayIndices } from "./utils/findUniqueDayIndices"
+export { default as timeAgoOnlyDate } from "./utils/timeAgoOnlyDate"
+export { default as groupObjectsByDay } from "./utils/groupObjectsByDay"

@@ -102,3 +102,4 @@ export { default as Action } from "./default/Action/Action"
 /* project */
 export { default as Message } from "./project/Message/Message"
 export { default as Background } from "./project/Background/Background"
+export { default as InfiniteScroll } from "./project/InfiniteScroll/InfiniteScroll"

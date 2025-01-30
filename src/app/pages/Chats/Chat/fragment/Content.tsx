@@ -1,6 +1,19 @@
-import { Background, Flex, Message } from "components"
+import { timeAgo } from "@minsize/utils"
+import { Background, FixedLayout, Flex, Message, Title } from "components"
+import {
+  findUniqueDayIndices,
+  groupObjectsByDay,
+  timeAgoOnlyDate,
+} from "engine"
 
-import { type JSX, type Component, onMount, For } from "solid-js"
+import {
+  type JSX,
+  type Component,
+  onMount,
+  For,
+  createMemo,
+  Show,
+} from "solid-js"
 import { createStore } from "solid-js/store"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
@@ -17,13 +30,97 @@ const Content: Component<Content> = (props) => {
         },
         text: "Привет мир",
         type: "in",
-        time: new Date(),
+        time: new Date(Date.now() - 86_400_000 * 6),
       },
       {
-        text: `Хм, "Тень горы", кажется, слышал про такую. Запишу себе в список, спасибо! А день мой прошел довольно типично для последнего времени: много работы, немного встреч и немного программирования. Кстати, закончил интересный проект, над которым работал последние пару недель, - небольшая программа для автоматизации рутинных задач. Может, как-нибудь покажу тебе, если интересно. А вообще, что ты думаешь о последних новостях про искусственный интеллект? Я тут пару статей прочел, и мне кажется, что это очень перспективное направление.`,
+        forward: {
+          text: `Давид! Как ты? У меня тут выдался свободный вечер, и я подумала, что было бы здорово с кем-нибудь поболтать. Как у тебя настроение? Какие планы на вечер? Может быть, что-нибудь интересное смотришь или читаешь? Я вот сейчас как раз дочитываю очень захватывающий роман, и мне не терпится поделиться впечатлениями, когда закончу. А ты чем занят?`,
+          time: new Date(),
+        },
+        text: "Привет мир",
+        type: "in",
+        time: new Date(Date.now() - 86_400_000 * 4),
+      },
+      {
+        forward: {
+          text: `Давид! Как ты? У меня тут выдался свободный вечер, и я подумала, что было бы здорово с кем-нибудь поболтать. Как у тебя настроение? Какие планы на вечер? Может быть, что-нибудь интересное смотришь или читаешь? Я вот сейчас как раз дочитываю очень захватывающий роман, и мне не терпится поделиться впечатлениями, когда закончу. А ты чем занят?`,
+          time: new Date(),
+        },
+        text: "Привет мир",
+        type: "in",
+        time: new Date(Date.now() - 86_400_000 * 3),
+      },
+      {
+        forward: {
+          text: `Давид! Как ты? У меня тут выдался свободный вечер, и я подумала, что было бы здорово с кем-нибудь поболтать. Как у тебя настроение? Какие планы на вечер? Может быть, что-нибудь интересное смотришь или читаешь? Я вот сейчас как раз дочитываю очень захватывающий роман, и мне не терпится поделиться впечатлениями, когда закончу. А ты чем занят?`,
+          time: new Date(),
+        },
+        text: "Привет мир",
+        type: "in",
+        time: new Date(Date.now() - 86_400_000 * 3),
+      },
+      {
+        forward: {
+          text: `Давид! Как ты? У меня тут выдался свободный вечер, и я подумала, что было бы здорово с кем-нибудь поболтать. Как у тебя настроение? Какие планы на вечер? Может быть, что-нибудь интересное смотришь или читаешь? Я вот сейчас как раз дочитываю очень захватывающий роман, и мне не терпится поделиться впечатлениями, когда закончу. А ты чем занят?`,
+          time: new Date(),
+        },
+        text: "Привет мир",
+        type: "in",
+        time: new Date(Date.now() - 86_400_000 * 2),
+      },
+      {
+        forward: {
+          text: `Давид! Как ты? У меня тут выдался свободный вечер, и я подумала, что было бы здорово с кем-нибудь поболтать. Как у тебя настроение? Какие планы на вечер? Может быть, что-нибудь интересное смотришь или читаешь? Я вот сейчас как раз дочитываю очень захватывающий роман, и мне не терпится поделиться впечатлениями, когда закончу. А ты чем занят?`,
+          time: new Date(),
+        },
+        text: "Привет мир",
+        type: "in",
+        time: new Date(Date.now() - 86_400_000 * 2),
+      },
+      {
+        forward: {
+          text: `Давид! Как ты? У меня тут выдался свободный вечер, и я подумала, что было бы здорово с кем-нибудь поболтать. Как у тебя настроение? Какие планы на вечер? Может быть, что-нибудь интересное смотришь или читаешь? Я вот сейчас как раз дочитываю очень захватывающий роман, и мне не терпится поделиться впечатлениями, когда закончу. А ты чем занят?`,
+          time: new Date(),
+        },
+        text: "Привет мир",
+        type: "in",
+        time: new Date(Date.now() - 86_400_000 * 2),
+      },
+      {
+        text: `Привет.`,
 
         type: "out",
-        time: new Date(),
+        time: new Date(Date.now() - 86_400_000),
+      },
+      {
+        text: `Привет.`,
+
+        type: "out",
+        time: new Date(Date.now() - 86_400_000),
+      },
+      {
+        text: `Привет.`,
+
+        type: "out",
+        time: new Date(Date.now() - 86_400_000),
+      },
+      {
+        text: `Привет.`,
+
+        type: "out",
+        time: new Date(Date.now() - 16_400_000),
+      },
+      {
+        text: `Привет.`,
+
+        type: "out",
+        time: new Date(Date.now()),
+      },
+      {
+        text: `Привет.`,
+
+        type: "out",
+        time: new Date(Date.now()),
       },
     ],
   })
@@ -33,6 +130,11 @@ const Content: Component<Content> = (props) => {
       ref.scrollTop = ref.scrollHeight
     }
   })
+
+  const getMessages = createMemo(
+    () => groupObjectsByDay(store.messages),
+    store.messages,
+  )
 
   return (
     <Flex
@@ -45,15 +147,24 @@ const Content: Component<Content> = (props) => {
       <Background fixed type={2} quality={1} />
 
       <Message.Group ref={ref!}>
-        <For each={store.messages}>
-          {(message, index) => (
-            <Message
-              data-index={index()}
-              forward={message.forward}
-              type={message.type as any}
-              text={message.text}
-              time={message.time}
-            />
+        <For each={getMessages()}>
+          {(messages, index) => (
+            <Message.Group.List data-index={index()}>
+              <Message.System key={index()}>
+                {timeAgoOnlyDate(getMessages()[index()]?.[0]?.time?.getTime())}
+              </Message.System>
+              <For each={messages}>
+                {(message, index) => (
+                  <Message
+                    data-index={index()}
+                    forward={message.forward}
+                    type={message.type as any}
+                    text={message.text}
+                    time={message.time}
+                  />
+                )}
+              </For>
+            </Message.Group.List>
           )}
         </For>
       </Message.Group>

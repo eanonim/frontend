@@ -1,5 +1,5 @@
 import style from "./Message.module.css"
-import { Badge, Group } from "./addons"
+import { Badge, Group, System } from "./addons"
 
 import { type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
@@ -31,6 +31,7 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
 type ComponentMessage = Component<Message> & {
   Badge: typeof Badge
   Group: typeof Group
+  System: typeof System
 }
 
 const Message: ComponentMessage = (props) => {
@@ -96,5 +97,6 @@ const Message: ComponentMessage = (props) => {
 
 Message.Badge = Badge
 Message.Group = Group
+Message.System = System
 
 export default Message

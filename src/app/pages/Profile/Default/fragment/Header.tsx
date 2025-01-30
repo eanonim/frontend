@@ -1,4 +1,4 @@
-import { Image, Ratio } from "components"
+import { AvatarProfile } from "components"
 
 import { createSmartData, USER_ATOM } from "engine/state"
 
@@ -10,9 +10,12 @@ const Content: Component<Content> = (props) => {
   const [user] = createSmartData(USER_ATOM, {}, {})
 
   return (
-    <Ratio width={1} height={1}>
-      <Image src={user().photo} />
-    </Ratio>
+    <AvatarProfile
+      src={user().photo}
+      id={user().id}
+      first_name={user().first_name}
+      last_name={user().last_name}
+    />
   )
 }
 

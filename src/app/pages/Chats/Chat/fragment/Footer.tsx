@@ -1,8 +1,7 @@
-import { FixedLayout, Separator, WriteBar } from "components"
-import { IconChecks, Logo, LogoElumTeam } from "source"
+import { FixedLayout, WriteBar } from "components"
+import { IconGiftFilled, IconPaperclip } from "source"
 
 import { type JSX, type Component } from "solid-js"
-import { bridgeRequestViewport } from "@apiteam/twa-bridge/solid"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -15,11 +14,15 @@ const Footer: Component<Footer> = (props) => {
       }}
     >
       <WriteBar>
-        <WriteBar.Icon>test</WriteBar.Icon>
+        <WriteBar.Icon>
+          <IconPaperclip color={"var(--separator_primary)"} />
+        </WriteBar.Icon>
         <WriteBar.Field>
           <WriteBar.Field.Textarea />
         </WriteBar.Field>
-        <WriteBar.Icon>test</WriteBar.Icon>
+        <WriteBar.Icon>
+          <IconGiftFilled color={"var(--separator_primary)"} />
+        </WriteBar.Icon>
       </WriteBar>
     </FixedLayout>
   )

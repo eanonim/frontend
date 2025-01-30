@@ -1,0 +1,38 @@
+.AvatarProfile__name {
+  position: absolute;
+  bottom  : 0;
+  left    : 0;
+  right   : 0;
+
+  z-index: 1;
+  padding: 10px 16px;
+
+  color   : var(--text_primary);
+  overflow: hidden;
+
+
+  backdrop-filter: blur(8px);
+}
+
+.AvatarProfile__name_title {
+  font-weight: 500;
+  font-size  : var(--font_size--x-large);
+  line-height: var(--font_height--x-large);
+}
+
+
+.AvatarProfile__name_subtitle {
+  font-size  : var(--font_size--medium);
+  line-height: var(--font_height--medium);
+}
+
+.AvatarProfile__name::before {
+  content         : " ";
+  position        : absolute;
+  left            : 0;
+  right           : 0;
+  top             : 0;
+  bottom          : 0;
+  background-color: var(--bg_color);
+  opacity         : 0.3;
+}

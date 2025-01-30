@@ -71,7 +71,21 @@ const Action: Component<Action> = (props) => {
             selected={activeView() === views.PROFILE}
           >
             <Gap direction={"column"}>
-              <Avatar size={"28px"} src={user().photo} />
+              <Avatar
+                size={"28px"}
+                src={user().photo}
+                style={{
+                  border:
+                    activeView() === views.PROFILE
+                      ? "solid 2px var(--section_bg_color)"
+                      : "",
+                  outline:
+                    activeView() === views.PROFILE
+                      ? "solid 1px var(--accent_color)"
+                      : "",
+                  "box-sizing": "border-box",
+                }}
+              />
               <Title>Настройки</Title>
             </Gap>
           </Tabbar.Button>

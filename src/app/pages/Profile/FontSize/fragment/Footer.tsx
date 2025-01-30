@@ -16,8 +16,8 @@ const Footer: Component<Footer> = (props) => {
 
   const onInput = (value: number) => {
     setValue(value)
-    document.body.style.setProperty("--message_font_size", `${value}px`)
-    document.body.style.setProperty("--message_line_height", `${value + 4}px`)
+    document.body.style.setProperty("--message_font_size", `${value}pt`)
+    document.body.style.setProperty("--message_line_height", `${value + 4}pt`)
   }
 
   return (
@@ -35,7 +35,7 @@ const Footer: Component<Footer> = (props) => {
             }}
           />
         </Range.Icon>
-        <Range.Input onRange={onInput} min={14} max={20} value={value()} />
+        <Range.Input onRange={onInput} min={10} max={18} value={value()} />
         <Range.Icon>
           <IconLetterCase
             width={28}

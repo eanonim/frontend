@@ -4,7 +4,7 @@
   box-sizing: border-box;
 
   opacity   : 1;
-  transition: 0.2s;
+  transition: 0.3s ease-in;
   transform : scale(1);
 }
 

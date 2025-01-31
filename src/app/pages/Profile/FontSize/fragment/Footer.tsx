@@ -3,15 +3,23 @@ import { IconLetterCase } from "source"
 
 import { type JSX, type Component, createSignal } from "solid-js"
 import { backPage } from "router"
+import { setFontSize, SETTINGS_ATOM } from "engine/state/settings"
+import { getter } from "elum-state/solid"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Footer: Component<Footer> = (props) => {
-  const [value, setValue] = createSignal(14)
-  const handlerCancel = () => {}
+  const [value, setValue] = createSignal(getter(SETTINGS_ATOM).font_size)
+  const handlerCancel = () => {
+    backPage()
+    setValue(getter(SETTINGS_ATOM).font_size)
+    document.body.style.setProperty("--message_font_size", `${value()}pt`)
+    document.body.style.setProperty("--message_line_height", `${value() + 4}pt`)
+  }
 
   const handlerAccept = () => {
     backPage()
+    setFontSize(value())
   }
 
   const onInput = (value: number) => {
@@ -35,7 +43,7 @@ const Footer: Component<Footer> = (props) => {
             }}
           />
         </Range.Icon>
-        <Range.Input onRange={onInput} min={10} max={18} value={value()} />
+        <Range.Input onRange={onInput} min={10} max={16} value={value()} />
         <Range.Icon>
           <IconLetterCase
             width={28}

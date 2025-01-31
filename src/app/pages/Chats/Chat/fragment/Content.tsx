@@ -1,10 +1,12 @@
 import { timeAgo } from "@minsize/utils"
 import { Background, FixedLayout, Flex, Message, Title } from "components"
+import { globalSignal } from "elum-state/solid"
 import {
   findUniqueDayIndices,
   groupObjectsByDay,
   timeAgoOnlyDate,
 } from "engine"
+import { SETTINGS_ATOM } from "engine/state"
 
 import {
   type JSX,
@@ -19,6 +21,7 @@ import { createStore } from "solid-js/store"
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
+  const [settings] = globalSignal(SETTINGS_ATOM)
   let ref: HTMLDivElement
 
   const [store, setStore] = createStore({
@@ -144,7 +147,12 @@ const Content: Component<Content> = (props) => {
         "margin-top": "auto",
       }}
     >
-      <Background fixed type={2} quality={1} />
+      <Background
+        fixed
+        type={2}
+        quality={1}
+        color={settings().backgroundColor}
+      />
 
       <Message.Group ref={ref!}>
         <For each={getMessages()}>

@@ -2,8 +2,10 @@ import { Background, Flex, Gap, Group, Link, SubTitle } from "components"
 
 import { chunks } from "@minsize/utils"
 
-import { type JSX, type Component, For, Show } from "solid-js"
+import { type JSX, type Component, For, Show, createEffect } from "solid-js"
 import { pages, pushPage } from "router"
+import { globalSignal } from "elum-state/solid"
+import { SETTINGS_ATOM } from "engine/state"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -13,6 +15,8 @@ const backgrounds = chunks(
 )
 
 const Content: Component<Content> = (props) => {
+  const [settings] = globalSignal(SETTINGS_ATOM)
+
   const handlerOpen = (type: number) => {
     pushPage({ pageId: pages.BACKGROUND_EDIT, params: { backgroundId: type } })
   }
@@ -29,7 +33,7 @@ const Content: Component<Content> = (props) => {
                     <Background.Preview
                       onClick={() => handlerOpen(backgroundId)}
                       data-index={index()}
-                      selected={backgroundId === 2}
+                      selected={backgroundId === settings().backgroundId}
                     >
                       <Background
                         color={"#3F3F3F"}

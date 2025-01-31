@@ -5,7 +5,7 @@ type SETTINGS = {
 }
 
 const SETTINGS_ATOM = atom<SETTINGS>({
-  key: "settings_atom",
+  key: "FF_settings_atom",
   default: {
     pathname: "",
   },

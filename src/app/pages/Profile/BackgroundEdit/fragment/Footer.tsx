@@ -1,5 +1,7 @@
 import { Button, FixedLayout, Separator, Title } from "components"
-import { pages, replaceParams, useParams } from "router"
+import { globalSignal } from "elum-state/solid"
+import { setBackground, SETTINGS_ATOM } from "engine/state"
+import { backPage, pages, replaceParams, useParams } from "router"
 import { type JSX, type Component, For } from "solid-js"
 import { createStore } from "solid-js/store"
 
@@ -144,13 +146,20 @@ function applyAlphaToHex(hexColor: string, alpha: number) {
 }
 
 const Footer: Component<Footer> = (props) => {
+  const [settings] = globalSignal(SETTINGS_ATOM)
+
   const params = useParams<{ backgroundId?: number; color?: string }>({
     pageId: pages.BACKGROUND_EDIT,
   })
 
-  const [store, setStore] = createStore<Store>({ color: "#222222" })
+  const [store, setStore] = createStore<Store>({
+    color: settings().backgroundColor || "#222222",
+  })
 
-  const handlerSave = () => {}
+  const handlerSave = () => {
+    backPage(2)
+    setBackground(undefined, store.color)
+  }
 
   const onColor = (color: string) => {
     replaceParams({

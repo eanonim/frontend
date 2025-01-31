@@ -64,7 +64,7 @@ const Message: ComponentMessage = (props) => {
         <Show keyed when={local.forward}>
           {(forward) => (
             <Flex class={style.Message__forward} height={"100%"}>
-              <span class={style.Message__forward_separator} />
+              {/* <span class={style.Message__forward_separator} /> */}
               <span class={style.Message__forward_text}>{forward.text}</span>
             </Flex>
           )}

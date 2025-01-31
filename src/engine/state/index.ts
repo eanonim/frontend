@@ -7,3 +7,5 @@ export {
 export { USER_ATOM } from "./user"
 
 export { KEYBOARD_ATOM } from "./keyboard"
+
+export { SETTINGS_ATOM, setBackground } from "./settings"

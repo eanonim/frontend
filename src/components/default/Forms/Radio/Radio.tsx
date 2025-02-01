@@ -1,10 +1,12 @@
-import style from "./Radio.module.css"
+import { styles } from "./styles"
 
+import { type HTMLAttributes } from "@ui/Types"
+import useStyle from "@ui/default/utils/useStyle"
 import Events from "@ui/default/Templates/Events/Events"
 
-import { type JSX, type Component, splitProps, mergeProps } from "solid-js"
+import { type Component, splitProps, mergeProps } from "solid-js"
 
-interface Radio extends JSX.HTMLAttributes<HTMLInputElement> {
+interface Radio extends HTMLAttributes<HTMLInputElement> {
   /**
    * Указывает, является ли радиокнопка выбранной.
    */
@@ -23,6 +25,7 @@ interface Radio extends JSX.HTMLAttributes<HTMLInputElement> {
 }
 
 const Radio: Component<Radio> = (props) => {
+  const style = useStyle(styles, props.platform)
   const merged = mergeProps({}, props)
   const [local, others] = splitProps(merged, [
     "class",

@@ -1,5 +1,4 @@
 import { defineConfig } from "vite"
-import devtools from "solid-devtools/vite"
 
 import tsconfigPaths from "vite-tsconfig-paths"
 import solidPlugin from "vite-plugin-solid"
@@ -32,10 +31,6 @@ export default defineConfig({
     host: "0.0.0.0",
   },
   plugins: [
-    devtools({
-      /* features options - all disabled by default */
-      autoname: true, // e.g. enable autoname
-    }),
     eruda(),
     tsconfigPaths(),
     solidPlugin(),

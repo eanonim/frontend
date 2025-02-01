@@ -7,8 +7,14 @@ import {
   Title,
 } from "components"
 import {
+  IconAlignBoxLeftTopFilled,
+  IconBugFilled,
   IconCameraPlus,
+  IconCircleHalf,
+  IconDiamondFilled,
+  IconLetterCase,
   IconMoodEdit,
+  IconPhotoFilled,
   IconUserEdit,
   Logo,
   LogoElumTeam,
@@ -62,18 +68,18 @@ const Content: Component<Content> = (props) => {
     ],
     [
       {
-        icon: IconUserEdit,
+        icon: IconCircleHalf,
         title: "Цветовая схема",
         color: "#33A4DA",
       },
       {
-        icon: IconMoodEdit,
+        icon: IconPhotoFilled,
         title: "Фон бесед",
         color: "#A2845E",
         handler: () => pushPage({ pageId: pages.BACKGROUNDS }),
       },
       {
-        icon: IconCameraPlus,
+        icon: IconLetterCase,
         title: "Размер текста",
         color: "#5CA19A",
         handler: () => pushPage({ pageId: pages.FONTSIZE }),
@@ -81,17 +87,17 @@ const Content: Component<Content> = (props) => {
     ],
     [
       {
-        icon: IconUserEdit,
+        icon: IconDiamondFilled,
         title: "Сотрудничество",
         color: "#FEC319",
       },
       {
-        icon: IconMoodEdit,
+        icon: IconAlignBoxLeftTopFilled,
         title: "Политика конфиденциальности",
         color: "#33C6DA",
       },
       {
-        icon: IconCameraPlus,
+        icon: IconBugFilled,
         title: "Помощь",
         color: "#FF0000",
       },

@@ -13,8 +13,8 @@ import {
   onMount,
   onCleanup,
   untrack,
+  Show,
 } from "solid-js"
-import { clamp } from "@minsize/utils"
 import { Mutex } from "@minsize/mutex"
 
 const backgroundFiles = [
@@ -167,6 +167,7 @@ interface Background extends JSX.HTMLAttributes<HTMLDivElement> {
   color?: string
   fixed?: boolean
   quality?: number
+  onSize?: () => { width: number; height: number }
 }
 
 type ComponentBackground = Component<Background> & {
@@ -182,7 +183,11 @@ type Store = {
 
 const Background: ComponentBackground = (props) => {
   const merged = mergeProps(
-    { color: "#222222", quality: window.devicePixelRatio || 1 },
+    {
+      color: "#222222",
+      quality: window.devicePixelRatio || 1,
+      onSize: () => ({ width: window.innerWidth, height: window.innerHeight }),
+    },
     props,
   )
   const [local, others] = splitProps(merged, [
@@ -192,6 +197,7 @@ const Background: ComponentBackground = (props) => {
     "color",
     "fixed",
     "quality",
+    "onSize",
   ])
 
   const [store, setStore] = createStore<Store>({
@@ -202,6 +208,7 @@ const Background: ComponentBackground = (props) => {
   let ref: HTMLCanvasElement
   const handlerRender = async () => {
     const release = await mutex.wait()
+    onCleanup(() => release())
     try {
       if (!ref!) return
       if (!local.type) return
@@ -219,6 +226,8 @@ const Background: ComponentBackground = (props) => {
         `"currentColor"`,
         `"${untrack(() => local.color)}"`,
       )
+
+      const size = local.onSize()
 
       const match = svgString.match(/width="([^"]*)" height="([^"]*)"/)
 
@@ -243,8 +252,8 @@ const Background: ComponentBackground = (props) => {
       img.onload = () => {
         context.imageSmoothingEnabled = false
 
-        ref.width = window.innerWidth * local.quality
-        ref.height = window.innerHeight * local.quality
+        ref.width = size.width * local.quality
+        ref.height = size.height * local.quality
 
         const pattern = context.createPattern(img, "repeat")
         if (pattern) {
@@ -253,8 +262,8 @@ const Background: ComponentBackground = (props) => {
           context.fillRect(
             0,
             0,
-            window.innerWidth * local.quality,
-            window.innerHeight * local.quality,
+            size.width * local.quality,
+            size.height * local.quality,
           )
         }
 
@@ -308,13 +317,17 @@ const Background: ComponentBackground = (props) => {
       }}
       {...others}
     >
-      <canvas
-        ref={ref!}
-        data-color={local.color}
-        width={window.innerWidth}
-        height={window.innerHeight}
-        class={style.Background__item}
-      />
+      <Show keyed when={local.onSize()}>
+        {(size) => (
+          <canvas
+            ref={ref!}
+            data-color={local.color}
+            width={size.width}
+            height={size.height}
+            class={style.Background__item}
+          />
+        )}
+      </Show>
       <span
         class={style.Background__show}
         classList={{

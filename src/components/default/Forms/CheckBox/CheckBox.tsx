@@ -1,11 +1,13 @@
-import style from "./CheckBox.module.css"
+import { styles } from "./styles"
 
+import { type HTMLAttributes } from "@ui/Types"
+import useStyle from "@component/default/utils/useStyle"
 import Events from "@ui/default/Templates/Events/Events"
 import IconCheck from "@ui/default/Icons/Check.svg"
 
 import { type JSX, type Component, splitProps, mergeProps } from "solid-js"
 
-interface CheckBox extends JSX.HTMLAttributes<HTMLInputElement> {
+interface CheckBox extends HTMLAttributes<HTMLInputElement> {
   /**
    * Указывает, является ли чекбокс отмеченным.
    */
@@ -24,6 +26,7 @@ interface CheckBox extends JSX.HTMLAttributes<HTMLInputElement> {
 }
 
 const CheckBox: Component<CheckBox> = (props) => {
+  const style = useStyle(styles, props.platform)
   const merged = mergeProps({}, props)
   const [local, others] = splitProps(merged, [
     "class",

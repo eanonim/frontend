@@ -1983,12 +1983,4 @@
         stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
     </g>
   </g>
-  <defs>
-    <clipPath id="clip0_9_91942">
-      <rect width="375" height="812" fill="white" />
-    </clipPath>
-    <clipPath id="clip1_9_91942">
-      <rect width="375" height="812" fill="white" />
-    </clipPath>
-  </defs>
 </svg>

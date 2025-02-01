@@ -158,7 +158,7 @@ const Footer: Component<Footer> = (props) => {
 
   const handlerSave = () => {
     backPage(2)
-    setBackground(undefined, store.color)
+    setBackground(params().backgroundId, store.color)
   }
 
   const onColor = (color: string) => {

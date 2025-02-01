@@ -1,8 +1,6 @@
-/* UI */
 import createStyle from "@ui/default/utils/createStyle"
-/* UI */
 
-import styleDefault from "../Field.module.css"
+import styleDefault from "../CheckBox.module.css"
 import iOS from "./iOS.module.css"
 import android from "./android.module.css"
 // import macOS from "./macOS.module.css"

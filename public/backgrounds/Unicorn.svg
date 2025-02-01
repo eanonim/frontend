@@ -3133,12 +3133,4 @@
         stroke-linejoin="round" />
     </g>
   </g>
-  <defs>
-    <clipPath id="clip0_9_97214">
-      <rect width="375" height="812" fill="white" />
-    </clipPath>
-    <clipPath id="clip1_9_97214">
-      <rect width="375" height="812" fill="white" />
-    </clipPath>
-  </defs>
 </svg>

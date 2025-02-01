@@ -1,28 +1,28 @@
-html[platform="iOS"] .CheckBox {
+.CheckBox {
   padding: 2px;
 }
 
-html[platform="iOS"] .CheckBox__input {
-  width: 20px;
-  height: 20px;
+.CheckBox__input {
+  width        : 20px;
+  height       : 20px;
   border-radius: 6px;
-  border: solid 2px var(--radio_color);
+  border       : solid 2px var(--radio_color);
 }
 
-html[platform="iOS"] .CheckBox__icon {
+.CheckBox__icon {
   margin: 2px;
 }
 
-html[platform="iOS"] .CheckBox__input:checked~.CheckBox__icon {
+.CheckBox__input:checked~.CheckBox__icon {
   opacity: 1;
 }
 
-html[platform="iOS"] .CheckBox__input:checked {
-  border: solid 2px var(--radio_color--selected);
+.CheckBox__input:checked {
+  border          : solid 2px var(--radio_color--selected);
   background-color: var(--radio_color--selected);
 }
 
-html[platform="iOS"] .CheckBox__input:disabled {
-  border: solid 2px var(--radio_color--disabled);
+.CheckBox__input:disabled {
+  border          : solid 2px var(--radio_color--disabled);
   background-color: var(--radio_color--disabled);
 }

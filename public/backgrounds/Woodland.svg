@@ -4089,12 +4089,4 @@
         fill="currentColor" />
     </g>
   </g>
-  <defs>
-    <clipPath id="clip0_9_154778">
-      <rect width="375" height="812" fill="white" />
-    </clipPath>
-    <clipPath id="clip1_9_154778">
-      <rect width="375" height="812" fill="white" transform="translate(0 -0.219727)" />
-    </clipPath>
-  </defs>
 </svg>

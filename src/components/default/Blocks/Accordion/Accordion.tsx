@@ -1,5 +1,8 @@
-import style from "./Accordion.module.css"
+import { styles } from "./styles"
 import { AccordionContent, AccordionSummary, AccordionList } from "./addons"
+
+import { type Platform } from "@ui/Types"
+import useStyle from "@ui/default/utils/useStyle"
 
 import {
   type JSX,
@@ -16,6 +19,7 @@ import { createStore } from "solid-js/store"
 
 interface Accordion
   extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "onChange"> {
+  platform?: Platform
   /**
    * Уникальный идентификатор элемента Accordion.
    *
@@ -44,6 +48,7 @@ type Store = {
 }
 
 const Accordion: ComponentAccordion = (props) => {
+  const style = useStyle(styles, props.platform)
   const merged = mergeProps({ key: createUniqueId() }, props)
   const [local, others] = splitProps(merged, [
     "class",

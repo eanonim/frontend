@@ -1,65 +1,65 @@
-html[platform="others"] .Radio {
+.Radio {
   box-sizing: border-box;
 }
 
-html[platform="others"] .Radio::after {
-  left: -10px;
-  right: -10px;
+.Radio::after {
+  left  : -10px;
+  right : -10px;
   bottom: -10px;
-  top: -10px;
+  top   : -10px;
 }
 
-html[platform="others"] .Radio._active::after,
-html[platform="others"] .Radio:checked._active::after {
+.Radio._active::after,
+.Radio:checked._active::after {
   opacity: 0.12;
 }
 
-html[platform="others"] .Radio._hover::after,
-html[platform="others"] .Radio:checked._hover::after {
+.Radio._hover::after,
+.Radio:checked._hover::after {
   opacity: 0.08;
 }
 
 
-html[platform="others"] .Radio._hover::after {
+.Radio._hover::after {
   background-color: var(--radio_color-active);
 }
 
-html[platform="others"] .Radio._active::after {
+.Radio._active::after {
   background-color: var(--radio_color-hover);
 }
 
-html[platform="others"] .Radio:checked._hover::after {
+.Radio:checked._hover::after {
   background-color: var(--radio_color-hover);
 }
 
-html[platform="others"] .Radio:checked._active::after {
+.Radio:checked._active::after {
   background-color: var(--radio_color-active);
 }
 
-html[platform="others"] .Radio__input {
-  width: 20px;
-  height: 20px;
+.Radio__input {
+  width        : 20px;
+  height       : 20px;
   border-radius: 20px;
-  border: solid 2px var(--radio_color);
+  border       : solid 2px var(--radio_color);
 }
 
-html[platform="others"] .Radio__circle {
+.Radio__circle {
   border-radius: 20px;
-  margin: 5px;
+  margin       : 5px;
 }
 
-html[platform="others"] .Radio__input:checked {
+.Radio__input:checked {
   border: solid 2px var(--radio_color--selected);
 }
 
-html[platform="others"] .Radio__input:disabled {
+.Radio__input:disabled {
   border: solid 2px var(--radio_color--disabled);
 }
 
-html[platform="others"] .Radio__input:checked~.Radio__circle {
+.Radio__input:checked~.Radio__circle {
   background-color: var(--radio_color--selected);
 }
 
-html[platform="others"] .Radio__input:disabled~.Radio__circle {
+.Radio__input:disabled~.Radio__circle {
   background-color: var(--radio_color--disabled);
 }

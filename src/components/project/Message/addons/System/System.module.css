@@ -32,6 +32,8 @@
 
   font-size  : calc(var(--message_font_size) - 2px);
   line-height: calc(var(--message_line_height) - 2px);
+
+  backdrop-filter: blur(10px);
 }
 
 .System__text {

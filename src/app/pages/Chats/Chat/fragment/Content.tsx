@@ -149,7 +149,7 @@ const Content: Component<Content> = (props) => {
     >
       <Background
         fixed
-        type={2}
+        type={settings().backgroundId}
         quality={1}
         color={settings().backgroundColor}
       />

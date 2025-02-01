@@ -1,7 +1,7 @@
-html[platform="others"] .Link._hover {
+.Link._hover {
   text-decoration: underline;
 }
 
-html[platform="others"] .Link::after {
+.Link::after {
   opacity: 0;
 }

@@ -1,4 +1,6 @@
 import { Button, FixedLayout, Separator, Title } from "components"
+import loc from "engine/languages"
+
 import { globalSignal } from "elum-state/solid"
 import { setBackground, SETTINGS_ATOM } from "engine/state"
 import { backPage, pages, replaceParams, useParams } from "router"
@@ -85,33 +87,6 @@ type Store = {
   color: string
 }
 
-function getTextColorForHex(hexColor: string) {
-  // Убираем символ #, если он есть
-  hexColor = hexColor.replace("#", "")
-
-  // Преобразуем hex в RGB
-  let r, g, b
-  if (hexColor.length === 3) {
-    r = parseInt(hexColor[0].repeat(2), 16)
-    g = parseInt(hexColor[1].repeat(2), 16)
-    b = parseInt(hexColor[2].repeat(2), 16)
-  } else if (hexColor.length === 6) {
-    r = parseInt(hexColor.substring(0, 2), 16)
-    g = parseInt(hexColor.substring(2, 4), 16)
-    b = parseInt(hexColor.substring(4, 6), 16)
-  } else {
-    // Некорректный hex-формат, возвращаем черный
-    return "black"
-  }
-
-  // Вычисляем яркость (Luma) по формуле
-  const luma = 0.299 * r + 0.587 * g + 0.114 * b
-
-  // Выбираем цвет текста на основе яркости.
-  // Значение 150 - порог, можете попробовать поменять его для достижения лучшего результата
-  return luma > 150 ? "black" : "white"
-}
-
 function applyAlphaToHex(hexColor: string, alpha: number) {
   if (alpha < 0 || alpha > 1) {
     return hexColor
@@ -146,6 +121,7 @@ function applyAlphaToHex(hexColor: string, alpha: number) {
 }
 
 const Footer: Component<Footer> = (props) => {
+  const [lang] = loc()
   const [settings] = globalSignal(SETTINGS_ATOM)
 
   const params = useParams<{ backgroundId?: number; color?: string }>({
@@ -187,17 +163,18 @@ const Footer: Component<Footer> = (props) => {
                     mode={"transparent"}
                     style={{
                       background: color.color,
+                      border:
+                        store.color === color.color
+                          ? "2px solid white"
+                          : `2px solid ${color.color}`,
                     }}
                   >
                     <Button.Container>
                       <span
                         style={{
-                          width: "32px",
-                          height: "32px",
+                          width: "28px",
+                          height: "28px",
                           display: "block",
-                          "border-radius": "6px",
-                          background:
-                            store.color === color.color ? "white" : "",
                         }}
                       />
                     </Button.Container>
@@ -215,7 +192,7 @@ const Footer: Component<Footer> = (props) => {
         <Button.Group.Container>
           <Button stretched size={"large"} onClick={handlerSave}>
             <Button.Container>
-              <Title>Применить во всех чатах</Title>
+              <Title>{lang("apply_in_all_chats")}</Title>
             </Button.Container>
           </Button>
         </Button.Group.Container>

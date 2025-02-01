@@ -6,6 +6,8 @@ import {
   IconChevron,
   Title,
 } from "components"
+import loc from "engine/languages"
+
 import {
   IconAlignBoxLeftTopFilled,
   IconBugFilled,
@@ -16,8 +18,6 @@ import {
   IconMoodEdit,
   IconPhotoFilled,
   IconUserEdit,
-  Logo,
-  LogoElumTeam,
 } from "source"
 
 import { type JSX, type Component, For, Switch, Match, Show } from "solid-js"
@@ -42,9 +42,20 @@ const textProps: TextProps = {
 }
 
 const Content: Component<Content> = (props) => {
+  const [lang] = loc()
+
   const elements: {
     icon: Component<JSX.SvgSVGAttributes<SVGSVGElement>>
-    title: string
+    title:
+      | "change_name"
+      | "change_emoji_status"
+      | "change_photo"
+      | "color_scheme"
+      | "conversation_background"
+      | "text_size"
+      | "cooperation"
+      | "privacy_policy"
+      | "help"
     isAccent?: boolean
     color?: string
     handler?: () => void
@@ -52,35 +63,35 @@ const Content: Component<Content> = (props) => {
     [
       {
         icon: IconUserEdit,
-        title: "Изменить имя",
+        title: "change_name",
         isAccent: true,
       },
       {
         icon: IconMoodEdit,
-        title: "Сменить эмодзи-статус",
+        title: "change_emoji_status",
         isAccent: true,
       },
       {
         icon: IconCameraPlus,
-        title: "Изменить фотографию",
+        title: "change_photo",
         isAccent: true,
       },
     ],
     [
       {
         icon: IconCircleHalf,
-        title: "Цветовая схема",
+        title: "color_scheme",
         color: "#33A4DA",
       },
       {
         icon: IconPhotoFilled,
-        title: "Фон бесед",
+        title: "conversation_background",
         color: "#A2845E",
         handler: () => pushPage({ pageId: pages.BACKGROUNDS }),
       },
       {
         icon: IconLetterCase,
-        title: "Размер текста",
+        title: "text_size",
         color: "#5CA19A",
         handler: () => pushPage({ pageId: pages.FONTSIZE }),
       },
@@ -88,17 +99,17 @@ const Content: Component<Content> = (props) => {
     [
       {
         icon: IconDiamondFilled,
-        title: "Сотрудничество",
+        title: "cooperation",
         color: "#FEC319",
       },
       {
         icon: IconAlignBoxLeftTopFilled,
-        title: "Политика конфиденциальности",
+        title: "privacy_policy",
         color: "#33C6DA",
       },
       {
         icon: IconBugFilled,
-        title: "Помощь",
+        title: "help",
         color: "#FF0000",
       },
     ],
@@ -143,7 +154,7 @@ const Content: Component<Content> = (props) => {
                     <Cell.Container>
                       <Cell.Content>
                         <Title {...(cell.isAccent ? textProps : {})}>
-                          {cell.title}
+                          {lang(cell.title)}
                         </Title>
                       </Cell.Content>
                       <Show when={!!cell.color}>

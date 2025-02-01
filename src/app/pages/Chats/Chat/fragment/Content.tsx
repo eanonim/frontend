@@ -33,7 +33,7 @@ const Content: Component<Content> = (props) => {
         },
         text: "Привет мир",
         type: "in",
-        time: new Date(Date.now() - 86_400_000 * 6),
+        time: new Date(Date.now() - 86_400_000 * 611),
       },
       {
         forward: {
@@ -150,7 +150,7 @@ const Content: Component<Content> = (props) => {
       <Background
         fixed
         type={settings().backgroundId}
-        quality={1}
+        quality={2}
         color={settings().backgroundColor}
       />
 

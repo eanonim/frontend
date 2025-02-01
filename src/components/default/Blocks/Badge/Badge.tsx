@@ -14,14 +14,6 @@ import { type DynamicProps } from "solid-js/web"
 
 interface Badge extends HTMLAttributes<DynamicProps<"span">> {
   /**
-   * Элемент, который будет отображаться перед основным содержимым значка.
-   */
-  before?: JSX.Element
-  /**
-   * Элемент, который будет отображаться после основного содержимого значка.
-   */
-  after?: JSX.Element
-  /**
    * Определяет внешний вид значка.
    */
   appearance?: "accent" | "green" | "red"
@@ -72,8 +64,6 @@ const Badge: ComponentBadge = (props) => {
     "class",
     "classList",
     "children",
-    "before",
-    "after",
     "appearance",
     "mode",
     "size",

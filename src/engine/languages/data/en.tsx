@@ -1,1 +1,28 @@
-export default {}
+export default {
+  search_for_an_interlocutor: "Search for an interlocutor",
+  change_themes: "Change themes",
+  chats: "Chats",
+  search: "Search",
+  settings: "Settings",
+  change_name: "Change name",
+  change_emoji_status: "Change emoji-status",
+  change_photo: "Change photo",
+  color_scheme: "Color scheme",
+  conversation_background: "Conversation background",
+  text_size: "Text size",
+  cooperation: "Cooperation",
+  privacy_policy: "Privacy Policy",
+  help: "Help",
+  apply: "Apply",
+  cancel: "Cancel",
+  apply_in_all_chats: "Apply in all chats",
+  font_size: {
+    templates: {
+      1: "Does he want me to turn to the right? Or to the left?",
+      2: "Head to the right and expressively.",
+      3: "Is that all? I think he said a lot more.",
+    },
+  },
+  today: "Today",
+  yesterday: "Yesterday",
+}

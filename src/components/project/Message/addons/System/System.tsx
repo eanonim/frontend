@@ -38,7 +38,7 @@ const System: Component<System> = (props) => {
     isHidden: !context?.getIsVisible(local.key),
   })
 
-  let timer: number
+  let timer: NodeJS.Timeout
 
   createEffect(() => {
     context?.setVisible(local.key, !!contextList?.getVisible())

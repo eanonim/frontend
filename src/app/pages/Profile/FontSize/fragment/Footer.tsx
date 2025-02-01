@@ -1,5 +1,6 @@
 import { Control, FixedLayout, Range, Separator, Title } from "components"
 import { IconLetterCase } from "source"
+import loc from "engine/languages"
 
 import { type JSX, type Component, createSignal } from "solid-js"
 import { backPage } from "router"
@@ -9,6 +10,8 @@ import { getter } from "elum-state/solid"
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Footer: Component<Footer> = (props) => {
+  const [lang] = loc()
+
   const [value, setValue] = createSignal(getter(SETTINGS_ATOM).font_size)
   const handlerCancel = () => {
     backPage()
@@ -55,11 +58,11 @@ const Footer: Component<Footer> = (props) => {
       <Separator />
       <Control safeBottom>
         <Control.Button onClick={handlerCancel}>
-          <Title>Отмена</Title>
+          <Title>{lang("cancel")}</Title>
         </Control.Button>
         <Separator type={"vertical"} />
         <Control.Button onClick={handlerAccept}>
-          <Title>Применить</Title>
+          <Title>{lang("apply")}</Title>
         </Control.Button>
       </Control>
     </FixedLayout>

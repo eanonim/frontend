@@ -1,4 +1,6 @@
 import { Action as EAction, Tabbar, Path, Title, Gap, Avatar } from "components"
+import loc from "engine/languages"
+
 import { panels, swipeView, useRouter, useRouterPanel, views } from "router"
 
 import { type JSX, type Component, createEffect } from "solid-js"
@@ -23,6 +25,8 @@ const getView = (nav: string) =>
   }[nav] || "")
 
 const Action: Component<Action> = (props) => {
+  const [lang] = loc()
+
   const activeView = useRouter("view")
   const activePanel = useRouterPanel(() => getView(props.nav))
 
@@ -54,7 +58,7 @@ const Action: Component<Action> = (props) => {
           >
             <Gap direction={"column"}>
               <IconArchiveFilled width={28} height={28} />
-              <Title>Чаты</Title>
+              <Title>{lang("chats")}</Title>
             </Gap>
           </Tabbar.Button>
           <Tabbar.Button
@@ -63,7 +67,7 @@ const Action: Component<Action> = (props) => {
           >
             <Gap direction={"column"}>
               <IconMessageCircleFilled width={28} height={28} />
-              <Title>Поиск</Title>
+              <Title>{lang("search")}</Title>
             </Gap>
           </Tabbar.Button>
           <Tabbar.Button
@@ -86,7 +90,7 @@ const Action: Component<Action> = (props) => {
                   "box-sizing": "border-box",
                 }}
               />
-              <Title>Настройки</Title>
+              <Title>{lang("settings")}</Title>
             </Gap>
           </Tabbar.Button>
         </Tabbar>

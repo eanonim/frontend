@@ -18,6 +18,11 @@ import {
 import ru from "./data/ru"
 import en from "./data/en"
 
+export const ISOLanguage = {
+  ru: "RU-ru",
+  en: "EN-en",
+}
+
 export type Locale = "ru" | "en"
 export type RawDictionary = typeof ru & typeof en
 export type Dictionary = Flatten<RawDictionary>
@@ -55,6 +60,11 @@ export const locByCode = () => {
     Accessor<Locale>,
   ]
 }
+
+export const getLoc = translator(
+  () => flatten(dictionaries[getLocale()]),
+  resolveTemplate,
+)
 
 const loc = () => {
   const [locale] = globalSignal<Locale>(LOC)

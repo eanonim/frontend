@@ -1,6 +1,6 @@
-import { Panel, Plug, Title } from "components"
+import { Panel } from "components"
 
-import { Content } from "./fragment"
+import { Content, Footer } from "./fragment"
 
 import { type JSX, type Component } from "solid-js"
 
@@ -11,11 +11,8 @@ interface Default extends JSX.HTMLAttributes<HTMLDivElement> {
 const Default: Component<Default> = (props) => {
   return (
     <Panel {...props}>
-      <Plug full>
-        <Plug.Container>
-          <Title>SEARCH</Title>
-        </Plug.Container>
-      </Plug>
+      <Content />
+      <Footer />
     </Panel>
   )
 }

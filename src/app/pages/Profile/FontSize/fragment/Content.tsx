@@ -1,5 +1,5 @@
-import { Background, Flex, Message, Plug } from "components"
-import { Logo, LogoElumTeam } from "source"
+import { Background, Flex, Message } from "components"
+import loc from "engine/languages"
 
 import { type JSX, type Component } from "solid-js"
 import { timeAgoOnlyDate } from "engine"
@@ -7,6 +7,8 @@ import { timeAgoOnlyDate } from "engine"
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
+  const [lang] = loc()
+
   return (
     <Flex
       style={{
@@ -23,22 +25,22 @@ const Content: Component<Content> = (props) => {
           </Message.System>
           <Message
             type={"out"}
-            text={"Он хочет, чтобы я повернулся направо? Или налево?"}
+            text={lang("font_size.templates.1")}
             time={new Date()}
             isRead={true}
           />
           <Message
             forward={{
-              text: "Он хочет, чтобы я повернулся направо? Или налево?",
+              text: lang("font_size.templates.1"),
             }}
             type={"in"}
-            text={"Голову направо и выразительно."}
+            text={lang("font_size.templates.2")}
             time={new Date()}
             isRead={true}
           />
           <Message
             type={"out"}
-            text={"И это всё? Мне кажетcя, он сказал намного больше."}
+            text={lang("font_size.templates.3")}
             time={new Date()}
             isRead={true}
           />

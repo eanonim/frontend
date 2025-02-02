@@ -1,34 +1,15 @@
 import {
-  type TextProps,
   Avatar,
   Cell,
   FixedLayout,
-  Gap,
-  IconCheck,
-  Message,
   Separator,
-  SubTitle,
   Title,
   UserName,
 } from "components"
-import { IconChecks, Logo, LogoElumTeam } from "source"
 
-import { type JSX, type Component, For, Show, Switch, Match } from "solid-js"
-import { timeAgo } from "@minsize/utils"
+import { type JSX, type Component } from "solid-js"
 
 interface Header extends JSX.HTMLAttributes<HTMLDivElement> {}
-
-const textProps: TextProps = {
-  iOS: {
-    size: "x-small",
-    weight: "400",
-    color: "secondary",
-  },
-  android: "iOS",
-  macOS: "iOS",
-  windows: "iOS",
-  others: "iOS",
-}
 
 const Header: Component<Header> = (props) => {
   return (

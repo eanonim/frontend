@@ -7,10 +7,11 @@ const timeAgoOnlyDate = (timestamp: number) => {
   if (!timestamp) return "только что"
   const date = new Date(timestamp)
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
-  const dayMonthString = () =>
+  const dayMonthString = (year: boolean = false) =>
     new Intl.DateTimeFormat(ISOLanguage[lang], {
       day: "numeric",
       month: "long",
+      year: year ? "numeric" : undefined,
     })
       .format(date)
       .replace(".", "")
@@ -27,7 +28,7 @@ const timeAgoOnlyDate = (timestamp: number) => {
       return lasing(getLoc("yesterday"), "", Math.floor(seconds / 86400))
     case seconds >= 31536000 || date.getFullYear() !== new Date().getFullYear():
       return lasing(
-        `${dayMonthString()} ${date.getFullYear()}`,
+        `${dayMonthString(true)}`,
         "",
         Math.floor(seconds / 31536000),
       )

@@ -99,12 +99,14 @@
 }
 
 .Button__title {
-  color: var(--button_title);
+  transition: 0.3s ease-in-out;
+  color     : var(--button_title);
 }
 
 .Button__subtitle {
-  color  : var(--button_title);
-  opacity: 0.8;
+  transition: 0.3s ease-in-out;
+  color     : var(--button_title);
+  opacity   : 0.8;
 }
 
 

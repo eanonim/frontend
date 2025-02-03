@@ -17,7 +17,7 @@ import useStyle from "@ui/default/utils/useStyle"
 import { type Component, mergeProps, splitProps } from "solid-js"
 import { type DynamicProps } from "solid-js/web"
 
-interface Button extends HTMLAttributes<DynamicProps<"button">> {
+export interface TypeButton extends HTMLAttributes<DynamicProps<"button">> {
   /**
    * Цвет кнопки.
    */
@@ -53,7 +53,7 @@ interface Button extends HTMLAttributes<DynamicProps<"button">> {
   type?: "default" | "icon"
 }
 
-type ComponentButton = Component<Button> & {
+type ComponentButton = Component<TypeButton> & {
   Group: typeof Group
   Container: typeof Container
   Icon: typeof Icon

@@ -67,6 +67,7 @@ export { default as CheckBox } from "./default/Forms/CheckBox/CheckBox"
 export { default as Select } from "./default/Forms/Select/Select"
 export { default as Input } from "./default/Forms/Input/Input"
 export { default as Range } from "./default/Forms/Range/Range"
+export { default as SegmentedControl } from "./default/Forms/SegmentedControl/SegmentedControl"
 
 /* Icons */
 export { default as IconCheck } from "./default/Icons/Check.svg"

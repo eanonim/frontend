@@ -1,0 +1,23 @@
+.SegmentedControl {
+  position  : relative;
+  box-sizing: border-box;
+  overflow  : hidden;
+  border    : 2px solid transparent;
+}
+
+.SegmentedControl__hover {
+  position        : absolute;
+  left            : 0;
+  top             : 0;
+  bottom          : 0;
+  background-color: var(--accent_color);
+  border-radius   : 10px;
+  pointer-events  : none;
+
+  transition: 0.3s ease-in-out;
+}
+
+.SegmentedControl__separator {
+  height    : calc(100% - 10px);
+  box-sizing: border-box;
+}

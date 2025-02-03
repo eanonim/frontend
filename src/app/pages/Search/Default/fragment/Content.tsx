@@ -1,15 +1,65 @@
-import { Badge, Button, Flex, Group, Title } from "components"
+import {
+  Badge,
+  Button,
+  Flex,
+  Gap,
+  Grid,
+  Group,
+  SegmentedControl,
+  Title,
+} from "components"
 import loc from "engine/languages"
 
-import { type JSX, type Component } from "solid-js"
+import { type JSX, type Component, For } from "solid-js"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
 
+  const elements = [
+    [
+      { text: "Мужской", key: "1" },
+      { text: "Женский", key: "2" },
+    ],
+    [
+      { text: "18-24", key: "3" },
+      { text: "25-31", key: "4" },
+      { text: "32-38", key: "5" },
+      { text: "39-45", key: "6" },
+      { text: "46+", key: "7" },
+    ],
+  ]
+
   return (
-    <Flex height={"100%"} alignItems={"start"}>
+    <Flex height={"100%"} justifyContent={"start"} direction={"column"}>
+      <Group>
+        <For each={elements}>
+          {(items, index) => (
+            <Group.Container>
+              <SegmentedControl
+                data-index={index()}
+                onSelected={() => {}}
+                selected={items[0].key}
+              >
+                <For each={items}>
+                  {(item, itemIndex) => (
+                    <SegmentedControl.Button
+                      data-index={itemIndex()}
+                      stretched
+                      key={item.key}
+                    >
+                      <SegmentedControl.Button.Container>
+                        <Title>{item.text}</Title>
+                      </SegmentedControl.Button.Container>
+                    </SegmentedControl.Button>
+                  )}
+                </For>
+              </SegmentedControl>
+            </Group.Container>
+          )}
+        </For>
+      </Group>
       <Group>
         <Group.Container>
           <Button.Group>

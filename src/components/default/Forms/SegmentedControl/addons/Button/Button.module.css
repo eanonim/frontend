@@ -1,0 +1,23 @@
+.Button {
+  z-index : 2;
+  overflow: unset;
+
+  --button_title: var(--separator_primary);
+}
+
+/* .Button::after {
+  content: " ";
+
+  position: absolute;
+  right   : -1px;
+  top     : 8px;
+  bottom  : 8px;
+
+
+  background-color: var(--separator_secondary);
+  width           : 1px;
+} */
+
+.Button--selected {
+  --button_title: var(--accent_color--text);
+}

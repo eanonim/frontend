@@ -44,6 +44,7 @@
 }
 
 .Separator__type--vertical {
-  width : 1px;
-  height: 100%;
+  width    : 1px;
+  min-width: 1px;
+  height   : 100%;
 }

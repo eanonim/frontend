@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload the build directory instead of the entire repository
-          path: "./dist"
+          path: "./static"
 
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages

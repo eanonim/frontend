@@ -23,7 +23,11 @@ document.addEventListener("contextmenu", (e) => e.preventDefault())
 
 render(
   () => (
-    <Route pathname={""} startView={views.STARTUP} struct={routerStruct}>
+    <Route
+      pathname={"/frontend"}
+      startView={views.STARTUP}
+      struct={routerStruct}
+    >
       <App />
     </Route>
   ),

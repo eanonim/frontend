@@ -42,7 +42,7 @@ const App: Component = () => {
     }
 
     const data = getAppData()
-    console.log({ data })
+    console.log({ data }, "ASF")
   })
 
   onMount(() => {

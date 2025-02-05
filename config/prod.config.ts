@@ -33,9 +33,9 @@ export default defineConfig({
     },
   },
   publicDir: "public",
-  esbuild: {
-    pure: ["console.log"],
-  },
+  // esbuild: {
+  //   pure: ["console.log"],
+  // },
   build: {
     target: "esnext",
     outDir: path.join(compilerOptions.outDir),

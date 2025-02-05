@@ -6,6 +6,7 @@ import {
   Grid,
   Group,
   SegmentedControl,
+  Separator,
   Title,
 } from "components"
 import loc from "engine/languages"
@@ -34,6 +35,37 @@ const Content: Component<Content> = (props) => {
   return (
     <Flex height={"100%"} justifyContent={"start"} direction={"column"}>
       <Group>
+        <Group.Header mode={"primary"}>Вы</Group.Header>
+        <For each={elements}>
+          {(items, index) => (
+            <Group.Container>
+              <SegmentedControl
+                data-index={index()}
+                onSelected={() => {}}
+                selected={items[0].key}
+              >
+                <For each={items}>
+                  {(item, itemIndex) => (
+                    <SegmentedControl.Button
+                      data-index={itemIndex()}
+                      stretched
+                      key={item.key}
+                    >
+                      <SegmentedControl.Button.Container>
+                        <Title>{item.text}</Title>
+                      </SegmentedControl.Button.Container>
+                    </SegmentedControl.Button>
+                  )}
+                </For>
+              </SegmentedControl>
+            </Group.Container>
+          )}
+        </For>
+      </Group>
+
+      <Separator size={"indent"} />
+      <Group>
+        <Group.Header mode={"primary"}>Собеседник</Group.Header>
         <For each={elements}>
           {(items, index) => (
             <Group.Container>
@@ -61,6 +93,7 @@ const Content: Component<Content> = (props) => {
         </For>
       </Group>
       <Group>
+        <Group.Header mode={"primary"}>Темы</Group.Header>
         <Group.Container>
           <Button.Group>
             <Button.Group.Container>

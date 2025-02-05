@@ -28,11 +28,11 @@ const setHistory = (
     if (stringParams) path += `:${stringParams.slice(0, -1)}`
   }
   try {
-    window.history.pushState(
-      {},
-      "",
-      path + window.location.search + window.location.hash,
-    )
+    // window.history.pushState(
+    //   {},
+    //   "",
+    //   path + window.location.search + window.location.hash,
+    // )
   } catch (e) {
     console.log({ e })
   }

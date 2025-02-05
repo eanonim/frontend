@@ -26,7 +26,7 @@ const output: OutputOptions | OutputOptions[] = {
 }
 
 export default defineConfig({
-  base: "/",
+  base: "/frontend",
   worker: {
     rollupOptions: {
       output: output,

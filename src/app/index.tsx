@@ -19,6 +19,8 @@ import {
   EventViewportChanged,
   bridgeRequestViewport,
   bridgeSetupSwipeBehavior,
+  bridgeGetInitData,
+  getAppData,
 } from "@apiteam/twa-bridge/solid"
 import { setHeaderColor } from "engine"
 import { KEYBOARD_ATOM } from "engine/state"
@@ -38,6 +40,9 @@ const App: Component = () => {
         block: "start",
       })
     }
+
+    const data = getAppData()
+    console.log({ data })
   })
 
   onMount(() => {

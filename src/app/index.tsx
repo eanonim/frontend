@@ -40,12 +40,12 @@ const App: Component = () => {
         block: "start",
       })
     }
-
-    const data = getAppData()
-    console.log({ data }, "ASF")
   })
 
   onMount(() => {
+    const data = getAppData()
+    console.log("ASF", { data })
+
     bridgeSetupFullScreen({ is_full: false })
 
     bridgeSetupSwipeBehavior({

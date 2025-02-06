@@ -22,7 +22,7 @@ const List: Component<List> = (props) => {
   let ref: HTMLDivElement
 
   const useVisibilityObserver = createVisibilityObserver({
-    initialValue: true,
+    initialValue: false,
     threshold: 0.9,
   })
 

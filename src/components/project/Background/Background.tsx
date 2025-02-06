@@ -153,7 +153,7 @@ const mutex = Mutex({ globalLimit: 1 })
 
 const preload = async (type: number) => {
   const response = await fetch(
-    `/backgrounds/${backgroundFiles.find((x) => x.id === type)?.name}`,
+    `/frontend/backgrounds/${backgroundFiles.find((x) => x.id === type)?.name}`,
   )
   const svgString = await response.text()
 

@@ -153,7 +153,9 @@ const mutex = Mutex({ globalLimit: 1 })
 
 const preload = async (type: number) => {
   const response = await fetch(
-    `/frontend/backgrounds/${backgroundFiles.find((x) => x.id === type)?.name}`,
+    `${import.meta.env.MODE === "development" ? "" : "/frontend"}/backgrounds/${
+      backgroundFiles.find((x) => x.id === type)?.name
+    }`,
   )
   const svgString = await response.text()
 
@@ -179,6 +181,7 @@ type ComponentBackground = Component<Background> & {
 type Store = {
   isVisible: boolean
   isHidden: boolean
+  cleanup: boolean
 }
 
 const Background: ComponentBackground = (props) => {
@@ -203,12 +206,20 @@ const Background: ComponentBackground = (props) => {
   const [store, setStore] = createStore<Store>({
     isVisible: !!cache.has(local.type),
     isHidden: false,
+    cleanup: false,
   })
 
   let ref: HTMLCanvasElement
   const handlerRender = async () => {
+    onCleanup(() => {
+      release?.()
+      setStore("cleanup", true)
+    })
     const release = await mutex.wait()
-    onCleanup(() => release())
+    if (store.cleanup) {
+      release()
+      return
+    }
     try {
       if (!ref!) return
       if (!local.type) return

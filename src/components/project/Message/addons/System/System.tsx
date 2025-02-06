@@ -55,7 +55,7 @@ const System: Component<System> = (props) => {
 
           setStore("isHidden", false)
           timer = setTimeout(() => {
-            setStore("isHidden", !!!context?.getIsVisible(local.key))
+            setStore("isHidden", true) // !!!context?.getIsVisible(local.key)
           }, 3000)
         }
       },

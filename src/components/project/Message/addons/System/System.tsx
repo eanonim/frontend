@@ -46,7 +46,11 @@ const System: Component<System> = (props) => {
 
   createEffect(
     on(
-      [() => context?.getScrollTop(), () => context?.getIsVisible(local.key)],
+      [
+        () => context?.getScrollTop(),
+        () => context?.getIsVisible(local.key),
+        () => !!contextList?.getVisible(),
+      ],
       () => {
         console.log({ ASG: context?.getIsVisible(local.key) })
         if (!!!context?.getIsVisible(local.key)) {

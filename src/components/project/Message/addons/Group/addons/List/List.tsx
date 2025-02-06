@@ -23,7 +23,7 @@ const List: Component<List> = (props) => {
 
   const useVisibilityObserver = createVisibilityObserver({
     initialValue: true,
-    // threshold: 0.9,
+    threshold: 0.9,
   })
 
   const visible = useVisibilityObserver(() => ref!)

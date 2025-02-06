@@ -53,14 +53,14 @@ const System: Component<System> = (props) => {
       ],
       () => {
         console.log({ ASG: context?.getIsVisible(local.key) })
-        if (!!!context?.getIsVisible(local.key)) {
+        if (!contextList?.getVisible()) {
           if (timer) {
             clearTimeout(timer)
           }
 
           setStore("isHidden", false)
           timer = setTimeout(() => {
-            setStore("isHidden", true) // !!!context?.getIsVisible(local.key)
+            setStore("isHidden", !!!context?.getIsVisible(local.key)) // !!!context?.getIsVisible(local.key)
           }, 3000)
         }
       },

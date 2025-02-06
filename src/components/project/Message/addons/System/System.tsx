@@ -48,6 +48,7 @@ const System: Component<System> = (props) => {
     on(
       [() => context?.getScrollTop(), () => context?.getIsVisible(local.key)],
       () => {
+        console.log({ ASG: context?.getIsVisible(local.key) })
         if (!!!context?.getIsVisible(local.key)) {
           if (timer) {
             clearTimeout(timer)

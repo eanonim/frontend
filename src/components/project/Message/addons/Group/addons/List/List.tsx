@@ -22,8 +22,8 @@ const List: Component<List> = (props) => {
   let ref: HTMLDivElement
 
   const useVisibilityObserver = createVisibilityObserver({
-    initialValue: false,
-    threshold: 0.9,
+    initialValue: true,
+    // threshold: 0.9,
   })
 
   const visible = useVisibilityObserver(() => ref!)

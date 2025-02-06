@@ -35,7 +35,8 @@ const setterStatus = <VALUE, OPTIONS>(
       const error =
         params.error !== undefined ? params.error : !!cache?.system?.error
       const load =
-        params.load !== undefined ? params.load : !!cache?.system?.load
+        (params.load !== undefined ? params.load : !!cache?.system?.load) &&
+        !!!cache?.data
       const fullLoad =
         params.fullLoad !== undefined
           ? params.fullLoad

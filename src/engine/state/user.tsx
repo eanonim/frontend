@@ -5,16 +5,16 @@ export const USER_ATOM = atom({
     id: 1,
     first_name: "Иван",
     last_name: "Иванов",
-    photo: "", //https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg
+    photo: "https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg", //https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg
   },
-  onRequested: () => {
-    setTimeout(() => {
-      setter(
-        USER_ATOM,
-        "photo",
-        "https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg",
-      )
-      console.log("END 2")
-    }, 5000)
-  },
+  // onRequested: () => {
+  //   // setTimeout(() => {
+  //   //   setter(
+  //   //     USER_ATOM,
+  //   //     "photo",
+  //   //     "https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg",
+  //   //   )
+  //   //   console.log("END 2")
+  //   // }, 5000)
+  // },
 })

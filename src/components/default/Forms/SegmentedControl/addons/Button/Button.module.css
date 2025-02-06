@@ -2,6 +2,8 @@
   z-index : 2;
   overflow: unset;
 
+  --button__padding-horizontal: 6px !important;
+
   --button_title: var(--separator_primary);
 }
 

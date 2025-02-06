@@ -6,6 +6,7 @@ import { setBackground, SETTINGS_ATOM } from "engine/state"
 import { backPage, pages, replaceParams, useParams } from "router"
 import { type JSX, type Component, For } from "solid-js"
 import { createStore } from "solid-js/store"
+import { useAtom } from "engine/modules/smart-data"
 
 const colors: {
   color: string
@@ -122,14 +123,14 @@ function applyAlphaToHex(hexColor: string, alpha: number) {
 
 const Footer: Component<Footer> = (props) => {
   const [lang] = loc()
-  const [settings] = globalSignal(SETTINGS_ATOM)
+  const [settings] = useAtom(SETTINGS_ATOM)
 
   const params = useParams<{ backgroundId?: number; color?: string }>({
     pageId: pages.BACKGROUND_EDIT,
   })
 
   const [store, setStore] = createStore<Store>({
-    color: settings().backgroundColor || "#222222",
+    color: settings.backgroundColor || "#222222",
   })
 
   const handlerSave = () => {

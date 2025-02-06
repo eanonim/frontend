@@ -1,8 +1,7 @@
 import { clamp } from "@minsize/utils"
-import { atom, getter, setter } from "elum-state/solid"
+import { atom, getter, setter } from "engine/modules/smart-data"
 
 export const SETTINGS_ATOM = atom({
-  key: "settings_atom",
   default: {
     font_size: 13,
     backgroundId: 2,

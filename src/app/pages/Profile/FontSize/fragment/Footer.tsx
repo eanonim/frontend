@@ -5,7 +5,7 @@ import loc from "engine/languages"
 import { type JSX, type Component, createSignal } from "solid-js"
 import { backPage } from "router"
 import { setFontSize, SETTINGS_ATOM } from "engine/state/settings"
-import { getter } from "elum-state/solid"
+import { getter } from "engine/modules/smart-data"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 

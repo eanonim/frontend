@@ -1,14 +1,8 @@
-import { SmartData, type AtomReturn } from "../types"
-import { getter, setter, setterStatus } from ".."
+import { type System, type AtomReturn } from "../types"
+import { getter, setterStatus } from ".."
 
 import { createEffect, mergeProps, on, splitProps } from "solid-js"
-import { createStore, SetStoreFunction } from "solid-js/store"
-
-type System = {
-  load?: boolean
-  error?: boolean
-  fullLoad?: boolean
-}
+import { createStore } from "solid-js/store"
 
 export const useAtomSystem = <VALUE, OPTIONS>(
   signal: AtomReturn<VALUE, OPTIONS>,
@@ -54,11 +48,7 @@ export const useAtomSystem = <VALUE, OPTIONS>(
     ),
   )
 
-  const _setCache = (options: {
-    error?: boolean
-    load?: boolean
-    fullLoad?: boolean
-  }) => {
+  const _setCache = (options: System) => {
     const key = getKey()
     return setterStatus([signal, key], options)
   }

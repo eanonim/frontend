@@ -1,5 +1,5 @@
 import { type AtomReturn } from "../types"
-import { getter, setter, setterStatus } from ".."
+import { getter, getValue, setter, setterStatus } from ".."
 
 import { createEffect, mergeProps, on, splitProps } from "solid-js"
 import { createStore, SetStoreFunction } from "solid-js/store"
@@ -15,7 +15,7 @@ export const useAtom = <VALUE, OPTIONS>(
     /**
      * Ключ для кеширования данных.
      */
-    key?: string | number | (() => string | number)
+    key?: string | (() => string)
     /**
      * Определяет, нужно ли автоматически выполнять начальный запрос данных при монтировании компонента.
      */
@@ -31,21 +31,9 @@ export const useAtom = <VALUE, OPTIONS>(
 
   const [storeCache, setStoreCache] = signal
 
-  const getKey = () => {
-    return typeof local.key === "function"
-      ? String(local.key())
-      : String(local.key)
-  }
-
-  const getOptions = () => {
-    return typeof options === "function" ? (options as Function)() : options
-  }
-
-  const getRequest = () => {
-    return typeof local.isRequest === "function"
-      ? (local.isRequest as Function)()
-      : local.isRequest
-  }
+  const getKey = () => getValue(local.key)
+  const getOptions = () => getValue(options)
+  const getRequest = () => getValue(local.isRequest)
 
   const [cache, setCache] = createStore<{ data: VALUE }>({
     data: getter(signal, getKey()),
@@ -80,16 +68,11 @@ export const useAtom = <VALUE, OPTIONS>(
         if (data?.update_at.getTime() > Date.now()) return
 
         const isRequest = storeCache.requests[key] !== "start"
-        // if (!_isRequest && getRequest() && store.when) {
         if (isRequest && getRequest()) {
           const onRequested = storeCache.onRequested
-          if (onRequested) {
-            setterStatus([signal, key], { load: true })
+          onRequested?.(getOptions(), key)
 
-            onRequested(getOptions(), key)
-          } else {
-            setterStatus([signal, key], { load: false })
-          }
+          setterStatus([signal, key], { load: !!onRequested })
         }
       }
     }),

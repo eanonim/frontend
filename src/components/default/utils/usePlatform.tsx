@@ -7,7 +7,7 @@ const [signal, setSignal] = createSignal<Platform>("iOS")
  * Функция для определения и установки платформы на основе userAgent.
  */
 const setPlatform = () => {
-  let platform: Platform = "others"
+  let platform: Platform = "android"
   if (/iPhone|iPad|iPod|Mac OS|Macintosh/i.test(navigator.userAgent)) {
     platform = "iOS"
   } else if (/Android|Linux/i.test(navigator.userAgent)) {

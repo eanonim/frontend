@@ -1,5 +1,4 @@
-import { produce } from "solid-js/store"
-import { AtomReturn } from "../types"
+import { type AtomReturn, type System } from "../types"
 import { getDefault } from ".."
 import { batch } from "solid-js"
 
@@ -9,22 +8,11 @@ type SetterStatusOptions<VALUE, OPTIONS> =
 
 const setterStatus = <VALUE, OPTIONS>(
   options: SetterStatusOptions<VALUE, OPTIONS>,
-  params: {
-    load?: boolean
-    error?: boolean
-    fullLoad?: boolean
-  },
+  params: System,
 ) => {
-  let key = "default"
-  let signal: AtomReturn<VALUE, OPTIONS> | undefined
-
-  if (Array.isArray(options[0]) && typeof options[1] === "string") {
-    signal = options[0]
-    key = options[1]
-  }
-  if (!Array.isArray(options[0]) && typeof options[1] !== "string") {
-    signal = [options[0], options[1]]
-  }
+  const [signal, key] = Array.isArray(options[0])
+    ? [options[0], options[1] as string]
+    : [options as AtomReturn<VALUE, OPTIONS>, "default"]
 
   if (signal) {
     batch(() => {
@@ -32,31 +20,23 @@ const setterStatus = <VALUE, OPTIONS>(
 
       const cache = getter.cache[key]
 
-      const error =
-        params.error !== undefined ? params.error : !!cache?.system?.error
+      const error = params.error ?? !!cache?.system?.error ?? false
       const load =
-        (params.load !== undefined ? params.load : !!cache?.system?.load) &&
-        !!!cache?.data
-      const fullLoad =
-        params.fullLoad !== undefined
-          ? params.fullLoad
-          : !!cache?.system?.fullLoad
+        (params.load ?? !!cache?.system?.load ?? false) && !!!cache?.data
+      const fullLoad = params.fullLoad ?? !!cache?.system?.fullLoad ?? false
+
+      const system = { error, load, fullLoad }
 
       if (!cache) {
         setter("cache", key, {
           data: getDefault(getter.default),
-          system: { error: error, load: load, fullLoad: fullLoad },
+          system: system,
           update_at: new Date(),
         })
       }
 
       setter("requests", key, params.load ? "start" : "end")
-      setter("cache", key, "system", {
-        load: load,
-        error: error,
-        fullLoad: fullLoad,
-      })
-      console.log("END")
+      setter("cache", key, "system", system)
     })
   }
 }

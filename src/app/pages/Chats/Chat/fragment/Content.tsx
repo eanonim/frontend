@@ -6,6 +6,7 @@ import {
   groupObjectsByDay,
   timeAgoOnlyDate,
 } from "engine"
+import { useAtom } from "engine/modules/smart-data"
 import { SETTINGS_ATOM } from "engine/state"
 
 import {
@@ -21,7 +22,7 @@ import { createStore } from "solid-js/store"
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
-  const [settings] = globalSignal(SETTINGS_ATOM)
+  const [settings] = useAtom(SETTINGS_ATOM)
   let ref: HTMLDivElement
 
   const [store, setStore] = createStore({
@@ -149,9 +150,9 @@ const Content: Component<Content> = (props) => {
     >
       <Background
         fixed
-        type={settings().backgroundId}
+        type={settings.backgroundId}
         quality={2}
-        color={settings().backgroundColor}
+        color={settings.backgroundColor}
       />
 
       <Message.Group ref={ref!}>

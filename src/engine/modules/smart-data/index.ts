@@ -19,3 +19,4 @@ export { default as SmartData } from "./components/SmartData/SmartData"
 
 /* utils */
 export { default as getDefault } from "./utils/getDefault"
+export { default as getValue } from "./utils/getValue"

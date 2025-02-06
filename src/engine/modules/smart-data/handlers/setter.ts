@@ -308,16 +308,10 @@ function setter<VALUE, OPTIONS>(
   options: SetterOptions<VALUE, OPTIONS>,
   ...args: any[]
 ) {
-  let key = "default"
-  let signal: AtomReturn<VALUE, OPTIONS> | undefined
+  const [signal, key] = Array.isArray(options[0])
+    ? [options[0], options[1] as string]
+    : [options as AtomReturn<VALUE, OPTIONS>, "default"]
 
-  if (Array.isArray(options[0]) && typeof options[1] === "string") {
-    signal = options[0]
-    key = options[1]
-  }
-  if (!Array.isArray(options[0]) && typeof options[1] !== "string") {
-    signal = [options[0], options[1]]
-  }
   if (signal) {
     batch(() => {
       const [getter, setter] = signal
@@ -332,10 +326,9 @@ function setter<VALUE, OPTIONS>(
         })
       }
 
-      setter("cache", key, "update_at", update_at)
-      // setter("cache", key, "req_id", createUniqueId())
       ;(setter as any)(...["cache", key, "data"], ...args)
 
+      setter("cache", key, "update_at", update_at)
       setterStatus([signal, key], { load: false })
     })
   }

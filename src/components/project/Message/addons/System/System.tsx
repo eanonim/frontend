@@ -49,7 +49,7 @@ const System: Component<System> = (props) => {
       [
         () => context?.getScrollTop(),
         () => context?.getIsVisible(local.key),
-        () => !!contextList?.getVisible(),
+        () => contextList?.getVisible(),
       ],
       () => {
         console.log({ ASG: context?.getIsVisible(local.key) })

@@ -11,7 +11,8 @@ import ProfileDefault from "app/pages/Profile/Default/Default"
 import ChatsDefault from "app/pages/Chats/Default/Default"
 
 import { IconArchiveFilled, IconMessageCircleFilled } from "source"
-import { createSmartData, USER_ATOM } from "engine/state"
+import { USER_ATOM } from "engine/state"
+import { useAtom } from "engine/modules/smart-data"
 
 interface Action extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -39,8 +40,7 @@ const Action: Component<Action> = (props) => {
       setStore("panel", activePanel())
     }
   })
-
-  const [user] = createSmartData(USER_ATOM, {}, {})
+  const [user] = useAtom(USER_ATOM)
 
   const handlerChats = () => swipeView({ viewId: views.CHATS })
   const handlerSearch = () => swipeView({ viewId: views.SEARCH })
@@ -77,7 +77,7 @@ const Action: Component<Action> = (props) => {
             <Gap direction={"column"}>
               <Avatar
                 size={"28px"}
-                src={user().photo}
+                src={user.photo}
                 style={{
                   border:
                     activeView() === views.PROFILE

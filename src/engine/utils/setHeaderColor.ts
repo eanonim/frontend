@@ -14,7 +14,6 @@ const setHeaderColor = ({
     color = _color
   }
 
-  console.log({ color })
   if (color) {
     bridgeSetHeaderColor({
       color: color,

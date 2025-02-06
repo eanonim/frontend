@@ -44,7 +44,7 @@ const App: Component = () => {
 
   onMount(() => {
     const data = getAppData()
-    console.log("ASF", { data })
+    console.log({ data })
 
     bridgeSetupFullScreen({ is_full: false })
 
@@ -103,9 +103,7 @@ const App: Component = () => {
           store.touch = false
           return { ...store }
         })
-        console.log("open", data)
       } else {
-        console.log("close", data)
         setter(KEYBOARD_ATOM, (store) => {
           store.open = false
           store.touch = false

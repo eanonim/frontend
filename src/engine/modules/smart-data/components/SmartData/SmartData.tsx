@@ -10,13 +10,9 @@ import {
 } from "solid-js"
 
 import { Content, Skeleton, Error } from "./addition"
-import { SmartDataAtom } from "../../handlers"
-import {
-  type GlobalAtom,
-  type SmartData as ISmartData,
-} from "../../types/index"
-import { globalSignal } from "elum-state/solid"
+import { AtomReturn } from "../../types/index"
 import { createStore, produce } from "solid-js/store"
+import { useAtomSystem } from "../.."
 
 export const context = createContext({
   skeleton: true,
@@ -25,7 +21,7 @@ export const context = createContext({
 })
 
 interface SmartDataProps extends JSX.HTMLAttributes<HTMLDivElement> {
-  atom: GlobalAtom<any, any>
+  signal: AtomReturn<any, any>
   key?: string | number
 }
 
@@ -37,14 +33,9 @@ export type CSmartData = Component<SmartDataProps> & {
 
 const SmartData: CSmartData = (props) => {
   const merged = mergeProps({ key: "default" }, props)
-  const [local, others] = splitProps(merged, ["atom", "key"])
+  const [local, others] = splitProps(merged, ["signal", "key"])
 
-  const [state] = globalSignal(
-    local.atom as unknown as GlobalAtom<
-      SmartDataAtom<ISmartData<unknown>, any>,
-      any
-    >,
-  )
+  const [state] = useAtomSystem(local.signal, { key: () => local.key })
 
   const [values, setValues] = createStore({
     skeleton: true,
@@ -53,11 +44,11 @@ const SmartData: CSmartData = (props) => {
   })
 
   createEffect(() => {
-    const data = state().cache.get(String(local.key))
-    if (data) {
-      const skeleton = !data?.system?.isError && !!data?.system?.isLoad
-      const error = !!data?.system?.isError
-      const content = !data?.system?.isError && !data?.system?.isLoad
+    if (state) {
+      console.log({ ...state })
+      const skeleton = !state?.error && !!state?.load
+      const error = !!state?.error
+      const content = !state?.error && !state?.load
       if (
         skeleton !== values.skeleton ||
         error !== values.error ||

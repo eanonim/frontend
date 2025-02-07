@@ -45,7 +45,6 @@ const SmartData: CSmartData = (props) => {
 
   createEffect(() => {
     if (state) {
-      console.log({ ...state })
       const skeleton = !state?.error && !!state?.load
       const error = !!state?.error
       const content = !state?.error && !state?.load

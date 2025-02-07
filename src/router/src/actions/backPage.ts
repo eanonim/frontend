@@ -97,7 +97,6 @@ const backPage = leading(
             backIndex * -1,
           )
         }
-
         return { ...value }
       })
 

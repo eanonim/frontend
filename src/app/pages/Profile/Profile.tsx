@@ -1,7 +1,7 @@
 import { View, Path } from "components"
 import { panels, useRouterPanel } from "router"
 
-import { type JSX, type Component } from "solid-js"
+import { type JSX, type Component, createEffect } from "solid-js"
 
 import Action from "app/action"
 import Settings from "./Settings/Settings"

@@ -34,10 +34,6 @@ const Default: Component<Default> = (props) => {
   //   }, 4000)
   // })
 
-  createEffect(() => {
-    console.log({ getter: getter })
-  })
-
   return (
     <Panel {...props}>
       <Cell>

@@ -14,6 +14,7 @@ import {
   onCleanup,
   untrack,
   Show,
+  useTransition,
 } from "solid-js"
 import { Mutex } from "@minsize/mutex"
 
@@ -185,6 +186,8 @@ type Store = {
 }
 
 const Background: ComponentBackground = (props) => {
+  const [isPending, start] = useTransition()
+
   const merged = mergeProps(
     {
       color: "#222222",
@@ -211,83 +214,86 @@ const Background: ComponentBackground = (props) => {
 
   let ref: HTMLCanvasElement
   const handlerRender = async () => {
-    onCleanup(() => {
-      release?.()
-      setStore("cleanup", true)
+    start(async () => {
+      const release = await mutex.wait()
+
+      onCleanup(() => {
+        release?.()
+        setStore("cleanup", true)
+      })
+      if (store.cleanup) {
+        release()
+        return
+      }
+      try {
+        if (!ref!) return
+        if (!local.type) return
+
+        const context = ref.getContext("2d")
+        if (!context) return
+
+        let svgString = cache.get(local.type)
+
+        if (!svgString) {
+          svgString = await preload(local.type)
+        }
+
+        svgString = svgString.replaceAll(
+          `"currentColor"`,
+          `"${untrack(() => local.color)}"`,
+        )
+
+        const size = local.onSize()
+
+        const match = svgString.match(/width="([^"]*)" height="([^"]*)"/)
+
+        if (match) {
+          const originalWidth = parseFloat(match[1])
+          const originalHeight = parseFloat(match[2])
+
+          // Проверяем, удалось ли получить значения ширины и высоты
+          if (!isNaN(originalWidth) && !isNaN(originalHeight)) {
+            const newWidth = originalWidth * local.quality
+            const newHeight = originalHeight * local.quality
+
+            svgString = svgString.replace(
+              /width="[^"]*" height="[^"]*"/g,
+              `width="${newWidth}" height="${newHeight}"`,
+            )
+          }
+        }
+
+        // Создаем изображение
+        const img = new Image()
+        img.onload = () => {
+          context.imageSmoothingEnabled = false
+
+          ref.width = size.width * local.quality
+          ref.height = size.height * local.quality
+
+          const pattern = context.createPattern(img, "repeat")
+          if (pattern) {
+            context.fillStyle = pattern
+
+            context.fillRect(
+              0,
+              0,
+              size.width * local.quality,
+              size.height * local.quality,
+            )
+          }
+
+          setStore("isVisible", true)
+          setStore("isHidden", false)
+        }
+
+        img.src = `data:image/svg+xml;utf8,${encodeURIComponent(
+          svgString,
+        ).replace(/'/g, "%27")}`
+      } finally {
+        release()
+      }
     })
-    const release = await mutex.wait()
-    if (store.cleanup) {
-      release()
-      return
-    }
-    try {
-      if (!ref!) return
-      if (!local.type) return
-
-      const context = ref.getContext("2d")
-      if (!context) return
-
-      let svgString = cache.get(local.type)
-
-      if (!svgString) {
-        svgString = await preload(local.type)
-      }
-
-      svgString = svgString.replaceAll(
-        `"currentColor"`,
-        `"${untrack(() => local.color)}"`,
-      )
-
-      const size = local.onSize()
-
-      const match = svgString.match(/width="([^"]*)" height="([^"]*)"/)
-
-      if (match) {
-        const originalWidth = parseFloat(match[1])
-        const originalHeight = parseFloat(match[2])
-
-        // Проверяем, удалось ли получить значения ширины и высоты
-        if (!isNaN(originalWidth) && !isNaN(originalHeight)) {
-          const newWidth = originalWidth * local.quality
-          const newHeight = originalHeight * local.quality
-
-          svgString = svgString.replace(
-            /width="[^"]*" height="[^"]*"/g,
-            `width="${newWidth}" height="${newHeight}"`,
-          )
-        }
-      }
-
-      // Создаем изображение
-      const img = new Image()
-      img.onload = () => {
-        context.imageSmoothingEnabled = false
-
-        ref.width = size.width * local.quality
-        ref.height = size.height * local.quality
-
-        const pattern = context.createPattern(img, "repeat")
-        if (pattern) {
-          context.fillStyle = pattern
-
-          context.fillRect(
-            0,
-            0,
-            size.width * local.quality,
-            size.height * local.quality,
-          )
-        }
-
-        setStore("isVisible", true)
-        setStore("isHidden", false)
-      }
-
-      img.src = `data:image/svg+xml;utf8,${encodeURIComponent(
-        svgString,
-      ).replace(/'/g, "%27")}`
-    } finally {
-      release()
-    }
   }
 
   onMount(() => {
@@ -328,7 +334,7 @@ const Background: ComponentBackground = (props) => {
       }}
       {...others}
     >
-      <Show keyed when={local.onSize()}>
+      <Show keyed when={!isPending() && local.onSize()}>
         {(size) => (
           <canvas
             ref={ref!}

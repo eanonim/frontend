@@ -52,7 +52,6 @@ const System: Component<System> = (props) => {
         () => contextList?.getVisible(),
       ],
       () => {
-        console.log({ ASG: context?.getIsVisible(local.key) })
         if (!contextList?.getVisible()) {
           if (timer) {
             clearTimeout(timer)

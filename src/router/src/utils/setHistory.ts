@@ -13,6 +13,7 @@ const setHistory = (
   { pageId, modalId, popoutId, params }: HistoryParams,
   history = true,
 ) => {
+  console.log({ pageId })
   const context = getter(SETTINGS_ATOM)
 
   let path = ""

@@ -98,7 +98,8 @@
   overflow-y: scroll;
   overflow-y: auto;
 
-  overscroll-behavior: none;
+  overscroll-behavior       : none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .Panel__blurSafeTop>.Panel__outer {

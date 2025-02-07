@@ -70,7 +70,6 @@ const SegmentedControl: ComponentSegmentedControl = (props) => {
       setStore("selected", key)
       local.onSelected?.(key)
     }
-    console.log({ ...store.buttons })
   }
 
   onMount(() => {

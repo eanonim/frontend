@@ -92,8 +92,6 @@ const LayoutManager: ComponentLayoutManager = (props) => {
 
         const isTabbar = !!activePage?.tabbar && !!lastPage?.tabbar
 
-        console.log({ isTabbar }, activePage?.nav, lastPage?.nav)
-
         // if (isTabbar) return
 
         setStore({
@@ -142,9 +140,9 @@ const LayoutManager: ComponentLayoutManager = (props) => {
         ) !== -1,
     )
 
-    // if (backIndex === -1 || nextIndex === -1) {
-    //   return "next"
-    // }
+    if (backIndex === -1 || nextIndex === -1) {
+      return "next"
+    }
 
     return backIndex < nextIndex ? "next" : "back"
   }

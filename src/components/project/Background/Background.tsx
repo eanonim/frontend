@@ -171,6 +171,7 @@ interface Background extends JSX.HTMLAttributes<HTMLDivElement> {
   fixed?: boolean
   quality?: number
   onSize?: () => { width: number; height: number }
+  onContext?: (context: CanvasRenderingContext2D) => void
 }
 
 type ComponentBackground = Component<Background> & {
@@ -204,6 +205,7 @@ const Background: ComponentBackground = (props) => {
     "fixed",
     "quality",
     "onSize",
+    "onContext",
   ])
 
   const [store, setStore] = createStore<Store>({
@@ -282,6 +284,8 @@ const Background: ComponentBackground = (props) => {
               size.height * local.quality,
             )
           }
+
+          local.onContext?.(context)
 
           setStore("isVisible", true)
           setStore("isHidden", false)

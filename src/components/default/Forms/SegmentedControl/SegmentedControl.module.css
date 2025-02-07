@@ -7,14 +7,13 @@
 
 .SegmentedControl__hover {
   position        : absolute;
-  left            : 0;
+  left            : 0px;
   top             : 0;
   bottom          : 0;
   background-color: var(--accent_color);
-  border-radius   : 10px;
+  border-radius   : 8px;
   pointer-events  : none;
-
-  transition: 0.3s ease-in-out;
+  transition      : 0.3s ease-in-out;
 }
 
 .SegmentedControl__separator {

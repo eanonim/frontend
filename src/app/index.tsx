@@ -91,7 +91,7 @@ const App: Component = () => {
         /** Открытие клавиатуры */
         document.body.style.setProperty(
           "--safe-area-inset-bottom",
-          `${store.bottom + store.bottom ? 10 : 0}px`,
+          `${store.bottom + (store.bottom ? 10 : 0)}px`,
         )
         document.body.style.setProperty(
           "--keyboard-safe-area-inset-bottom",

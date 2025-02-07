@@ -1,5 +1,4 @@
-.Overlay,
-.Overlay::before {
+.Overlay {
   position: absolute;
   left    : 0;
   right   : 0;
@@ -9,15 +8,27 @@
   border-radius: inherit;
   overflow     : hidden;
 
-  backdrop-filter: blur(1px);
-  color          : var(--secondary_color--text);
+  color: var(--secondary_color--text);
 
   padding   : 8px;
   box-sizing: border-box;
 }
 
 .Overlay::before {
-  content         : " ";
-  background-color: var(--secondary_color);
-  opacity         : 0.4;
+  position: absolute;
+  left    : 0px;
+  right   : 0px;
+  top     : 0px;
+  bottom  : 0px;
+  content : " ";
 }
+
+/* .Overlay::before {
+  background: var(--bg_color);
+  opacity   : 0.9;
+} */
+
+/* .Overlay::after {
+  background-color: var(--bg_color);
+  opacity         : 0.5;
+} */

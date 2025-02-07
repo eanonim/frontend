@@ -40,6 +40,17 @@ const Content: Component<Content> = (props) => {
                         color={"#3F3F3F"}
                         type={backgroundId}
                         quality={0.5}
+                        onContext={(context) => {
+                          if (backgroundId >= 11) {
+                            context.fillStyle = "rgba(0,0,0,0.6)"
+                            context.fillRect(
+                              0,
+                              0,
+                              window.innerWidth,
+                              window.innerHeight,
+                            )
+                          }
+                        }}
                       />
 
                       <Show when={backgroundId >= 11}>

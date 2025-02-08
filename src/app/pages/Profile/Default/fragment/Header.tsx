@@ -3,12 +3,16 @@ import { SmartData, useAtom } from "engine/modules/smart-data"
 
 import { USER_ATOM } from "engine/state"
 
-import { type JSX, type Component } from "solid-js"
+import { type JSX, type Component, createEffect } from "solid-js"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
   const [user] = useAtom(USER_ATOM)
+
+  createEffect(() => {
+    console.log({ user })
+  })
 
   return (
     <SmartData signal={USER_ATOM}>

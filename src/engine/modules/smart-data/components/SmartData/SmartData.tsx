@@ -10,7 +10,7 @@ import {
 } from "solid-js"
 
 import { Content, Skeleton, Error } from "./addition"
-import { AtomReturn } from "../../types/index"
+import { AtomReturn, type Key } from "../../types/index"
 import { createStore, produce } from "solid-js/store"
 import { useAtomSystem } from "../.."
 
@@ -22,7 +22,7 @@ export const context = createContext({
 
 interface SmartDataProps extends JSX.HTMLAttributes<HTMLDivElement> {
   signal: AtomReturn<any, any>
-  key?: string | number
+  key?: Key
 }
 
 export type CSmartData = Component<SmartDataProps> & {
@@ -65,6 +65,18 @@ const SmartData: CSmartData = (props) => {
       }
     }
   })
+
+  // return Suspense({
+  //   fallback: context.Provider({
+  //     value: {
+  //       skeleton: true,
+  //       error: false,
+  //       content: false,
+  //     },
+  //     children: props.children,
+  //   }),
+  //   children: context.Provider({ value: values, children: props.children }),
+  // })
 
   return (
     <Suspense

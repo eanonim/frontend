@@ -1,15 +1,24 @@
-import style from "./Error.module.css"
-import { type Error, ErrorProps } from "./Error.props"
-
 import { context } from "../../SmartData"
 
-import { Show, useContext } from "solid-js"
+import {
+  type Component,
+  type JSX,
+  Show,
+  mergeProps,
+  splitProps,
+  useContext,
+} from "solid-js"
 
-const Content: Error = (props) => {
-  const [local, others] = ErrorProps(props)
+interface Error extends JSX.HTMLAttributes<HTMLDivElement> {}
+
+const Error: Component<Error> = (props) => {
+  const merged = mergeProps({}, props)
+
+  const [local, others] = splitProps(merged, ["class", "classList", "children"])
   const values = useContext(context)
 
+  // return Show({ when: values.error, children: local.children })
   return <Show when={values.error}>{local.children}</Show>
 }
 
-export default Content
+export default Error

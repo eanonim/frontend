@@ -10,7 +10,9 @@ export const SETTINGS_ATOM = atom({
     backgroundId: 2,
     backgroundColor: "#222222",
   },
-  onRequested: () => {},
+  onRequested: (options, key) => {
+    console.log(options, key)
+  },
   onUpdate: ({ prev, next }, key) => {
     console.log({ prev, next }, key)
   },

@@ -1,4 +1,4 @@
-import { type System, type AtomReturn } from "../types"
+import { type System, type AtomReturn, type Key } from "../types"
 import { getter, setterStatus } from ".."
 
 import { createEffect, mergeProps, on, splitProps } from "solid-js"
@@ -10,7 +10,7 @@ export const useAtomSystem = <VALUE, OPTIONS>(
     /**
      * Ключ для кеширования данных.
      */
-    key?: string | number | (() => string | number)
+    key?: Key | (() => Key)
   },
 ): [get: System, set: (options: System) => void] => {
   const merged = mergeProps({ key: "default" }, params)

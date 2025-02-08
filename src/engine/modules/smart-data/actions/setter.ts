@@ -1,10 +1,11 @@
-import { type AtomReturn } from "../types"
-import { batch, createEffect, createUniqueId, on } from "solid-js"
-import getDefault from "../utils/getDefault"
-import { produce } from "solid-js/store"
-import setterStatus from "./setterStatus"
-import { error } from "console"
+import { type Key, type AtomReturn } from "../types"
+
 import { comparison } from "@minsize/utils"
+
+import setterStatus from "../actions/setterStatus"
+import getDefault from "../utils/getDefault"
+
+import { batch } from "solid-js"
 
 type KeyOf<T> = keyof T
 type W<T> = { [K in keyof T]: T[K] }
@@ -53,7 +54,7 @@ export type StoreSetter<T, U extends PropertyKey[] = []> =
 
 type SetterOptions<VALUE, OPTIONS> =
   | AtomReturn<VALUE, OPTIONS>
-  | [signal: AtomReturn<VALUE, OPTIONS>, key: string]
+  | [signal: AtomReturn<VALUE, OPTIONS>, key: Key]
 
 type RestSetterOrContinue<T, U extends PropertyKey[]> =
   | [StoreSetter<T, U>]
@@ -323,17 +324,17 @@ function setter<VALUE, OPTIONS>(
         setter("cache", key, {
           data: getDefault(getter.default),
           system: { error: false, load: false, fullLoad: false },
-          update_at: new Date(),
+          update_at: update_at,
         })
       }
 
-      const oldValue = getDefault(getter.cache[key]?.data)
+      const prev = getDefault(cache?.data)
       ;(setter as any)(...["cache", key, "data"], ...args)
-      const newValue = getDefault(getter.cache[key]?.data)
+      const next = getDefault(cache?.data)
 
       const onUpdate = getter.onUpdate
-      if (onUpdate && !comparison(oldValue, newValue)) {
-        onUpdate({ prev: oldValue, next: newValue }, key)
+      if (onUpdate && !comparison(prev, next)) {
+        onUpdate({ prev, next }, key)
       }
 
       setter("cache", key, "update_at", update_at)

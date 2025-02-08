@@ -1,10 +1,10 @@
-import { type AtomReturn, type System } from "../types"
-import { getDefault } from ".."
+import { type Key, type AtomReturn, type System } from "../types"
+import getDefault from "../utils/getDefault"
 import { batch } from "solid-js"
 
 type SetterStatusOptions<VALUE, OPTIONS> =
   | AtomReturn<VALUE, OPTIONS>
-  | [signal: AtomReturn<VALUE, OPTIONS>, key: string]
+  | [signal: AtomReturn<VALUE, OPTIONS>, key: Key]
 
 const setterStatus = <VALUE, OPTIONS>(
   options: SetterStatusOptions<VALUE, OPTIONS>,
@@ -20,12 +20,11 @@ const setterStatus = <VALUE, OPTIONS>(
 
       const cache = getter.cache[key]
 
-      const error = params.error ?? !!cache?.system?.error ?? false
-      const load =
-        (params.load ?? !!cache?.system?.load ?? false) && !!!cache?.data
-      const fullLoad = params.fullLoad ?? !!cache?.system?.fullLoad ?? false
-
-      const system = { error, load, fullLoad }
+      const system = {
+        error: params.error ?? !!cache?.system?.error ?? false,
+        load: (params.load ?? !!cache?.system?.load ?? false) && !cache?.data,
+        fullLoad: params.fullLoad ?? !!cache?.system?.fullLoad ?? false,
+      }
 
       if (!cache) {
         setter("cache", key, {
@@ -33,10 +32,11 @@ const setterStatus = <VALUE, OPTIONS>(
           system: system,
           update_at: new Date(),
         })
+      } else {
+        setter("cache", key, "system", system)
       }
 
       setter("requests", key, params.load ? "start" : "end")
-      setter("cache", key, "system", system)
     })
   }
 }

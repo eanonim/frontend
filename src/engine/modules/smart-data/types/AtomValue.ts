@@ -1,4 +1,4 @@
-import { type SmartData } from "./SmartData"
+import { type AtomProps, type SmartData } from "types"
 
 export type AtomValue<VALUE extends unknown, OPTIONS> = {
   /**
@@ -12,11 +12,11 @@ export type AtomValue<VALUE extends unknown, OPTIONS> = {
   /**
    * Функция, вызываемая при запросе новых данных. Используется для запуска процесса получения данных.
    */
-  onRequested?: (options: OPTIONS, key: string | number) => void
+  onRequested?: AtomProps<VALUE, OPTIONS>["onRequested"]
   /**
    * Функция, вызываемая при изменении сигнала. Используется для запуска отправки данных.
    */
-  onUpdate?: (value: { prev: VALUE; next: VALUE }, key: string | number) => void
+  onUpdate?: AtomProps<VALUE, OPTIONS>["onUpdate"]
   /**
    * Кеш для хранения полученных данных.
    */

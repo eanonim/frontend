@@ -1,8 +1,8 @@
-import { type AtomReturn } from "../types"
+import { type Key, type AtomReturn } from "../types"
 import { getter, getValue, setter, setterStatus } from ".."
 
 import { createEffect, mergeProps, on, splitProps } from "solid-js"
-import { createStore, SetStoreFunction } from "solid-js/store"
+import { createStore, type SetStoreFunction } from "solid-js/store"
 
 /**
  * `useAtom` - хук SolidJS для работы с атомарными данными (состоянием).
@@ -15,7 +15,7 @@ export const useAtom = <VALUE, OPTIONS>(
     /**
      * Ключ для кеширования данных.
      */
-    key?: string | (() => string)
+    key?: Key | (() => Key)
     /**
      * Определяет, нужно ли автоматически выполнять начальный запрос данных при монтировании компонента.
      */
@@ -79,8 +79,7 @@ export const useAtom = <VALUE, OPTIONS>(
   )
 
   const _setCache: SetStoreFunction<VALUE> = (...args: unknown[]) => {
-    const key = getKey()
-    return (setter as any)([signal, key], ...args)
+    return (setter as any)([signal, getKey()], ...args)
   }
 
   return [cache.data, _setCache]

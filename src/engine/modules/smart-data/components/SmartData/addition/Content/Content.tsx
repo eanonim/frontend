@@ -1,13 +1,23 @@
-import style from "./Content.module.css"
-import { type Content, ContentProps } from "./Content.props"
-
 import { context } from "../../SmartData"
 
-import { Show, createEffect, useContext } from "solid-js"
+import {
+  type Component,
+  type JSX,
+  Show,
+  mergeProps,
+  splitProps,
+  useContext,
+} from "solid-js"
 
-const Content: Content = (props) => {
-  const [local, others] = ContentProps(props)
+interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
+
+const Content: Component<Content> = (props) => {
+  const merged = mergeProps({}, props)
+
+  const [local, others] = splitProps(merged, ["class", "classList", "children"])
   const values = useContext(context)
+
+  // return Show({ when: values.content, children: local.children })
 
   return <Show when={values.content}>{local.children}</Show>
 }

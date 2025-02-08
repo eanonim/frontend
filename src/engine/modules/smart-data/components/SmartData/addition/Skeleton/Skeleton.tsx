@@ -1,13 +1,23 @@
-import style from "./Skeleton.module.css"
-import { type Skeleton, SkeletonProps } from "./Skeleton.props"
-
 import { context } from "../../SmartData"
 
-import { Show, useContext } from "solid-js"
+import {
+  type Component,
+  type JSX,
+  Show,
+  mergeProps,
+  splitProps,
+  useContext,
+} from "solid-js"
 
-const Skeleton: Skeleton = (props) => {
-  const [local, others] = SkeletonProps(props)
+interface Skeleton extends JSX.HTMLAttributes<HTMLDivElement> {}
+
+const Skeleton: Component<Skeleton> = (props) => {
+  const merged = mergeProps({}, props)
+
+  const [local, others] = splitProps(merged, ["class", "classList", "children"])
   const values = useContext(context)
+
+  // return Show({ when: values.skeleton, children: local.children })
 
   return <Show when={values.skeleton}>{local.children}</Show>
 }

@@ -18,10 +18,10 @@ export const USER_ATOM = atom<User, Request>({
     last_name: "Иванов",
     photo: "https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg", //https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg
   },
-  onRequested: (options, key) => {
-    setTimeout(() => {
-      setter([USER_ATOM, key], "photo", "")
-      console.log("END 2")
-    }, 5000)
-  },
+  // onRequested: (options, key) => {
+  //   setTimeout(() => {
+  //     setter([USER_ATOM, key], "photo", "")
+  //     console.log("END 2")
+  //   }, 5000)
+  // },
 })

@@ -16,6 +16,10 @@
   background-color: var(--section_bg_color);
 }
 
+.FixedLayout__background--white {
+  background-color: white;
+}
+
 /* safe */
 .FixedLayout__position--top.FixedLayout--safe {
   padding-top: var(--safe-area-inset-top);

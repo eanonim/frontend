@@ -2,6 +2,11 @@
   position: relative;
 
   height: 100%;
+
+  -user-select       : none;
+  -webkit-user-select: none;
+  -moz-user-select   : none;
+  -ms-user-select    : none;
 }
 
 .Background__item {
@@ -41,4 +46,10 @@
 
 .Background__show--hidden {
   opacity: 1;
+}
+
+.Background__svg {
+  position: relative;
+  height  : 100%;
+  width   : 100%;
 }

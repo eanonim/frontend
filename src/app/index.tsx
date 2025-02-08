@@ -95,18 +95,25 @@ const App: Component = () => {
         )
         document.body.style.setProperty(
           "--keyboard-safe-area-inset-bottom",
-          `${window.outerHeight - data.height - store.bottom}px`,
+          `${
+            window.outerHeight -
+            data.height -
+            (getter(KEYBOARD_ATOM)?.bottom || 0) -
+            (!(getter(KEYBOARD_ATOM)?.bottom || 0) ? store.bottom : 0)
+          }px`,
         )
 
         setter(KEYBOARD_ATOM, (store) => {
           store.open = true
           store.touch = false
+          store.bottom = 0
           return { ...store }
         })
       } else {
         setter(KEYBOARD_ATOM, (store) => {
           store.open = false
           store.touch = false
+          store.bottom = 0
           return { ...store }
         })
         document.body.style.setProperty(
@@ -134,6 +141,16 @@ const App: Component = () => {
         document.body.style.setProperty(
           "--safe-area-inset-bottom",
           `${store.bottom}px`,
+        )
+      } else {
+        setter(KEYBOARD_ATOM, (store) => {
+          store.bottom = 0
+          return { ...store }
+        })
+
+        document.body.style.setProperty(
+          "--keyboard-safe-area-inset-bottom",
+          `0px`,
         )
       }
 

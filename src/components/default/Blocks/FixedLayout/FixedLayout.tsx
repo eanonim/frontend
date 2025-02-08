@@ -7,7 +7,7 @@ import { type ValidComponent, type Component, splitProps } from "solid-js"
 
 interface FixedLayout<T extends ValidComponent = "div"> extends TypeFlex<T> {
   position: "top" | "bottom"
-  background?: "none" | "section_bg_color"
+  background?: "none" | "section_bg_color" | "white"
   safe?: boolean
 }
 

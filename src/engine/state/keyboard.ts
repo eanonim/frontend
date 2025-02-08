@@ -5,5 +5,6 @@ export const KEYBOARD_ATOM = atom({
   default: {
     open: false,
     touch: false,
+    bottom: 0,
   },
 })

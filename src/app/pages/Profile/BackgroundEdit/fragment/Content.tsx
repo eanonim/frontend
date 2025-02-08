@@ -21,6 +21,7 @@ const Content: Component<Content> = (props) => {
         fixed
         type={params().backgroundId || 0}
         color={params().color || settings.backgroundColor}
+        render={"svg"}
       />
     </Flex>
   )

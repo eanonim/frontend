@@ -1,4 +1,14 @@
-import { Button, FixedLayout, Separator, Title } from "components"
+import {
+  Button,
+  Field,
+  FixedLayout,
+  Hue,
+  Input,
+  Picker,
+  Separator,
+  Title,
+  WriteBar,
+} from "components"
 import loc from "engine/languages"
 
 import { globalSignal } from "elum-state/solid"
@@ -7,6 +17,7 @@ import { backPage, pages, replaceParams, useParams } from "router"
 import { type JSX, type Component, For } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useAtom } from "engine/modules/smart-data"
+import { HEXtoRGB, RGBtoHEX, RGBtoHSV } from "@minsize/utils"
 
 const colors: {
   color: string
@@ -85,40 +96,8 @@ const colors: {
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 type Store = {
-  color: string
-}
-
-function applyAlphaToHex(hexColor: string, alpha: number) {
-  if (alpha < 0 || alpha > 1) {
-    return hexColor
-  }
-
-  hexColor = hexColor.replace("#", "")
-  if (!/^[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/.test(hexColor)) {
-    return "#" + hexColor
-  }
-
-  try {
-    if (hexColor.length === 3) {
-      hexColor =
-        hexColor[0] +
-        hexColor[0] +
-        hexColor[1] +
-        hexColor[1] +
-        hexColor[2] +
-        hexColor[2]
-    }
-
-    const r = parseInt(hexColor.substring(0, 2), 16)
-    const g = parseInt(hexColor.substring(2, 4), 16)
-    const b = parseInt(hexColor.substring(4, 6), 16)
-
-    const alphaHex = Math.round(alpha * 255).toString(16)
-    const alphaHexPadded = alphaHex.length === 1 ? "0" + alphaHex : alphaHex
-    return `#${hexColor}${alphaHexPadded}`
-  } catch (e) {
-    return "#" + hexColor
-  }
+  color: [number, number, number]
+  accent: [number, number]
 }
 
 const Footer: Component<Footer> = (props) => {
@@ -129,75 +108,65 @@ const Footer: Component<Footer> = (props) => {
     pageId: pages.BACKGROUND_EDIT,
   })
 
+  const rgb = HEXtoRGB(settings.backgroundColor)
+  const hsv = RGBtoHSV(...rgb)
+
   const [store, setStore] = createStore<Store>({
-    color: settings.backgroundColor || "#222222",
+    color: rgb,
+
+    accent: [hsv[0], hsv[1]],
   })
 
   const handlerSave = () => {
     backPage(2)
-    setBackground(params().backgroundId, store.color)
+    setBackground(params().backgroundId, RGBtoHEX(...store.color))
   }
 
-  const onColor = (color: string) => {
+  const onColor = (color: [number, number, number]) => {
+    const [r, g, b] = color
     replaceParams({
-      color: applyAlphaToHex(color, 0.3),
+      color: RGBtoHEX(r, g, b),
       backgroundId: params().backgroundId,
     })
-
     setStore("color", color)
   }
 
   return (
-    <FixedLayout safe position={"bottom"} background={"section_bg_color"}>
-      <Button.Group>
-        <For each={colors}>
-          {(colors, index) => (
-            <Button.Group.Container data-index={index()}>
-              <For each={colors}>
-                {(color, index) => (
-                  <Button
-                    data-index={index()}
-                    size={"small"}
-                    type={"icon"}
-                    onClick={() => onColor(color.color)}
-                    appearance={"primary"}
-                    mode={"transparent"}
-                    style={{
-                      background: color.color,
-                      border:
-                        store.color === color.color
-                          ? "2px solid white"
-                          : `2px solid ${color.color}`,
-                    }}
-                  >
-                    <Button.Container>
-                      <span
-                        style={{
-                          width: "28px",
-                          height: "28px",
-                          display: "block",
-                        }}
-                      />
-                    </Button.Container>
-                  </Button>
-                )}
-              </For>
-            </Button.Group.Container>
-          )}
-        </For>
+    <FixedLayout safe position={"bottom"} background={"white"}>
+      <Separator />
+      <Button.Group
+        style={{
+          background: "var(--section_bg_color)",
+        }}
+      >
+        <Field>
+          <Input
+            value={RGBtoHEX(...store.color)}
+            style={{ "text-transform": "uppercase" }}
+          />
+        </Field>
       </Button.Group>
+      <Hue
+        mode={"telegram"}
+        accent={store.accent}
+        onChange={(accent) => {
+          setStore("accent", accent)
+        }}
+      >
+        <Picker accent={store.accent} color={store.color} onChange={onColor} />
 
-      <Separator size={"indent"} />
+        <Button.Group>
+          <Button.Group.Container>
+            <Button stretched size={"large"} onClick={handlerSave}>
+              <Button.Container>
+                <Title>{lang("apply_in_all_chats")}</Title>
+              </Button.Container>
+            </Button>
+          </Button.Group.Container>
+        </Button.Group>
+      </Hue>
 
-      <Button.Group>
-        <Button.Group.Container>
-          <Button stretched size={"large"} onClick={handlerSave}>
-            <Button.Container>
-              <Title>{lang("apply_in_all_chats")}</Title>
-            </Button.Container>
-          </Button>
-        </Button.Group.Container>
-      </Button.Group>
+      {/* <Separator size={"indent"} /> */}
     </FixedLayout>
   )
 }

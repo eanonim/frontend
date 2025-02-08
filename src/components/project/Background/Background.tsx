@@ -15,6 +15,8 @@ import {
   untrack,
   Show,
   useTransition,
+  Switch,
+  Match,
 } from "solid-js"
 import { Mutex } from "@minsize/mutex"
 
@@ -172,6 +174,8 @@ interface Background extends JSX.HTMLAttributes<HTMLDivElement> {
   quality?: number
   onSize?: () => { width: number; height: number }
   onContext?: (context: CanvasRenderingContext2D) => void
+
+  render?: "canvas" | "svg"
 }
 
 type ComponentBackground = Component<Background> & {
@@ -194,6 +198,7 @@ const Background: ComponentBackground = (props) => {
       color: "#222222",
       quality: window.devicePixelRatio || 1,
       onSize: () => ({ width: window.innerWidth, height: window.innerHeight }),
+      render: "canvas",
     },
     props,
   )
@@ -206,6 +211,7 @@ const Background: ComponentBackground = (props) => {
     "quality",
     "onSize",
     "onContext",
+    "render",
   ])
 
   const [store, setStore] = createStore<Store>({
@@ -214,8 +220,40 @@ const Background: ComponentBackground = (props) => {
     cleanup: false,
   })
 
+  let refDiv: HTMLDivElement
   let ref: HTMLCanvasElement
-  const handlerRender = async () => {
+
+  const handlerRenderSvg = async () => {
+    start(async () => {
+      const release = await mutex.wait()
+      onCleanup(() => {
+        release?.()
+        setStore("cleanup", true)
+      })
+
+      try {
+        if (store.cleanup) return
+
+        if (!refDiv!) return
+
+        const URL = `${
+          import.meta.env.MODE === "development" ? "" : "/frontend"
+        }/backgrounds/${
+          backgroundFiles.find((x) => x.id === local.type)?.name
+        }`.replace(/ /gi, "%20")
+
+        refDiv.style.mask = `url(${URL})`
+        refDiv.style.webkitMask = `url(${URL})`
+        refDiv.style.backgroundSize = "contain"
+        refDiv.style.backgroundRepeat = "repeat"
+        refDiv.style.backgroundColor = local.color
+      } finally {
+        release()
+      }
+    })
+  }
+
+  const handlerRenderCanvas = async () => {
     start(async () => {
       const release = await mutex.wait()
 
@@ -223,13 +261,11 @@ const Background: ComponentBackground = (props) => {
         release?.()
         setStore("cleanup", true)
       })
-      if (store.cleanup) {
-        release()
-        return
-      }
+
       try {
-        if (!ref!) return
+        if (store.cleanup) return
         if (!local.type) return
+        if (!ref!) return
 
         const context = ref.getContext("2d")
         if (!context) return
@@ -300,17 +336,39 @@ const Background: ComponentBackground = (props) => {
     })
   }
 
-  onMount(() => {
-    handlerRender()
-  })
+  const handlerRender = () => {
+    switch (local.render) {
+      case "canvas": {
+        handlerRenderCanvas()
+      }
+      case "svg": {
+        handlerRenderSvg()
+      }
+    }
+  }
+
+  createEffect(
+    on([() => ref!, () => refDiv!], () => {
+      if (local.render === "svg") {
+        handlerRender()
+      } else {
+        setStore("isHidden", false)
+        handlerRender()
+      }
+    }),
+  )
 
   createEffect(
     on(
       [() => local.color, () => local.type],
       () => {
-        setStore("isHidden", true)
+        if (local.render === "svg") {
+          handlerRender()
+        } else {
+          setStore("isHidden", true)
 
-        setTimeout(handlerRender, 250)
+          setTimeout(handlerRender, 250)
+        }
       },
       {
         defer: true,
@@ -340,13 +398,24 @@ const Background: ComponentBackground = (props) => {
     >
       <Show keyed when={!isPending() && local.onSize()}>
         {(size) => (
-          <canvas
-            ref={ref!}
-            data-color={local.color}
-            width={size.width}
-            height={size.height}
-            class={style.Background__item}
-          />
+          <Switch>
+            <Match when={local.render === "svg"}>
+              <div
+                class={style.Background__svg}
+                ref={refDiv!}
+                style={{ color: "red" }}
+              />
+            </Match>
+            <Match when={local.render === "canvas"}>
+              <canvas
+                ref={ref!}
+                data-color={local.color}
+                width={size.width}
+                height={size.height}
+                class={style.Background__item}
+              />
+            </Match>
+          </Switch>
         )}
       </Show>
       <span

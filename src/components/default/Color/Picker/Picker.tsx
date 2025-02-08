@@ -13,7 +13,7 @@ interface Picker
   extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "onChange" | "color"> {
   color: [number, number, number]
   /** от 0 до 1 */
-  accent: number
+  accent: [number, number]
   onChange: (color: [number, number, number]) => void
 }
 
@@ -23,7 +23,7 @@ type StorePosition = {
 }
 
 type StoreColor = {
-  accent: number
+  accent: [number, number]
   rgb: [number, number, number]
   position: StorePosition
 }
@@ -32,7 +32,7 @@ const Picker: Component<Picker> = (props) => {
   const [local, others] = splitProps(props, ["color", "accent", "onChange"])
 
   const [color, setColor] = createStore<StoreColor>({
-    accent: 0,
+    accent: [0, 0],
     rgb: local.color,
     position: getPosition(...local.color),
   })
@@ -43,7 +43,7 @@ const Picker: Component<Picker> = (props) => {
 
   const handlerChange = (x: number, y: number) => {
     setColor("position", { x, y })
-    const rgb = HSVtoRGB(local.accent, x / 100, 1 - y / 100)
+    const rgb = HSVtoRGB(local.accent[0], 1 - local.accent[1], 1 - x / 100)
     local.onChange(rgb)
   }
 
@@ -85,10 +85,12 @@ const Picker: Component<Picker> = (props) => {
   }
 
   createEffect(() => {
-    if (local.accent !== color.accent) {
+    if (
+      local.accent[0] !== color.accent[0] ||
+      local.accent[1] !== color.accent[1]
+    ) {
       handlerChange(color.position.x, color.position.y)
     }
-
     setColor({
       accent: local.accent,
       rgb: local.color,
@@ -96,37 +98,27 @@ const Picker: Component<Picker> = (props) => {
     })
   })
 
-  const getColor = (type: "circle" | "background") => {
-    const s = type === "circle" ? color.position.x / 100 : 1
-    const v = type === "circle" ? 1 - color.position.y / 100 : 1
-
-    const [r, g, b] = HSVtoRGB(local.accent, s, v)
-
+  const getColor = () => {
+    const [r, g, b] = HSVtoRGB(local.accent[0], 1 - local.accent[1], 1)
     return `rgb(${r},${g},${b})`
   }
 
   return (
     <div class={style.Picker} {...others}>
-      <Ratio width={3} height={2}>
-        <Touch class={style.Picker__inner} onStart={Start} onMove={Move}>
-          <div
-            class={style.Picker__hue}
-            style={{ "background-color": getColor("background") }}
-          />
-          <div
-            class={style.Picker__toddle}
-            style={{
-              left: `${color.position.x}%`,
-              top: `${color.position.y}%`,
-            }}
-          >
-            <span
-              class={style.Picker__circle}
-              style={{ background: getColor("circle") }}
-            />
-          </div>
-        </Touch>
-      </Ratio>
+      <Touch class={style.Picker__inner} onStart={Start} onMove={Move}>
+        <div
+          class={style.Picker__hue}
+          style={{ "background-color": getColor() }}
+        />
+        <div
+          class={style.Picker__toddle}
+          style={{
+            left: `${color.position.x}%`,
+          }}
+        >
+          <span class={style.Picker__circle} />
+        </div>
+      </Touch>
     </div>
   )
 }

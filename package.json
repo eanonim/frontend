@@ -16,7 +16,7 @@
         "@elum/router": "^0.0.13",
         "@minsize/mutex": "^0.0.6",
         "@minsize/ui": "^0.0.5-beta",
-        "@minsize/utils": "^0.0.5",
+        "@minsize/utils": "^0.0.6",
         "@solid-primitives/intersection-observer": "^2.2.0",
         "@solid-primitives/scheduled": "^1.5.0",
         "@solidjs/router": "^0.15.1",

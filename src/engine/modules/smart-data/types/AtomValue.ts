@@ -14,6 +14,10 @@ export type AtomValue<VALUE extends unknown, OPTIONS> = {
    */
   onRequested?: (options: OPTIONS, key: string | number) => void
   /**
+   * Функция, вызываемая при изменении сигнала. Используется для запуска отправки данных.
+   */
+  onUpdate?: (value: { prev: VALUE; next: VALUE }, key: string | number) => void
+  /**
    * Кеш для хранения полученных данных.
    */
   cache: { [key in string]: SmartData<VALUE> }

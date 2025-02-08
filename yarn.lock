@@ -364,10 +364,10 @@
   resolved "https://registry.yarnpkg.com/@minsize/utils/-/utils-0.0.5.tgz#2b3326b27976c77c5b2ca1aa336d708c3ec7f5c9"
   integrity sha512-IoQ4+QLmoOnTvLODdpZG8K6ikk5B8ljTUuE2GJohPoYbaVtQm/5q7B8DT3blQ5sdVjudGpdxQC71DKA4ZAqjqQ==
 
-"@minsize/utils@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@minsize/utils/-/utils-0.0.6.tgz#f912fb98bd01f24c9c811009845594892ff6bb89"
-  integrity sha512-MYALIh3o86W4Ck0dXV+pXm2JwIo/mFNWuvAd8bt9/vJdN0eLTvmtvaNtgTVV5EN8GndY2vx7RHjAk0C/6NIvFw==
+"@minsize/utils@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@minsize/utils/-/utils-0.0.7.tgz#84585d3414632e80ba8f70c5c8f89097e433bb46"
+  integrity sha512-mXsEuy3zbtZSb8UZmYxnT2Z3DmJgjUV7hzMU+iT3neu/7H6OeWnA3/lVU4lqkP69Dfs+CVn3jq5BgqiN//aMWQ==
 
 "@nothing-but/utils@~0.12.0":
   version "0.12.1"

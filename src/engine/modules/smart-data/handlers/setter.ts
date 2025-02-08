@@ -1,9 +1,10 @@
 import { type AtomReturn } from "../types"
-import { batch, createUniqueId } from "solid-js"
+import { batch, createEffect, createUniqueId, on } from "solid-js"
 import getDefault from "../utils/getDefault"
 import { produce } from "solid-js/store"
 import setterStatus from "./setterStatus"
 import { error } from "console"
+import { comparison } from "@minsize/utils"
 
 type KeyOf<T> = keyof T
 type W<T> = { [K in keyof T]: T[K] }
@@ -326,7 +327,14 @@ function setter<VALUE, OPTIONS>(
         })
       }
 
+      const oldValue = getDefault(getter.cache[key]?.data)
       ;(setter as any)(...["cache", key, "data"], ...args)
+      const newValue = getDefault(getter.cache[key]?.data)
+
+      const onUpdate = getter.onUpdate
+      if (onUpdate && !comparison(oldValue, newValue)) {
+        onUpdate({ prev: oldValue, next: newValue }, key)
+      }
 
       setter("cache", key, "update_at", update_at)
       setterStatus([signal, key], { load: false })

@@ -2,11 +2,17 @@ import { clamp } from "@minsize/utils"
 import { atom, getter, setter } from "engine/modules/smart-data"
 import { produce } from "solid-js/store"
 
+import { debounce, leading } from "@solid-primitives/scheduled"
+
 export const SETTINGS_ATOM = atom({
   default: {
     font_size: 13,
     backgroundId: 2,
     backgroundColor: "#222222",
+  },
+  onRequested: () => {},
+  onUpdate: ({ prev, next }, key) => {
+    console.log({ prev, next }, key)
   },
 })
 

@@ -17,6 +17,7 @@ export const USER_ATOM = atom<
     emoji: 0,
     premium: false,
   },
+  updateIntervalMs: 15_000,
   onRequested: async (options, key) => {
     userGet({})
   },

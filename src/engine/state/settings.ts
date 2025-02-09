@@ -19,6 +19,7 @@ export const SETTINGS_ATOM = atom<
   onRequested: (options, key) => {
     storeList(options)
   },
+  updateIntervalMs: 30_000,
   onUpdate: leading(
     debounce,
     ({ prev, next }, key) => {

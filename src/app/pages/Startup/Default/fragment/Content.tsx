@@ -1,15 +1,11 @@
-import { Background, Plug } from "components"
+import { Plug } from "components"
 import { Logo, LogoElumTeam } from "source"
 
-import { type JSX, type Component, onMount } from "solid-js"
+import { type JSX, type Component } from "solid-js"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
-  onMount(() => {
-    Background.preload(2)
-  })
-
   return (
     <Plug full>
       <Plug.Container>

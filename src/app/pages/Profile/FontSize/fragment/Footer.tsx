@@ -5,17 +5,19 @@ import loc from "engine/languages"
 import { type JSX, type Component, createSignal } from "solid-js"
 import { backPage } from "router"
 import { setFontSize, SETTINGS_ATOM } from "engine/state/settings"
-import { getter } from "engine/modules/smart-data"
+import { useAtom } from "engine/modules/smart-data"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Footer: Component<Footer> = (props) => {
   const [lang] = loc()
 
-  const [value, setValue] = createSignal(getter(SETTINGS_ATOM).font_size)
+  const [settings] = useAtom(SETTINGS_ATOM)
+
+  const [value, setValue] = createSignal<number>(0)
   const handlerCancel = () => {
     backPage()
-    setValue(getter(SETTINGS_ATOM).font_size)
+    setValue(settings.fontSize)
     document.body.style.setProperty("--message_font_size", `${value()}pt`)
     document.body.style.setProperty("--message_line_height", `${value() + 4}pt`)
   }
@@ -46,7 +48,12 @@ const Footer: Component<Footer> = (props) => {
             }}
           />
         </Range.Icon>
-        <Range.Input onRange={onInput} min={10} max={16} value={value()} />
+        <Range.Input
+          onRange={onInput}
+          min={10}
+          max={16}
+          value={value() || settings.fontSize}
+        />
         <Range.Icon>
           <IconLetterCase
             width={28}

@@ -175,6 +175,11 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
+"@elum/ews@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@elum/ews/-/ews-0.0.8.tgz#31eef93c4efe28892ca10625f722919b6cfe69aa"
+  integrity sha512-j/xs3NewBuB1TKp+W9z3MKyzQ63Q6Od5VU1JzHe/DZpm+YM1XZ9HkjxQPfgInhzt8BzjUHxi9WOMbsACC0fkxw==
+
 "@elum/router@^0.0.13":
   version "0.0.13"
   resolved "https://registry.yarnpkg.com/@elum/router/-/router-0.0.13.tgz#9e0c78478d485d5da1e0821439235ba93ef353c7"
@@ -350,13 +355,6 @@
   resolved "https://registry.yarnpkg.com/@minsize/mutex/-/mutex-0.0.6.tgz#2085c5627014b2cc7d94b5c6b171dea30fec8793"
   integrity sha512-5P1X/tLOUNdVuE1eX3/wSVkeHUqf3Vp9lZVtNhls/+HCtXY/Xw1Kuav66z7ZWaJCyAj3JX9pgdVwTeezcQyAbg==
 
-"@minsize/state@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@minsize/state/-/state-0.0.1.tgz#d474a6455eaab0db23e1c9db2e78971498728439"
-  integrity sha512-q0Z4Rt2jo3tZkmO7CdURlCnmaCfJr5wKx4QuHDwJ7rzB+Yw/si88cdwoFwdV/fPtM86yApG1WYdiV9k4TwDKcQ==
-  dependencies:
-    "@minsize/utils" "^0.0.7"
-
 "@minsize/ui@^0.0.5-beta":
   version "0.0.5-beta"
   resolved "https://registry.yarnpkg.com/@minsize/ui/-/ui-0.0.5-beta.tgz#207f2ab1171e2ecf5f69a96b938b372e8e6bafbd"
@@ -370,11 +368,6 @@
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@minsize/utils/-/utils-0.0.5.tgz#2b3326b27976c77c5b2ca1aa336d708c3ec7f5c9"
   integrity sha512-IoQ4+QLmoOnTvLODdpZG8K6ikk5B8ljTUuE2GJohPoYbaVtQm/5q7B8DT3blQ5sdVjudGpdxQC71DKA4ZAqjqQ==
-
-"@minsize/utils@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@minsize/utils/-/utils-0.0.7.tgz#84585d3414632e80ba8f70c5c8f89097e433bb46"
-  integrity sha512-mXsEuy3zbtZSb8UZmYxnT2Z3DmJgjUV7hzMU+iT3neu/7H6OeWnA3/lVU4lqkP69Dfs+CVn3jq5BgqiN//aMWQ==
 
 "@minsize/utils@^0.0.8":
   version "0.0.8"

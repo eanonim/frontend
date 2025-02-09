@@ -1,14 +1,39 @@
-import { Background, Flex, Gap, Group, Link, SubTitle } from "components"
+import {
+  type TextProps,
+  Background,
+  Cell,
+  Flex,
+  Gap,
+  Group,
+  Link,
+  SubTitle,
+  Title,
+} from "components"
 
 import { chunks } from "@minsize/utils"
 
 import { type JSX, type Component, For, Show } from "solid-js"
 import { pages, pushPage } from "router"
-import { globalSignal } from "elum-state/solid"
 import { SETTINGS_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
+
+const textProps: TextProps = {
+  iOS: {
+    color: "accent",
+    size: "medium",
+    weight: "500",
+  },
+  android: {
+    color: "accent",
+    size: "medium",
+    weight: "500",
+  },
+  macOS: "iOS",
+  windows: "iOS",
+  others: "iOS",
+}
 
 const backgrounds = chunks(
   3,
@@ -24,6 +49,17 @@ const Content: Component<Content> = (props) => {
 
   return (
     <Group>
+      <Group.Container>
+        <Cell.List>
+          <Cell onClick={() => handlerOpen(0)}>
+            <Cell.Container>
+              <Cell.Content>
+                <Title {...textProps}>Задать цвет</Title>
+              </Cell.Content>
+            </Cell.Container>
+          </Cell>
+        </Cell.List>
+      </Group.Container>
       <Group.Container>
         <Gap count={"6px"} direction={"column"} style={{ padding: "6px" }}>
           <For each={backgrounds}>

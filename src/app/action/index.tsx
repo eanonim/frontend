@@ -77,7 +77,7 @@ const Action: Component<Action> = (props) => {
             <Gap direction={"column"}>
               <Avatar
                 size={"28px"}
-                src={user.photo}
+                src={user.image}
                 style={{
                   border:
                     activeView() === views.PROFILE

@@ -236,16 +236,18 @@ const Background: ComponentBackground = (props) => {
 
         if (!refDiv!) return
 
-        const URL = `${
-          import.meta.env.MODE === "development" ? "" : "/frontend"
-        }/backgrounds/${
-          backgroundFiles.find((x) => x.id === local.type)?.name
-        }`.replace(/ /gi, "%20")
+        if (local.type) {
+          const URL = `${
+            import.meta.env.MODE === "development" ? "" : "/frontend"
+          }/backgrounds/${
+            backgroundFiles.find((x) => x.id === local.type)?.name
+          }`.replace(/ /gi, "%20")
 
-        refDiv.style.mask = `url(${URL})`
-        refDiv.style.webkitMask = `url(${URL})`
-        refDiv.style.backgroundSize = "contain"
-        refDiv.style.backgroundRepeat = "repeat"
+          refDiv.style.mask = `url(${URL})`
+          refDiv.style.webkitMask = `url(${URL})`
+          refDiv.style.backgroundSize = "contain"
+          refDiv.style.backgroundRepeat = "repeat"
+        }
         refDiv.style.backgroundColor = local.color
       } finally {
         release()
@@ -264,72 +266,87 @@ const Background: ComponentBackground = (props) => {
 
       try {
         if (store.cleanup) return
-        if (!local.type) return
+
         if (!ref!) return
 
         const context = ref.getContext("2d")
         if (!context) return
 
-        let svgString = cache.get(local.type)
-
-        if (!svgString) {
-          svgString = await preload(local.type)
-        }
-
-        svgString = svgString.replaceAll(
-          `"currentColor"`,
-          `"${untrack(() => local.color)}"`,
-        )
-
         const size = local.onSize()
 
-        const match = svgString.match(/width="([^"]*)" height="([^"]*)"/)
+        let svgString = cache.get(local.type)
 
-        if (match) {
-          const originalWidth = parseFloat(match[1])
-          const originalHeight = parseFloat(match[2])
+        if (local.type) {
+          if (!svgString) {
+            svgString = await preload(local.type)
+          }
 
-          // Проверяем, удалось ли получить значения ширины и высоты
-          if (!isNaN(originalWidth) && !isNaN(originalHeight)) {
-            const newWidth = originalWidth * local.quality
-            const newHeight = originalHeight * local.quality
+          svgString = svgString.replaceAll(
+            `"currentColor"`,
+            `"${untrack(() => local.color)}"`,
+          )
 
-            svgString = svgString.replace(
-              /width="[^"]*" height="[^"]*"/g,
-              `width="${newWidth}" height="${newHeight}"`,
-            )
+          const match = svgString.match(/width="([^"]*)" height="([^"]*)"/)
+
+          if (match) {
+            const originalWidth = parseFloat(match[1])
+            const originalHeight = parseFloat(match[2])
+
+            // Проверяем, удалось ли получить значения ширины и высоты
+            if (!isNaN(originalWidth) && !isNaN(originalHeight)) {
+              const newWidth = originalWidth * local.quality
+              const newHeight = originalHeight * local.quality
+
+              svgString = svgString.replace(
+                /width="[^"]*" height="[^"]*"/g,
+                `width="${newWidth}" height="${newHeight}"`,
+              )
+            }
           }
         }
 
-        // Создаем изображение
-        const img = new Image()
-        img.onload = () => {
-          context.imageSmoothingEnabled = false
+        if (local.type && svgString) {
+          // Создаем изображение
+          const img = new Image()
+          img.onload = () => {
+            context.imageSmoothingEnabled = false
 
-          ref.width = size.width * local.quality
-          ref.height = size.height * local.quality
+            ref.width = size.width * local.quality
+            ref.height = size.height * local.quality
 
-          const pattern = context.createPattern(img, "repeat")
-          if (pattern) {
-            context.fillStyle = pattern
+            const pattern = context.createPattern(img, "repeat")
+            if (pattern) {
+              context.fillStyle = pattern
 
-            context.fillRect(
-              0,
-              0,
-              size.width * local.quality,
-              size.height * local.quality,
-            )
+              context.fillRect(
+                0,
+                0,
+                size.width * local.quality,
+                size.height * local.quality,
+              )
+            }
+
+            local.onContext?.(context)
+
+            setStore("isVisible", true)
+            setStore("isHidden", false)
           }
 
-          local.onContext?.(context)
+          img.src = `data:image/svg+xml;utf8,${encodeURIComponent(
+            svgString,
+          ).replace(/'/g, "%27")}`
+        } else {
+          context.fillStyle = local.color
+          context.fillRect(
+            0,
+            0,
+            size.width * local.quality,
+            size.height * local.quality,
+          )
 
           setStore("isVisible", true)
           setStore("isHidden", false)
         }
-
-        img.src = `data:image/svg+xml;utf8,${encodeURIComponent(
-          svgString,
-        ).replace(/'/g, "%27")}`
       } finally {
         release()
       }

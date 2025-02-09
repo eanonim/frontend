@@ -3,6 +3,10 @@ import { type Key } from "../types"
 export interface AtomProps<VALUE, OPTIONS> {
   readonly default: VALUE
   /**
+   * Функция, вызываемая для генерации ключа
+   */
+  onKey?: (options: OPTIONS) => string
+  /**
    * Функция, вызываемая при запросе новых данных. Используется для запуска процесса получения данных.
    */
   onRequested?: (options: OPTIONS, key: Key) => void

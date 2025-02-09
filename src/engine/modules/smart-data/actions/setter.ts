@@ -328,12 +328,16 @@ function setter<VALUE, OPTIONS>(
         })
       }
 
-      const prev = getDefault(cache?.data)
+      const prev = getDefault(getter?.cache?.[key]?.data)
       ;(setter as any)(...["cache", key, "data"], ...args)
-      const next = getDefault(cache?.data)
+      const next = getDefault(getter?.cache?.[key]?.data)
 
       const onUpdate = getter.onUpdate
-      if (onUpdate && !comparison(prev, next)) {
+      if (
+        onUpdate &&
+        !comparison(prev, next) &&
+        getter.requests[key] === "end"
+      ) {
         onUpdate({ prev, next }, key)
       }
 

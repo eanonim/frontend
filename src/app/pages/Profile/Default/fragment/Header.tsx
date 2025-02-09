@@ -10,15 +10,11 @@ interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 const Content: Component<Content> = (props) => {
   const [user] = useAtom(USER_ATOM)
 
-  createEffect(() => {
-    console.log({ user })
-  })
-
   return (
     <SmartData signal={USER_ATOM}>
       <SmartData.Content>
         <AvatarProfile
-          src={user.photo}
+          src={user.image}
           id={user.id}
           first_name={user.first_name}
           last_name={user.last_name}

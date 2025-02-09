@@ -1,6 +1,10 @@
-import { type AtomProps, type SmartData } from "types"
+import { type AtomProps, type SmartData } from "../types"
 
 export type AtomValue<VALUE extends unknown, OPTIONS> = {
+  /**
+   * Функция, вызываемая для генерации ключа
+   */
+  onKey?: AtomProps<VALUE, OPTIONS>["onKey"]
   /**
    * Значение по умолчанию для данных в хранилище.
    */

@@ -14,7 +14,7 @@ import loc from "engine/languages"
 import { globalSignal } from "elum-state/solid"
 import { setBackground, SETTINGS_ATOM } from "engine/state"
 import { backPage, pages, replaceParams, useParams } from "router"
-import { type JSX, type Component, For } from "solid-js"
+import { type JSX, type Component, For, createEffect } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useAtom } from "engine/modules/smart-data"
 import { HEXtoRGB, RGBtoHEX, RGBtoHSV } from "@minsize/utils"
@@ -108,13 +108,19 @@ const Footer: Component<Footer> = (props) => {
     pageId: pages.BACKGROUND_EDIT,
   })
 
-  const rgb = HEXtoRGB(settings.backgroundColor)
-  const hsv = RGBtoHSV(...rgb)
+  const generateStore = () => {
+    const rgb = HEXtoRGB(settings.backgroundColor)
+    const hsv = RGBtoHSV(...rgb)
+    return {
+      color: rgb,
+      accent: [hsv[0], 1 - hsv[1]] as [number, number],
+    }
+  }
 
-  const [store, setStore] = createStore<Store>({
-    color: rgb,
+  const [store, setStore] = createStore<Store>(generateStore())
 
-    accent: [hsv[0], hsv[1]],
+  createEffect(() => {
+    setStore(generateStore())
   })
 
   const handlerSave = () => {

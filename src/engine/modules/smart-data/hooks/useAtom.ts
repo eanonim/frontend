@@ -26,13 +26,16 @@ export const useAtom = <VALUE, OPTIONS>(
     equals?: (prev: VALUE, next: VALUE) => boolean
   },
 ): [get: VALUE, set: SetStoreFunction<VALUE>] => {
-  const merged = mergeProps({ key: "default", isRequest: true }, params)
+  const merged = mergeProps({ isRequest: true }, params)
   const [local] = splitProps(merged, ["isRequest", "key", "equals"])
 
   const [storeCache, setStoreCache] = signal
 
-  const getKey = () => getValue(local.key)
   const getOptions = () => getValue(options)
+  const getKey = () =>
+    getValue(
+      local.key ? local.key : storeCache.onKey?.(getOptions()) ?? "default",
+    )
   const getRequest = () => getValue(local.isRequest)
 
   const [cache, setCache] = createStore<{ data: VALUE }>({
@@ -44,6 +47,7 @@ export const useAtom = <VALUE, OPTIONS>(
       [
         () => getter(signal, getKey()),
         () => storeCache.cache[getKey()],
+        () => storeCache.cache[getKey()]?.update_at,
         getKey,
       ],
       (next, prev) => {

@@ -2,7 +2,6 @@ import { Background, Flex } from "components"
 
 import { type JSX, type Component } from "solid-js"
 import { pages, useParams } from "router"
-import { globalSignal } from "elum-state/solid"
 import { SETTINGS_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
 

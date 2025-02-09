@@ -3,11 +3,14 @@ import loc from "engine/languages"
 
 import { type JSX, type Component } from "solid-js"
 import { timeAgoOnlyDate } from "engine"
+import { useAtom } from "engine/modules/smart-data"
+import { SETTINGS_ATOM } from "engine/state"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
+  const [settings] = useAtom(SETTINGS_ATOM)
 
   return (
     <Flex
@@ -17,7 +20,12 @@ const Content: Component<Content> = (props) => {
         "margin-top": "auto",
       }}
     >
-      <Background fixed type={2} quality={2} />
+      <Background
+        fixed
+        type={settings.backgroundId}
+        color={settings.backgroundColor}
+        quality={2}
+      />
       <Message.Group>
         <Message.Group.List>
           <Message.System key={0}>

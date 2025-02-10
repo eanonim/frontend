@@ -105,8 +105,6 @@ html[theme="light"][theme-color="pink"] {
   --section_bg_color        : #ffdbf0;
   --section_bg_color--active: #E0E0E0;
 
-  --bg_layout_shadow: #888888;
-
   /* --bg_input: #FFFFFF; */
 
   --min_height_input: 34px;
@@ -148,8 +146,6 @@ html[theme="dark"][theme-color="pink"] {
 
   --section_bg_color        : #1e0011;
   --section_bg_color--active: #2b0019;
-
-  --bg_layout_shadow: #888888;
 
   /* --bg_input: #FFFFFF; */
 

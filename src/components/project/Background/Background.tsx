@@ -154,17 +154,22 @@ const backgroundFiles = [
 const cache = new Map<number, string>()
 const mutex = Mutex({ globalLimit: 1 })
 
-const preload = async (type: number) => {
-  const response = await fetch(
-    `${import.meta.env.MODE === "development" ? "" : "/frontend"}/backgrounds/${
-      backgroundFiles.find((x) => x.id === type)?.name
-    }`,
-  )
-  const svgString = await response.text()
+const preload = async (type: number, signal = new AbortController().signal) => {
+  try {
+    const response = await fetch(
+      `${
+        import.meta.env.MODE === "development" ? "" : "/frontend"
+      }/backgrounds/${backgroundFiles.find((x) => x.id === type)?.name}`,
+      { signal },
+    )
+    const svgString = await response.text()
 
-  cache.set(type, svgString)
+    cache.set(type, svgString)
 
-  return svgString
+    return svgString
+  } catch {
+    return ""
+  }
 }
 
 interface Background extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -256,12 +261,14 @@ const Background: ComponentBackground = (props) => {
   }
 
   const handlerRenderCanvas = async () => {
+    const { signal, abort } = new AbortController()
     start(async () => {
       const release = await mutex.wait()
 
       onCleanup(() => {
         release?.()
         setStore("cleanup", true)
+        abort()
       })
 
       try {
@@ -278,7 +285,7 @@ const Background: ComponentBackground = (props) => {
 
         if (local.type) {
           if (!svgString) {
-            svgString = await preload(local.type)
+            svgString = await preload(local.type, signal)
           }
 
           svgString = svgString.replaceAll(

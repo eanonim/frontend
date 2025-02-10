@@ -75,14 +75,14 @@
   right   : 0;
 }
 
+.Cell.Cell__Separator--always .Cell__separator {
+  opacity: 1;
+}
+
 .Cell:only-child .Cell__separator {
   opacity: 0;
 }
 
 .Cell:not(:only-child):last-child .Cell__separator {
   opacity: 0;
-}
-
-.Cell.Cell__Separator--always .Cell__separator {
-  opacity: 1;
 }

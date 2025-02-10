@@ -25,4 +25,13 @@ export default {
   },
   today: "Today",
   yesterday: "Yesterday",
+  theme: {
+    system: "System",
+    dark: "Dark",
+    light: "Light",
+  },
+  themeColor: {
+    standard: "Standard",
+    pink: "Pink",
+  },
 }

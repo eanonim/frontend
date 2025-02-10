@@ -109,7 +109,7 @@
 
 .Message--out .Message__in {
   background-color: var(--accent_color);
-  color           : var(--text_primary);
+  color           : var(--accent_color--text);
 }
 
 

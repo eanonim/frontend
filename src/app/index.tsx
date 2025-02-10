@@ -21,11 +21,15 @@ import {
   bridgeSetupSwipeBehavior,
   bridgeGetInitData,
   getAppData,
+  bridgeRequestTheme,
+  EventThemeChanged,
 } from "@apiteam/twa-bridge/solid"
-import { setHeaderColor } from "engine"
-import { KEYBOARD_ATOM } from "engine/state"
+import { isColorDark, setHeaderColor } from "engine"
+import { KEYBOARD_ATOM, SETTINGS_ATOM } from "engine/state"
 import { getter, globalSignal, setter } from "elum-state/solid"
+import { getter as SmartGetter } from "engine/modules/smart-data"
 import { createStore } from "solid-js/store"
+import { setTheme } from "engine/state/settings"
 
 const App: Component = () => {
   const [keyboard] = globalSignal(KEYBOARD_ATOM)
@@ -123,6 +127,27 @@ const App: Component = () => {
       }
     }
 
+    const onEventThemeChanged = (
+      data: EventsData[typeof EventThemeChanged],
+    ) => {
+      if (data.theme_params["bg_color"]) {
+        if (
+          !SmartGetter(SETTINGS_ATOM) ||
+          SmartGetter(SETTINGS_ATOM).theme === "system"
+        ) {
+          setTheme(
+            isColorDark(data.theme_params["bg_color"]) ? "dark" : "light",
+            false,
+          )
+        } else {
+          setTheme(SmartGetter(SETTINGS_ATOM).theme ?? "dark", false)
+        }
+      }
+    }
+
+    listener.on("theme_changed", onEventThemeChanged)
+    bridgeRequestTheme()
+
     listener.on(EventContentSafeAreaChanged, onEventContentSafeAreaChanged)
     bridgeRequestContentSafeAreaInset()
 
@@ -173,6 +198,7 @@ const App: Component = () => {
     document.addEventListener("touchend", onTouchEnd)
 
     onCleanup(() => {
+      listener.off(EventThemeChanged, onEventThemeChanged)
       listener.off(EventContentSafeAreaChanged, onEventContentSafeAreaChanged)
       listener.off(EventSafeAreaChanged, onEventSafeAreaChanged)
       listener.off(EventViewportChanged, onEventViewportChanged)

@@ -1,7 +1,7 @@
 import { setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
 import { SETTINGS_ATOM } from "engine/state"
-import { setFontSize } from "engine/state/settings"
+import { setFontSize, setTheme, setThemeColor } from "engine/state/settings"
 
 const storeList = async (options: Socket["store.list"]["request"]) => {
   const { response, error } = await socketSend("store.list", options)
@@ -20,10 +20,20 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
     ;(response as any)[key] = value
   }
 
+  /* Установка дефолтной системной темы */
+  if (!response.theme) response.theme = "system"
+  if (!response.themeColor) response.themeColor = "system"
+
+  setter(SETTINGS_ATOM, response)
+
   if (response?.fontSize) {
     setFontSize(response?.fontSize)
   }
-  setter(SETTINGS_ATOM, response)
+
+  setTheme(response.theme)
+  setThemeColor(response.themeColor)
+  console.log({ fresponse: response })
+
   return { response, error }
 }
 

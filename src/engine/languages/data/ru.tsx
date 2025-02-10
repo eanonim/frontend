@@ -25,4 +25,13 @@ export default {
   },
   today: "Сегодня",
   yesterday: "Вчера",
+  theme: {
+    system: "Системная",
+    dark: "Тёмная",
+    light: "Светлая",
+  },
+  themeColor: {
+    standard: "По умолчанию",
+    pink: "Розовая",
+  },
 }

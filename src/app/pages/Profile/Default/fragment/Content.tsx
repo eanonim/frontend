@@ -82,6 +82,7 @@ const Content: Component<Content> = (props) => {
         icon: IconCircleHalf,
         title: "color_scheme",
         color: "#33A4DA",
+        handler: () => pushPage({ pageId: pages.THEME }),
       },
       {
         icon: IconPhotoFilled,

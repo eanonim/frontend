@@ -23,7 +23,11 @@ export type Socket = {
         }
       | {
           key: "theme"
-          value: "dark" | "light"
+          value: "dark" | "light" | "system"
+        }
+      | {
+          key: "themeColor"
+          value: "pink" | "standard"
         }
     response: {
       result: boolean
@@ -41,7 +45,8 @@ export type Socket = {
       fontSize: number
       backgroundId: number
       backgroundColor: string
-      theme: "dark" | "light"
+      theme: "dark" | "light" | "system"
+      themeColor: "pink" | "standard"
     }
   }
   "user.get": {
@@ -86,13 +91,16 @@ export const socketSend = async <KEY extends keyof Socket>(
   key: KEY,
   options: Socket[KEY]["request"],
 ) => {
-  const release1 = await mutex.wait({ key: "lock1", limit: 1 })
+  console.log({ key1: key, options })
+  await mutex.wait({ key: "lock1", limit: 1 })
   if (status()) {
-    release1()
+    mutex.release({ key: "lock1" })
+    mutex.release({ key: "lock2" })
   }
-  const release2 = await mutex.wait({ key: "lock2", limit: 1 })
+  await mutex.wait({ key: "lock2", limit: 1 })
   if (status()) {
-    release2()
+    mutex.release({ key: "lock1" })
+    mutex.release({ key: "lock2" })
   }
 
   return await socket.send(key, options)

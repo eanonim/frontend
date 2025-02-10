@@ -333,6 +333,7 @@ function setter<VALUE, OPTIONS>(
       const next = getDefault(getter?.cache?.[key]?.data)
 
       const onUpdate = getter.onUpdate
+      console.log({ prev, next })
       if (
         onUpdate &&
         !comparison(prev, next) &&

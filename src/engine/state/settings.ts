@@ -22,7 +22,7 @@ export const SETTINGS_ATOM = atom<
     backgroundId: 0,
     backgroundColor: "#222222",
     theme: "dark",
-    themeColor: "system",
+    themeColor: "standard",
   },
   onRequested: (options, key) => {
     storeList(options)

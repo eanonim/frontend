@@ -145,7 +145,7 @@ const App: Component = () => {
       }
     }
 
-    listener.on("theme_changed", onEventThemeChanged)
+    listener.on(EventThemeChanged, onEventThemeChanged)
     bridgeRequestTheme()
 
     listener.on(EventContentSafeAreaChanged, onEventContentSafeAreaChanged)

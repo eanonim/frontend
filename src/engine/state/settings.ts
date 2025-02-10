@@ -64,12 +64,13 @@ export const setThemeColor = (
   if (set) {
     setter(SETTINGS_ATOM, "themeColor", themeColor)
   }
-  if (themeColor === "system") {
+
+  document.documentElement.setAttribute("theme-color", themeColor)
+
+  if (themeColor === "standard") {
     bridgeRequestTheme()
     return
   }
-
-  document.documentElement.setAttribute("theme-color", themeColor)
 }
 
 export const setTheme = (
@@ -88,9 +89,11 @@ export const setTheme = (
   const bodyStyles = window.getComputedStyle(document.body)
   const color = bodyStyles.getPropertyValue("--bg_color")
 
-  bridgeSetHeaderColor({ color: color })
-  bridgeSetBottomBarColor({ color })
+  bridgeSetHeaderColor({ color })
   bridgeSetBackgroundColor({ color })
+
+  const colorBottom = bodyStyles.getPropertyValue("--section_bg_color")
+  bridgeSetBottomBarColor({ color: colorBottom })
 }
 
 export const setBackground = (

@@ -22,7 +22,7 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
 
   /* Установка дефолтной системной темы */
   if (!response.theme) response.theme = "system"
-  if (!response.themeColor) response.themeColor = "system"
+  if (!response.themeColor) response.themeColor = "standard"
 
   setter(SETTINGS_ATOM, response)
 

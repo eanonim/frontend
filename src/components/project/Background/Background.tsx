@@ -196,8 +196,6 @@ type Store = {
 }
 
 const Background: ComponentBackground = (props) => {
-  const [isPending, start] = useTransition()
-
   const merged = mergeProps(
     {
       color: "#222222",
@@ -228,136 +226,137 @@ const Background: ComponentBackground = (props) => {
   let refDiv: HTMLDivElement
   let ref: HTMLCanvasElement
 
+  const controller = new AbortController()
+
+  onCleanup(() => {
+    console.log("AS")
+    controller?.abort?.()
+  })
+
   const handlerRenderSvg = async () => {
-    start(async () => {
-      const release = await mutex.wait()
-      onCleanup(() => {
-        release?.()
-        setStore("cleanup", true)
-      })
-
-      try {
-        if (store.cleanup) return
-
-        if (!refDiv!) return
-
-        if (local.type) {
-          const URL = `${
-            import.meta.env.MODE === "development" ? "" : "/frontend"
-          }/backgrounds/${
-            backgroundFiles.find((x) => x.id === local.type)?.name
-          }`.replace(/ /gi, "%20")
-
-          refDiv.style.mask = `url(${URL})`
-          refDiv.style.webkitMask = `url(${URL})`
-          refDiv.style.backgroundSize = "contain"
-          refDiv.style.backgroundRepeat = "repeat"
-        }
-        refDiv.style.backgroundColor = local.color
-      } finally {
-        release()
-      }
+    const release = await mutex.wait()
+    onCleanup(() => {
+      release?.()
+      setStore("cleanup", true)
     })
+
+    try {
+      if (store.cleanup) return
+
+      if (!refDiv!) return
+
+      if (local.type) {
+        const URL = `${
+          import.meta.env.MODE === "development" ? "" : "/frontend"
+        }/backgrounds/${
+          backgroundFiles.find((x) => x.id === local.type)?.name
+        }`.replace(/ /gi, "%20")
+
+        refDiv.style.mask = `url(${URL})`
+        refDiv.style.webkitMask = `url(${URL})`
+        refDiv.style.backgroundSize = "contain"
+        refDiv.style.backgroundRepeat = "repeat"
+      }
+      refDiv.style.backgroundColor = local.color
+    } finally {
+      release()
+    }
   }
 
   const handlerRenderCanvas = async () => {
-    const { signal, abort } = new AbortController()
-    start(async () => {
-      const release = await mutex.wait()
+    const release = await mutex.wait()
 
-      onCleanup(() => {
-        release?.()
-        setStore("cleanup", true)
-        abort()
-      })
+    onCleanup(() => {
+      release?.()
+      setStore("cleanup", true)
+    })
 
-      try {
-        if (store.cleanup) return
+    try {
+      if (store.cleanup) return
 
-        if (!ref!) return
+      if (!ref!) return
 
-        const context = ref.getContext("2d")
-        if (!context) return
+      const context = ref.getContext("2d")
+      if (!context) return
 
-        const size = local.onSize()
+      const size = local.onSize()
 
-        let svgString = cache.get(local.type)
+      let svgString = cache.get(local.type)
 
-        if (local.type) {
-          if (!svgString) {
-            svgString = await preload(local.type, signal)
-          }
-
-          svgString = svgString.replaceAll(
-            `"currentColor"`,
-            `"${untrack(() => local.color)}"`,
-          )
-
-          const match = svgString.match(/width="([^"]*)" height="([^"]*)"/)
-
-          if (match) {
-            const originalWidth = parseFloat(match[1])
-            const originalHeight = parseFloat(match[2])
-
-            // Проверяем, удалось ли получить значения ширины и высоты
-            if (!isNaN(originalWidth) && !isNaN(originalHeight)) {
-              const newWidth = originalWidth * local.quality
-              const newHeight = originalHeight * local.quality
-
-              svgString = svgString.replace(
-                /width="[^"]*" height="[^"]*"/g,
-                `width="${newWidth}" height="${newHeight}"`,
-              )
-            }
-          }
+      if (local.type) {
+        if (!svgString) {
+          svgString = await preload(local.type, controller.signal)
         }
 
-        if (local.type && svgString) {
-          // Создаем изображение
-          const img = new Image()
-          img.onload = () => {
-            context.imageSmoothingEnabled = false
+        svgString = svgString.replaceAll(
+          `"currentColor"`,
+          `"${untrack(() => local.color)}"`,
+        )
 
-            ref.width = size.width * local.quality
-            ref.height = size.height * local.quality
+        const match = svgString.match(/width="([^"]*)" height="([^"]*)"/)
 
-            const pattern = context.createPattern(img, "repeat")
-            if (pattern) {
-              context.fillStyle = pattern
+        if (match) {
+          const originalWidth = parseFloat(match[1])
+          const originalHeight = parseFloat(match[2])
 
-              context.fillRect(
-                0,
-                0,
-                size.width * local.quality,
-                size.height * local.quality,
-              )
-            }
+          // Проверяем, удалось ли получить значения ширины и высоты
+          if (!isNaN(originalWidth) && !isNaN(originalHeight)) {
+            const newWidth = originalWidth * local.quality
+            const newHeight = originalHeight * local.quality
 
-            local.onContext?.(context)
+            svgString = svgString.replace(
+              /width="[^"]*" height="[^"]*"/g,
+              `width="${newWidth}" height="${newHeight}"`,
+            )
+          }
+        }
+      }
 
-            setStore("isVisible", true)
-            setStore("isHidden", false)
+      if (local.type && svgString) {
+        // Создаем изображение
+        const img = new Image()
+        img.onload = () => {
+          context.imageSmoothingEnabled = false
+
+          ref.width = size.width * local.quality
+          ref.height = size.height * local.quality
+
+          const pattern = context.createPattern(img, "repeat")
+          if (pattern) {
+            context.fillStyle = pattern
+
+            context.fillRect(
+              0,
+              0,
+              size.width * local.quality,
+              size.height * local.quality,
+            )
           }
 
-          img.src = `data:image/svg+xml;utf8,${encodeURIComponent(
-            svgString,
-          ).replace(/'/g, "%27")}`
-        } else {
-          context.fillStyle = local.color
-          context.fillRect(
-            0,
-            0,
-            size.width * local.quality,
-            size.height * local.quality,
-          )
+          local.onContext?.(context)
 
           setStore("isVisible", true)
           setStore("isHidden", false)
         }
-      } finally {
-        release()
+
+        img.src = `data:image/svg+xml;utf8,${encodeURIComponent(
+          svgString,
+        ).replace(/'/g, "%27")}`
+      } else {
+        context.fillStyle = local.color
+        context.fillRect(
+          0,
+          0,
+          size.width * local.quality,
+          size.height * local.quality,
+        )
+
+        setStore("isVisible", true)
+        setStore("isHidden", false)
       }
-    })
+    } finally {
+      release()
+    }
   }
 
   const handlerRender = () => {
@@ -407,7 +406,6 @@ const Background: ComponentBackground = (props) => {
       window.removeEventListener("resize", handlerRender)
     })
   })
-
   return (
     <div
       class={style.Background}
@@ -420,7 +418,7 @@ const Background: ComponentBackground = (props) => {
       }}
       {...others}
     >
-      <Show keyed when={!isPending() && local.onSize()}>
+      <Show keyed when={local.onSize()}>
         {(size) => (
           <Switch>
             <Match when={local.render === "svg"}>

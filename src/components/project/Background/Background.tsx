@@ -154,6 +154,21 @@ const backgroundFiles = [
 const cache = new Map<number, string>()
 const mutex = Mutex({ globalLimit: 1 })
 
+const cacheBlob = new Map<number, string>()
+const createBlob = (type: number, data: string) => {
+  const cache = cacheBlob.get(type)
+
+  if (!!cache) return cache
+
+  const blob = new Blob([data], { type: "image/svg+xml" })
+
+  const MASK = URL.createObjectURL(blob)
+
+  cacheBlob.set(type, MASK)
+
+  return MASK
+}
+
 const preload = async (type: number, signal = new AbortController().signal) => {
   try {
     const response = await fetch(
@@ -246,14 +261,15 @@ const Background: ComponentBackground = (props) => {
       if (!refDiv!) return
 
       if (local.type) {
-        const URL = `${
-          import.meta.env.MODE === "development" ? "" : "/frontend"
-        }/backgrounds/${
-          backgroundFiles.find((x) => x.id === local.type)?.name
-        }`.replace(/ /gi, "%20")
+        let svgString = cache.get(local.type)
 
-        refDiv.style.mask = `url(${URL})`
-        refDiv.style.webkitMask = `url(${URL})`
+        if (!svgString) {
+          svgString = await preload(local.type)
+        }
+
+        const MASK = createBlob(local.type, svgString)
+        refDiv.style.mask = `url(${MASK})`
+        refDiv.style.webkitMask = `url(${MASK})`
         refDiv.style.backgroundSize = "contain"
         refDiv.style.backgroundRepeat = "repeat"
       }

@@ -12,7 +12,7 @@ const storeSet = async (options: Socket["store.set"]["request"]) => {
      */
     console.log({ error })
     storeList({})
-    handlerError({ error_code: error.Code, message: error.Message })
+    handlerError({ error_code: error.code, message: error.message })
 
     return { response, error }
   }

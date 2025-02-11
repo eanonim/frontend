@@ -3,8 +3,9 @@ import { Mutex } from "@minsize/mutex"
 import { createEffect, createSignal, on } from "solid-js"
 
 export type SocketError = {
-  Code: number
-  Message: string
+  code: number
+  message: string
+  critical?: boolean
 }
 
 export type Socket = {

@@ -8,7 +8,28 @@ export type SocketError = {
   critical?: boolean
 }
 
+export enum StoreOptions {
+  "backgroundId" = "backgroundId",
+  "themeColor" = "themeColor",
+}
+
 export type Socket = {
+  "store.options": {
+    request: {
+      key: StoreOptions
+    }
+    response:
+      | Array<{
+          key: StoreOptions.backgroundId
+          value: number
+          is_premium: boolean
+        }>
+      | Array<{
+          key: StoreOptions.themeColor
+          value: "pink" | "standard"
+          is_premium: boolean
+        }>
+  }
   "store.set": {
     request:
       | {

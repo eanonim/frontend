@@ -7,10 +7,11 @@ import {
   Switch,
   Match,
   splitProps,
+  createEffect,
 } from "solid-js"
-import { SETTINGS_ATOM } from "engine/state"
+import { SETTINGS_ATOM, STORE_OPTIONS_ATOM, USER_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
-import { Socket } from "engine/api/module"
+import { Socket, StoreOptions } from "engine/api/module"
 import loc from "engine/languages"
 import { setTheme, setThemeColor } from "engine/state/settings"
 import { DynamicProps } from "solid-js/web"
@@ -19,7 +20,15 @@ interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
-  const [settings, setSettings] = useAtom(SETTINGS_ATOM)
+  const [settings] = useAtom(SETTINGS_ATOM)
+  const [options] = useAtom(STORE_OPTIONS_ATOM, {
+    key: StoreOptions.themeColor,
+  })
+  const [user] = useAtom(USER_ATOM)
+
+  createEffect(() => {
+    console.log({ options })
+  })
 
   const handlerSet = (theme: Socket["store.list"]["response"]["theme"]) => {
     setTheme(theme)
@@ -28,6 +37,11 @@ const Content: Component<Content> = (props) => {
   const handlerSetColor = (
     themeColor: Socket["store.list"]["response"]["themeColor"],
   ) => {
+    console.log({ options })
+    const isPremium =
+      options.find((x) => x.value === themeColor)?.is_premium ?? false
+    if (isPremium !== user.premium) return
+
     setThemeColor(themeColor)
   }
 

@@ -8,6 +8,9 @@ import Startup from "./pages/Startup/Startup"
 import Search from "./pages/Search/Search"
 import Profile from "./pages/Profile/Profile"
 import Chats from "./pages/Chats/Chats"
+
+import Popup from "./popups"
+
 import {
   bridgeRequestSafeAreaInset,
   EventSafeAreaChanged,
@@ -19,7 +22,6 @@ import {
   EventViewportChanged,
   bridgeRequestViewport,
   bridgeSetupSwipeBehavior,
-  bridgeGetInitData,
   getAppData,
   bridgeRequestTheme,
   EventThemeChanged,
@@ -209,7 +211,7 @@ const App: Component = () => {
   })
 
   return (
-    <Root activeView={activeView()}>
+    <Root activeView={activeView()} popup={<Popup />}>
       <Path
         tabbar={[`${pages.CHATS}`].includes(getLastPage(views.CHATS) || "")}
         nav={views.CHATS}

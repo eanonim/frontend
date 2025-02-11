@@ -9,6 +9,7 @@ import {
   SubTitle,
   Title,
 } from "components"
+import { backgrounds } from "root/configs"
 
 import { chunks } from "@minsize/utils"
 
@@ -35,11 +36,6 @@ const textProps: TextProps = {
   others: "iOS",
 }
 
-const backgrounds = chunks(
-  3,
-  Array.from(Array(30)).map((x, index) => index + 2),
-)
-
 const Content: Component<Content> = (props) => {
   const [settings] = useAtom(SETTINGS_ATOM)
 
@@ -62,22 +58,22 @@ const Content: Component<Content> = (props) => {
       </Group.Container>
       <Group.Container>
         <Gap count={"6px"} direction={"column"} style={{ padding: "6px" }}>
-          <For each={backgrounds}>
+          <For each={chunks(3, backgrounds)}>
             {(chunk, chunkIndex) => (
               <Gap data-index={chunkIndex()} count={"6px"}>
                 <For each={chunk}>
-                  {(backgroundId, index) => (
+                  {(background, index) => (
                     <Background.Preview
-                      onClick={() => handlerOpen(backgroundId)}
+                      onClick={() => handlerOpen(background.id)}
                       data-index={index()}
-                      selected={backgroundId === settings.backgroundId}
+                      selected={background.id === settings.backgroundId}
                     >
                       <Background
                         color={"#3F3F3F"}
-                        type={backgroundId}
+                        type={background.id}
                         quality={0.5}
                         onContext={(context) => {
-                          if (backgroundId >= 11) {
+                          if (background.isPremium) {
                             context.fillStyle = "rgba(0,0,0,0.6)"
                             context.fillRect(
                               0,
@@ -89,7 +85,7 @@ const Content: Component<Content> = (props) => {
                         }}
                       />
 
-                      <Show when={backgroundId >= 11}>
+                      <Show when={background.isPremium}>
                         <Background.Overlay>
                           <Flex height={"100%"}>
                             <SubTitle align={"center"}>

@@ -1,0 +1,53 @@
+.Snackbar {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+
+  box-sizing: border-box;
+  bottom: 0;
+  margin: 8px;
+
+  border-radius: 14px;
+
+  /* backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); */
+  display: flex;
+  align-items: center;
+}
+
+
+.Snackbar::after {
+  z-index: 1;
+  content: " ";
+
+  border-radius: inherit;
+  position: absolute;
+  background-color: var(--section_bg_color);
+  opacity: 0.5;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+
+.Snackbar::before {
+  z-index: 1;
+  content: " ";
+
+  border-radius: inherit;
+  position: absolute;
+  background-color: var(--secondary_bg_color);
+  opacity: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+
+}
+
+.Snackbar__children {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  overflow: hidden;
+}

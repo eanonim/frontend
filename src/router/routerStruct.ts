@@ -48,7 +48,6 @@ export enum modals {
 }
 
 export enum popouts {
-  COPY = "snackbar_copy",
   ERROR = "snackbar_error",
 }
 

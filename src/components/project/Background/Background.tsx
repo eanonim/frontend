@@ -17,139 +17,11 @@ import {
   useTransition,
   Switch,
   Match,
+  startTransition,
 } from "solid-js"
 import { Mutex } from "@minsize/mutex"
-
-const backgroundFiles = [
-  {
-    id: 1,
-    name: "Cartoon Space.svg",
-  },
-  {
-    id: 2,
-    name: "Cats.svg",
-  },
-  {
-    id: 3,
-    name: "Characters.svg",
-  },
-  {
-    id: 4,
-    name: "Christmas.svg",
-  },
-  {
-    id: 5,
-    name: "Food.svg",
-  },
-  {
-    id: 6,
-    name: "Free Time.svg",
-  },
-  {
-    id: 7,
-    name: "Fun space.svg",
-  },
-  {
-    id: 8,
-    name: "Games 2.svg",
-  },
-  {
-    id: 9,
-    name: "Games.svg",
-  },
-  {
-    id: 10,
-    name: "HALOWEEN.svg",
-  },
-  {
-    id: 11,
-    name: "Love.svg",
-  },
-  {
-    id: 12,
-    name: "Magic 2.svg",
-  },
-  {
-    id: 13,
-    name: "Magic potion.svg",
-  },
-  {
-    id: 14,
-    name: "Magic.svg",
-  },
-  {
-    id: 15,
-    name: "Richness.svg",
-  },
-  {
-    id: 16,
-    name: "Sea World.svg",
-  },
-  {
-    id: 17,
-    name: "Sightseeing.svg",
-  },
-  {
-    id: 18,
-    name: "Snowflakes.svg",
-  },
-  {
-    id: 19,
-    name: "Space Cat.svg",
-  },
-  {
-    id: 20,
-    name: "Space.svg",
-  },
-  {
-    id: 21,
-    name: "Sport.svg",
-  },
-  {
-    id: 22,
-    name: "Star Wars 2.svg",
-  },
-  {
-    id: 23,
-    name: "Star Wars.svg",
-  },
-  {
-    id: 24,
-    name: "Sweet Love.svg",
-  },
-  {
-    id: 25,
-    name: "Sweets.svg",
-  },
-  {
-    id: 26,
-    name: "T-City.svg",
-  },
-  {
-    id: 27,
-    name: "Unicorn.svg",
-  },
-  {
-    id: 28,
-    name: "Witch.svg",
-  },
-  {
-    id: 29,
-    name: "Wizard world.svg",
-  },
-  {
-    id: 30,
-    name: "Woodland.svg",
-  },
-  {
-    id: 31,
-    name: "Zoo.svg",
-  },
-  {
-    id: 32,
-    name: "renovation.svg",
-  },
-]
+import { createVisibilityObserver } from "@solid-primitives/intersection-observer"
+import { backgrounds } from "root/configs"
 
 const cache = new Map<number, string>()
 const mutex = Mutex({ globalLimit: 1 })
@@ -174,7 +46,7 @@ const preload = async (type: number, signal = new AbortController().signal) => {
     const response = await fetch(
       `${
         import.meta.env.MODE === "development" ? "" : "/frontend"
-      }/backgrounds/${backgroundFiles.find((x) => x.id === type)?.name}`,
+      }/backgrounds/${backgrounds.find((x) => x.id === type)?.name}`,
       { signal },
     )
     const svgString = await response.text()
@@ -207,7 +79,6 @@ type ComponentBackground = Component<Background> & {
 type Store = {
   isVisible: boolean
   isHidden: boolean
-  cleanup: boolean
 }
 
 const Background: ComponentBackground = (props) => {
@@ -232,32 +103,29 @@ const Background: ComponentBackground = (props) => {
     "render",
   ])
 
-  const [store, setStore] = createStore<Store>({
-    isVisible: !!cache.has(local.type),
-    isHidden: false,
-    cleanup: false,
-  })
-
   let refDiv: HTMLDivElement
   let ref: HTMLCanvasElement
+
+  const useVisibilityObserver = createVisibilityObserver({
+    initialValue: false,
+  })
+
+  const visibleCanvas = useVisibilityObserver(() => ref!)
+
+  const [store, setStore] = createStore<Store>({
+    isVisible: visibleCanvas() && !!cache.has(local.type),
+    isHidden: false,
+  })
 
   const controller = new AbortController()
 
   onCleanup(() => {
-    console.log("AS")
     controller?.abort?.()
   })
 
   const handlerRenderSvg = async () => {
     const release = await mutex.wait()
-    onCleanup(() => {
-      release?.()
-      setStore("cleanup", true)
-    })
-
     try {
-      if (store.cleanup) return
-
       if (!refDiv!) return
 
       if (local.type) {
@@ -280,16 +148,10 @@ const Background: ComponentBackground = (props) => {
   }
 
   const handlerRenderCanvas = async () => {
+    if (!visibleCanvas()) return
     const release = await mutex.wait()
 
-    onCleanup(() => {
-      release?.()
-      setStore("cleanup", true)
-    })
-
     try {
-      if (store.cleanup) return
-
       if (!ref!) return
 
       const context = ref.getContext("2d")
@@ -376,18 +238,20 @@ const Background: ComponentBackground = (props) => {
   }
 
   const handlerRender = () => {
-    switch (local.render) {
-      case "canvas": {
-        handlerRenderCanvas()
+    startTransition(() => {
+      switch (local.render) {
+        case "canvas": {
+          handlerRenderCanvas()
+        }
+        case "svg": {
+          handlerRenderSvg()
+        }
       }
-      case "svg": {
-        handlerRenderSvg()
-      }
-    }
+    })
   }
 
   createEffect(
-    on([() => ref!, () => refDiv!], () => {
+    on([() => ref!, () => refDiv!, visibleCanvas], () => {
       if (local.render === "svg") {
         handlerRender()
       } else {
@@ -422,6 +286,7 @@ const Background: ComponentBackground = (props) => {
       window.removeEventListener("resize", handlerRender)
     })
   })
+
   return (
     <div
       class={style.Background}

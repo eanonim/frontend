@@ -44,6 +44,10 @@ const Content: Component<Content> = (props) => {
   const [settings] = useAtom(SETTINGS_ATOM)
   const [user] = useAtom(USER_ATOM)
 
+  createEffect(() => {
+    console.log({ options: options })
+  })
+
   const handlerOpen = (type: number) => {
     const isPremium = options.find((x) => x.value === type)?.is_premium ?? true
 
@@ -66,14 +70,22 @@ const Content: Component<Content> = (props) => {
       </Group.Container>
       <Group.Container>
         <Gap count={"6px"} direction={"column"} style={{ padding: "6px" }}>
-          <For each={chunks(3, backgrounds)}>
+          <For
+            each={chunks(
+              3,
+              backgrounds.map((background) => ({
+                ...background,
+                ...{
+                  isPremium: options.find((x) => x.value === background.id)
+                    ?.is_premium,
+                },
+              })),
+            )}
+          >
             {(chunk, chunkIndex) => (
               <Gap data-index={chunkIndex()} count={"6px"}>
                 <For each={chunk}>
                   {(background, index) => {
-                    const isPremium =
-                      options.find((x) => x.value === background.id)
-                        ?.is_premium ?? true
                     return (
                       <Background.Preview
                         onClick={() => handlerOpen(background.id)}
@@ -85,7 +97,7 @@ const Content: Component<Content> = (props) => {
                           type={background.id}
                           quality={0.5}
                           onContext={(context) => {
-                            if (isPremium !== user.premium) {
+                            if (background.isPremium !== user.premium) {
                               context.fillStyle = "rgba(0,0,0,0.6)"
                               context.fillRect(
                                 0,
@@ -97,7 +109,7 @@ const Content: Component<Content> = (props) => {
                           }}
                         />
 
-                        <Show when={isPremium !== user.premium}>
+                        <Show when={background.isPremium !== user.premium}>
                           <Background.Overlay>
                             <Flex height={"100%"}>
                               <SubTitle align={"center"}>

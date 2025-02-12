@@ -26,10 +26,6 @@ const Content: Component<Content> = (props) => {
   })
   const [user] = useAtom(USER_ATOM)
 
-  createEffect(() => {
-    console.log({ options })
-  })
-
   const handlerSet = (theme: Socket["store.list"]["response"]["theme"]) => {
     setTheme(theme)
   }
@@ -37,7 +33,6 @@ const Content: Component<Content> = (props) => {
   const handlerSetColor = (
     themeColor: Socket["store.list"]["response"]["themeColor"],
   ) => {
-    console.log({ options })
     const isPremium =
       options.find((x) => x.value === themeColor)?.is_premium ?? false
     if (isPremium !== user.premium) return

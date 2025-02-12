@@ -1,5 +1,5 @@
 import { type Key, type AtomReturn } from "../types"
-import { getter, getValue, setter, setterStatus } from ".."
+import { getDefault, getter, getValue, setter, setterStatus } from ".."
 
 import { createEffect, mergeProps, on, splitProps } from "solid-js"
 import { createStore, type SetStoreFunction } from "solid-js/store"
@@ -38,9 +38,7 @@ export const useAtom = <VALUE, OPTIONS>(
     )
   const getRequest = () => getValue(local.isRequest)
 
-  const [cache, setCache] = createStore<{ data: VALUE }>({
-    data: getter(signal, getKey()),
-  })
+  const [cache, setCache] = createStore(getter(signal, getKey()) as any)
 
   createEffect(
     on(
@@ -56,7 +54,7 @@ export const useAtom = <VALUE, OPTIONS>(
 
         if (local.equals?.(prevData, nextData)) return
 
-        setCache("data", next?.[1].data)
+        setCache(next?.[1].data)
       },
       { defer: true },
     ),
@@ -86,7 +84,11 @@ export const useAtom = <VALUE, OPTIONS>(
     return (setter as any)([signal, getKey()], ...args)
   }
 
-  return [cache.data, _setCache]
+  createEffect(() => {
+    console.log({ data: cache })
+  })
+
+  return [cache, _setCache]
 }
 
 export default useAtom

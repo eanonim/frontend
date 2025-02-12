@@ -1,7 +1,7 @@
 import { atom } from "engine/modules/smart-data"
 
 import { storeOptions } from "engine/api"
-import { Socket } from "engine/api/module"
+import { Socket, StoreOptionsAtom } from "engine/api/module"
 
 export const STORE_OPTIONS_ATOM = atom<
   Socket["store.options"]["response"],

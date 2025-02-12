@@ -8,6 +8,12 @@ export type SocketError = {
   critical?: boolean
 }
 
+export type StoreOptionsAtom<
+  T extends Socket["store.options"]["response"][0] = Socket["store.options"]["response"][0],
+> = {
+  [key in T["value"]]?: T
+}
+
 export enum StoreOptions {
   "backgroundId" = "backgroundId",
   "themeColor" = "themeColor",

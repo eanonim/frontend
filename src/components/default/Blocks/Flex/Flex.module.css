@@ -70,3 +70,8 @@
 .Flex--reverse.Flex__direction--column {
   flex-direction: column-reverse;
 }
+
+/* Wrap */
+.Flex--wrap {
+  flex-wrap: wrap;
+}

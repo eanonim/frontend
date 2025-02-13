@@ -1,0 +1,52 @@
+.Tag {
+  font-weight: inherit;
+  font-size  : inherit;
+  line-height: inherit;
+
+  position        : relative;
+  box-sizing      : border-box;
+  appearance      : none;
+  background-color: transparent;
+  border          : none;
+  padding         : 0;
+  margin          : 0;
+
+  background-color: var(--secondary_color);
+  padding         : 4px 6px 4px 4px;
+  border-radius   : 13px;
+
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+  gap            : 4px;
+}
+
+
+.Tag__circle {
+  padding      : 2px;
+  border-radius: 20px;
+  color        : var(--accent_color--text);
+  border       : 1px solid var(--separator_primary);
+  transition   : 0.3s;
+}
+
+.Tag__circle svg {
+  opacity   : 0;
+  transform : scale(0);
+  transition: 0.3s;
+}
+
+.Tag--selected .Tag__circle {
+  background-color: var(--accent_color);
+  border          : 1px solid var(--accent_color);
+}
+
+.Tag--selected .Tag__circle svg {
+  opacity  : 1;
+  transform: scale(1);
+}
+
+.Tag__circle svg {
+  width : 16px;
+  height: 16px;
+}

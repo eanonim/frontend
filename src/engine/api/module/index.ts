@@ -1,5 +1,8 @@
 import init, { Status } from "@elum/ews"
 import { Mutex } from "@minsize/mutex"
+import { getter } from "elum-state/solid"
+import { AUTH_TOKEN_ATOM } from "engine/state"
+import { HOST } from "root/configs"
 import { createEffect, createSignal, on } from "solid-js"
 
 export type SocketError = {
@@ -91,12 +94,13 @@ export type Socket = {
   }
 }
 
-export const socket = init<Socket, SocketError>({
+export let socket = init<Socket, SocketError>({
   //url: "wss://dev.elum.app?66a8cb192ea93182aaa11d6d50d83be39fe6ef9617c823f66e41edc5ea63890a7ddf9ae226c9893c48078d2fd7ab720b22fdd747e6",
-  url: "wss://eanonim-backend-9a6d.twc1.net?66a8cb192ea93182aaa11d6d50d83be39fe6ef9617c823f66e41edc5ea63890a7ddf9ae226c9893c48078d2fd7ab720b22fdd747e6",
+  url: `wss://${HOST}?${getter(AUTH_TOKEN_ATOM)}`,
   autoConnect: true,
   autoReconnect: true,
 })
+
 // socket.onEvents(({data,event}) => {
 
 // })

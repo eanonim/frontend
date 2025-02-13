@@ -4,8 +4,10 @@ import { Content } from "./fragment"
 
 import { type JSX, type Component, onMount } from "solid-js"
 import { routerStruct, swipeView, views } from "router"
-import { storeList } from "engine/api"
+import { authTwa, storeList } from "engine/api"
 import { bridgeSessionStorageGet } from "@apiteam/twa-bridge/solid"
+import { setter } from "elum-state/solid"
+import { AUTH_TOKEN_ATOM } from "engine/state"
 
 interface Default extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -40,8 +42,18 @@ const Default: Component<Default> = (props) => {
     }
   }
 
-  onMount(() => {
+  const initAuth = async () => {
+    const { response, error } = await authTwa({})
+    if (error) {
+      return
+    }
+
+    setter(AUTH_TOKEN_ATOM, response.token)
     initStore()
+  }
+
+  onMount(() => {
+    initAuth()
   })
 
   return (

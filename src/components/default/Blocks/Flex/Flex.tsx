@@ -36,6 +36,8 @@ export interface Flex<T extends ValidComponent>
    */
   reverse?: boolean
 
+  wrap?: boolean
+
   /**
    * Устанавливает высоту flex-контейнера.
    *
@@ -61,6 +63,7 @@ const Flex = <T extends ValidComponent>(props: Flex<T>) => {
       justifyContent: "center",
       direction: "row",
       reverse: false,
+      wrap: false,
     },
     props,
   )
@@ -74,6 +77,7 @@ const Flex = <T extends ValidComponent>(props: Flex<T>) => {
     "height",
     "width",
     "style",
+    "wrap",
   ])
 
   return (
@@ -88,6 +92,7 @@ const Flex = <T extends ValidComponent>(props: Flex<T>) => {
           !!local.justifyContent,
         [style[`Flex__direction--${local.direction}`]]: !!local.direction,
         [style[`Flex--reverse`]]: local.reverse,
+        [style[`Flex--wrap`]]: local.wrap,
       }}
       style={combineStyle(
         {

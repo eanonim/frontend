@@ -1,3 +1,5 @@
+export { default as authTwa } from "./auth/twa"
+
 export { default as userGet } from "./user/get"
 
 /* store */

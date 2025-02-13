@@ -60,6 +60,7 @@ export { default as IconBackground } from "./default/Blocks/IconBackground/IconB
 export { default as UserName } from "./default/Blocks/UserName/UserName"
 export { default as FixedLayout } from "./default/Blocks/FixedLayout/FixedLayout"
 export { default as Control } from "./default/Blocks/Control/Control"
+export { default as Tag } from "./default/Blocks/Tag/Tag"
 
 /* Forms */
 export { default as Radio } from "./default/Forms/Radio/Radio"

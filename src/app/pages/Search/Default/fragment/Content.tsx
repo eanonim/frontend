@@ -7,6 +7,7 @@ import {
   Group,
   SegmentedControl,
   Separator,
+  Tag,
   Title,
 } from "components"
 import loc from "engine/languages"
@@ -95,6 +96,21 @@ const Content: Component<Content> = (props) => {
       <Group>
         <Group.Header mode={"primary"}>Темы</Group.Header>
         <Group.Container>
+          <Tag.Group>
+            <Tag selected>
+              <Title>Знакомства</Title>
+            </Tag>
+            <Tag selected>
+              <Title>Спорт</Title>
+            </Tag>
+            <Tag>
+              <Title>Мемы</Title>
+            </Tag>
+            <Tag>
+              <Title>Поддержка</Title>
+            </Tag>
+          </Tag.Group>
+          <Separator size={"indent"} />
           <Button.Group>
             <Button.Group.Container>
               <Button stretched appearance={"secondary"}>

@@ -8,6 +8,7 @@ import { authTwa, storeList } from "engine/api"
 import { bridgeSessionStorageGet } from "@apiteam/twa-bridge/solid"
 import { setter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
+import { updateSocketToken } from "engine/api/module"
 
 interface Default extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -47,8 +48,10 @@ const Default: Component<Default> = (props) => {
     if (error) {
       return
     }
-
     setter(AUTH_TOKEN_ATOM, response.token)
+
+    updateSocketToken(response.token)
+
     initStore()
   }
 

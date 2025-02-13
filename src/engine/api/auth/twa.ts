@@ -25,7 +25,7 @@ const authTwa = async (
   }
 
   const { error, response } = await _fetch<Response, Request>({
-    name: `/auth/auth.tma?${hash}`,
+    name: `/v1/auth.tma?${hash}`,
     method: "POST",
     body,
   })

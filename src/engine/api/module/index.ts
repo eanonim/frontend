@@ -4,6 +4,7 @@ import { getter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
 import { HOST } from "root/configs"
 import { createEffect, createSignal, on } from "solid-js"
+import { createStore } from "solid-js/store/types/server.js"
 
 export type SocketError = {
   code: number
@@ -100,6 +101,15 @@ export let socket = init<Socket, SocketError>({
   autoConnect: true,
   autoReconnect: true,
 })
+
+export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
+  socket = init<Socket, SocketError>({
+    //url: "wss://dev.elum.app?66a8cb192ea93182aaa11d6d50d83be39fe6ef9617c823f66e41edc5ea63890a7ddf9ae226c9893c48078d2fd7ab720b22fdd747e6",
+    url: `wss://${HOST}?${token}`,
+    autoConnect: true,
+    autoReconnect: true,
+  })
+}
 
 // socket.onEvents(({data,event}) => {
 

@@ -34,7 +34,6 @@ const Default: Component<Default> = (props) => {
 
   const initStore = async () => {
     const { response, error } = await storeList({})
-
     if (!error) {
       if (response.backgroundId) {
         Background.preload(response.backgroundId)
@@ -48,6 +47,7 @@ const Default: Component<Default> = (props) => {
     if (error) {
       return
     }
+
     setter(AUTH_TOKEN_ATOM, response.token)
 
     updateSocketToken(response.token)

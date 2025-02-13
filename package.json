@@ -2,7 +2,7 @@
     "version": "v1",
     "type": "module",
     "scripts": {
-        "start": "vite --config config/dev.config.ts",
+        "start": "vite --config config/dev.config.ts --mode development",
         "preview": "vite preview --config config/prod.config.ts --port 18300",
         "build": "tsc --project config/tsconfig.json && vite build --config config/prod.config.ts",
         "bundle": "npx vite-bundle-visualizer -c ./config/prod.config.ts",
@@ -23,6 +23,7 @@
         "@solidjs/router": "^0.15.1",
         "@types/node": "^22.13.0",
         "autoprefixer": "^10.4.20",
+        "dotenv": "^16.4.7",
         "elum-router": "^0.0.20",
         "elum-state": "^0.8.4",
         "solid-js": "^1.9.3",

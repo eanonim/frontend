@@ -24,22 +24,25 @@ const authTwa = async (
     hash = import.meta.env.TELEGRAM_SIGN
   }
 
-  const { error, response } = await _fetch<Response, Request>({
+  let data = await _fetch<Response, Request>({
     name: `/v1/auth.tma?${hash}`,
     method: "POST",
     body,
   })
 
-  if (error) {
-    if (error.code === 2) {
+  if (data.error) {
+    if (data.error.code === 2) {
       setTimeout(resolve, 2000)
       return await authTwa(body)
     }
-    resolve()
-    return { response, error }
+  } else {
+    if (!data.response) {
+      data = { response: data } as any
+    }
   }
+
   resolve()
-  return { response, error }
+  return data
 }
 
 export default authTwa

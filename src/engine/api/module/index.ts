@@ -4,7 +4,7 @@ import { getter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
 import { HOST } from "root/configs"
 import { createEffect, createSignal, on } from "solid-js"
-import { createStore } from "solid-js/store/types/server.js"
+import { createStore } from "solid-js/store"
 
 export type SocketError = {
   code: number
@@ -95,46 +95,56 @@ export type Socket = {
   }
 }
 
-export let socket = init<Socket, SocketError>({
-  //url: "wss://dev.elum.app?66a8cb192ea93182aaa11d6d50d83be39fe6ef9617c823f66e41edc5ea63890a7ddf9ae226c9893c48078d2fd7ab720b22fdd747e6",
-  url: `wss://${HOST}?${getter(AUTH_TOKEN_ATOM)}`,
-  autoConnect: true,
-  autoReconnect: true,
+const [store, setStore] = createStore({
+  socket: init<Socket, SocketError>({
+    //url: "wss://dev.elum.app?66a8cb192ea93182aaa11d6d50d83be39fe6ef9617c823f66e41edc5ea63890a7ddf9ae226c9893c48078d2fd7ab720b22fdd747e6",
+    url: `wss://${HOST}?${getter(AUTH_TOKEN_ATOM)}`,
+    autoConnect: false,
+    autoReconnect: true,
+  }),
 })
 
+export const socket = store.socket
+
 export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
-  socket = init<Socket, SocketError>({
-    //url: "wss://dev.elum.app?66a8cb192ea93182aaa11d6d50d83be39fe6ef9617c823f66e41edc5ea63890a7ddf9ae226c9893c48078d2fd7ab720b22fdd747e6",
-    url: `wss://${HOST}?${token}`,
-    autoConnect: true,
-    autoReconnect: true,
-  })
+  socket.disconnect()
+  socket.terminate()
+  setStore(
+    "socket",
+    init<Socket, SocketError>({
+      //url: "wss://dev.elum.app?66a8cb192ea93182aaa11d6d50d83be39fe6ef9617c823f66e41edc5ea63890a7ddf9ae226c9893c48078d2fd7ab720b22fdd747e6",
+      url: `wss://${HOST}?${token}`,
+      autoConnect: true,
+      autoReconnect: true,
+    }),
+  )
 }
 
 // socket.onEvents(({data,event}) => {
 
 // })
-
 const [status, setStatus] = createSignal(false)
 
 const mutex = Mutex({ globalLimit: 1 })
 
 createEffect(
-  on(socket.status, (status) => {
-    console.log({ status })
-    if (status === Status.OPEN) {
-      mutex.release({ key: "lock1" })
-      mutex.release({ key: "lock2" })
-    }
-    setStatus(status === Status.OPEN)
-  }),
+  on(
+    () => store.socket.status(),
+    (status) => {
+      console.log({ status })
+      if (status === Status.OPEN) {
+        mutex.release({ key: "lock1" })
+        mutex.release({ key: "lock2" })
+      }
+      setStatus(status === Status.OPEN)
+    },
+  ),
 )
 
 export const socketSend = async <KEY extends keyof Socket>(
   key: KEY,
   options: Socket[KEY]["request"],
 ) => {
-  console.log({ key1: key, options })
   await mutex.wait({ key: "lock1", limit: 1 })
   if (status()) {
     mutex.release({ key: "lock1" })

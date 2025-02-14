@@ -10,3 +10,4 @@ export {
 } from "./settings"
 export { TEST_ATOM } from "./TEST"
 export { STORE_OPTIONS_ATOM } from "./options"
+export { SEARCH_OPTIONS_ATOM } from "./search_options"

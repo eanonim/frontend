@@ -23,7 +23,55 @@ export enum StoreOptions {
   "themeColor" = "themeColor",
 }
 
+type SearchInteresting =
+  | "music"
+  | "travel"
+  | "sport"
+  | "art"
+  | "cooking"
+  | "movies"
+  | "games"
+  | "reading"
+  | "tech"
+  | "animals"
+  | "nature"
+  | "photography"
+  | "dance"
+  | "space"
+  | "science"
+  | "history"
+  | "fashion"
+  | "yoga"
+  | "psychology"
+  | "volunteering"
+  | "flirt"
+  | "crypto"
+  | "anime"
+  | "lgbt"
+
 export type Socket = {
+  "chat.search": {
+    request: {
+      language: string
+      your_start: number
+      your_end: number
+      /**
+       * 0 - мужское
+       * 1 - женское
+       */
+      your_sex: number
+
+      my_age: number
+      /**
+       * 0 - мужское
+       * 1 - женское
+       */
+      my_sex: number
+    } & {
+      [key in SearchInteresting]?: boolean
+    }
+    response: {}
+  }
   "store.options": {
     request: {
       key: StoreOptions

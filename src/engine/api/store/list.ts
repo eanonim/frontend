@@ -10,14 +10,32 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
     return { response, error }
   }
 
+  console.log({ response })
+
+  const notArray = [
+    "fontSize",
+    "backgroundId",
+    "backgroundColor",
+    "theme",
+    "themeColor",
+  ]
+
   for (const key in response) {
-    let value = (response as any)[key]
-    if (typeof Number(value) === "number" && !isNaN(Number(value))) {
-      value = Number(value)
-    } else if (value === "true" || value === "false") {
-      value = Boolean(value)
+    let values = (response as any)[key] as unknown[]
+
+    for (let i = 0; i < values.length; i++) {
+      if (typeof Number(values[i]) === "number" && !isNaN(Number(values[i]))) {
+        values[i] = Number(values[i])
+      } else if (values[i] === "true" || values[i] === "false") {
+        values[i] = Boolean(values[i])
+      }
+
+      if (notArray.includes(key)) {
+        ;(response as any)[key] = values[i]
+      } else {
+        ;(response as any)[key][i] = values[i]
+      }
     }
-    ;(response as any)[key] = value
   }
 
   /* Установка дефолтной системной темы */

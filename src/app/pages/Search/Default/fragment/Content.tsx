@@ -18,9 +18,20 @@ interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
-  const [searchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
+  const [searchOptions, setSearchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
 
-  const elements = [
+  const elements: (
+    | {
+        text: string
+        key: "man" | "woman"
+        type: "male"
+      }[]
+    | {
+        text: string
+        key: string
+        type: "age"
+      }[]
+  )[] = [
     [
       { text: "Мужской", key: "man", type: "male" },
       { text: "Женский", key: "woman", type: "male" },
@@ -34,10 +45,25 @@ const Content: Component<Content> = (props) => {
     ],
   ]
 
-  const handlerSelectedYou = (
+  const handlerSelected = (
+    from: "you" | "companion",
     type: (typeof elements)[0][0]["type"],
-    key: string,
-  ) => {}
+    key: (typeof elements)[0][0]["key"],
+  ) => {
+    const parts = key.split("-")
+
+    setSearchOptions(from, (you) => {
+      if (type === "age") {
+        you.age = {
+          from: Number(parts[0]),
+          to: Number(parts[1]),
+        }
+      } else {
+        you.male = key as any
+      }
+      return you
+    })
+  }
 
   return (
     <Flex height={"100%"} justifyContent={"start"} direction={"column"}>
@@ -48,7 +74,7 @@ const Content: Component<Content> = (props) => {
             <Group.Container>
               <SegmentedControl
                 data-index={index()}
-                onSelected={(key) => handlerSelectedYou(items[0].type, key)}
+                onSelected={(key) => handlerSelected("you", items[0].type, key)}
                 selected={
                   items[0].type === "male"
                     ? searchOptions.you.male
@@ -84,7 +110,9 @@ const Content: Component<Content> = (props) => {
             <Group.Container>
               <SegmentedControl
                 data-index={index()}
-                onSelected={() => {}}
+                onSelected={(key) =>
+                  handlerSelected("companion", items[0].type, key)
+                }
                 selected={
                   items[0].type === "male"
                     ? searchOptions.companion.male

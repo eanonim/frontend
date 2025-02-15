@@ -11,6 +11,7 @@
   --separator_secondary: #3B3B3D;
   --bg_selected        : #1d2936;
   --bg_color           : #000000;
+  --modal_bg_color     : #151515;
 
   --section_bg_color        : #1C1C1C;
   --section_bg_color--active: #333333;
@@ -57,6 +58,7 @@ html[theme="light"] {
   --separator_secondary: #c4c4c2;
   --bg_selected        : #e2d6c9;
   --bg_color           : #ffffff;
+  --modal_bg_color     : #ffffff;
 
   --section_bg_color        : #e3e3e3;
   --section_bg_color--active: #cccccc;
@@ -101,6 +103,7 @@ html[theme="light"][theme-color="pink"] {
   --separator_secondary: #ffcdea;
   --bg_selected        : #F8D8E8;
   --bg_color           : #ffe7f5;
+  --modal_bg_color     : #ffe7f5;
 
   --section_bg_color        : #ffdbf0;
   --section_bg_color--active: #E0E0E0;

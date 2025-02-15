@@ -1,0 +1,229 @@
+.ModalPanel {
+  display                    : flex;
+  position                   : absolute;
+  top                        : 0;
+  right                      : 0;
+  bottom                     : 0;
+  left                       : 0;
+  flex-direction             : column;
+  cursor                     : pointer;
+  z-index                    : 100;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ModalPanel__inner {
+  display       : flex;
+  position      : relative;
+  flex          : 1 1;
+  flex-direction: column-reverse;
+  flex-wrap     : nowrap;
+  overflow      : hidden;
+  align-items   : center;
+}
+
+.ModalPanel::before {
+  content: "";
+  display: flex;
+  height : calc(var(--header-height) + var(--safe-area-inset-top));
+}
+
+.ModalPanel--panel .ModalPanel__inner {
+  padding: 0;
+}
+
+.ModalPanel--card .ModalPanel__inner {
+  padding: 12px 12px calc(12px + var(--safe-area-inset-bottom)) 12px;
+}
+
+.ModalPanel--panel .ModalPanel__content,
+.ModalPanel--panel .ModalPanel__children {
+  border-radius: 12px 12px 0 0;
+}
+
+.ModalPanel--panel .ModalPanel__content {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.ModalPanel--card .ModalPanel__content,
+.ModalPanel--card .ModalPanel__scroll,
+.ModalPanel--card .ModalPanel__children {
+  border-radius: 12px;
+}
+
+/* .ModalPanel--card .ModalPanel__children {
+  border: solid 1px var(--section_separator_color);
+} */
+
+.ModalPanel--card .ModalPanel__background {
+  display: none;
+}
+
+
+.ModalPanel__content {
+  display           : flex;
+  width             : 100%;
+  border-radius     : 18px 18px 0 0;
+  box-sizing        : border-box;
+  -webkit-box-shadow: 0px -10px 36px 0px rgba(34, 60, 80, 0.05);
+  -moz-box-shadow   : 0px -10px 36px 0px rgba(34, 60, 80, 0.05);
+  box-shadow        : 0px -10px 36px 0px rgba(34, 60, 80, 0.05);
+  flex-direction    : column;
+  flex-wrap         : nowrap;
+  cursor            : default;
+  /* overflow       : hidden; */
+  z-index           : 1;
+  position          : relative;
+}
+
+
+.ModalPanel__children {
+  max-width            : 500px;
+  position             : relative;
+  overflow             : hidden;
+  z-index              : 3;
+  width                : 100%;
+  /* background-color  : var(--section_modal_bg_color); */
+  background-color     : var(--modal_bg_color);
+  display              : flex;
+  flex-direction       : column;
+  /* -webkit-box-shadow: 0px 0px 20px 1px var(--section_modal_bg_color);
+  -moz-box-shadow      : 0px 0px 20px 1px var(--section_modal_bg_color);
+  box-shadow           : 0px 0px 20px 1px var(--section_modal_bg_color); */
+}
+
+/* html[platform=iOS] .ModalPanel__children {
+  background-color: var(--modal_bg_color);
+} */
+
+.ModalPanel__openFull .ModalPanel__children {
+  min-height: 100%;
+}
+
+.ModalPanel__openFull .ModalPanel__content {
+  min-height    : 100%;
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.ModalPanel__footer--enable.ModalPanel--panel .ModalPanel__footer {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.ModalPanel__footer--enable.ModalPanel--panel .ModalPanel__content {
+  padding-bottom: 0px;
+}
+
+
+/* .ModalPanel--panel .ModalPanel__children,
+.ModalPanel--panel .ModalPanel__scroll {
+  padding-bottom: var(--safe-area-inset-bottom);
+} */
+
+/* .ModalPanel--animation .ModalPanel__content {
+  transition: .24s;
+} */
+.ModalPanel__scroll {
+  overflow           : scroll;
+  overflow-y         : auto;
+  overflow-x         : hidden;
+  height             : 100%;
+  overscroll-behavior: none;
+  position           : relative;
+}
+
+.ModalPanel__scroll * {
+  pointer-events: all;
+}
+
+.ModalPanel__background {
+  position         : absolute;
+  width            : 100%;
+  height           : 100%;
+  background-color : var(--modal_bg_color);
+  /* pointer-events: none; */
+}
+
+.ModalPanel__background::before {
+  content: "";
+  display: block;
+  width  : 100%;
+  height : 100%;
+  z-index: 1;
+}
+
+.ModalPanel__after {
+  display         : flex;
+  width           : 100%;
+  height          : 100vh;
+  background-color: var(--modal_bg_color);
+}
+
+
+.ModalPanel__FixedHeader {
+  z-index        : 3;
+  position       : relative;
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+}
+
+.ModalPanel__footer {
+  /* border: solid 1px transparent;
+  border-radius: inherit;
+  position: absolute;
+  left: 1px;
+  bottom: 1px;
+  right: 1px;
+  z-index: 2;
+  background-color: var(--modal_bg_color); */
+  position        : -webkit-sticky;
+  position        : sticky;
+  bottom          : 0;
+  background-color: var(--modal_bg_color);
+  z-index         : 10;
+}
+
+.ModalPanel__header {
+  position        : -webkit-sticky;
+  position        : sticky;
+  top             : 0;
+  background-color: var(--modal_bg_color);
+  z-index         : 10;
+}
+
+.ModalPanel__close {
+  position: absolute;
+  right   : 0;
+  top     : 0;
+  padding : 16px;
+  z-index : 100;
+  color   : var(--text_primary);
+}
+
+
+.ModalPanel__header--enable .ModalPanel__content,
+.ModalPanel__header--enable .ModalPanel__scroll {
+  border-radius: 0px 0px 12px 12px;
+}
+
+.ModalPanel__footer--enable.ModalPanel--card .ModalPanel__content,
+.ModalPanel__footer--enable.ModalPanel--card .ModalPanel__scroll {
+  border-radius: 12px 12px 0px 0px;
+}
+
+.ModalPanel__footer--enable.ModalPanel__header--enable .ModalPanel__content,
+.ModalPanel__footer--enable.ModalPanel__header--enable .ModalPanel__scroll {
+  border-radius: 0px;
+}
+
+.ModalPanel__full--open .ModalPanel__scroll,
+.ModalPanel__full--open .ModalPanel__content,
+.ModalPanel__full--open .ModalPanel__children {
+  border-radius: 0px;
+}
+
+.ModalPanel__header--center .ModalPanel__header {
+  flex           : 1 1;
+  justify-content: center;
+  display        : flex;
+  align-items    : center;
+}

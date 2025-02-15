@@ -45,6 +45,7 @@ export enum pages {
 
 export enum modals {
   STORE_MONEY = "modal_store_money",
+  INTERESTS_LIST = "modal_interests_list",
 }
 
 export enum popouts {
@@ -52,9 +53,7 @@ export enum popouts {
 }
 
 export type routerParams = {
-  // [modals.STORE_MONEY]: {
-  //   group: shopGetRequest["group"]
-  // }
+  [modals.INTERESTS_LIST]: undefined
 }
 
 // type GORouting = {

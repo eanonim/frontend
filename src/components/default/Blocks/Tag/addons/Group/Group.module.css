@@ -1,4 +1,7 @@
 .Group {
-  gap    : 10px;
+  gap: 10px;
+}
+
+.Group--padding {
   padding: 12px 16px;
 }

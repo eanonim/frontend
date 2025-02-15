@@ -23,7 +23,7 @@ export enum StoreOptions {
   "themeColor" = "themeColor",
 }
 
-type SearchInteresting =
+export type SearchInteresting =
   | "music"
   | "travel"
   | "sport"
@@ -148,7 +148,7 @@ const [store, setStore] = createStore({
     //url: "wss://dev.elum.app?66a8cb192ea93182aaa11d6d50d83be39fe6ef9617c823f66e41edc5ea63890a7ddf9ae226c9893c48078d2fd7ab720b22fdd747e6",
     url: `wss://${HOST}?${getter(AUTH_TOKEN_ATOM)}`,
     autoConnect: false,
-    autoReconnect: true,
+    autoReconnect: false,
   }),
 })
 
@@ -166,6 +166,10 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
       autoReconnect: true,
     }),
   )
+
+  socket.onEvents((data) => {
+    console.log("server socket", data)
+  })
 }
 
 // socket.onEvents(({data,event}) => {
@@ -189,10 +193,20 @@ createEffect(
   ),
 )
 
+type Result<E, R> =
+  | {
+      error?: undefined
+      response: R
+    }
+  | {
+      error: E
+      response?: undefined
+    }
+
 export const socketSend = async <KEY extends keyof Socket>(
   key: KEY,
   options: Socket[KEY]["request"],
-) => {
+): Promise<Result<SocketError, Socket[KEY]["response"]>> => {
   await mutex.wait({ key: "lock1", limit: 1 })
   if (status()) {
     mutex.release({ key: "lock1" })
@@ -204,5 +218,10 @@ export const socketSend = async <KEY extends keyof Socket>(
     mutex.release({ key: "lock2" })
   }
 
-  return await socket.send(key, options)
+  const data = await socket.send(key, options)
+
+  if (data?.error?.code === 0) {
+    return await socketSend(key, options)
+  }
+  return data
 }

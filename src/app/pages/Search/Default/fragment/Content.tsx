@@ -8,11 +8,13 @@ import {
   Tag,
   Title,
 } from "components"
+import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { SEARCH_OPTIONS_ATOM } from "engine/state"
+import { modals, pushModal } from "router"
 
-import { type JSX, type Component, For, Show } from "solid-js"
+import { type JSX, type Component, For, Show, createMemo } from "solid-js"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -20,10 +22,17 @@ const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const [searchOptions, setSearchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
 
+  const interestsCount = createMemo(
+    () =>
+      Object.values(searchOptions.interests).filter((x) => x.isSelected)
+        .length ?? 0,
+    [searchOptions.interests],
+  )
+
   const elements: (
     | {
-        text: string
-        key: "man" | "woman"
+        text: "man" | "woman" | "any"
+        key: "man" | "woman" | "any"
         type: "male"
       }[]
     | {
@@ -33,15 +42,16 @@ const Content: Component<Content> = (props) => {
       }[]
   )[] = [
     [
-      { text: "Мужской", key: "man", type: "male" },
-      { text: "Женский", key: "woman", type: "male" },
+      { text: "man", key: "man", type: "male" },
+      { text: "woman", key: "woman", type: "male" },
+      { text: "any", key: "any", type: "male" },
     ],
     [
       { text: "18-24", key: "18-24", type: "age" },
       { text: "25-31", key: "25-31", type: "age" },
       { text: "32-38", key: "32-38", type: "age" },
       { text: "39-45", key: "39-45", type: "age" },
-      { text: "46+", key: "46+", type: "age" },
+      { text: "46+", key: "46-116", type: "age" },
     ],
   ]
 
@@ -65,10 +75,18 @@ const Content: Component<Content> = (props) => {
     })
   }
 
+  const handlerChangeInteresting = (key: SearchInteresting) => {
+    setSearchOptions("interests", key, "isSelected", (bool) => !bool)
+  }
+
+  const openModal = () => {
+    pushModal({ modalId: modals.INTERESTS_LIST })
+  }
+
   return (
     <Flex height={"100%"} justifyContent={"start"} direction={"column"}>
       <Group>
-        <Group.Header mode={"primary"}>Вы</Group.Header>
+        <Group.Header mode={"primary"}>{lang("you")}</Group.Header>
         <For each={elements}>
           {(items, index) => (
             <Group.Container>
@@ -91,7 +109,9 @@ const Content: Component<Content> = (props) => {
                       key={item.key}
                     >
                       <SegmentedControl.Button.Container>
-                        <Title>{item.text}</Title>
+                        <Title>
+                          {item.type === "male" ? lang(item.text) : item.text}
+                        </Title>
                       </SegmentedControl.Button.Container>
                     </SegmentedControl.Button>
                   )}
@@ -104,7 +124,7 @@ const Content: Component<Content> = (props) => {
 
       <Separator size={"indent"} />
       <Group>
-        <Group.Header mode={"primary"}>Собеседник</Group.Header>
+        <Group.Header mode={"primary"}>{lang("companion")}</Group.Header>
         <For each={elements}>
           {(items, index) => (
             <Group.Container>
@@ -129,7 +149,9 @@ const Content: Component<Content> = (props) => {
                       key={item.key}
                     >
                       <SegmentedControl.Button.Container>
-                        <Title>{item.text}</Title>
+                        <Title>
+                          {item.type === "male" ? lang(item.text) : item.text}
+                        </Title>
                       </SegmentedControl.Button.Container>
                     </SegmentedControl.Button>
                   )}
@@ -140,15 +162,27 @@ const Content: Component<Content> = (props) => {
         </For>
       </Group>
       <Group>
-        <Group.Header mode={"primary"}>Темы</Group.Header>
+        <Group.Header mode={"primary"}>{lang("interests")}</Group.Header>
         <Group.Container>
-          <Show keyed when={searchOptions.themes}>
-            {(themes) => (
+          <Show
+            keyed
+            when={
+              Object.entries(searchOptions.interests) as [
+                SearchInteresting,
+                { isSelected: boolean; isHidden?: boolean },
+              ][]
+            }
+          >
+            {(interests) => (
               <Tag.Group>
-                <For each={themes}>
-                  {(theme, index) => (
-                    <Tag data-index={index()} selected>
-                      <Title>{lang(`searchThemes.${theme}`)}</Title>
+                <For each={interests.filter((x) => x[1].isHidden !== true)}>
+                  {([key, interest], index) => (
+                    <Tag
+                      onClick={() => handlerChangeInteresting(key)}
+                      data-index={index()}
+                      selected={interest.isSelected}
+                    >
+                      <Title>{lang(`searchInterests.${key}`)}</Title>
                     </Tag>
                   )}
                 </For>
@@ -158,21 +192,21 @@ const Content: Component<Content> = (props) => {
           <Separator size={"indent"} />
           <Button.Group>
             <Button.Group.Container>
-              <Button stretched appearance={"secondary"}>
+              <Button onClick={openModal} stretched appearance={"secondary"}>
                 <Button.Icon style={{ opacity: 0 }}>
                   <Badge size={"small"} type={"text"}>
                     <Badge.Container>
-                      <Title>{searchOptions.themes.length ?? 0}/5</Title>
+                      <Title>{interestsCount()}/5</Title>
                     </Badge.Container>
                   </Badge>
                 </Button.Icon>
                 <Button.Container>
-                  <Title>{lang("change_themes")}</Title>
+                  <Title>{lang("change_interests")}</Title>
                 </Button.Container>
                 <Button.Icon>
                   <Badge size={"small"} type={"text"}>
                     <Badge.Container>
-                      <Title>5/5</Title>
+                      <Title>{interestsCount()}/5</Title>
                     </Badge.Container>
                   </Badge>
                 </Button.Icon>

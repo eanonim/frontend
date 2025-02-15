@@ -71,10 +71,14 @@
   --badge_text      : var(--green_color--text);
 }
 
-
 .Badge__appearance--red {
   --badge_background: var(--red_color);
   --badge_text      : var(--red_color--text);
+}
+
+.Badge__appearance--accentReverse {
+  --badge_background: var(--accent_color--text);
+  --badge_text      : var(--accent_color);
 }
 
 /* Mode */

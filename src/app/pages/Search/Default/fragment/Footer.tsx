@@ -1,5 +1,7 @@
 import { Button, FixedLayout, Separator, Title } from "components"
+import { getMaleOfNumber } from "engine"
 import { chatSearch } from "engine/api"
+import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { SEARCH_OPTIONS_ATOM } from "engine/state"
@@ -13,24 +15,36 @@ const Footer: Component<Footer> = (props) => {
   const [searchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
 
   const handlerSearch = () => {
-    console.log("ASG")
+    var interests: Partial<Record<SearchInteresting, boolean>> = {}
+
+    for (const [key, value] of Object.entries(searchOptions.interests)) {
+      if (value.isSelected) {
+        interests[key as SearchInteresting] = value.isSelected
+      }
+    }
+
     console.log({
       f: {
         language: "en",
         your_start: searchOptions.companion.age.from,
         your_end: searchOptions.companion.age.to,
-        your_sex: searchOptions.companion.male === "man" ? 0 : 1,
+        your_sex: getMaleOfNumber(searchOptions.companion.male),
         my_age: searchOptions.you.age.from,
-        my_sex: searchOptions.you.male === "man" ? 0 : 1,
+        my_sex: getMaleOfNumber(searchOptions.you.male),
+        music: true,
+        ...interests,
       },
     })
+
     chatSearch({
       language: "en",
       your_start: searchOptions.companion.age.from,
       your_end: searchOptions.companion.age.to,
-      your_sex: searchOptions.companion.male === "man" ? 0 : 1,
+      your_sex: getMaleOfNumber(searchOptions.companion.male),
       my_age: searchOptions.you.age.from,
-      my_sex: searchOptions.you.male === "man" ? 0 : 1,
+      my_sex: getMaleOfNumber(searchOptions.you.male),
+      music: true,
+      ...interests,
     })
   }
 

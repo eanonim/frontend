@@ -10,16 +10,25 @@ import {
   ValidComponent,
 } from "solid-js"
 
-interface Group<V extends ValidComponent = "span"> extends TypeFlex<V> {}
+interface Group<V extends ValidComponent = "span"> extends TypeFlex<V> {
+  padding?: boolean
+}
 
 const Group: Component<Group> = (props) => {
-  const merged = mergeProps({}, props)
-  const [local, others] = splitProps(merged, ["class", "classList", "children"])
+  const merged = mergeProps({ padding: true }, props)
+  const [local, others] = splitProps(merged, [
+    "class",
+    "classList",
+    "children",
+    "padding",
+  ])
 
   return (
     <Flex
       class={style.Group}
       classList={{
+        [style[`Group--padding`]]: local.padding,
+
         [`${local.class}`]: !!local.class,
         ...local.classList,
       }}

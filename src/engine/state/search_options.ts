@@ -1,4 +1,5 @@
-import { atom } from "engine/modules/smart-data"
+import { SearchInteresting } from "engine/api/module"
+import { setter, atom } from "engine/modules/smart-data"
 
 type SearchOptionsAtom = {
   you: {
@@ -15,7 +16,9 @@ type SearchOptionsAtom = {
       to: number
     }
   }
-  themes: (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10)[]
+  interests: Partial<
+    Record<SearchInteresting, { isSelected: boolean; isHidden?: boolean }>
+  >
 }
 
 export const SEARCH_OPTIONS_ATOM = atom<SearchOptionsAtom, {}>({
@@ -34,7 +37,32 @@ export const SEARCH_OPTIONS_ATOM = atom<SearchOptionsAtom, {}>({
         to: 24,
       },
     },
-    themes: [1, 2, 3, 4, 10],
+    interests: {
+      animals: {
+        isSelected: true,
+      },
+      anime: {
+        isSelected: true,
+      },
+      art: {
+        isSelected: true,
+      },
+      science: {
+        isSelected: true,
+      },
+      fashion: {
+        isSelected: true,
+      },
+    },
   },
   updateIntervalMs: 60_000,
+  onUpdate: ({ prev, next }, key) => {
+    const nextCount = Object.values(next.interests).filter(
+      (x) => x.isSelected,
+    ).length
+
+    if (nextCount > 5) {
+      setter([SEARCH_OPTIONS_ATOM, key], prev)
+    }
+  },
 })

@@ -10,6 +10,7 @@ import Profile from "./pages/Profile/Profile"
 import Chats from "./pages/Chats/Chats"
 
 import Popup from "./popups"
+import Modals from "./modals"
 
 import {
   bridgeRequestSafeAreaInset,
@@ -211,7 +212,7 @@ const App: Component = () => {
   })
 
   return (
-    <Root activeView={activeView()} popup={<Popup />}>
+    <Root activeView={activeView()} popup={<Popup />} modal={<Modals />}>
       <Path
         tabbar={[`${pages.CHATS}`].includes(getLastPage(views.CHATS) || "")}
         nav={views.CHATS}

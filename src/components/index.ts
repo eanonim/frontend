@@ -29,6 +29,8 @@ export { default as Panel } from "./default/Panel/Panel"
 export { default as Path } from "./default/Path/Path"
 export { default as Root } from "./default/Root/Root"
 export { default as View } from "./default/View/View"
+export { default as ModalRoot } from "./default/ModalRoot/ModalRoot"
+export { default as ModalPanel } from "./default/ModalPanel/ModalPanel"
 
 export { default as Plug } from "./default/Blocks/Plug/Plug"
 

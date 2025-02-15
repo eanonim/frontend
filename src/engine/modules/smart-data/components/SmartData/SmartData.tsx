@@ -20,18 +20,21 @@ export const context = createContext({
   content: false,
 })
 
-interface SmartDataProps extends JSX.HTMLAttributes<HTMLDivElement> {
-  signal: AtomReturn<any, any>
-  key?: Key
+interface SmartDataProps<VALUE, OPTIONS, KEY extends string>
+  extends JSX.HTMLAttributes<HTMLDivElement> {
+  signal: AtomReturn<VALUE, OPTIONS, KEY>
+  key?: KEY
 }
 
-export type CSmartData = Component<SmartDataProps> & {
-  Content: typeof Content
-  Skeleton: typeof Skeleton
-  Error: typeof Error
-}
+// export type CSmartData = Component<SmartDataProps<any, any, any>> & {
+//   Content: typeof Content
+//   Skeleton: typeof Skeleton
+//   Error: typeof Error
+// }
 
-const SmartData: CSmartData = (props) => {
+const SmartData = <VALUE, OPTIONS, KEY extends string>(
+  props: SmartDataProps<VALUE, OPTIONS, KEY>,
+) => {
   const merged = mergeProps({ key: "default" }, props)
   const [local, others] = splitProps(merged, ["signal", "key"])
 

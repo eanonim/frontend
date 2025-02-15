@@ -1,16 +1,10 @@
 import { popouts, pushPopout } from "router"
 
-const handlerError = ({
-  error_code,
-  message,
-}: {
-  error_code: number
-  message: string
-}) => {
+const handlerError = ({ code, message }: { code: number; message: string }) => {
   pushPopout({
     popoutId: popouts.ERROR,
     params: {
-      error_code,
+      error_code: code,
       label: message,
     },
   })

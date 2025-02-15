@@ -1,10 +1,10 @@
 import { type AtomProps, type SmartData } from "../types"
 
-export type AtomValue<VALUE extends unknown, OPTIONS> = {
+export type AtomValue<VALUE extends unknown, OPTIONS, KEY> = {
   /**
    * Функция, вызываемая для генерации ключа
    */
-  onKey?: AtomProps<VALUE, OPTIONS>["onKey"]
+  onKey?: AtomProps<VALUE, OPTIONS, KEY>["onKey"]
   /**
    * Значение по умолчанию для данных в хранилище.
    */
@@ -16,11 +16,11 @@ export type AtomValue<VALUE extends unknown, OPTIONS> = {
   /**
    * Функция, вызываемая при запросе новых данных. Используется для запуска процесса получения данных.
    */
-  onRequested?: AtomProps<VALUE, OPTIONS>["onRequested"]
+  onRequested?: AtomProps<VALUE, OPTIONS, KEY>["onRequested"]
   /**
    * Функция, вызываемая при изменении сигнала. Используется для запуска отправки данных.
    */
-  onUpdate?: AtomProps<VALUE, OPTIONS>["onUpdate"]
+  onUpdate?: AtomProps<VALUE, OPTIONS, KEY>["onUpdate"]
   /**
    * Кеш для хранения полученных данных.
    */

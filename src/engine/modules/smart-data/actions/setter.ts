@@ -52,9 +52,9 @@ export type StoreSetter<T, U extends PropertyKey[] = []> =
   | CustomPartial<T>
   | ((prevState: T, traversed: U) => T | CustomPartial<T>)
 
-type SetterOptions<VALUE, OPTIONS> =
-  | AtomReturn<VALUE, OPTIONS>
-  | [signal: AtomReturn<VALUE, OPTIONS>, key: Key]
+type SetterOptions<VALUE, OPTIONS, KEY> =
+  | AtomReturn<VALUE, OPTIONS, KEY>
+  | [signal: AtomReturn<VALUE, OPTIONS, KEY>, key: Key]
 
 type RestSetterOrContinue<T, U extends PropertyKey[]> =
   | [StoreSetter<T, U>]
@@ -80,8 +80,8 @@ type Rest<T, U extends PropertyKey[], K extends KeyOf<T> = KeyOf<T>> = [
  * @param k1
  * @param setter
  */
-function setter<VALUE, OPTIONS, K1 extends MutableKeyOf<W<VALUE>>>(
-  options: SetterOptions<VALUE, OPTIONS>,
+function setter<VALUE, OPTIONS, KEY, K1 extends MutableKeyOf<W<VALUE>>>(
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
   k1: Part<W<VALUE>, K1>,
   setter: StoreSetter<W<VALUE>[K1]>,
 ): void
@@ -96,10 +96,11 @@ function setter<VALUE, OPTIONS, K1 extends MutableKeyOf<W<VALUE>>>(
 function setter<
   VALUE,
   OPTIONS,
+  KEY,
   K1 extends KeyOf<W<VALUE>>,
   K2 extends KeyOf<W<W<VALUE>[K1]>>,
 >(
-  options: SetterOptions<VALUE, OPTIONS>,
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
   k1: Part<W<VALUE>, K1>,
   k2: Part<W<W<VALUE>[K1]>, K2>,
   setter: StoreSetter<W<W<VALUE>[K1]>[K2], [K2, K1]>,
@@ -116,11 +117,12 @@ function setter<
 function setter<
   VALUE,
   OPTIONS,
+  KEY,
   K1 extends KeyOf<W<VALUE>>,
   K2 extends KeyOf<W<W<VALUE>[K1]>>,
   K3 extends KeyOf<W<W<W<VALUE>[K1]>[K2]>>,
 >(
-  options: SetterOptions<VALUE, OPTIONS>,
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
   k1: Part<W<VALUE>, K1>,
   k2: Part<W<W<VALUE>[K1]>, K2>,
   k3: Part<W<W<W<VALUE>[K1]>[K2]>, K3>,
@@ -139,12 +141,13 @@ function setter<
 function setter<
   VALUE,
   OPTIONS,
+  KEY,
   K1 extends KeyOf<W<VALUE>>,
   K2 extends KeyOf<W<W<VALUE>[K1]>>,
   K3 extends KeyOf<W<W<W<VALUE>[K1]>[K2]>>,
   K4 extends KeyOf<W<W<W<W<VALUE>[K1]>[K2]>[K3]>>,
 >(
-  options: SetterOptions<VALUE, OPTIONS>,
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
 
   k1: Part<W<VALUE>, K1>,
   k2: Part<W<W<VALUE>[K1]>, K2>,
@@ -166,13 +169,14 @@ function setter<
 function setter<
   VALUE,
   OPTIONS,
+  KEY,
   K1 extends KeyOf<W<VALUE>>,
   K2 extends KeyOf<W<W<VALUE>[K1]>>,
   K3 extends KeyOf<W<W<W<VALUE>[K1]>[K2]>>,
   K4 extends KeyOf<W<W<W<W<VALUE>[K1]>[K2]>[K3]>>,
   K5 extends KeyOf<W<W<W<W<W<VALUE>[K1]>[K2]>[K3]>[K4]>>,
 >(
-  options: SetterOptions<VALUE, OPTIONS>,
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
 
   k1: Part<W<VALUE>, K1>,
   k2: Part<W<W<VALUE>[K1]>, K2>,
@@ -199,6 +203,7 @@ function setter<
 function setter<
   VALUE,
   OPTIONS,
+  KEY,
   K1 extends KeyOf<W<VALUE>>,
   K2 extends KeyOf<W<W<VALUE>[K1]>>,
   K3 extends KeyOf<W<W<W<VALUE>[K1]>[K2]>>,
@@ -206,7 +211,7 @@ function setter<
   K5 extends KeyOf<W<W<W<W<W<VALUE>[K1]>[K2]>[K3]>[K4]>>,
   K6 extends KeyOf<W<W<W<W<W<W<VALUE>[K1]>[K2]>[K3]>[K4]>[K5]>>,
 >(
-  options: SetterOptions<VALUE, OPTIONS>,
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
 
   k1: Part<W<VALUE>, K1>,
   k2: Part<W<W<VALUE>[K1]>, K2>,
@@ -225,8 +230,8 @@ function setter<
  * @param options ATOM or [ATOM, KEY]
  * @param setter
  */
-function setter<VALUE, OPTIONS>(
-  options: SetterOptions<VALUE, OPTIONS>,
+function setter<VALUE, OPTIONS, KEY>(
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
   setter: StoreSetter<VALUE>,
 ): void
 
@@ -245,6 +250,7 @@ function setter<VALUE, OPTIONS>(
 function setter<
   VALUE,
   OPTIONS,
+  KEY,
   K1 extends KeyOf<W<VALUE>>,
   K2 extends KeyOf<W<W<VALUE>[K1]>>,
   K3 extends KeyOf<W<W<W<VALUE>[K1]>[K2]>>,
@@ -253,7 +259,7 @@ function setter<
   K6 extends KeyOf<W<W<W<W<W<W<VALUE>[K1]>[K2]>[K3]>[K4]>[K5]>>,
   K7 extends KeyOf<W<W<W<W<W<W<W<VALUE>[K1]>[K2]>[K3]>[K4]>[K5]>[K6]>>,
 >(
-  options: SetterOptions<VALUE, OPTIONS>,
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
 
   k1: Part<W<VALUE>, K1>,
   k2: Part<W<W<VALUE>[K1]>, K2>,
@@ -283,6 +289,7 @@ function setter<
 function setter<
   VALUE,
   OPTIONS,
+  KEY,
   K1 extends KeyOf<W<VALUE>>,
   K2 extends KeyOf<W<W<VALUE>[K1]>>,
   K3 extends KeyOf<W<W<W<VALUE>[K1]>[K2]>>,
@@ -291,7 +298,7 @@ function setter<
   K6 extends KeyOf<W<W<W<W<W<W<VALUE>[K1]>[K2]>[K3]>[K4]>[K5]>>,
   K7 extends KeyOf<W<W<W<W<W<W<W<VALUE>[K1]>[K2]>[K3]>[K4]>[K5]>[K6]>>,
 >(
-  options: SetterOptions<VALUE, OPTIONS>,
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
   k1: Part<W<VALUE>, K1>,
   k2: Part<W<W<VALUE>[K1]>, K2>,
   k3: Part<W<W<W<VALUE>[K1]>[K2]>, K3>,
@@ -306,13 +313,13 @@ function setter<
 ): void
 
 /* ORIGINAL */
-function setter<VALUE, OPTIONS>(
-  options: SetterOptions<VALUE, OPTIONS>,
+function setter<VALUE, OPTIONS, KEY>(
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
   ...args: any[]
 ) {
   const [signal, key] = Array.isArray(options[0])
     ? [options[0], options[1] as string]
-    : [options as AtomReturn<VALUE, OPTIONS>, "default"]
+    : [options as AtomReturn<VALUE, OPTIONS, KEY>, "default"]
 
   if (signal) {
     batch(() => {

@@ -33,10 +33,6 @@ const Content: Component<Content> = (props) => {
   const handlerSetColor = (
     themeColor: Socket["store.list"]["response"]["themeColor"],
   ) => {
-    const isPremium =
-      options.find((x) => x.value === themeColor)?.is_premium ?? false
-    if (isPremium !== user.premium) return
-
     setThemeColor(themeColor)
   }
 

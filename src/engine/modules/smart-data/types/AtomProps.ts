@@ -1,6 +1,6 @@
 import { type Key } from "../types"
 
-export interface AtomProps<VALUE, OPTIONS> {
+export interface AtomProps<VALUE, OPTIONS, KEY> {
   readonly default: VALUE
   /**
    * Функция, вызываемая для генерации ключа

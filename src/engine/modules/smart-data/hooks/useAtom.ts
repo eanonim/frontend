@@ -8,14 +8,14 @@ import { createStore, type SetStoreFunction } from "solid-js/store"
  * `useAtom` - хук SolidJS для работы с атомарными данными (состоянием).
  * Позволяет подписываться на обновления атомарных данных и автоматически запрашивать данные с сервера.
  */
-export const useAtom = <VALUE, OPTIONS>(
-  signal: AtomReturn<VALUE, OPTIONS>,
+export const useAtom = <VALUE, OPTIONS, KEY extends string>(
+  signal: AtomReturn<VALUE, OPTIONS, KEY>,
   options?: OPTIONS | (() => OPTIONS),
   params?: {
     /**
      * Ключ для кеширования данных.
      */
-    key?: Key | (() => Key)
+    key?: KEY | (() => KEY)
     /**
      * Определяет, нужно ли автоматически выполнять начальный запрос данных при монтировании компонента.
      */

@@ -4,7 +4,8 @@ import { atom } from "engine/modules/smart-data"
 
 export const USER_ATOM = atom<
   Socket["user.get"]["response"],
-  Socket["user.get"]["request"]
+  Socket["user.get"]["request"],
+  "default"
 >({
   // onKey: (options) => {
   //   return String(options)

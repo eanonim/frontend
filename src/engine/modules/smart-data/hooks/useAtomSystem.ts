@@ -4,13 +4,13 @@ import { getter, setterStatus } from ".."
 import { createEffect, mergeProps, on, splitProps } from "solid-js"
 import { createStore } from "solid-js/store"
 
-export const useAtomSystem = <VALUE, OPTIONS>(
-  signal: AtomReturn<VALUE, OPTIONS>,
+export const useAtomSystem = <VALUE, OPTIONS, KEY extends string>(
+  signal: AtomReturn<VALUE, OPTIONS, KEY>,
   params?: {
     /**
      * Ключ для кеширования данных.
      */
-    key?: Key | (() => Key)
+    key?: KEY | (() => KEY)
   },
 ): [get: System, set: (options: System) => void] => {
   const merged = mergeProps({ key: "default" }, params)

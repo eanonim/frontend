@@ -21,7 +21,11 @@ type SearchOptionsAtom = {
   >
 }
 
-export const SEARCH_OPTIONS_ATOM = atom<SearchOptionsAtom, {}>({
+export const SEARCH_OPTIONS_ATOM = atom<
+  SearchOptionsAtom,
+  {},
+  "default" | "edit"
+>({
   default: {
     you: {
       male: "man",

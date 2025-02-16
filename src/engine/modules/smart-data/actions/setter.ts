@@ -6,7 +6,7 @@ import setterStatus from "../actions/setterStatus"
 import getDefault from "../utils/getDefault"
 
 import { batch } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, produce } from "solid-js/store"
 
 type KeyOf<T> = keyof T
 type W<T> = { [K in keyof T]: T[K] }
@@ -346,12 +346,20 @@ function setter<VALUE, OPTIONS, KEY>(
         !comparison(prev, next) &&
         getter.requests[key] === "end"
       ) {
-        const status = await onUpdate({ prev, next }, key)
+        const status = await onUpdate({ prev, next }, key as KEY)
         if (status === false) return
       }
 
-      ;(setter as any)(...["cache", key, "data"], ...args)
-      setter("cache", key, "update_at", update_at)
+      setter(
+        "cache",
+        key,
+        produce((data) => {
+          data.data = next
+          data.update_at = update_at
+
+          return data
+        }),
+      )
       setterStatus([signal, key], { load: false })
     })
   }

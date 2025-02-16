@@ -1,4 +1,8 @@
-import { debounce, leading } from "@solid-primitives/scheduled"
+import {
+  debounce,
+  leading,
+  leadingAndTrailing,
+} from "@solid-primitives/scheduled"
 import { storeDelete, storeList, storeSet } from "engine/api"
 import { SearchInteresting } from "engine/api/module"
 import { atom } from "engine/modules/smart-data"
@@ -24,7 +28,7 @@ type SearchOptionsAtom = {
   >
 }
 
-const onUpdateInteresting = leading(
+const onUpdateInteresting = leadingAndTrailing(
   debounce,
   ({ prev, next }, key) => {
     for (const _key in next.interests) {
@@ -48,7 +52,7 @@ const onUpdateInteresting = leading(
       }
     }
   },
-  2000,
+  250,
 )
 
 export const SEARCH_OPTIONS_ATOM = atom<

@@ -2,7 +2,7 @@ import { clamp } from "@minsize/utils"
 import { atom, getter, setter } from "engine/modules/smart-data"
 import { produce } from "solid-js/store"
 
-import { debounce, leading } from "@solid-primitives/scheduled"
+import { debounce, leadingAndTrailing } from "@solid-primitives/scheduled"
 import { storeList, storeSet } from "engine/api"
 import { Socket } from "engine/api/module"
 import {
@@ -12,7 +12,7 @@ import {
   bridgeSetHeaderColor,
 } from "@apiteam/twa-bridge/solid"
 
-const onUpdate = leading(
+const onUpdate = leadingAndTrailing(
   debounce,
   async (resolve: (status: boolean) => void, { prev, next }, key) => {
     const keysToCheck: Socket["store.set"]["request"]["key"][] = [
@@ -53,6 +53,7 @@ export const SETTINGS_ATOM = atom<
     backgroundColor: "#222222",
     theme: "dark",
     themeColor: "standard",
+    interest: [],
   },
   onRequested: (options, key) => {
     storeList(options)

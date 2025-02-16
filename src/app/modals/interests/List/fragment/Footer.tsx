@@ -30,16 +30,25 @@ const Footer: Component<Footer> = (props) => {
   const handlerSave = () => {
     setter(
       SEARCH_OPTIONS_ATOM,
-      produce((searchOptions2) => {
-        for (const key in searchOptions2.interests) {
-          const interest = searchOptions2.interests[key as SearchInteresting]
-          if (interest && !interest.isSelected) {
-            interest.isHidden = !interest.isSelected
+      "interests",
+      produce((interests) => {
+        for (const key in interests) {
+          if (interests[key as SearchInteresting]) {
+            delete interests[key as SearchInteresting]
           }
         }
-        searchOptions2.interests = { ...searchOptions.interests }
+        // console.log({ interests })
 
-        return searchOptions2
+        for (const _key in searchOptions.interests) {
+          const key = _key as SearchInteresting
+          if (searchOptions.interests[key]?.isSelected) {
+            interests[key] = { isSelected: true }
+          }
+        }
+
+        console.log({ interests })
+
+        return interests
       }),
     )
     backPage()

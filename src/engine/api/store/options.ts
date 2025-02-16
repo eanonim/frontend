@@ -1,5 +1,5 @@
 import { setter } from "engine/modules/smart-data"
-import { Socket, socketSend, StoreOptions, StoreOptionsAtom } from "../module"
+import { Socket, socketSend } from "../module"
 import { STORE_OPTIONS_ATOM } from "engine/state"
 
 const storeOptions = async (options: Socket["store.options"]["request"]) => {
@@ -26,7 +26,7 @@ const storeOptions = async (options: Socket["store.options"]["request"]) => {
     }
   }
 
-  setter([STORE_OPTIONS_ATOM, options.key], response)
+  setter([STORE_OPTIONS_ATOM, options.key], options.key, responseObject)
 
   return { response: responseObject, error }
 }

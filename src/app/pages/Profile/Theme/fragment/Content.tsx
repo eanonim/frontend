@@ -7,11 +7,10 @@ import {
   Switch,
   Match,
   splitProps,
-  createEffect,
 } from "solid-js"
-import { SETTINGS_ATOM, STORE_OPTIONS_ATOM, USER_ATOM } from "engine/state"
+import { SETTINGS_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
-import { Socket, StoreOptions } from "engine/api/module"
+import { Socket } from "engine/api/module"
 import loc from "engine/languages"
 import { setTheme, setThemeColor } from "engine/state/settings"
 import { DynamicProps } from "solid-js/web"

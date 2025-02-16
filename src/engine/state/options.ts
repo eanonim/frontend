@@ -1,7 +1,7 @@
 import { atom } from "engine/modules/smart-data"
 
 import { storeOptions } from "engine/api"
-import { Socket, StoreOptions } from "engine/api/module"
+import { Socket } from "engine/api/module"
 
 export const STORE_OPTIONS_ATOM = atom<
   Partial<Socket["store.options"]["response"]>,

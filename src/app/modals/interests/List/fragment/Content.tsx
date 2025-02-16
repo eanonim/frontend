@@ -1,6 +1,6 @@
 import { pick } from "@minsize/utils"
 import { Background, Flex, Link, SubTitle, Tag, Title } from "components"
-import { SearchInteresting, StoreOptions } from "engine/api/module"
+import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { getDefault, getter, useAtom } from "engine/modules/smart-data"
 import {
@@ -31,7 +31,7 @@ const Content: Component<Content> = (props) => {
     { key: "edit" },
   )
   const [storeOptions] = useAtom(STORE_OPTIONS_ATOM, {
-    key: StoreOptions.interest,
+    key: "interest" as "interest",
   })
 
   onMount(() => {
@@ -55,8 +55,8 @@ const Content: Component<Content> = (props) => {
   const PremiumTags = createMemo(() => (
     <For
       each={(
-        Object.values(storeOptions) as {
-          key: StoreOptions.interest
+        Object.values(storeOptions?.["interest"] || {}) as {
+          key: "interest"
           value: SearchInteresting
           is_premium: boolean
         }[]
@@ -80,8 +80,8 @@ const Content: Component<Content> = (props) => {
       <Tag.Group>
         <For
           each={(
-            Object.values(storeOptions) as {
-              key: StoreOptions.interest
+            Object.values(storeOptions?.["interest"] || {}) as {
+              key: "interest"
               value: SearchInteresting
               is_premium: boolean
             }[]

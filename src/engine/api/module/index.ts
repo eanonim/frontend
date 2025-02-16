@@ -12,18 +12,6 @@ export type SocketError = {
   critical?: boolean
 }
 
-export type StoreOptionsAtom<
-  T extends Socket["store.options"]["response"][0] = Socket["store.options"]["response"][0],
-> = {
-  [key in T["value"]]?: T
-}
-
-export enum StoreOptions {
-  "backgroundId" = "backgroundId",
-  "themeColor" = "themeColor",
-  "interest" = "interest",
-}
-
 export type SearchInteresting =
   | "music"
   | "travel"
@@ -84,30 +72,31 @@ export type Socket = {
   }
   "store.options": {
     request: {
-      key: StoreOptions
+      key: "interest" | "themeColor" | "backgroundId"
     }
-    response:
-      | {
-          [key in SearchInteresting]: {
-            key: StoreOptions.interest
-            value: SearchInteresting
-            is_premium: boolean
-          }
+    response: {
+      interest: {
+        [key in SearchInteresting]: {
+          key: "interest"
+          value: SearchInteresting
+          is_premium: boolean
         }
-      | {
-          [key in "pink" | "standard"]: {
-            key: StoreOptions.themeColor
-            value: "pink" | "standard"
-            is_premium: boolean
-          }
+      }
+      themeColor: {
+        [key in "pink" | "standard"]: {
+          key: "themeColor"
+          value: "pink" | "standard"
+          is_premium: boolean
         }
-      | {
-          [key in number]: {
-            key: StoreOptions.backgroundId
-            value: number
-            is_premium: boolean
-          }
+      }
+      backgroundId: {
+        [key in number]: {
+          key: "backgroundId"
+          value: number
+          is_premium: boolean
         }
+      }
+    }
   }
   "store.set": {
     request:

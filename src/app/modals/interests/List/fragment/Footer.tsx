@@ -3,6 +3,7 @@ import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { setter, useAtom } from "engine/modules/smart-data"
 import { SEARCH_OPTIONS_ATOM } from "engine/state"
+import { maxInterest } from "root/configs"
 import { backPage } from "router"
 
 import { type JSX, type Component, createMemo } from "solid-js"
@@ -52,7 +53,9 @@ const Footer: Component<Footer> = (props) => {
             <Button.Icon style={{ opacity: 0 }}>
               <Badge size={"small"} type={"text"}>
                 <Badge.Container>
-                  <Title>{interestsCount()}/5</Title>
+                  <Title>
+                    {interestsCount()}/{maxInterest}
+                  </Title>
                 </Badge.Container>
               </Badge>
             </Button.Icon>
@@ -62,7 +65,9 @@ const Footer: Component<Footer> = (props) => {
             <Button.Icon>
               <Badge size={"small"} type={"text"} appearance={"accentReverse"}>
                 <Badge.Container>
-                  <Title>{interestsCount()}/5</Title>
+                  <Title>
+                    {interestsCount()}/{maxInterest}
+                  </Title>
                 </Badge.Container>
               </Badge>
             </Button.Icon>

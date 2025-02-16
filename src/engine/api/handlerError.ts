@@ -1,3 +1,4 @@
+import { getLoc } from "engine/languages"
 import { popouts, pushPopout } from "router"
 
 const handlerError = ({ code, message }: { code: number; message: string }) => {
@@ -5,7 +6,7 @@ const handlerError = ({ code, message }: { code: number; message: string }) => {
     popoutId: popouts.ERROR,
     params: {
       error_code: code,
-      label: message,
+      label: getLoc(`errors.${code}` as any) ?? message,
     },
   })
 }

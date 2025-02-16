@@ -21,6 +21,7 @@ export type StoreOptionsAtom<
 export enum StoreOptions {
   "backgroundId" = "backgroundId",
   "themeColor" = "themeColor",
+  "interest" = "interest",
 }
 
 export type SearchInteresting =
@@ -72,6 +73,15 @@ export type Socket = {
     }
     response: {}
   }
+  "store.delete": {
+    request: {
+      key: "interest"
+      value: SearchInteresting
+    }
+    response: {
+      result: boolean
+    }
+  }
   "store.options": {
     request: {
       key: StoreOptions
@@ -85,6 +95,11 @@ export type Socket = {
       | Array<{
           key: StoreOptions.themeColor
           value: "pink" | "standard"
+          is_premium: boolean
+        }>
+      | Array<{
+          key: StoreOptions.interest
+          value: SearchInteresting
           is_premium: boolean
         }>
   }
@@ -110,6 +125,10 @@ export type Socket = {
           key: "themeColor"
           value: "pink" | "standard"
         }
+      | {
+          key: "interest"
+          value: SearchInteresting
+        }
     response: {
       result: boolean
     }
@@ -128,6 +147,7 @@ export type Socket = {
       backgroundColor: string
       theme: "dark" | "light" | "system"
       themeColor: "pink" | "standard"
+      interest: SearchInteresting[]
     }
   }
   "user.get": {

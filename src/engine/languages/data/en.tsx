@@ -66,4 +66,7 @@ export default {
     anime: "Anime",
     lgbt: "LGBT",
   },
+  errors: {
+    1002: "This action requires premium access",
+  },
 }

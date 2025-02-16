@@ -1,38 +1,36 @@
 import handlerError from "../handlerError"
 import ServerError from "../ServerError"
 import { Socket, socketSend } from "../module"
-import storeList from "./list"
 
 const storeSet = async (options: Socket["store.set"]["request"]) => {
   let errorServer
 
   if (options.key === "backgroundId") {
     errorServer = ServerError.isBackgroundId(options.value)
-  }
-  if (options.key === "themeColor") {
+  } else if (options.key === "themeColor") {
     errorServer = ServerError.isThemeColor(options.value)
   }
 
-  console.log({ errorServer })
+  try {
+    if (errorServer) {
+      return { response: undefined, error: errorServer }
+    }
 
-  if (errorServer) {
-    storeList({})
-    handlerError(errorServer)
-    return { response: undefined, error: errorServer }
-  }
+    const { response, error } = await socketSend("store.set", {
+      ...{ value: String(options.value) },
+      ...options,
+    })
 
-  options.value = String(options.value)
-  const { response, error } = await socketSend("store.set", options)
-
-  if (error) {
-    console.log({ error })
-    storeList({})
-    handlerError({ code: error.code, message: error.message })
+    if (error) {
+      errorServer = error
+    }
 
     return { response, error }
+  } finally {
+    if (errorServer) {
+      handlerError(errorServer)
+    }
   }
-  // setter(USER_ATOM, "id", response.id)
-  return { response, error }
 }
 
 export default storeSet

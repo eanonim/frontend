@@ -1,21 +1,38 @@
-import { Tag, Title } from "components"
-import { SearchInteresting } from "engine/api/module"
+import { pick } from "@minsize/utils"
+import { Background, Flex, Link, SubTitle, Tag, Title } from "components"
+import { SearchInteresting, StoreOptions } from "engine/api/module"
 import loc from "engine/languages"
 import { getDefault, getter, useAtom } from "engine/modules/smart-data"
-import { SEARCH_OPTIONS_ATOM } from "engine/state"
+import {
+  SEARCH_OPTIONS_ATOM,
+  STORE_OPTIONS_ATOM,
+  USER_ATOM,
+} from "engine/state"
 
-import { type JSX, type Component, For, onMount } from "solid-js"
+import {
+  type JSX,
+  type Component,
+  For,
+  onMount,
+  createEffect,
+  createMemo,
+  Show,
+} from "solid-js"
 import { produce } from "solid-js/store"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
+  const [user] = useAtom(USER_ATOM)
   const [searchOptions, setSearchOptions] = useAtom(
     SEARCH_OPTIONS_ATOM,
     {},
     { key: "edit" },
   )
+  const [storeOptions] = useAtom(STORE_OPTIONS_ATOM, {
+    key: StoreOptions.interest,
+  })
 
   onMount(() => {
     setSearchOptions(getDefault(getter(SEARCH_OPTIONS_ATOM)))
@@ -35,28 +52,80 @@ const Content: Component<Content> = (props) => {
     )
   }
 
+  const PremiumTags = createMemo(() => (
+    <For
+      each={
+        storeOptions.filter(
+          (x) => !!x.is_premium && x.key === StoreOptions.interest,
+        ) as {
+          key: StoreOptions.interest
+          value: SearchInteresting
+          is_premium: boolean
+        }[]
+      }
+    >
+      {(option, index) => (
+        <Tag
+          // style={{ "flex-grow": 1 }}
+          onClick={() => handlerChangeInteresting(option.value)}
+          data-index={index()}
+          selected={searchOptions.interests?.[option.value]?.isSelected}
+        >
+          <Title>{lang(`searchInterests.${option.value}`)}</Title>
+        </Tag>
+      )}
+    </For>
+  ))
+
   return (
-    <Tag.Group>
-      <For
-        each={
-          Object.entries(lang("searchInterests") as any) as unknown as [
-            SearchInteresting,
-            string,
-          ][]
-        }
-      >
-        {([key, locale], index) => (
-          <Tag
-            // style={{ "flex-grow": 1 }}
-            onClick={() => handlerChangeInteresting(key)}
-            data-index={index()}
-            selected={searchOptions.interests?.[key]?.isSelected}
-          >
-            <Title>{locale}</Title>
-          </Tag>
-        )}
-      </For>
-    </Tag.Group>
+    <>
+      <Tag.Group>
+        <For
+          each={
+            storeOptions.filter(
+              (x) => !!!x.is_premium && x.key === StoreOptions.interest,
+            ) as {
+              key: StoreOptions.interest
+              value: SearchInteresting
+              is_premium: boolean
+            }[]
+          }
+        >
+          {(option, index) => (
+            <Tag
+              onClick={() => handlerChangeInteresting(option.value)}
+              data-index={index()}
+              selected={searchOptions.interests?.[option.value]?.isSelected}
+            >
+              <Title>{lang(`searchInterests.${option.value}`)}</Title>
+            </Tag>
+          )}
+        </For>
+
+        <Show when={!user.premium} fallback={PremiumTags()}>
+          <span style={{ position: "relative" }}>
+            <Tag.Group
+              padding={false}
+              style={{
+                filter: "blur(1px)",
+                opacity: 0.1,
+              }}
+            >
+              {PremiumTags()}
+            </Tag.Group>
+
+            <Background.Overlay>
+              <Flex height={"100%"}>
+                <SubTitle align={"center"}>
+                  Только по <Link>подписке</Link>
+                </SubTitle>
+              </Flex>
+            </Background.Overlay>
+          </span>
+        </Show>
+      </Tag.Group>
+    </>
   )
 }
+
 export default Content

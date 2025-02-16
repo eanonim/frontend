@@ -84,10 +84,6 @@ export const useAtom = <VALUE, OPTIONS, KEY extends string>(
     return (setter as any)([signal, getKey()], ...args)
   }
 
-  createEffect(() => {
-    console.log({ data: cache })
-  })
-
   return [cache, _setCache]
 }
 

@@ -44,10 +44,6 @@ const Content: Component<Content> = (props) => {
   const [settings] = useAtom(SETTINGS_ATOM)
   const [user] = useAtom(USER_ATOM)
 
-  createEffect(() => {
-    console.log({ options: options })
-  })
-
   const handlerOpen = (type: number) => {
     const isPremium = options.find((x) => x.value === type)?.is_premium ?? true
 

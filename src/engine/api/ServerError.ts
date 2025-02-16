@@ -1,13 +1,10 @@
 import { getter } from "engine/modules/smart-data"
-import { Socket, StoreOptions } from "./module"
+import { Socket, SocketError, StoreOptions } from "./module"
 import { STORE_OPTIONS_ATOM, USER_ATOM } from "engine/state"
 
-type Error = {
-  code: number
-  message: string
-}
-
-const checkErrors = (errors: (Error | undefined)[]): false | Error => {
+const checkErrors = (
+  errors: (SocketError | undefined)[],
+): false | SocketError => {
   return errors.find(Boolean) || false
 }
 

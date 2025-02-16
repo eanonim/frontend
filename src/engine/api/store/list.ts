@@ -1,7 +1,8 @@
 import { setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
-import { SETTINGS_ATOM } from "engine/state"
+import { SEARCH_OPTIONS_ATOM, SETTINGS_ATOM } from "engine/state"
 import { setFontSize, setTheme, setThemeColor } from "engine/state/settings"
+import { maxInterest } from "root/configs"
 
 const storeList = async (options: Socket["store.list"]["request"]) => {
   const { response, error } = await socketSend("store.list", options)
@@ -43,6 +44,12 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
   if (!response.themeColor) response.themeColor = "standard"
 
   setter(SETTINGS_ATOM, response)
+  setter(SEARCH_OPTIONS_ATOM, "interests", (interests) => {
+    for (const key of response.interest.slice(0, maxInterest)) {
+      interests[key] = { isSelected: true }
+    }
+    return interests
+  })
 
   if (response?.fontSize) {
     setFontSize(response?.fontSize)

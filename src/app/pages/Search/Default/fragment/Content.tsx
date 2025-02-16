@@ -12,6 +12,7 @@ import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { SEARCH_OPTIONS_ATOM } from "engine/state"
+import { maxInterest } from "root/configs"
 import { modals, pushModal } from "router"
 
 import { type JSX, type Component, For, Show, createMemo } from "solid-js"
@@ -167,36 +168,43 @@ const Content: Component<Content> = (props) => {
           <Show
             keyed
             when={
-              Object.entries(searchOptions.interests) as [
+              Object.entries(searchOptions.interests).filter(
+                (x) => x[1].isHidden !== true,
+              ) as [
                 SearchInteresting,
                 { isSelected: boolean; isHidden?: boolean },
               ][]
             }
           >
             {(interests) => (
-              <Tag.Group>
-                <For each={interests.filter((x) => x[1].isHidden !== true)}>
-                  {([key, interest], index) => (
-                    <Tag
-                      onClick={() => handlerChangeInteresting(key)}
-                      data-index={index()}
-                      selected={interest.isSelected}
-                    >
-                      <Title>{lang(`searchInterests.${key}`)}</Title>
-                    </Tag>
-                  )}
-                </For>
-              </Tag.Group>
+              <Show when={interests.length}>
+                <Tag.Group>
+                  <For each={interests}>
+                    {([key, interest], index) => (
+                      <Tag
+                        onClick={() => handlerChangeInteresting(key)}
+                        data-index={index()}
+                        selected={interest.isSelected}
+                      >
+                        <Title>{lang(`searchInterests.${key}`)}</Title>
+                      </Tag>
+                    )}
+                  </For>
+                </Tag.Group>
+                <Separator size={"indent"} />
+              </Show>
             )}
           </Show>
-          <Separator size={"indent"} />
+
           <Button.Group>
             <Button.Group.Container>
               <Button onClick={openModal} stretched appearance={"secondary"}>
                 <Button.Icon style={{ opacity: 0 }}>
                   <Badge size={"small"} type={"text"}>
                     <Badge.Container>
-                      <Title>{interestsCount()}/5</Title>
+                      <Title>
+                        {interestsCount()}/{maxInterest}
+                      </Title>
                     </Badge.Container>
                   </Badge>
                 </Button.Icon>
@@ -206,7 +214,9 @@ const Content: Component<Content> = (props) => {
                 <Button.Icon>
                   <Badge size={"small"} type={"text"}>
                     <Badge.Container>
-                      <Title>{interestsCount()}/5</Title>
+                      <Title>
+                        {interestsCount()}/{maxInterest}
+                      </Title>
                     </Badge.Container>
                   </Badge>
                 </Button.Icon>

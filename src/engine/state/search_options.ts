@@ -1,5 +1,9 @@
+import { omit, pick } from "@minsize/utils"
+import { debounce, leading } from "@solid-primitives/scheduled"
+import { storeDelete, storeList, storeSet } from "engine/api"
 import { SearchInteresting } from "engine/api/module"
-import { setter, atom } from "engine/modules/smart-data"
+import { setter, atom, getDefault } from "engine/modules/smart-data"
+import { maxInterest } from "root/configs"
 
 type SearchOptionsAtom = {
   you: {
@@ -21,6 +25,33 @@ type SearchOptionsAtom = {
   >
 }
 
+const onUpdateInteresting = leading(
+  debounce,
+  ({ prev, next }, key) => {
+    for (const _key in next.interests) {
+      const key = _key as SearchInteresting
+
+      if (next.interests[key]?.isSelected) {
+        if (
+          prev.interests[key]?.isSelected !== next.interests[key]?.isSelected
+        ) {
+          storeSet({ key: "interest", value: key })
+        }
+      } else {
+        storeDelete({ key: "interest", value: key })
+      }
+    }
+    for (const _key in prev.interests) {
+      const key = _key as SearchInteresting
+
+      if (!next.interests[key]) {
+        storeDelete({ key: "interest", value: key })
+      }
+    }
+  },
+  2000,
+)
+
 export const SEARCH_OPTIONS_ATOM = atom<
   SearchOptionsAtom,
   {},
@@ -41,32 +72,21 @@ export const SEARCH_OPTIONS_ATOM = atom<
         to: 24,
       },
     },
-    interests: {
-      animals: {
-        isSelected: true,
-      },
-      anime: {
-        isSelected: true,
-      },
-      art: {
-        isSelected: true,
-      },
-      science: {
-        isSelected: true,
-      },
-      fashion: {
-        isSelected: true,
-      },
-    },
+    interests: {},
   },
   updateIntervalMs: 60_000,
-  onUpdate: ({ prev, next }, key) => {
+  onRequested: (options, key) => {
+    storeList(options)
+  },
+  onUpdate: async ({ prev, next }, key) => {
     const nextCount = Object.values(next.interests).filter(
       (x) => x.isSelected,
     ).length
 
-    if (nextCount > 5) {
-      setter([SEARCH_OPTIONS_ATOM, key], prev)
+    if (key === "default") {
+      onUpdateInteresting({ prev, next }, key)
     }
+
+    return nextCount <= maxInterest
   },
 })

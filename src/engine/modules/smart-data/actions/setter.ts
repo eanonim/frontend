@@ -6,6 +6,7 @@ import setterStatus from "../actions/setterStatus"
 import getDefault from "../utils/getDefault"
 
 import { batch } from "solid-js"
+import { createStore } from "solid-js/store"
 
 type KeyOf<T> = keyof T
 type W<T> = { [K in keyof T]: T[K] }
@@ -322,7 +323,7 @@ function setter<VALUE, OPTIONS, KEY>(
     : [options as AtomReturn<VALUE, OPTIONS, KEY>, "default"]
 
   if (signal) {
-    batch(() => {
+    batch(async () => {
       const [getter, setter] = signal
       const update_at = new Date(Date.now() + getter.updateIntervalMs)
 
@@ -336,8 +337,8 @@ function setter<VALUE, OPTIONS, KEY>(
       }
 
       const prev = getDefault(getter?.cache?.[key]?.data)
-      ;(setter as any)(...["cache", key, "data"], ...args)
-      const next = getDefault(getter?.cache?.[key]?.data)
+
+      const next = getPreviewData(options, ...args)
 
       const onUpdate = getter.onUpdate
       if (
@@ -345,13 +346,33 @@ function setter<VALUE, OPTIONS, KEY>(
         !comparison(prev, next) &&
         getter.requests[key] === "end"
       ) {
-        onUpdate({ prev, next }, key)
+        const status = await onUpdate({ prev, next }, key)
+        if (status === false) return
       }
 
+      ;(setter as any)(...["cache", key, "data"], ...args)
       setter("cache", key, "update_at", update_at)
       setterStatus([signal, key], { load: false })
     })
   }
+}
+
+function getPreviewData<VALUE, OPTIONS, KEY>(
+  options: SetterOptions<VALUE, OPTIONS, KEY>,
+  ...args: (string | number | Function)[]
+) {
+  const [signal, key] = Array.isArray(options[0])
+    ? [options[0], options[1] as string]
+    : [options as AtomReturn<VALUE, OPTIONS, KEY>, "default"]
+
+  const [getter] = signal
+  const [store, setStore] = createStore<any>(
+    getDefault(getter.cache[key]?.data || getter.default),
+  )
+
+  ;(setStore as any)(...args)
+
+  return getDefault(store)
 }
 
 export default setter

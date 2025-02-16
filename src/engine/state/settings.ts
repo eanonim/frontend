@@ -6,12 +6,42 @@ import { debounce, leading } from "@solid-primitives/scheduled"
 import { storeList, storeSet } from "engine/api"
 import { Socket } from "engine/api/module"
 import {
-  bridgeGetInitData,
   bridgeRequestTheme,
   bridgeSetBackgroundColor,
   bridgeSetBottomBarColor,
   bridgeSetHeaderColor,
 } from "@apiteam/twa-bridge/solid"
+
+const onUpdate = leading(
+  debounce,
+  async (resolve: (status: boolean) => void, { prev, next }, key) => {
+    const keysToCheck: Socket["store.set"]["request"]["key"][] = [
+      "backgroundColor",
+      "backgroundId",
+      "fontSize",
+      "theme",
+      "themeColor",
+    ]
+
+    let status = true
+
+    for (const key of keysToCheck) {
+      const value = next[key] as any
+      if (prev[key] !== value) {
+        const { error } = await storeSet({ key: key, value: value })
+        if (error?.code) {
+          status = false
+        } else {
+          if (key === "themeColor") {
+            document.documentElement.setAttribute("theme-color", value)
+          }
+        }
+      }
+    }
+    resolve(status)
+  },
+  2000,
+)
 
 export const SETTINGS_ATOM = atom<
   Socket["store.list"]["response"],
@@ -28,33 +58,11 @@ export const SETTINGS_ATOM = atom<
     storeList(options)
   },
   updateIntervalMs: 30_000,
-  onUpdate: leading(
-    debounce,
-    ({ prev, next }, key) => {
-      const keysToCheck: Socket["store.set"]["request"]["key"][] = [
-        "backgroundColor",
-        "backgroundId",
-        "fontSize",
-        "theme",
-        "themeColor",
-      ]
-      keysToCheck.forEach((property) => {
-        const key = property
-        const value = next[key] as any
-        if (prev[key] !== value) {
-          storeSet({ key: key, value: value })
-
-          // if (key === "theme") {
-          //   setTheme(value)
-          // }
-          // if (key === "themeColor") {
-          //   setTheme(value)
-          // }
-        }
-      })
-    },
-    2000,
-  ),
+  onUpdate: async ({ prev, next }, key) => {
+    return await new Promise<boolean>((resolve) => {
+      onUpdate(resolve, { prev, next }, key)
+    })
+  },
 })
 
 export const setThemeColor = (
@@ -64,8 +72,6 @@ export const setThemeColor = (
   if (set) {
     setter(SETTINGS_ATOM, "themeColor", themeColor)
   }
-
-  document.documentElement.setAttribute("theme-color", themeColor)
 
   if (themeColor === "standard") {
     bridgeRequestTheme()

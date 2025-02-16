@@ -11,17 +11,12 @@ const Content: Component<Content> = (props) => {
   const [user] = useAtom(USER_ATOM)
 
   return (
-    <SmartData signal={USER_ATOM}>
-      <SmartData.Content>
-        <AvatarProfile
-          src={user.image}
-          id={user.id}
-          first_name={user.first_name}
-          last_name={user.last_name}
-        />
-      </SmartData.Content>
-      <SmartData.Skeleton>ASFASF</SmartData.Skeleton>
-    </SmartData>
+    <AvatarProfile
+      src={user.image}
+      id={user.id}
+      first_name={user.first_name}
+      last_name={user.last_name}
+    />
   )
 }
 

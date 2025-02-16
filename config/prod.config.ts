@@ -11,7 +11,10 @@ import eruda from "./plugins/eruda"
 import tsconfigPaths from "vite-tsconfig-paths"
 import solidPlugin from "vite-plugin-solid"
 import injectEntryChunk from "./plugins/injectEntryChunk"
-import { viteSingleFile } from "vite-plugin-singlefile"
+
+import { execSync } from "child_process" // Import execSync
+
+const gitCommitHash = execSync("git rev-parse --short HEAD").toString().trim()
 
 const generator = classGenerator()
 
@@ -27,6 +30,9 @@ const output: OutputOptions | OutputOptions[] = {
 
 export default defineConfig({
   base: "/frontend",
+  define: {
+    "import.meta.env.APP_VERSION": JSON.stringify(gitCommitHash),
+  },
   worker: {
     rollupOptions: {
       output: output,

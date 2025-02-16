@@ -1,8 +1,7 @@
-import { omit, pick } from "@minsize/utils"
 import { debounce, leading } from "@solid-primitives/scheduled"
 import { storeDelete, storeList, storeSet } from "engine/api"
 import { SearchInteresting } from "engine/api/module"
-import { setter, atom, getDefault } from "engine/modules/smart-data"
+import { atom } from "engine/modules/smart-data"
 import { maxInterest } from "root/configs"
 
 type SearchOptionsAtom = {

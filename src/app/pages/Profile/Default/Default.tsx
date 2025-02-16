@@ -1,6 +1,6 @@
 import { Panel } from "components"
 
-import { Content, Header } from "./fragment"
+import { Content, Footer, Header } from "./fragment"
 
 import { type JSX, type Component } from "solid-js"
 
@@ -13,6 +13,7 @@ const Default: Component<Default> = (props) => {
     <Panel {...props}>
       <Header />
       <Content />
+      <Footer />
     </Panel>
   )
 }

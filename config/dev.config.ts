@@ -7,9 +7,12 @@ import classGenerator from "./plugins/classGenerator"
 import eruda from "./plugins/eruda"
 import solidSVG from "./plugins/solidSVG"
 import dotenv from "dotenv"
+import { execSync } from "child_process" // Import execSync
 dotenv.config()
 
 const generator = classGenerator()
+
+const gitCommitHash = execSync("git rev-parse --short HEAD").toString().trim()
 
 const TELEGRAM_SIGN = process.env.TELEGRAM_SIGN
 
@@ -17,6 +20,7 @@ export default defineConfig({
   base: "./",
   define: {
     "import.meta.env.TELEGRAM_SIGN": JSON.stringify(TELEGRAM_SIGN),
+    "import.meta.env.APP_VERSION": JSON.stringify(gitCommitHash + ".dev"),
   },
   css: {
     modules: {

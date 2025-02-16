@@ -8,10 +8,10 @@ import {
   Tag,
   Title,
 } from "components"
-import { SearchInteresting } from "engine/api/module"
+import { SearchInteresting, StoreOptions } from "engine/api/module"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
-import { SEARCH_OPTIONS_ATOM } from "engine/state"
+import { SEARCH_OPTIONS_ATOM, STORE_OPTIONS_ATOM } from "engine/state"
 import { maxInterest } from "root/configs"
 import { modals, pushModal } from "router"
 
@@ -22,6 +22,9 @@ interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const [searchOptions, setSearchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
+  const [storeOptions] = useAtom(STORE_OPTIONS_ATOM, {
+    key: StoreOptions.interest,
+  })
 
   const interestsCount = createMemo(
     () =>
@@ -168,26 +171,33 @@ const Content: Component<Content> = (props) => {
           <Show
             keyed
             when={
-              Object.entries(searchOptions.interests).filter(
-                (x) => x[1].isHidden !== true,
-              ) as [
-                SearchInteresting,
-                { isSelected: boolean; isHidden?: boolean },
-              ][]
+              storeOptions as {
+                key: StoreOptions.interest
+                value: SearchInteresting
+                is_premium: boolean
+              }[]
             }
           >
             {(interests) => (
-              <Show when={interests.length}>
+              <Show when={Object.values(searchOptions.interests).length}>
                 <Tag.Group>
                   <For each={interests}>
-                    {([key, interest], index) => (
-                      <Tag
-                        onClick={() => handlerChangeInteresting(key)}
-                        data-index={index()}
-                        selected={interest.isSelected}
-                      >
-                        <Title>{lang(`searchInterests.${key}`)}</Title>
-                      </Tag>
+                    {(interest, index) => (
+                      <Show when={searchOptions.interests[interest.value]}>
+                        <Tag
+                          onClick={() =>
+                            handlerChangeInteresting(interest.value)
+                          }
+                          data-index={index()}
+                          selected={
+                            searchOptions.interests[interest.value]?.isSelected
+                          }
+                        >
+                          <Title>
+                            {lang(`searchInterests.${interest.value}`)}
+                          </Title>
+                        </Tag>
+                      </Show>
                     )}
                   </For>
                 </Tag.Group>

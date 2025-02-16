@@ -9,5 +9,9 @@ export {
   setTheme,
 } from "./settings"
 export { TEST_ATOM } from "./TEST"
-export { STORE_OPTIONS_ATOM } from "./options"
+export {
+  STORE_BACKGROUND_ATOM,
+  STORE_THEME_COLOR_ATOM,
+  STORE_INTEREST_ATOM,
+} from "./options"
 export { SEARCH_OPTIONS_ATOM } from "./search_options"

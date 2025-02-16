@@ -1,6 +1,10 @@
 import { getter } from "engine/modules/smart-data"
 import { Socket, SocketError } from "./module"
-import { STORE_OPTIONS_ATOM, USER_ATOM } from "engine/state"
+import {
+  STORE_BACKGROUND_ATOM,
+  STORE_THEME_COLOR_ATOM,
+  USER_ATOM,
+} from "engine/state"
 
 const checkErrors = (
   errors: (SocketError | undefined)[],
@@ -23,7 +27,7 @@ const Error1002 = (userPremium?: boolean, value?: boolean) => {
 const ServerError = {
   isBackgroundId: (value: Socket["store.list"]["response"]["backgroundId"]) => {
     const user = getter(USER_ATOM)
-    const options = getter(STORE_OPTIONS_ATOM, "backgroundId")
+    const options = getter(STORE_BACKGROUND_ATOM)
 
     const option = options[value]
 
@@ -31,7 +35,7 @@ const ServerError = {
   },
   isThemeColor: (value: Socket["store.list"]["response"]["themeColor"]) => {
     const user = getter(USER_ATOM)
-    const options = getter(STORE_OPTIONS_ATOM, "themeColor")
+    const options = getter(STORE_THEME_COLOR_ATOM)
 
     const option = options[value]
 

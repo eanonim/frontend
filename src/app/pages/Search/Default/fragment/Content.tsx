@@ -11,7 +11,7 @@ import {
 import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
-import { SEARCH_OPTIONS_ATOM, STORE_OPTIONS_ATOM } from "engine/state"
+import { SEARCH_OPTIONS_ATOM, STORE_INTEREST_ATOM } from "engine/state"
 import { maxInterest } from "root/configs"
 import { modals, pushModal } from "router"
 
@@ -22,9 +22,7 @@ interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const [searchOptions, setSearchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
-  const [storeOptions] = useAtom(STORE_OPTIONS_ATOM, {
-    key: "interest" as "interest",
-  })
+  const [storeInterest] = useAtom(STORE_INTEREST_ATOM)
 
   const interestsCount = createMemo(
     () =>
@@ -168,16 +166,7 @@ const Content: Component<Content> = (props) => {
       <Group>
         <Group.Header mode={"primary"}>{lang("interests")}</Group.Header>
         <Group.Container>
-          <Show
-            keyed
-            when={
-              Object.values(storeOptions?.["interest"] || {}) as {
-                key: "interest"
-                value: SearchInteresting
-                is_premium: boolean
-              }[]
-            }
-          >
+          <Show keyed when={Object.values(storeInterest)}>
             {(interests) => (
               <Show when={Object.values(searchOptions.interests).length}>
                 <Tag.Group>

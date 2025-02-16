@@ -1,8 +1,18 @@
 import { setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
-import { STORE_OPTIONS_ATOM } from "engine/state"
+import {
+  STORE_BACKGROUND_ATOM,
+  STORE_INTEREST_ATOM,
+  STORE_THEME_COLOR_ATOM,
+} from "engine/state"
 
 const storeOptions = async (options: Socket["store.options"]["request"]) => {
+  const atoms = {
+    backgroundId: STORE_BACKGROUND_ATOM,
+    themeColor: STORE_THEME_COLOR_ATOM,
+    interest: STORE_INTEREST_ATOM,
+  }
+
   const { response, error } = await socketSend("store.options", options)
   if (error) {
     return { response, error }
@@ -26,7 +36,7 @@ const storeOptions = async (options: Socket["store.options"]["request"]) => {
     }
   }
 
-  setter([STORE_OPTIONS_ATOM, options.key], options.key, responseObject)
+  setter(atoms[options.key], responseObject)
 
   return { response: responseObject, error }
 }

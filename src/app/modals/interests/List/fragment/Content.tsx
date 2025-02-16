@@ -1,11 +1,10 @@
-import { pick } from "@minsize/utils"
 import { Background, Flex, Link, SubTitle, Tag, Title } from "components"
 import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { getDefault, getter, useAtom } from "engine/modules/smart-data"
 import {
   SEARCH_OPTIONS_ATOM,
-  STORE_OPTIONS_ATOM,
+  STORE_INTEREST_ATOM,
   USER_ATOM,
 } from "engine/state"
 
@@ -14,7 +13,6 @@ import {
   type Component,
   For,
   onMount,
-  createEffect,
   createMemo,
   Show,
 } from "solid-js"
@@ -30,9 +28,7 @@ const Content: Component<Content> = (props) => {
     {},
     { key: "edit" },
   )
-  const [storeOptions] = useAtom(STORE_OPTIONS_ATOM, {
-    key: "interest" as "interest",
-  })
+  const [storeInterest] = useAtom(STORE_INTEREST_ATOM)
 
   onMount(() => {
     setSearchOptions(getDefault(getter(SEARCH_OPTIONS_ATOM)))
@@ -53,15 +49,7 @@ const Content: Component<Content> = (props) => {
   }
 
   const PremiumTags = createMemo(() => (
-    <For
-      each={(
-        Object.values(storeOptions?.["interest"] || {}) as {
-          key: "interest"
-          value: SearchInteresting
-          is_premium: boolean
-        }[]
-      ).filter((x) => !!x.is_premium)}
-    >
+    <For each={Object.values(storeInterest).filter((x) => !!x.is_premium)}>
       {(option, index) => (
         <Tag
           // style={{ "flex-grow": 1 }}
@@ -78,15 +66,7 @@ const Content: Component<Content> = (props) => {
   return (
     <>
       <Tag.Group>
-        <For
-          each={(
-            Object.values(storeOptions?.["interest"] || {}) as {
-              key: "interest"
-              value: SearchInteresting
-              is_premium: boolean
-            }[]
-          ).filter((x) => !x.is_premium)}
-        >
+        <For each={Object.values(storeInterest).filter((x) => !x.is_premium)}>
           {(option, index) => (
             <Tag
               onClick={() => handlerChangeInteresting(option.value)}

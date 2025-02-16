@@ -12,9 +12,9 @@ import {
 
 import { chunks } from "@minsize/utils"
 
-import { type JSX, type Component, For, Show, createEffect } from "solid-js"
+import { type JSX, type Component, For, Show } from "solid-js"
 import { pages, pushPage } from "router"
-import { SETTINGS_ATOM, STORE_OPTIONS_ATOM, USER_ATOM } from "engine/state"
+import { SETTINGS_ATOM, STORE_BACKGROUND_ATOM, USER_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
@@ -36,13 +36,11 @@ const textProps: TextProps = {
 }
 
 const Content: Component<Content> = (props) => {
-  const [storeOptions] = useAtom(STORE_OPTIONS_ATOM, {
-    key: "backgroundId" as "backgroundId",
-  })
+  const [storeBackground] = useAtom(STORE_BACKGROUND_ATOM)
   const [settings] = useAtom(SETTINGS_ATOM)
   const [user] = useAtom(USER_ATOM)
   const handlerOpen = (type: number) => {
-    const isPremium = storeOptions?.["backgroundId"]?.[type]?.is_premium ?? true
+    const isPremium = storeBackground[type]?.is_premium ?? true
 
     if (isPremium !== user.premium) return
     pushPage({ pageId: pages.BACKGROUND_EDIT, params: { backgroundId: type } })
@@ -67,7 +65,7 @@ const Content: Component<Content> = (props) => {
             each={chunks(
               3,
               (
-                Object.values(storeOptions?.["backgroundId"] || {}) as {
+                Object.values(storeBackground) as {
                   key: "backgroundId"
                   value: number
                   is_premium: boolean

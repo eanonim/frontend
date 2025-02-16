@@ -16,8 +16,8 @@ import { execSync } from "child_process" // Import execSync
 
 const gitCommitHash = execSync("git rev-parse --short HEAD").toString().trim()
 
-const newVersion = await incrementPackageVersion("./package.json")
-console.log("APP Version:", newVersion)
+// const newVersion = await incrementPackageVersion("./package.json")
+// console.log("APP Version:", newVersion)
 const generator = classGenerator()
 
 const output: OutputOptions | OutputOptions[] = {

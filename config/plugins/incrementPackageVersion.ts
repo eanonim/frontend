@@ -2,7 +2,7 @@ import path from "path"
 import fs from "fs/promises"
 
 async function incrementPackageVersion(
-  packageJsonPath: string = "./package.json",
+  packageJsonPath: string = "../package.json",
 ): Promise<string> {
   try {
     // 1. Read the package.json file.

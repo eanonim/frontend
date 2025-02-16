@@ -6,7 +6,7 @@ import { OutputOptions } from "rollup"
 import { compilerOptions } from "./tsconfig.json"
 import classGenerator from "./plugins/classGenerator"
 import solidSVG from "./plugins/solidSVG"
-import eruda from "./plugins/eruda"
+import incrementPackageVersion from "./plugins/incrementPackageVersion"
 
 import tsconfigPaths from "vite-tsconfig-paths"
 import solidPlugin from "vite-plugin-solid"
@@ -16,6 +16,8 @@ import { execSync } from "child_process" // Import execSync
 
 const gitCommitHash = execSync("git rev-parse --short HEAD").toString().trim()
 
+const newVersion = await incrementPackageVersion("./package.json")
+console.log("APP Version:", newVersion)
 const generator = classGenerator()
 
 const output: OutputOptions | OutputOptions[] = {

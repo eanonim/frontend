@@ -15,11 +15,8 @@ const storeSet = async (options: Socket["store.set"]["request"]) => {
     if (errorServer) {
       return { response: undefined, error: errorServer }
     }
-
-    const { response, error } = await socketSend("store.set", {
-      ...{ value: String(options.value) },
-      ...options,
-    })
+    options.value = String(options.value)
+    const { response, error } = await socketSend("store.set", options)
 
     if (error) {
       errorServer = error

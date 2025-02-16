@@ -45,7 +45,7 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
 
   setter(SETTINGS_ATOM, response)
   setter(SEARCH_OPTIONS_ATOM, "interests", (interests) => {
-    for (const key of response.interest.slice(0, maxInterest)) {
+    for (const key of (response.interest ?? []).slice(0, maxInterest)) {
       interests[key] = { isSelected: true }
     }
     return interests

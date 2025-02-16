@@ -54,15 +54,13 @@ const Content: Component<Content> = (props) => {
 
   const PremiumTags = createMemo(() => (
     <For
-      each={
-        storeOptions.filter(
-          (x) => !!x.is_premium && x.key === StoreOptions.interest,
-        ) as {
+      each={(
+        Object.values(storeOptions) as {
           key: StoreOptions.interest
           value: SearchInteresting
           is_premium: boolean
         }[]
-      }
+      ).filter((x) => !!x.is_premium)}
     >
       {(option, index) => (
         <Tag
@@ -81,15 +79,13 @@ const Content: Component<Content> = (props) => {
     <>
       <Tag.Group>
         <For
-          each={
-            storeOptions.filter(
-              (x) => !!!x.is_premium && x.key === StoreOptions.interest,
-            ) as {
+          each={(
+            Object.values(storeOptions) as {
               key: StoreOptions.interest
               value: SearchInteresting
               is_premium: boolean
             }[]
-          }
+          ).filter((x) => !x.is_premium)}
         >
           {(option, index) => (
             <Tag

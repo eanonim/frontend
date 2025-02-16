@@ -25,9 +25,7 @@ const ServerError = {
     const user = getter(USER_ATOM)
     const options = getter(STORE_OPTIONS_ATOM, StoreOptions.backgroundId)
 
-    const option = options.find(
-      (x) => x.key === StoreOptions.backgroundId && x.value === value,
-    )
+    const option = options[value]
 
     return checkErrors([Error1002(user?.premium, option?.is_premium)])
   },
@@ -35,9 +33,7 @@ const ServerError = {
     const user = getter(USER_ATOM)
     const options = getter(STORE_OPTIONS_ATOM, StoreOptions.themeColor)
 
-    const option = options.find(
-      (x) => x.key === StoreOptions.themeColor && x.value === value,
-    )
+    const option = options[value]
 
     return checkErrors([Error1002(user?.premium, option?.is_premium)])
   },

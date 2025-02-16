@@ -21,10 +21,6 @@ interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const [settings] = useAtom(SETTINGS_ATOM)
-  const [options] = useAtom(STORE_OPTIONS_ATOM, {
-    key: StoreOptions.themeColor,
-  })
-  const [user] = useAtom(USER_ATOM)
 
   const handlerSet = (theme: Socket["store.list"]["response"]["theme"]) => {
     setTheme(theme)

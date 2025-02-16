@@ -171,7 +171,7 @@ const Content: Component<Content> = (props) => {
           <Show
             keyed
             when={
-              storeOptions as {
+              Object.values(storeOptions) as {
                 key: StoreOptions.interest
                 value: SearchInteresting
                 is_premium: boolean

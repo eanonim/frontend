@@ -9,11 +9,10 @@ import {
   SubTitle,
   Title,
 } from "components"
-import { backgrounds } from "root/configs"
 
 import { chunks } from "@minsize/utils"
 
-import { type JSX, type Component, For, Show, createEffect } from "solid-js"
+import { type JSX, type Component, For, Show } from "solid-js"
 import { pages, pushPage } from "router"
 import { SETTINGS_ATOM, STORE_OPTIONS_ATOM, USER_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
@@ -38,14 +37,14 @@ const textProps: TextProps = {
 }
 
 const Content: Component<Content> = (props) => {
-  const [options] = useAtom(STORE_OPTIONS_ATOM, {
+  const [storeOptions] = useAtom(STORE_OPTIONS_ATOM, {
     key: StoreOptions.backgroundId,
   })
   const [settings] = useAtom(SETTINGS_ATOM)
   const [user] = useAtom(USER_ATOM)
 
   const handlerOpen = (type: number) => {
-    const isPremium = options.find((x) => x.value === type)?.is_premium ?? true
+    const isPremium = storeOptions[type]?.is_premium ?? true
 
     if (isPremium !== user.premium) return
     pushPage({ pageId: pages.BACKGROUND_EDIT, params: { backgroundId: type } })
@@ -69,13 +68,13 @@ const Content: Component<Content> = (props) => {
           <For
             each={chunks(
               3,
-              backgrounds.map((background) => ({
-                ...background,
-                ...{
-                  isPremium: options.find((x) => x.value === background.id)
-                    ?.is_premium,
-                },
-              })),
+              (
+                Object.values(storeOptions) as {
+                  key: StoreOptions.backgroundId
+                  value: number
+                  is_premium: boolean
+                }[]
+              ).sort((a, b) => a.value - b.value),
             )}
           >
             {(chunk, chunkIndex) => (
@@ -84,16 +83,16 @@ const Content: Component<Content> = (props) => {
                   {(background, index) => {
                     return (
                       <Background.Preview
-                        onClick={() => handlerOpen(background.id)}
+                        onClick={() => handlerOpen(background.value)}
                         data-index={index()}
-                        selected={background.id === settings.backgroundId}
+                        selected={background.value === settings.backgroundId}
                       >
                         <Background
                           color={"#3F3F3F"}
-                          type={background.id}
+                          type={background.value}
                           quality={0.5}
                           onContext={(context) => {
-                            if (background.isPremium !== user.premium) {
+                            if (background.is_premium !== user.premium) {
                               context.fillStyle = "rgba(0,0,0,0.6)"
                               context.fillRect(
                                 0,
@@ -105,7 +104,7 @@ const Content: Component<Content> = (props) => {
                           }}
                         />
 
-                        <Show when={background.isPremium !== user.premium}>
+                        <Show when={background.is_premium !== user.premium}>
                           <Background.Overlay>
                             <Flex height={"100%"}>
                               <SubTitle align={"center"}>

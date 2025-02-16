@@ -4,14 +4,14 @@ import { storeOptions } from "engine/api"
 import { Socket, StoreOptions } from "engine/api/module"
 
 export const STORE_OPTIONS_ATOM = atom<
-  Socket["store.options"]["response"],
+  Partial<Socket["store.options"]["response"]>,
   Socket["store.options"]["request"],
   Socket["store.options"]["request"]["key"]
 >({
   onKey: (options) => {
     return options.key
   },
-  default: [],
+  default: {},
   onRequested: (options, key) => {
     storeOptions(options)
   },

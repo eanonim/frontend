@@ -87,21 +87,27 @@ export type Socket = {
       key: StoreOptions
     }
     response:
-      | Array<{
-          key: StoreOptions.backgroundId
-          value: number
-          is_premium: boolean
-        }>
-      | Array<{
-          key: StoreOptions.themeColor
-          value: "pink" | "standard"
-          is_premium: boolean
-        }>
-      | Array<{
-          key: StoreOptions.interest
-          value: SearchInteresting
-          is_premium: boolean
-        }>
+      | {
+          [key in SearchInteresting]: {
+            key: StoreOptions.interest
+            value: SearchInteresting
+            is_premium: boolean
+          }
+        }
+      | {
+          [key in "pink" | "standard"]: {
+            key: StoreOptions.themeColor
+            value: "pink" | "standard"
+            is_premium: boolean
+          }
+        }
+      | {
+          [key in number]: {
+            key: StoreOptions.backgroundId
+            value: number
+            is_premium: boolean
+          }
+        }
   }
   "store.set": {
     request:

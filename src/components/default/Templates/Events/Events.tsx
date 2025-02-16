@@ -98,18 +98,18 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
     }
   }
 
-  const mouseEvent = {
-    onMouseDown: onStart,
-    onMouseMove: onMouseMove,
-    onMouseUp: onEnd,
-    onMouseLeave: onMouseLeave,
-  }
+  // const mouseEvent = {
+  //   onMouseDown: onStart,
+  //   onMouseMove: onMouseMove,
+  //   onMouseUp: onEnd,
+  //   onMouseLeave: onMouseLeave,
+  // }
 
-  const touchEvent = {
-    onTouchStart: onStart,
-    onTouchEnd: onEnd,
-    onTouchMove: onMouseMove,
-  }
+  // const touchEvent = {
+  //   onTouchStart: onStart,
+  //   onTouchEnd: onEnd,
+  //   onTouchMove: onMouseMove,
+  // }
 
   return (
     <Dynamic
@@ -123,7 +123,15 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
         _active: store.active,
         ...local.classList,
       }}
-      {...(isTouchSupport ? touchEvent : mouseEvent)}
+      // {...(isTouchSupport ? touchEvent : mouseEvent)}
+      // {...(!isTouchSupport ? touchEvent : mouseEvent)}
+      onTouchStart={onStart}
+      onTouchEnd={onEnd}
+      onTouchMove={onMouseMove}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      onMouseDown={onStart}
+      onMouseUp={onEnd}
       onClick={handleClick}
       {...({ href: local.href } as any)}
       {...others}

@@ -1,5 +1,5 @@
 import { setter } from "engine/modules/smart-data"
-import { Socket, socketSend, StoreOptionsAtom } from "../module"
+import { Socket, socketSend, StoreOptions, StoreOptionsAtom } from "../module"
 import { STORE_OPTIONS_ATOM } from "engine/state"
 
 const storeOptions = async (options: Socket["store.options"]["request"]) => {
@@ -18,15 +18,17 @@ const storeOptions = async (options: Socket["store.options"]["request"]) => {
     ;(response as any)[key].value = value
   }
 
-  // const elements: StoreOptionsAtom = {}
+  const responseObject: Record<string, any> = {}
 
-  // for (const data of response) {
-  //   elements[data.value] = data
-  // }
+  if (Object.prototype.toString.call(response) === "[object Array]") {
+    for (const item of response as any) {
+      responseObject[item.value] = item
+    }
+  }
 
   setter([STORE_OPTIONS_ATOM, options.key], response)
 
-  return { response, error }
+  return { response: responseObject, error }
 }
 
 export default storeOptions

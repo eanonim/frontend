@@ -15,8 +15,6 @@ interface Default extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 const Default: Component<Default> = (props) => {
-  console.log("STARTUP")
-
   const openApp = () => {
     let viewId = views.SEARCH
     if (import.meta.env.MODE !== "development") {
@@ -58,6 +56,7 @@ const Default: Component<Default> = (props) => {
   }
 
   onMount(() => {
+    console.log("STARTUP")
     initAuth()
   })
 

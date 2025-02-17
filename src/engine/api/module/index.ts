@@ -1,5 +1,6 @@
 import init, { Status } from "@elum/ews"
 import { Mutex } from "@minsize/mutex"
+import { sleep } from "@minsize/utils"
 import { getter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
 import { HOST } from "root/configs"
@@ -238,6 +239,7 @@ export const socketSend = async <KEY extends keyof Socket>(
   const data = await socket.send(key, options)
 
   if ([0, 1001].includes(data?.error?.code || -1)) {
+    await sleep(1_000)
     return await socketSend(key, options)
   }
   return data

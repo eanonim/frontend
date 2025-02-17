@@ -192,9 +192,6 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
   })
 }
 
-// socket.onEvents(({data,event}) => {
-
-// })
 const [status, setStatus] = createSignal(false)
 
 const mutex = Mutex({ globalLimit: 1 })
@@ -240,7 +237,7 @@ export const socketSend = async <KEY extends keyof Socket>(
 
   const data = await socket.send(key, options)
 
-  if (data?.error?.code === 0) {
+  if ([0, 1001].includes(data?.error?.code || -1)) {
     return await socketSend(key, options)
   }
   return data

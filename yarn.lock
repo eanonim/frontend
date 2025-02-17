@@ -175,10 +175,10 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
-"@elum/ews@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@elum/ews/-/ews-0.0.12.tgz#ae952db90509aedcf8df4369a48d9ff8db33a76d"
-  integrity sha512-plerqCuvZQj72QNhzyWCAOL+0KxEfGzC1VniYGEoCE12zLvL9VqQYkZMKIbWa0c2ju0kHRemj3yiWQVQoXhjHQ==
+"@elum/ews@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@elum/ews/-/ews-0.0.13.tgz#494202840a4f9ea6690ee8093172f00a046048b4"
+  integrity sha512-vfKd3udTVQLg6t8kTgj61sDiyDmeBTSOoWqK5ZQtnRSDBJX45hZHwUCqVc4LsDT4c18axl8+G3aB9OgZcYoIQQ==
 
 "@elum/router@^0.0.13":
   version "0.0.13"

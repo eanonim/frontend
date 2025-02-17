@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@apiteam/twa-bridge": "^8.0.2-beta",
-    "@elum/ews": "^0.0.12",
+    "@elum/ews": "^0.0.13",
     "@elum/router": "^0.0.13",
     "@minsize/mutex": "^0.0.6",
     "@minsize/ui": "^0.0.5-beta",

@@ -14,7 +14,7 @@ const Startup: Component<Startup> = (props) => {
   const activePanel = useRouterPanel(props.nav)
 
   createEffect(() => {
-    console.log({ activePanel: activePanel() })
+    console.log({ activePanel2: activePanel() })
   })
 
   return (

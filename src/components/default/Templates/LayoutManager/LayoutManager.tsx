@@ -80,7 +80,8 @@ const LayoutManager: ComponentLayoutManager = (props) => {
   createEffect(
     on(
       () => local.active,
-      (active) => {
+      (active, prevActive) => {
+        if (active === prevActive) return
         const isLastTypeFirst = store.lastType === "first"
         if (store[isLastTypeFirst ? "last" : "first"] === active) return
 

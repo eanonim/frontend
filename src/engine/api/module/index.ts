@@ -3,7 +3,7 @@ import { Mutex } from "@minsize/mutex"
 import { getter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
 import { HOST } from "root/configs"
-import { pages, pushPage } from "router"
+import { pages, pushPage, replacePage } from "router"
 import { createEffect, createSignal, on } from "solid-js"
 import { createStore } from "solid-js/store"
 
@@ -187,7 +187,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     console.log("server socket", data, event)
 
     if (event === "connection.duplicated") {
-      pushPage({ pageId: pages.DUPLICATED, is_back: false })
+      replacePage({ pageId: pages.DUPLICATED, is_back: false })
     }
   })
 }

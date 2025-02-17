@@ -4,6 +4,7 @@ import { Logo, LogoElumTeam } from "source"
 import { version } from "root/package.json"
 
 import { type JSX, type Component } from "solid-js"
+import { pages, replacePage } from "router"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -20,6 +21,10 @@ const textProps: TextProps = {
 }
 
 const Content: Component<Content> = (props) => {
+  const handlerReconnect = () => {
+    replacePage({ pageId: pages.STARTUP })
+  }
+
   return (
     <Plug full>
       <Plug.Container>
@@ -27,16 +32,10 @@ const Content: Component<Content> = (props) => {
           <Logo />
         </Plug.Icon>
       </Plug.Container>
-      <SubTitle {...textProps}>
-        {version} ({import.meta.env.APP_VERSION})
-      </SubTitle>
-      <Plug.Icon>
-        <LogoElumTeam />
-      </Plug.Icon>
-      <Plug.Action>
+      <Plug.Action style={{ width: "100%" }}>
         <Button.Group>
           <Button.Group.Container>
-            <Button>
+            <Button onClick={handlerReconnect} stretched size={"large"}>
               <Button.Container>
                 <Title>Переподключиться</Title>
               </Button.Container>
@@ -44,6 +43,12 @@ const Content: Component<Content> = (props) => {
           </Button.Group.Container>
         </Button.Group>
       </Plug.Action>
+      <Plug.Icon>
+        <LogoElumTeam />
+      </Plug.Icon>
+      <SubTitle {...textProps}>
+        {version} ({import.meta.env.APP_VERSION})
+      </SubTitle>
     </Plug>
   )
 }

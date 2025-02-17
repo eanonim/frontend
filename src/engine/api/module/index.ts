@@ -184,7 +184,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
   )
 
   socket.onEvents(({ data, event }) => {
-    console.log("server socket", data)
+    console.log("server socket", data, event)
 
     if (event === "connection.duplicated") {
       pushPage({ pageId: pages.DUPLICATED, is_back: false })

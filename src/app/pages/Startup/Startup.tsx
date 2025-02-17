@@ -1,7 +1,7 @@
 import { Path, View } from "components"
 import { panels, useRouterPanel } from "router"
 
-import { type JSX, type Component } from "solid-js"
+import { type JSX, type Component, createEffect } from "solid-js"
 
 import Default from "./Default/Default"
 import Duplicated from "./Duplicated/Duplicated"
@@ -21,4 +21,4 @@ const Startup: Component<Startup> = (props) => {
   )
 }
 
-export default Default
+export default Startup

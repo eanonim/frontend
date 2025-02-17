@@ -13,6 +13,10 @@ interface Startup extends JSX.HTMLAttributes<HTMLDivElement> {
 const Startup: Component<Startup> = (props) => {
   const activePanel = useRouterPanel(props.nav)
 
+  createEffect(() => {
+    console.log({ activePanel: activePanel() })
+  })
+
   return (
     <View {...props} activePanel={activePanel()}>
       <Path nav={panels.STARTUP} component={Default} />

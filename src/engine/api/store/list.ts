@@ -13,12 +13,17 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
 
   console.log({ response })
 
-  const notArray = [
+  const notArray: (keyof Socket["store.list"]["response"])[] = [
     "fontSize",
     "backgroundId",
     "backgroundColor",
     "theme",
     "themeColor",
+    "filterMyAge",
+    "filterMySex",
+    "filterYourAgeEnd",
+    "filterYourAgeStart",
+    "filterYourSex",
   ]
 
   for (const key in response) {
@@ -31,7 +36,7 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
         values[i] = Boolean(values[i])
       }
 
-      if (notArray.includes(key)) {
+      if (notArray.includes(key as any)) {
         ;(response as any)[key] = values[i]
       } else {
         ;(response as any)[key][i] = values[i]
@@ -44,11 +49,34 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
   if (!response.themeColor) response.themeColor = "standard"
 
   setter(SETTINGS_ATOM, response)
-  setter(SEARCH_OPTIONS_ATOM, "interests", (interests) => {
-    for (const key of (response.interest ?? []).slice(0, maxInterest)) {
-      interests[key] = { isSelected: true }
+  setter(SEARCH_OPTIONS_ATOM, (searchOptions) => {
+    if (response.filterMyAge) {
+      searchOptions.you.age.from = response.filterMyAge
+      const list: Record<number, number> = {
+        18: 24,
+        25: 31,
+        32: 38,
+        39: 45,
+        46: 116,
+      }
+      searchOptions.you.age.to = list[response.filterMyAge]
     }
-    return interests
+    if (response.filterMySex) {
+      searchOptions.you.male = response.filterMySex
+    }
+    if (response.filterYourAgeEnd && response.filterYourAgeStart) {
+      searchOptions.companion.age.from = response.filterYourAgeStart
+      searchOptions.companion.age.to = response.filterYourAgeEnd
+    }
+
+    if (response.filterYourSex) {
+      searchOptions.companion.male = response.filterYourSex
+    }
+
+    for (const key of (response.interest ?? []).slice(0, maxInterest)) {
+      searchOptions.interests[key] = { isSelected: true }
+    }
+    return searchOptions
   })
 
   if (response?.fontSize) {

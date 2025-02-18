@@ -126,6 +126,26 @@ export type Socket = {
           key: "interest"
           value: SearchInteresting
         }
+      | {
+          key: "filterMyAge"
+          value: number
+        }
+      | {
+          key: "filterMySex"
+          value: "man" | "woman"
+        }
+      | {
+          key: "filterYourAgeEnd"
+          value: number
+        }
+      | {
+          key: "filterYourAgeStart"
+          value: number
+        }
+      | {
+          key: "filterYourSex"
+          value: "man" | "woman" | "any"
+        }
     response: {
       result: boolean
     }
@@ -145,6 +165,11 @@ export type Socket = {
       theme: "dark" | "light" | "system"
       themeColor: "pink" | "standard"
       interest: SearchInteresting[]
+      filterMyAge: number
+      filterMySex: "man" | "woman"
+      filterYourAgeStart: number
+      filterYourAgeEnd: number
+      filterYourSex: "man" | "woman" | "any"
     }
   }
   "user.get": {

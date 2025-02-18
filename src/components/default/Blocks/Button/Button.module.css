@@ -86,6 +86,7 @@
 
 
 .Button__background {
+  pointer-events  : none;
   position        : absolute;
   left            : 0;
   right           : 0;

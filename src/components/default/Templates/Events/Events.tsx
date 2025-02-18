@@ -3,7 +3,11 @@ import style from "./Events.module.css"
 import { type JSX, type ValidComponent, mergeProps, splitProps } from "solid-js"
 import { createStore } from "solid-js/store"
 import { type DynamicProps, Dynamic } from "solid-js/web"
-import { leadingAndTrailing, throttle } from "@solid-primitives/scheduled"
+import {
+  debounce,
+  leadingAndTrailing,
+  throttle,
+} from "@solid-primitives/scheduled"
 
 export interface IEvents<T extends ValidComponent>
   extends JSX.HTMLAttributes<DynamicProps<T>> {
@@ -46,7 +50,7 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
     local.minActive === 0
       ? (status: boolean) => setStore("active", status)
       : leadingAndTrailing(
-          throttle,
+          debounce,
           (status: boolean) => setStore("active", status),
           local.minActive,
         )
@@ -54,7 +58,7 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
     local.minHover === 0
       ? (status: boolean) => setStore("hover", status)
       : leadingAndTrailing(
-          throttle,
+          debounce,
           (status: boolean) => setStore("hover", status),
           local.minActive,
         )

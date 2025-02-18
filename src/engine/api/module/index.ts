@@ -165,11 +165,11 @@ export type Socket = {
       theme: "dark" | "light" | "system"
       themeColor: "pink" | "standard"
       interest: SearchInteresting[]
-      filterMyAge: number
-      filterMySex: "man" | "woman"
-      filterYourAgeStart: number
-      filterYourAgeEnd: number
-      filterYourSex: "man" | "woman" | "any"
+      filterMyAge?: number
+      filterMySex?: "man" | "woman"
+      filterYourAgeStart?: number
+      filterYourAgeEnd?: number
+      filterYourSex?: "man" | "woman" | "any"
     }
   }
   "user.get": {

@@ -103,7 +103,9 @@ const Content: Component<Content> = (props) => {
                         .join("-")
                 }
               >
-                <For each={items}>
+                <For
+                  each={items[0].type === "male" ? items.slice(0, 2) : items}
+                >
                   {(item, itemIndex) => (
                     <SegmentedControl.Button
                       data-index={itemIndex()}

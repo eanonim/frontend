@@ -9,7 +9,7 @@ import "styles/system.css"
  */
 document.addEventListener("contextmenu", (e) => e.preventDefault())
 document.addEventListener("touchstart", (e) => {
-  e.preventDefault()
+  // e.preventDefault()
   e.stopPropagation()
 })
 

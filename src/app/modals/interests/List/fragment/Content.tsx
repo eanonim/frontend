@@ -83,7 +83,6 @@ const Content: Component<Content> = (props) => {
             <Tag.Group
               padding={false}
               style={{
-                filter: "blur(1px)",
                 opacity: 0.1,
               }}
             >

@@ -84,31 +84,30 @@ const Button: ComponentButton = (props) => {
   ])
 
   return (
-    <TextContext.Provider
-      value={generateTypography({
-        title: {
-          class: style[`Button__title`],
-        },
-        subTitle: {
-          class: style[`Button__subtitle`],
-        },
-      })}
-    >
-      <Events
-        class={style.Button}
-        classList={{
-          [`${local.class}`]: !!local.class,
-          ...local.classList,
+    <Events
+      class={style.Button}
+      classList={{
+        [`${local.class}`]: !!local.class,
+        ...local.classList,
 
-          [style[`Button__appearance--${local.appearance}`]]:
-            !!local.appearance,
-          [style[`Button__type--${local.type}`]]: !!local.type,
-          [style[`Button__size--${local.size}`]]: !!local.size,
-          [style[`Button__mode--${local.mode}`]]: !!local.mode,
-          [style[`Button--stretched`]]: local.stretched,
-          [style[`Button--loading`]]: local.loading,
-        }}
-        {...others}
+        [style[`Button__appearance--${local.appearance}`]]: !!local.appearance,
+        [style[`Button__type--${local.type}`]]: !!local.type,
+        [style[`Button__size--${local.size}`]]: !!local.size,
+        [style[`Button__mode--${local.mode}`]]: !!local.mode,
+        [style[`Button--stretched`]]: local.stretched,
+        [style[`Button--loading`]]: local.loading,
+      }}
+      {...others}
+    >
+      <TextContext.Provider
+        value={generateTypography({
+          title: {
+            class: style[`Button__title`],
+          },
+          subTitle: {
+            class: style[`Button__subtitle`],
+          },
+        })}
       >
         <Flex component={"div"} class={style.Button__in}>
           {local.children}
@@ -121,8 +120,8 @@ const Button: ComponentButton = (props) => {
           />
         </Show>
         <span class={style.Button__background} />
-      </Events>
-    </TextContext.Provider>
+      </TextContext.Provider>
+    </Events>
   )
 }
 

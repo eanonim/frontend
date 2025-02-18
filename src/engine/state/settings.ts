@@ -41,7 +41,7 @@ const onUpdate = leadingAndTrailing(
     }
     resolve(status)
   },
-  2000,
+  500,
 )
 
 export const SETTINGS_ATOM = atom<

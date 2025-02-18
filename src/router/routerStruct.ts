@@ -6,6 +6,7 @@ type RouterStruct = {
 
 export enum views {
   STARTUP = "view_startup",
+  ERROR = "view_error",
   PROFILE = "view_profile",
   SEARCH = "view_search",
   CHATS = "view_chats",
@@ -81,6 +82,12 @@ export const routerStruct: RouterStruct = [
     default: pages.STARTUP,
     panels: {
       [pages.STARTUP]: panels.STARTUP,
+    },
+  },
+  {
+    viewId: views.ERROR,
+    default: pages.DUPLICATED,
+    panels: {
       [pages.DUPLICATED]: panels.DUPLICATED,
     },
   },

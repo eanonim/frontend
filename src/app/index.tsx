@@ -5,6 +5,7 @@ import { pages, useRouter, views } from "router"
 import { getLastPage } from "router/src/utils"
 
 import Startup from "./pages/Startup/Startup"
+import Error from "./pages/Error/Error"
 import Search from "./pages/Search/Search"
 import Profile from "./pages/Profile/Profile"
 import Chats from "./pages/Chats/Chats"
@@ -230,6 +231,7 @@ const App: Component = () => {
       />
 
       <Path nav={views.STARTUP} component={Startup} />
+      <Path nav={views.ERROR} component={Error} />
     </Root>
   )
 }

@@ -65,13 +65,14 @@ const Footer: Component<Footer> = (props) => {
     event,
   ) => {
     const hex = event.target.value
-
-    const store = generateStore(hex)
-    replaceParams({
-      color: RGBtoHEX(...store.color),
-      backgroundId: params().backgroundId,
-    })
-    setStore(store)
+    if (hex.replace("#", "").length >= 6) {
+      const store = generateStore(hex)
+      replaceParams({
+        color: RGBtoHEX(...store.color),
+        backgroundId: params().backgroundId,
+      })
+      setStore(store)
+    }
   }
 
   return (
@@ -86,7 +87,7 @@ const Footer: Component<Footer> = (props) => {
           <Input
             value={RGBtoHEX(...store.color)}
             style={{ "text-transform": "uppercase" }}
-            onChange={handlerInput}
+            onInput={handlerInput}
           />
         </Field>
       </Button.Group>

@@ -20,6 +20,7 @@ interface Input extends HTMLAttributes<HTMLInputElement> {
    * Указывает, является ли чекбокс отключенным.
    */
   disabled?: boolean
+  value?: string
 }
 
 const Input: Component<Input> = (props) => {

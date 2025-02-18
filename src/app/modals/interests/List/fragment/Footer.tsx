@@ -37,16 +37,12 @@ const Footer: Component<Footer> = (props) => {
             delete interests[key as SearchInteresting]
           }
         }
-        // console.log({ interests })
-
         for (const _key in searchOptions.interests) {
           const key = _key as SearchInteresting
           if (searchOptions.interests[key]?.isSelected) {
             interests[key] = { isSelected: true }
           }
         }
-
-        console.log({ interests })
 
         return interests
       }),

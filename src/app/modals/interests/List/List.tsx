@@ -1,4 +1,4 @@
-import { type JSX, type Component } from "solid-js"
+import { type JSX, type Component, onMount } from "solid-js"
 
 import { ModalPanel } from "components"
 import { Content, Footer, Header } from "./fragment"

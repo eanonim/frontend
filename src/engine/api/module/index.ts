@@ -238,7 +238,7 @@ export const socketSend = async <KEY extends keyof Socket>(
 
   const data = await socket.send(key, options)
 
-  if ([0, 1001].includes(data?.error?.code || -1)) {
+  if ([0, 1001].includes(data?.error?.code ?? -1)) {
     await sleep(1_000)
     return await socketSend(key, options)
   }

@@ -11,6 +11,7 @@ import {
   bridgeSetBottomBarColor,
   bridgeSetHeaderColor,
 } from "@apiteam/twa-bridge/solid"
+import ServerError from "engine/api/ServerError"
 
 const onUpdate = leadingAndTrailing(
   debounce,
@@ -73,6 +74,11 @@ export const setThemeColor = (
 ) => {
   if (set) {
     setter(SETTINGS_ATOM, "themeColor", themeColor)
+  }
+
+  const error = ServerError.isThemeColor(themeColor)
+  if (!error) {
+    document.documentElement.setAttribute("theme-color", themeColor)
   }
 
   if (themeColor === "standard") {

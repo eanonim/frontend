@@ -13,6 +13,8 @@ import {
 import { type JSX, type Component, For, Show } from "solid-js"
 import { timeAgo } from "@minsize/utils"
 import { pages, pushPage } from "router"
+import { useAtom } from "engine/modules/smart-data"
+import { CHAT_LIST_ATOM } from "engine/state"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -29,6 +31,8 @@ const textProps: TextProps = {
 }
 
 const Content: Component<Content> = (props) => {
+  const [chatList] = useAtom(CHAT_LIST_ATOM)
+
   const history: {
     id: number
     first_name: string
@@ -80,16 +84,16 @@ const Content: Component<Content> = (props) => {
     },
   ]
 
-  const handlerChat = () => {
-    pushPage({ pageId: pages.CHAT })
+  const handlerChat = (dialog: string) => {
+    pushPage({ pageId: pages.CHAT, params: { dialog: dialog } })
   }
 
   return (
-    <Cell.List>
-      <For each={history}>
+    <Cell.List style={{ "overflow-y": "scroll" }}>
+      <For each={chatList}>
         {(chat, index) => (
           <Swipe
-            onClick={handlerChat}
+            onClick={() => handlerChat(chat.uuid)}
             after={
               <span
                 style={{
@@ -101,26 +105,29 @@ const Content: Component<Content> = (props) => {
               />
             }
           >
-            <Cell data-index={index()} separator={history.length > index() + 1}>
+            <Cell
+              data-index={index()}
+              separator={chatList.length > index() + 1}
+            >
               <Cell.Before>
-                <Avatar src={chat.photo} size={"48px"} />
+                <Avatar src={"chat.photo"} size={"48px"} />
               </Cell.Before>
               <Cell.Container>
                 <Cell.Content>
                   <Gap justifyContent={"space-between"} count={"6px"}>
                     <Title nowrap overflow>
                       <UserName
-                        first_name={chat.first_name}
-                        last_name={chat.last_name}
-                        icon={chat.icon}
+                        first_name={"chat.first_name"}
+                        last_name={"chat.last_name"}
+                        icon={"chat.icon"}
                       />
                     </Title>
-                    <SubTitle {...textProps} nowrap>
+                    {/* <SubTitle {...textProps} nowrap>
                       {timeAgo(chat.last_message.time.getTime())}
-                    </SubTitle>
+                    </SubTitle> */}
                   </Gap>
 
-                  <Show keyed when={chat.last_message.message}>
+                  {/* <Show keyed when={chat.last_message.message}>
                     {(message) => (
                       <Gap justifyContent={"space-between"} count={"6px"}>
                         <SubTitle nowrap overflow>
@@ -140,7 +147,7 @@ const Content: Component<Content> = (props) => {
                         />
                       </Gap>
                     )}
-                  </Show>
+                  </Show> */}
                 </Cell.Content>
               </Cell.Container>
             </Cell>

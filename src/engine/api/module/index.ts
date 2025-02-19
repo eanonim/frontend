@@ -41,6 +41,60 @@ export type SearchInteresting =
   | "lgbt"
 
 export type Socket = {
+  "message.info": {
+    request: {
+      dialog: string
+    }
+    response: {
+      id: number
+      author: number
+      message: string
+      time: Date
+      reply?: {
+        id: number
+        message: string
+      }
+      readed?: boolean
+      deleted?: boolean
+    }[]
+  }
+  "message.typing": {
+    request: {
+      dialog: string
+    }
+    response: {}
+  }
+  "message.delete": {
+    request: {
+      dialog: string
+      message_id: number
+    }
+    response: {}
+  }
+  "message.read": {
+    request: {
+      dialog: string
+      message_id: number
+    }
+    response: {}
+  }
+  "message.send": {
+    request: {
+      dialog: string
+      message: {
+        message: string
+      }
+    }
+    response: {}
+  }
+  "chat.list": {
+    request: {}
+    response: {
+      uuid: string
+      first_user: number
+      second_user: number
+    }[]
+  }
   "chat.search": {
     request: {
       language: string

@@ -35,6 +35,8 @@ export interface ITextarea
   onInput?: JSX.InputEventHandler<HTMLTextAreaElement, InputEvent>
 
   placeholder?: string
+
+  value: string
 }
 
 const Textarea: Component<ITextarea> = (props) => {

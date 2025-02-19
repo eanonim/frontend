@@ -15,3 +15,4 @@ export {
   STORE_INTEREST_ATOM,
 } from "./options"
 export { SEARCH_OPTIONS_ATOM } from "./search_options"
+export { CHAT_LIST_ATOM } from "./chat_list"

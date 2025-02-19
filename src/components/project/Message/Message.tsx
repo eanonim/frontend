@@ -16,7 +16,7 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   type: "in" | "out"
 
   forward?: {
-    text?: string
+    message?: string
     time?: Date
   }
 
@@ -65,7 +65,7 @@ const Message: ComponentMessage = (props) => {
           {(forward) => (
             <Flex class={style.Message__forward} height={"100%"}>
               {/* <span class={style.Message__forward_separator} /> */}
-              <span class={style.Message__forward_text}>{forward.text}</span>
+              <span class={style.Message__forward_text}>{forward.message}</span>
             </Flex>
           )}
         </Show>
@@ -73,7 +73,9 @@ const Message: ComponentMessage = (props) => {
         <Show keyed when={local.time}>
           {(time) => (
             <Gap class={style.Message__time} count={"2px"}>
-              <span class={style.Message__time_text}>{formatTime(time)}</span>
+              <span class={style.Message__time_text}>
+                {formatTime(new Date(time))}
+              </span>
               <Show when={local.type === "out"}>
                 <Badge
                   class={style.Message__time_badge}

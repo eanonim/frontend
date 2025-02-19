@@ -10,7 +10,7 @@ const groupObjectsByDay = <T extends { time: Date }>(objects: T[]) => {
       continue // Пропускаем объекты без поля time или null/undefined.
     }
 
-    const dateObj = obj.time // Получаем объект Date из поля time
+    const dateObj = new Date(obj.time) // Получаем объект Date из поля time
     const dateString = dateObj.toISOString().split("T")[0] // Получаем YYYY-MM-DD
 
     if (!groupedObjects[dateString]) {

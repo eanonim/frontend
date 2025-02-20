@@ -16,6 +16,7 @@ const Content: Component<Content> = (props) => {
   const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
     dialog: params().dialog,
   }))
+  let timer: NodeJS.Timeout
 
   let ref: HTMLDivElement
   onMount(() => {
@@ -29,57 +30,80 @@ const Content: Component<Content> = (props) => {
     messageInfo.history,
   )
 
+  const handlerContextMenu = (
+    type: "start" | "end" | "any",
+    message_id: number,
+  ) => {
+    const fn = () =>
+      pushModal({
+        modalId: modals.MESSAGE_CONTROL,
+        params: {
+          dialog: params().dialog,
+          message_id: message_id,
+        },
+      })
+    if (type === "start") {
+      timer = setTimeout(fn, 500)
+    } else if (type === "end") {
+      clearTimeout(timer)
+    } else {
+      fn()
+    }
+  }
+
   return (
-    <Flex
-      style={{
-        height: "100%",
-        overflow: "hidden",
-        "margin-top": "auto",
-      }}
-    >
+    <>
       <Background
         fixed
         type={settings.backgroundId}
         quality={2}
         color={settings.backgroundColor}
       />
-
-      <Message.Group ref={ref!}>
-        <For each={getMessages()}>
-          {(messages, index) => (
-            <Message.Group.List data-index={index()}>
-              <Message.System key={index()}>
-                {timeAgoOnlyDate(
-                  new Date(getMessages()[index()]?.[0]?.time)?.getTime(),
-                )}
-              </Message.System>
-              <For each={messages}>
-                {(message, index) => (
-                  <Message
-                    onClick={() =>
-                      pushModal({
-                        modalId: modals.MESSAGE_CONTROL,
-                        params: {
-                          dialog: params().dialog,
-                          message_id: message.id,
-                        },
-                      })
-                    }
-                    data-index={index()}
-                    forward={message.reply}
-                    type={message.author === user.id ? "out" : "in"}
-                    text={message.message}
-                    time={message.time}
-                    isRead={message.readed}
-                    isNotRead={!message.readed}
-                  />
-                )}
-              </For>
-            </Message.Group.List>
-          )}
-        </For>
-      </Message.Group>
-    </Flex>
+      <Flex
+        style={{
+          overflow: "hidden",
+        }}
+        height={"100%"}
+      >
+        <Message.Group ref={ref!}>
+          <For each={getMessages()}>
+            {(messages, index) => (
+              <Message.Group.List data-index={index()}>
+                <Message.System key={index()}>
+                  {timeAgoOnlyDate(
+                    new Date(getMessages()[index()]?.[0]?.time)?.getTime(),
+                  )}
+                </Message.System>
+                <For each={messages}>
+                  {(message, index) => (
+                    <Message
+                      onTouchStart={() =>
+                        handlerContextMenu("start", message.id)
+                      }
+                      onTouchEnd={() => handlerContextMenu("end", message.id)}
+                      onMouseDown={() =>
+                        handlerContextMenu("start", message.id)
+                      }
+                      onMouseUp={() => handlerContextMenu("end", message.id)}
+                      onContextMenu={() =>
+                        handlerContextMenu("any", message.id)
+                      }
+                      data-index={index()}
+                      forward={message.reply}
+                      type={message.author === user.id ? "out" : "in"}
+                      text={message.message}
+                      time={message.time}
+                      isRead={message.readed}
+                      isNotRead={!message.readed}
+                    />
+                  )}
+                </For>
+              </Message.Group.List>
+            )}
+          </For>
+        </Message.Group>
+      </Flex>
+    </>
   )
 }
 

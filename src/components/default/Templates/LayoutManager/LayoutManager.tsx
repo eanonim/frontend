@@ -205,6 +205,7 @@ const LayoutManager: ComponentLayoutManager = (props) => {
         [local.styles?.[direction(store.lastType)] ||
         "_" + direction(store.lastType)]: store.anim,
       }}
+      {...others}
     >
       <LayoutManagerStore.Provider
         value={{

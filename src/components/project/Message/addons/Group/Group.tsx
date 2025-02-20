@@ -37,8 +37,6 @@ const Group: ComponentGroup = (props) => {
     scrollTop: 0,
   })
 
-  let ref: HTMLDivElement
-
   const setVisible = (key: number, value: boolean) => {
     setSystems((store) => {
       const elem = store.find((x) => x.key === key)
@@ -63,7 +61,6 @@ const Group: ComponentGroup = (props) => {
 
   return (
     <div
-      ref={ref!}
       class={style.Group}
       classList={{
         [`${local.class}`]: !!local.class,

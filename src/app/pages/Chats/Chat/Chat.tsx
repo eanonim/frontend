@@ -15,10 +15,24 @@ const Default: Component<Default> = (props) => {
   })
 
   return (
-    <Panel {...props}>
-      <Header />
-      <Content />
-      <Footer />
+    <Panel
+      {...props}
+      onScroll={(e) => {
+        e.target.scrollTop = 0
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          height: "calc(100% + 1px)",
+          display: "flex",
+          "flex-direction": "column",
+        }}
+      >
+        <Header />
+        <Content />
+        <Footer />
+      </div>
     </Panel>
   )
 }

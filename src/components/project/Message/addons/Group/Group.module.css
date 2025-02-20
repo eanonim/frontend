@@ -4,6 +4,7 @@
   overflow-x                : hidden;
   overflow-y                : auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior       : none;
 
   padding   : 10px 4px;
   box-sizing: border-box;

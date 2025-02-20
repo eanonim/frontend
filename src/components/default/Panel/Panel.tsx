@@ -57,6 +57,7 @@ const Panel: Component<Panel> = (props) => {
     "footer",
     "classList",
     "safeContentTop",
+    "onScroll",
   ])
 
   // let ref: HTMLDivElement
@@ -108,7 +109,9 @@ const Panel: Component<Panel> = (props) => {
     >
       <div class={style.Panel__header}>{local.header}</div>
       <div class={style.Panel__outer}>
-        <div class={style.Panel__inner}>{local.children}</div>
+        <div class={style.Panel__inner} onScroll={local.onScroll}>
+          {local.children}
+        </div>
       </div>
       <div class={style.Panel__footer}>{local.footer}</div>
     </div>

@@ -2,7 +2,7 @@ export type TextObject = {
   /**
    * Цвет текста.
    */
-  color: "accent" | "primary" | "secondary" | "inherit"
+  color: "accent" | "primary" | "secondary" | "inherit" | "red"
   /**
    * Размер текста.
    */

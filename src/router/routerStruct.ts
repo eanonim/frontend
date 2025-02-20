@@ -49,6 +49,7 @@ export enum pages {
 export enum modals {
   STORE_MONEY = "modal_store_money",
   INTERESTS_LIST = "modal_interests_list",
+  MESSAGE_CONTROL = "modal_message_control",
 }
 
 export enum popouts {
@@ -57,6 +58,10 @@ export enum popouts {
 
 export type routerParams = {
   [modals.INTERESTS_LIST]: undefined
+  [modals.MESSAGE_CONTROL]: {
+    dialog: string
+    message_id: number
+  }
 }
 
 // type GORouting = {

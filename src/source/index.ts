@@ -20,3 +20,8 @@ export { default as IconAlignBoxLeftTopFilled } from "./AlignBoxLeftTopFilled.sv
 export { default as IconBugFilled } from "./BugFilled.svg"
 export { default as IconClose } from "./Close.svg"
 export { default as IconSend } from "./Send.svg"
+export { default as IconCopy } from "./Copy.svg"
+export { default as IconEdit } from "./Edit.svg"
+export { default as IconTrash } from "./Trash.svg"
+export { default as IconShare3 } from "./Share3.svg"
+export { default as IconX } from "./X.svg"

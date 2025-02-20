@@ -85,6 +85,7 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
 
   setTheme(response.theme)
   setThemeColor(response.themeColor)
+  document.documentElement.setAttribute("theme-color", response.themeColor)
 
   return { response, error }
 }

@@ -83,6 +83,9 @@ export type Socket = {
       dialog: string
       message: {
         message: string
+        reply?: {
+          id: number
+        }
       }
     }
     response: {}

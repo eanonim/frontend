@@ -1,11 +1,8 @@
-import { setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
-import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 
 const messageSend = async (options: Socket["message.send"]["request"]) => {
   const { response, error } = await socketSend("message.send", options)
-
-  // setter(MESSAGE_INFO_ATOM, (messages) => {
+  // setter([MESSAGE_INFO_ATOM,options.dialog], (messages) => {
   //   messages.push({
   //     id: Math.random(),
   //     message: options.message.message,

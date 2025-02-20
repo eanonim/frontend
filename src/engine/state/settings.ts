@@ -77,13 +77,6 @@ export const setThemeColor = (
     setter(SETTINGS_ATOM, "themeColor", themeColor)
   }
 
-  if (getter(STORE_THEME_COLOR_ATOM)) {
-    const error = ServerError.isThemeColor(themeColor) // ПРОВЕРИТЬ
-    if (!error) {
-      document.documentElement.setAttribute("theme-color", themeColor)
-    }
-  }
-
   if (themeColor === "standard") {
     bridgeRequestTheme()
     return

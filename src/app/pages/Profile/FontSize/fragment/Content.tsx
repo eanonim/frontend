@@ -39,7 +39,7 @@ const Content: Component<Content> = (props) => {
           />
           <Message
             forward={{
-              text: lang("font_size.templates.1"),
+              message: lang("font_size.templates.1"),
             }}
             type={"in"}
             text={lang("font_size.templates.2")}

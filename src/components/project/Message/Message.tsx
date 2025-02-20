@@ -59,6 +59,7 @@ const Message: ComponentMessage = (props) => {
       }}
       width={"100%"}
       justifyContent={local.type === "in" ? "start" : "end"}
+      {...others}
     >
       <span class={style.Message__in}>
         <Show keyed when={local.forward}>

@@ -7,6 +7,10 @@
   color: var(--accent_color);
 }
 
+.Text__color--red {
+  color: var(--red_color);
+}
+
 .Text__color--primary {
   color: var(--text_primary);
 }

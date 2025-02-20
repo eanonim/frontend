@@ -1,27 +1,11 @@
-import { timeAgo } from "@minsize/utils"
-import { leading, throttle } from "@solid-primitives/scheduled"
-import { Background, FixedLayout, Flex, Message, Title } from "components"
-import { globalSignal } from "elum-state/solid"
-import {
-  findUniqueDayIndices,
-  groupObjectsByDay,
-  timeAgoOnlyDate,
-} from "engine"
-import { messageTyping } from "engine/api"
+import { Background, Flex, Message } from "components"
+import { groupObjectsByDay, timeAgoOnlyDate } from "engine"
 import { useAtom } from "engine/modules/smart-data"
 import { SETTINGS_ATOM, USER_ATOM } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
-import { pages, useParams } from "router"
+import { modals, pages, pushModal, useParams } from "router"
 
-import {
-  type JSX,
-  type Component,
-  onMount,
-  For,
-  createMemo,
-  Show,
-} from "solid-js"
-import { createStore } from "solid-js/store"
+import { type JSX, type Component, onMount, For, createMemo } from "solid-js"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -41,8 +25,8 @@ const Content: Component<Content> = (props) => {
   })
 
   const getMessages = createMemo(
-    () => groupObjectsByDay(messageInfo),
-    messageInfo,
+    () => groupObjectsByDay(messageInfo.history),
+    messageInfo.history,
   )
 
   return (
@@ -72,9 +56,18 @@ const Content: Component<Content> = (props) => {
               <For each={messages}>
                 {(message, index) => (
                   <Message
+                    onClick={() =>
+                      pushModal({
+                        modalId: modals.MESSAGE_CONTROL,
+                        params: {
+                          dialog: params().dialog,
+                          message_id: message.id,
+                        },
+                      })
+                    }
                     data-index={index()}
                     forward={message.reply}
-                    type={message.author === user.id ? "in" : "out"}
+                    type={message.author === user.id ? "out" : "in"}
                     text={message.message}
                     time={message.time}
                     isRead={message.readed}

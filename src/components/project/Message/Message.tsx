@@ -1,5 +1,5 @@
 import style from "./Message.module.css"
-import { Badge, Group, System } from "./addons"
+import { Badge, Group, System, Typing } from "./addons"
 
 import { type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
@@ -32,6 +32,7 @@ type ComponentMessage = Component<Message> & {
   Badge: typeof Badge
   Group: typeof Group
   System: typeof System
+  Typing: typeof Typing
 }
 
 const Message: ComponentMessage = (props) => {
@@ -101,5 +102,6 @@ const Message: ComponentMessage = (props) => {
 Message.Badge = Badge
 Message.Group = Group
 Message.System = System
+Message.Typing = Typing
 
 export default Message

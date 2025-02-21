@@ -37,7 +37,6 @@ const Footer: Component<Footer> = (props) => {
       () => messageInfo.message.edit_id,
       (edit_id) => {
         const message = messageInfo.history.find((x) => x.id === edit_id)
-        console.log({ message }, edit_id)
         if (message && message.message) {
           setMessage(message.message)
         }

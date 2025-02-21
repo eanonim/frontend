@@ -5,7 +5,14 @@ import { SETTINGS_ATOM, USER_ATOM } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { modals, pages, pushModal, useParams } from "router"
 
-import { type JSX, type Component, onMount, For, createMemo } from "solid-js"
+import {
+  type JSX,
+  type Component,
+  onMount,
+  For,
+  createMemo,
+  Show,
+} from "solid-js"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 

@@ -2,7 +2,7 @@ import init, { Status } from "@elum/ews"
 import { Mutex } from "@minsize/mutex"
 import { sleep } from "@minsize/utils"
 import { getter } from "elum-state/solid"
-import { AUTH_TOKEN_ATOM } from "engine/state"
+import { AUTH_TOKEN_ATOM, setTyping } from "engine/state"
 import { HOST } from "root/configs"
 import { pages, pushPage, replacePage } from "router"
 import { createEffect, createSignal, on } from "solid-js"
@@ -62,7 +62,12 @@ export type Socket = {
     request: {
       dialog: string
     }
-    response: {}
+    response: {
+      result: boolean
+    }
+    event: {
+      dialog: string
+    }
   }
   "message.delete": {
     request: {
@@ -271,6 +276,14 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
 
     if (event === "connection.duplicated") {
       replacePage({ pageId: pages.DUPLICATED, is_back: false })
+    }
+
+    if (event === "message.typing") {
+      const dialog = data.response?.dialog
+      if (dialog) {
+        console.log({ typing: dialog })
+        setTyping(dialog)
+      }
     }
   })
 }

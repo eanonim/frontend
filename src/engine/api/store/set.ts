@@ -1,18 +1,34 @@
 import handlerError from "../handlerError"
 import ServerError from "../ServerError"
-import { Socket, socketSend } from "../module"
+import { Socket, SocketError, socketSend } from "../module"
 import { debounce, type Scheduled } from "@solid-primitives/scheduled"
 
 const debounces: Record<
   string,
-  Scheduled<[options: Socket["store.set"]["request"]]>
+  Scheduled<
+    [
+      resolve: (
+        value:
+          | { error: SocketError; response: undefined }
+          | { error: undefined; response: Socket["store.set"]["response"] },
+      ) => void,
+      options: Socket["store.set"]["request"],
+    ]
+  >
 > = {}
 
 const storeSet = async (options: Socket["store.set"]["request"]) => {
   let func = debounces[options.key]
   if (!func) {
     func = debounces[options.key] = debounce(
-      async (options: Socket["store.set"]["request"]) => {
+      async (
+        resolve: (
+          value:
+            | { error: SocketError; response: undefined }
+            | { error: undefined; response: Socket["store.set"]["response"] },
+        ) => void,
+        options: Socket["store.set"]["request"],
+      ) => {
         let errorServer
 
         if (options.key === "backgroundId") {
@@ -23,7 +39,8 @@ const storeSet = async (options: Socket["store.set"]["request"]) => {
 
         try {
           if (errorServer) {
-            return { response: undefined, error: errorServer }
+            resolve({ response: undefined, error: errorServer } as any)
+            return
           }
           options.value = String(options.value)
           const { response, error } = await socketSend("store.set", options)
@@ -32,7 +49,8 @@ const storeSet = async (options: Socket["store.set"]["request"]) => {
             errorServer = error
           }
 
-          return { response, error }
+          resolve({ response, error } as any)
+          return
         } finally {
           if (errorServer) {
             handlerError(errorServer)
@@ -43,7 +61,12 @@ const storeSet = async (options: Socket["store.set"]["request"]) => {
     )
   }
 
-  func(options)
+  return await new Promise<
+    | { error: SocketError; response: undefined }
+    | { error: undefined; response: Socket["store.set"]["response"] }
+  >((resolve) => {
+    func(resolve, options)
+  })
 }
 
 export default storeSet

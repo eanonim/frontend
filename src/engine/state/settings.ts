@@ -30,8 +30,8 @@ const onUpdate = leadingAndTrailing(
     for (const key of keysToCheck) {
       const value = next[key] as any
       if (prev[key] !== value) {
-        console.log({ key, value })
         const { error } = await storeSet({ key: key, value: value })
+
         if (error?.code) {
           status = false
         } else {

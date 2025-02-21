@@ -1,0 +1,54 @@
+.Typing {
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+  line-height    : inherit;
+  font-size      : inherit;
+  color          : inherit;
+  font-weight    : inherit;
+}
+
+.Typing__text {
+  line-height : 16px;
+  padding-left: 6px;
+}
+
+.Typing__badge {
+  width           : 4px;
+  height          : 4px;
+  background-color: var(--accent_color);
+  border-radius   : 50%;
+  margin          : 0 2px;
+  transform       : scale(0.8);
+
+  animation: _typing 1s infinite ease-in-out;
+
+}
+
+.Typing__badge:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.Typing__badge:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.Typing__badge:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+
+@keyframes _typing {
+  0% {
+    transform: scale(0.8);
+  }
+
+  30% {
+    transform: scale(1.3);
+  }
+
+  60%,
+  100% {
+    transform: scale(0.8);
+  }
+}

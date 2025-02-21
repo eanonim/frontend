@@ -20,7 +20,19 @@
   line-height: 20px;
 
   background-color: transparent;
-  overflow        : hidden;
+  overflow-x      : hidden;
+  overflow-y      : auto;
+}
+
+.Textarea::-webkit-scrollbar {
+  width : 0;
+  /*  Полностью скрываем скроллбар */
+  height: 0;
+}
+
+.Textarea {
+  -ms-overflow-style: none;
+  scrollbar-width   : none;
 }
 
 .Textarea--resize {

@@ -26,6 +26,8 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   isNotRead?: boolean
   /** Отображает бейдж как новый */
   isNew?: boolean
+  /** Отображать спинер */
+  loading?: boolean
 }
 
 type ComponentMessage = Component<Message> & {
@@ -46,6 +48,7 @@ const Message: ComponentMessage = (props) => {
     "isRead",
     "isNotRead",
     "isNew",
+    "loading",
   ])
 
   return (
@@ -65,7 +68,11 @@ const Message: ComponentMessage = (props) => {
       <span class={style.Message__in}>
         <Show keyed when={local.forward}>
           {(forward) => (
-            <Flex class={style.Message__forward} height={"100%"}>
+            <Flex
+              class={style.Message__forward}
+              height={"100%"}
+              justifyContent={"start"}
+            >
               {/* <span class={style.Message__forward_separator} /> */}
               <span class={style.Message__forward_text}>{forward.message}</span>
             </Flex>
@@ -84,6 +91,7 @@ const Message: ComponentMessage = (props) => {
                   isRead={local.isRead}
                   isNew={local.isNew}
                   isNotRead={local.isNotRead}
+                  loading={local.loading}
                   color={"inherit"}
                   size={"inherit"}
                 />

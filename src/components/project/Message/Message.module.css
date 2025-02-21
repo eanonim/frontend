@@ -101,6 +101,15 @@
   background-color: var(--accent_color);
 }
 
+
+.Message--out .Message__forward::after {
+  background-color: var(--accent_color--text);
+}
+
+.Message--out .Message__forward_text::before {
+  background-color: var(--accent_color--text);
+}
+
 /* type */
 .Message--in .Message__in {
   background-color: var(--section_bg_color);

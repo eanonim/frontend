@@ -9,6 +9,8 @@ import {
   mergeProps,
   splitProps,
   onMount,
+  createEffect,
+  on,
 } from "solid-js"
 
 export interface ITextarea
@@ -53,18 +55,19 @@ const Textarea: Component<ITextarea> = (props) => {
     "onResize",
     "onInput",
     "resize",
+    "value",
   ])
 
   let ref: HTMLTextAreaElement
   const styles = useComputedBlockStyles({
-    ref: () => ref,
+    ref: () => ref!,
     platform: props.platform,
-    onUpdate: () => ref,
+    onUpdate: () => ref!,
   })
 
   const onResize = () => {
     if (local.grow) {
-      if (ref && ref.offsetParent) {
+      if (ref! && ref.offsetParent) {
         ref.style.height = "0px"
         ref.style.height = ref.scrollHeight + "px"
 
@@ -80,6 +83,8 @@ const Textarea: Component<ITextarea> = (props) => {
   }
 
   onMount(onResize)
+
+  createEffect(on(() => local.value, onResize))
 
   const onInput: JSX.InputEventHandlerUnion<HTMLTextAreaElement, InputEvent> = (
     event,
@@ -102,6 +107,7 @@ const Textarea: Component<ITextarea> = (props) => {
       style={{
         "max-height": local.maxHeight,
       }}
+      value={local.value}
       {...others}
     />
   )

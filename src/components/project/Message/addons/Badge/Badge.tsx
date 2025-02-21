@@ -11,6 +11,7 @@ import {
   splitProps,
   mergeProps,
 } from "solid-js"
+import Spinner from "@component/default/Blocks/Spinner/Spinner"
 
 interface Badge extends JSX.HTMLAttributes<HTMLElement> {
   /** Отображает бейдж как прочитанный */
@@ -19,6 +20,8 @@ interface Badge extends JSX.HTMLAttributes<HTMLElement> {
   isNotRead?: boolean
   /** Отображает бейдж как новый */
   isNew?: boolean
+  /** Отображать спинер */
+  loading?: boolean
   /** Цвет иконки */
   color?: string
   /** Размеры */
@@ -31,6 +34,7 @@ const Badge: Component<Badge> = (props) => {
     "isRead",
     "isNotRead",
     "isNew",
+    "loading",
     "color",
     "size",
   ])
@@ -38,6 +42,18 @@ const Badge: Component<Badge> = (props) => {
   return (
     <span {...others}>
       <Switch>
+        <Match when={local.loading}>
+          <Spinner
+            class={style.Badge__spinner}
+            style={{
+              width:
+                typeof local.size === "number" ? local.size + "px" : local.size,
+              height:
+                typeof local.size === "number" ? local.size + "px" : local.size,
+              color: local.color,
+            }}
+          />
+        </Match>
         <Match when={local.isNew}>
           <span class={style.Badge__new} />
         </Match>

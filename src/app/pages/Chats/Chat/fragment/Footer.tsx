@@ -1,12 +1,5 @@
-import {
-  Cell,
-  FixedLayout,
-  Message,
-  SubTitle,
-  Title,
-  WriteBar,
-} from "components"
-import { IconClose, IconPaperclip, IconSend, IconTrash, IconX } from "source"
+import { Cell, FixedLayout, SubTitle, Title, WriteBar } from "components"
+import { IconPaperclip, IconSend, IconX } from "source"
 
 import {
   type JSX,
@@ -47,21 +40,14 @@ const Footer: Component<Footer> = (props) => {
   const handlerSend = () => {
     const messageTest = message()
     if (messageTest) {
-      const reply =
-        !!messageInfo.message.reply_id &&
-        messageInfo.history.find((x) => x.id === messageInfo.message.reply_id)
-
       messageSend({
         dialog: params().dialog,
         message: {
           message: messageTest,
-          reply: reply
-            ? {
-                id: reply.id,
-              }
-            : undefined,
+          reply_id: messageInfo.message.reply_id,
         },
       })
+      setMessage("")
     }
   }
 
@@ -76,8 +62,8 @@ const Footer: Component<Footer> = (props) => {
   const onInput: JSX.InputEventHandler<HTMLTextAreaElement, InputEvent> = (
     event,
   ) => {
-    setTyping()
     setMessage(event.target.value)
+    setTyping()
   }
 
   const handlerRemoveReply = () => {
@@ -176,7 +162,7 @@ const Footer: Component<Footer> = (props) => {
         </WriteBar.Field>
         <Show when={message().length}>
           <WriteBar.Icon onClick={handlerSend}>
-            <IconSend color={"var(--accent_color)"} />
+            <IconSend color={"var(--accent_color)"} width={36} height={36} />
           </WriteBar.Icon>
         </Show>
         {/* <WriteBar.Icon>

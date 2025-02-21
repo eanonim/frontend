@@ -9,3 +9,8 @@
 
   background-color: var(--accent_color);
 }
+
+.Badge__spinner {
+  padding   : 2px 2px 0px 4px;
+  box-sizing: border-box;
+}

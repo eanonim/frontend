@@ -12,7 +12,10 @@ import {
   For,
   createMemo,
   Show,
+  createEffect,
+  on,
 } from "solid-js"
+import { createStore } from "solid-js/store"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -23,11 +26,16 @@ const Content: Component<Content> = (props) => {
   const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
     dialog: params().dialog,
   }))
-  let timer: NodeJS.Timeout
 
+  const [store, setStore] = createStore({
+    isBottom: true,
+  })
+
+  let timer: NodeJS.Timeout
   let ref: HTMLDivElement
   onMount(() => {
     if (ref!) {
+      ref.onsecuritypolicyviolation
       ref.scrollTop = ref.scrollHeight
     }
   })
@@ -35,6 +43,17 @@ const Content: Component<Content> = (props) => {
   const getMessages = createMemo(
     () => groupObjectsByDay(messageInfo.history),
     messageInfo.history,
+  )
+
+  createEffect(
+    on(
+      () => messageInfo.history.length,
+      (next, prev) => {
+        if (next !== prev && store.isBottom && ref!) {
+          ref.scrollTop = ref.scrollHeight
+        }
+      },
+    ),
   )
 
   const handlerContextMenu = (
@@ -73,7 +92,20 @@ const Content: Component<Content> = (props) => {
         }}
         // height={"100%"}
       >
-        <Message.Group ref={ref!}>
+        <Message.Group
+          ref={ref!}
+          onScroll={(e) => {
+            const isBottom =
+              e.target.scrollTop >=
+              e.target.scrollHeight - e.target.clientHeight - 4
+
+            if (isBottom) {
+              e.target.scrollTop = e.target.scrollHeight
+            }
+
+            setStore("isBottom", isBottom)
+          }}
+        >
           <For each={getMessages()}>
             {(messages, index) => (
               <Message.Group.List data-index={index()}>
@@ -86,12 +118,14 @@ const Content: Component<Content> = (props) => {
                   {(message, index) => (
                     <Message
                       onTouchStart={() =>
+                        !message.loading &&
                         handlerContextMenu("start", message.id)
                       }
                       onTouchEnd={() => handlerContextMenu("end", message.id)}
                       onTouchMove={() => handlerContextMenu("end", message.id)}
                       onMouseMove={() => handlerContextMenu("end", message.id)}
                       onMouseDown={() =>
+                        !message.loading &&
                         handlerContextMenu("start", message.id)
                       }
                       onMouseUp={() => handlerContextMenu("end", message.id)}
@@ -105,6 +139,7 @@ const Content: Component<Content> = (props) => {
                       time={message.time}
                       isRead={message.readed}
                       isNotRead={!message.readed}
+                      loading={message.loading}
                     />
                   )}
                 </For>

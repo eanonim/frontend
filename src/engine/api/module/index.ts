@@ -2,11 +2,12 @@ import init, { Status } from "@elum/ews"
 import { Mutex } from "@minsize/mutex"
 import { sleep } from "@minsize/utils"
 import { getter } from "elum-state/solid"
-import { AUTH_TOKEN_ATOM, setTyping } from "engine/state"
+import { setter } from "engine/modules/smart-data"
+import { AUTH_TOKEN_ATOM, MESSAGE_INFO_ATOM, setTyping } from "engine/state"
 import { HOST } from "root/configs"
 import { pages, pushPage, replacePage } from "router"
 import { createEffect, createSignal, on } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, produce } from "solid-js/store"
 
 export type SocketError = {
   code: number
@@ -48,7 +49,7 @@ export type Socket = {
     response: {
       id: number
       author: number
-      message: string
+      message?: string
       time: Date
       reply?: {
         id: number
@@ -56,6 +57,7 @@ export type Socket = {
       }
       readed?: boolean
       deleted?: boolean
+      loading?: boolean
     }[]
   }
   "message.typing": {
@@ -87,13 +89,43 @@ export type Socket = {
     request: {
       dialog: string
       message: {
-        message: string
-        reply?: {
-          id: number
+        message?: string
+        attach?: {
+          type: string
+          items: Array<{
+            name: string
+            data: string
+          }>
         }
+        reply_id?: number
       }
     }
-    response: {}
+    response: {
+      result: boolean
+      id: number
+    }
+    event: {
+      dialog: string
+      message: {
+        id: number
+        author: number
+        message?: string
+        attach?: {
+          type: string
+          items: Array<{
+            name: string
+            data: string
+          }>
+        }
+        reply?: {
+          id: number
+          message: string
+        }
+        readed: boolean
+        time: Date
+        deleted: boolean
+      }
+    }
   }
   "chat.list": {
     request: {}
@@ -276,6 +308,24 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
 
     if (event === "connection.duplicated") {
       replacePage({ pageId: pages.DUPLICATED, is_back: false })
+    }
+
+    if (event === "message.send") {
+      const dialog = data.response?.dialog
+      if (dialog && data.response) {
+        setter(
+          [MESSAGE_INFO_ATOM, dialog],
+          produce((messages) => {
+            if (
+              !messages.history.find((x) => x.id === data.response.message.id)
+            ) {
+              messages.history.push(data.response.message)
+            }
+
+            return messages
+          }),
+        )
+      }
     }
 
     if (event === "message.typing") {

@@ -31,158 +31,158 @@ export const MESSAGE_INFO_ATOM = atom<
   },
   onRequested: (options, key) => {
     console.log("onRequested", key, options)
-    setter([MESSAGE_INFO_ATOM, key], "history", [
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-      {
-        id: 1,
-        author: 2,
-        message: "Test",
-        time: new Date(Date.now() + 1_000),
-      },
-    ])
+    // setter([MESSAGE_INFO_ATOM, key], "history", [
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    //   {
+    //     id: 1,
+    //     author: 2,
+    //     message: "Test",
+    //     time: new Date(Date.now() + 1_000),
+    //   },
+    // ])
   },
   updateIntervalMs: 60_000,
 })
@@ -190,7 +190,6 @@ export const MESSAGE_INFO_ATOM = atom<
 let timer: NodeJS.Timeout
 
 export const setTyping = (dialog: string) => {
-  console.log({ typeing: dialog })
   setter(
     [MESSAGE_INFO_ATOM, dialog],
     "message",

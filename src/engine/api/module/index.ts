@@ -418,7 +418,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             const message = messages.history.find(
               (x) => x.id === data.response.message_id,
             )
-            console.log({ message }, messages.history)
+
             if (message) {
               message.readed = true
             }
@@ -441,7 +441,6 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     if (event === "message.typing") {
       const dialog = data.response?.dialog
       if (dialog) {
-        console.log({ typing: dialog })
         setTyping(dialog)
       }
     }

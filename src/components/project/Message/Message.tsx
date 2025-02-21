@@ -10,12 +10,14 @@ import {
   type Component,
   Show,
   type ValidComponent,
+  createEffect,
   onCleanup,
   onMount,
   splitProps,
 } from "solid-js"
 import { IconMessageEnd } from "source"
 import { DynamicProps } from "solid-js/web"
+import { createVisibilityObserver } from "@solid-primitives/intersection-observer"
 
 interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   text?: string
@@ -69,19 +71,17 @@ const Message: ComponentMessage = (props) => {
 
   let ref: HTMLDivElement
 
-  onMount(() => {
-    if (local.isNotRead) {
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          local.onRead()
-        }
+  const useVisibilityObserver = local.isNotRead
+    ? createVisibilityObserver({
+        initialValue: false,
       })
+    : undefined
 
-      observer.observe(ref!)
+  const visibleObserver = useVisibilityObserver?.(() => ref!)
 
-      onCleanup(() => {
-        observer.disconnect()
-      })
+  createEffect(() => {
+    if (visibleObserver?.()) {
+      local.onRead()
     }
   })
 

@@ -153,6 +153,7 @@ const Content: Component<Content> = (props) => {
                         isEdit={message.edit}
                         onRead={() => {
                           if (user.id !== message.author && !message.readed) {
+                            console.log("rsead", message.id)
                             messageRead({
                               dialog: params().dialog,
                               message_id: message.id,

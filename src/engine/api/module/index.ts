@@ -158,6 +158,7 @@ export type Socket = {
     response: {
       dialog: string
     }
+    event: { dialog: string }
   }
   "store.delete": {
     request: {
@@ -327,6 +328,15 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             return messages
           }),
         )
+      }
+    }
+
+    if (event === "chat.search") {
+      if (data.response?.dialog) {
+        pushPage({
+          pageId: pages.CHAT,
+          params: { dialog: data.response?.dialog },
+        })
       }
     }
 

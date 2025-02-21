@@ -48,7 +48,7 @@ const Footer: Component<Footer> = (props) => {
       ...interests,
     })
 
-    if (response) {
+    if (response?.dialog) {
       pushPage({ pageId: pages.CHAT, params: { dialog: response.dialog } })
     }
   }

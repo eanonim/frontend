@@ -10,9 +10,23 @@ interface Backgrounds extends JSX.HTMLAttributes<HTMLDivElement> {
 
 const Backgrounds: Component<Backgrounds> = (props) => {
   return (
-    <Panel {...props}>
-      <Content />
-      <Footer />
+    <Panel
+      {...props}
+      onScroll={(e) => {
+        e.target.scrollTop = 1
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          "min-height": "calc(100% + 1px)",
+          display: "flex",
+          "flex-direction": "column",
+        }}
+      >
+        <Content />
+        <Footer />
+      </div>
     </Panel>
   )
 }

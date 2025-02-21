@@ -13,48 +13,50 @@ const Content: Component<Content> = (props) => {
   const [settings] = useAtom(SETTINGS_ATOM)
 
   return (
-    <Flex
-      style={{
-        height: "100%",
-        overflow: "hidden",
-        "margin-top": "auto",
-      }}
-    >
+    <>
       <Background
         fixed
         type={settings.backgroundId}
         color={settings.backgroundColor}
         quality={2}
       />
-      <Message.Group>
-        <Message.Group.List>
-          <Message.System key={0}>
-            {timeAgoOnlyDate(new Date().getTime())}
-          </Message.System>
-          <Message
-            type={"out"}
-            text={lang("font_size.templates.1")}
-            time={new Date()}
-            isRead={true}
-          />
-          <Message
-            forward={{
-              message: lang("font_size.templates.1"),
-            }}
-            type={"in"}
-            text={lang("font_size.templates.2")}
-            time={new Date()}
-            isRead={true}
-          />
-          <Message
-            type={"out"}
-            text={lang("font_size.templates.3")}
-            time={new Date()}
-            isRead={true}
-          />
-        </Message.Group.List>
-      </Message.Group>
-    </Flex>
+      <Flex
+        style={{
+          height: "100%",
+          overflow: "hidden",
+          "margin-top": "auto",
+        }}
+      >
+        <Message.Group>
+          <Message.Group.List>
+            <Message.System key={0}>
+              {timeAgoOnlyDate(new Date().getTime())}
+            </Message.System>
+            <Message
+              type={"out"}
+              text={lang("font_size.templates.1")}
+              time={new Date()}
+              isRead={true}
+            />
+            <Message
+              forward={{
+                message: lang("font_size.templates.1"),
+              }}
+              type={"in"}
+              text={lang("font_size.templates.2")}
+              time={new Date()}
+              isRead={true}
+            />
+            <Message
+              type={"out"}
+              text={lang("font_size.templates.3")}
+              time={new Date()}
+              isRead={true}
+            />
+          </Message.Group.List>
+        </Message.Group>
+      </Flex>
+    </>
   )
 }
 

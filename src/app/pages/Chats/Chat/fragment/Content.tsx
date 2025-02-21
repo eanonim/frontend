@@ -82,6 +82,8 @@ const Content: Component<Content> = (props) => {
                         handlerContextMenu("start", message.id)
                       }
                       onTouchEnd={() => handlerContextMenu("end", message.id)}
+                      onTouchMove={() => handlerContextMenu("end", message.id)}
+                      onMouseMove={() => handlerContextMenu("end", message.id)}
                       onMouseDown={() =>
                         handlerContextMenu("start", message.id)
                       }

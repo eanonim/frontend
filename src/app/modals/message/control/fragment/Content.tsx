@@ -1,4 +1,6 @@
+import { copyText } from "@minsize/utils"
 import { Cell, Title } from "components"
+import { messageDelete } from "engine/api"
 import loc from "engine/languages"
 import { setter, useAtom } from "engine/modules/smart-data"
 import { USER_ATOM } from "engine/state"
@@ -22,6 +24,21 @@ const Content: Component<Content> = (props) => {
 
   const [lang] = loc()
   const [user] = useAtom(USER_ATOM)
+
+  const handlerCopy = () => {
+    const message = messageInfo.history.find(
+      (x) => x.id === params().message_id,
+    )
+    if (message) {
+      copyText(message.message)
+      backPage()
+    }
+  }
+
+  const handlerDelete = () => {
+    messageDelete({ dialog: params().dialog, message_id: params().message_id })
+    backPage()
+  }
 
   const handlerReply = () => {
     setter([MESSAGE_INFO_ATOM, params().dialog], "message", (message) => {
@@ -57,20 +74,27 @@ const Content: Component<Content> = (props) => {
         </Cell.Before>
         <Cell.Container>
           <Cell.Content>
-            <Title>Ответить</Title>
+            <Title>{lang("answer")}</Title>
           </Cell.Content>
         </Cell.Container>
       </Cell>
-      <Cell separator={"auto"}>
-        <Cell.Before>
-          <IconCopy width={24} height={24} />
-        </Cell.Before>
-        <Cell.Container>
-          <Cell.Content>
-            <Title>Скопировать</Title>
-          </Cell.Content>
-        </Cell.Container>
-      </Cell>
+      <Show
+        when={
+          !!messageInfo.history.find((x) => x.id === params().message_id)
+            ?.message
+        }
+      >
+        <Cell onClick={handlerCopy} separator={"auto"}>
+          <Cell.Before>
+            <IconCopy width={24} height={24} />
+          </Cell.Before>
+          <Cell.Container>
+            <Cell.Content>
+              <Title>{lang("copy")}</Title>
+            </Cell.Content>
+          </Cell.Container>
+        </Cell>
+      </Show>
       <Show when={messageInfo.history.find((x) => x.author === user.id)}>
         <Cell onClick={handlerEdit} separator={"auto"}>
           <Cell.Before>
@@ -78,17 +102,17 @@ const Content: Component<Content> = (props) => {
           </Cell.Before>
           <Cell.Container>
             <Cell.Content>
-              <Title>Изменить</Title>
+              <Title>{lang("edit")}</Title>
             </Cell.Content>
           </Cell.Container>
         </Cell>
-        <Cell separator={"auto"}>
+        <Cell onClick={handlerDelete} separator={"auto"}>
           <Cell.Before>
             <IconTrash width={24} height={24} color={"var(--red_color)"} />
           </Cell.Before>
           <Cell.Container>
             <Cell.Content>
-              <Title color={"red"}>Удалить</Title>
+              <Title color={"red"}>{lang("delete")}</Title>
             </Cell.Content>
           </Cell.Container>
         </Cell>

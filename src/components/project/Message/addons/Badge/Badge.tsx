@@ -21,7 +21,7 @@ interface Badge extends JSX.HTMLAttributes<HTMLElement> {
   /** Отображает бейдж как новый */
   isNew?: boolean
   /** Отображать спинер */
-  loading?: boolean
+  isLoading?: boolean
   /** Цвет иконки */
   color?: string
   /** Размеры */
@@ -34,7 +34,7 @@ const Badge: Component<Badge> = (props) => {
     "isRead",
     "isNotRead",
     "isNew",
-    "loading",
+    "isLoading",
     "color",
     "size",
   ])
@@ -42,7 +42,7 @@ const Badge: Component<Badge> = (props) => {
   return (
     <span {...others}>
       <Switch>
-        <Match when={local.loading}>
+        <Match when={local.isLoading}>
           <Spinner
             class={style.Badge__spinner}
             style={{

@@ -1,5 +1,6 @@
 import { Background, Flex, Message } from "components"
 import { groupObjectsByDay, timeAgoOnlyDate } from "engine"
+import { messageRead } from "engine/api"
 import { useAtom } from "engine/modules/smart-data"
 import { SETTINGS_ATOM, USER_ATOM } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
@@ -116,31 +117,46 @@ const Content: Component<Content> = (props) => {
                 </Message.System>
                 <For each={messages}>
                   {(message, index) => (
-                    <Message
-                      onTouchStart={() =>
-                        !message.loading &&
-                        handlerContextMenu("start", message.id)
-                      }
-                      onTouchEnd={() => handlerContextMenu("end", message.id)}
-                      onTouchMove={() => handlerContextMenu("end", message.id)}
-                      onMouseMove={() => handlerContextMenu("end", message.id)}
-                      onMouseDown={() =>
-                        !message.loading &&
-                        handlerContextMenu("start", message.id)
-                      }
-                      onMouseUp={() => handlerContextMenu("end", message.id)}
-                      onContextMenu={() =>
-                        handlerContextMenu("any", message.id)
-                      }
-                      data-index={index()}
-                      forward={message.reply}
-                      type={message.author === user.id ? "out" : "in"}
-                      text={message.message}
-                      time={message.time}
-                      isRead={message.readed}
-                      isNotRead={!message.readed}
-                      loading={message.loading}
-                    />
+                    <Show when={!message.deleted}>
+                      <Message
+                        onTouchStart={() =>
+                          !message.loading &&
+                          handlerContextMenu("start", message.id)
+                        }
+                        onTouchEnd={() => handlerContextMenu("end", message.id)}
+                        onTouchMove={() =>
+                          handlerContextMenu("end", message.id)
+                        }
+                        onMouseMove={() =>
+                          handlerContextMenu("end", message.id)
+                        }
+                        onMouseDown={() =>
+                          !message.loading &&
+                          handlerContextMenu("start", message.id)
+                        }
+                        onMouseUp={() => handlerContextMenu("end", message.id)}
+                        onContextMenu={() =>
+                          handlerContextMenu("any", message.id)
+                        }
+                        data-index={index()}
+                        forward={message.reply}
+                        type={message.author === user.id ? "out" : "in"}
+                        text={message.message}
+                        time={message.time}
+                        isRead={message.readed}
+                        isNotRead={!message.readed}
+                        isLoading={message.loading}
+                        isEdit={message.edit}
+                        onRead={() => {
+                          if (user.id !== message.author) {
+                            messageRead({
+                              dialog: params().dialog,
+                              message_id: message.id,
+                            })
+                          }
+                        }}
+                      />
+                    </Show>
                   )}
                 </For>
               </Message.Group.List>

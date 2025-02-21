@@ -55,6 +55,7 @@ export type Socket = {
         id: number
         message: string
       }
+      edit?: boolean
       readed?: boolean
       deleted?: boolean
       loading?: boolean
@@ -76,14 +77,91 @@ export type Socket = {
       dialog: string
       message_id: number
     }
-    response: {}
+    response: {
+      result: boolean
+      dialog: string
+    }
   }
   "message.read": {
     request: {
       dialog: string
       message_id: number
     }
-    response: {}
+    response: {
+      result: boolean
+    }
+    event: {
+      dialog: string
+      message_id: number
+    }
+  }
+  "message.list": {
+    request: {
+      dialog: string
+      offset: number
+      count: number
+    }
+    response: Array<{
+      id: number
+      author: number
+      message?: string
+      attach?: {
+        type: string
+        items: Array<{
+          name: string
+          data: string
+        }>
+      }
+      reply?: {
+        id: number
+        message: string
+      }
+      readed: boolean
+      time: Date
+      deleted: boolean
+    }>
+  }
+  "message.edit": {
+    request: {
+      dialog: string
+      message: {
+        message?: string
+        attach?: {
+          type: string
+          items: Array<{
+            name: string
+            data: string
+          }>
+        }
+        reply_id?: number
+      }
+    }
+    response: {
+      result: boolean
+      id: number
+    }
+    event: {
+      dialog: string
+      message: {
+        id: number
+        author: number
+        message?: string
+        attach?: {
+          type: string
+          items: Array<{
+            name: string
+            data: string
+          }>
+        }
+        reply?: {
+          id: number
+          message: string
+        }
+        readed: boolean
+        time: Date
+        deleted: boolean
+      }
+    }
   }
   "message.send": {
     request: {
@@ -323,6 +401,25 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
               !messages.history.find((x) => x.id === data.response.message.id)
             ) {
               messages.history.push(data.response.message)
+            }
+
+            return messages
+          }),
+        )
+      }
+    }
+
+    if (event === "message.read") {
+      const dialog = data.response?.dialog
+      if (dialog && data.response) {
+        setter(
+          [MESSAGE_INFO_ATOM, dialog],
+          produce((messages) => {
+            const message = messages.history.find(
+              (x) => x.id === data.response.message_id,
+            )
+            if (message) {
+              message.readed = true
             }
 
             return messages

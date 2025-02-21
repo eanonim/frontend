@@ -5,8 +5,8 @@
 }
 
 .Message__in {
-
-  padding: 4px 6px 4px 10px;
+  white-space: pre-wrap;
+  padding    : 4px 6px 4px 10px;
 
 
   max-width: 80%;

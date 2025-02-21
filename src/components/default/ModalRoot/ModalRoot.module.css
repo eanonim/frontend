@@ -11,6 +11,10 @@
   transition      : all .3s;
 }
 
+.ModalRoot__keyboard {
+  transform: translateY(calc(var(--keyboard-safe-area-inset-bottom, 0px) * -1));
+}
+
 /* .ModalRoot::before {
   content: "";
   display: flex;

@@ -1,5 +1,5 @@
 import { Cell, FixedLayout, SubTitle, Title, WriteBar } from "components"
-import { IconPaperclip, IconSend, IconX } from "source"
+import { IconGiftFilled, IconPaperclip, IconSend, IconX } from "source"
 
 import {
   type JSX,
@@ -17,11 +17,15 @@ import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
+const isTouchSupport = window && "ontouchstart" in window
+
 const Footer: Component<Footer> = (props) => {
   const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
   const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
     dialog: params().dialog,
   }))
+
+  let ref: HTMLTextAreaElement
 
   const [message, setMessage] = createSignal("")
 
@@ -38,15 +42,17 @@ const Footer: Component<Footer> = (props) => {
   )
 
   const handlerSend = () => {
+    ref!?.focus()
     const messageTest = message()
     if (messageTest) {
       messageSend({
         dialog: params().dialog,
         message: {
-          message: messageTest,
+          message: messageTest.trim(),
           reply_id: messageInfo.message.reply_id,
         },
       })
+
       setMessage("")
     }
   }
@@ -158,16 +164,43 @@ const Footer: Component<Footer> = (props) => {
           <IconPaperclip color={"var(--separator_primary)"} />
         </WriteBar.Icon>
         <WriteBar.Field>
-          <WriteBar.Field.Textarea value={message()} onInput={onInput} />
+          <WriteBar.Field.Textarea
+            maxHeight={window.innerHeight / 3 + "px"}
+            ref={ref!}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey && !isTouchSupport) {
+                event.preventDefault()
+                handlerSend()
+              }
+            }}
+            value={message()}
+            onInput={onInput}
+          />
         </WriteBar.Field>
-        <Show when={message().length}>
-          <WriteBar.Icon onClick={handlerSend}>
-            <IconSend color={"var(--accent_color)"} width={36} height={36} />
-          </WriteBar.Icon>
-        </Show>
-        {/* <WriteBar.Icon>
-          <IconGiftFilled color={"var(--separator_primary)"} />
-        </WriteBar.Icon> */}
+        <WriteBar.Icon onClick={handlerSend}>
+          <IconSend
+            style={{
+              "z-index": 1,
+              transform: message().length ? "scale(1.2)" : "scale(0)",
+              "-webkit-transform": message().length ? "scale(1.2)" : "scale(0)",
+              transition: "0.3s",
+            }}
+            color={"var(--accent_color)"}
+            width={36}
+            height={36}
+          />
+
+          <span
+            style={{
+              position: "absolute",
+              transform: !message().length ? "scale(1)" : "scale(0)",
+              "-webkit-transform": !message().length ? "scale(1)" : "scale(0)",
+              transition: "0.3s",
+            }}
+          >
+            <IconGiftFilled color={"var(--separator_primary)"} />
+          </span>
+        </WriteBar.Icon>
       </WriteBar>
     </FixedLayout>
   )

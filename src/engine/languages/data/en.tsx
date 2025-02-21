@@ -66,6 +66,11 @@ export default {
     anime: "Anime",
     lgbt: "LGBT",
   },
+  prints: "prints",
+  answer: "Answer",
+  copy: "Copy",
+  edit: "Edit",
+  delete: "Delete",
   errors: {
     1002: "This action requires premium access",
   },

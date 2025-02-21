@@ -10,6 +10,8 @@ import { JSX } from "solid-js/jsx-runtime"
 import style from "./ModalRoot.module.css"
 import { toArray } from "engine"
 import { createStore } from "solid-js/store"
+import { KEYBOARD_ATOM } from "engine/state"
+import { globalSignal } from "elum-state/solid"
 
 interface ModalRoot
   extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "children"> {
@@ -28,6 +30,8 @@ const ModalRoot: Component<ModalRoot> = (props) => {
     "onClose",
     "onClick",
   ])
+
+  const [keyboard] = globalSignal(KEYBOARD_ATOM)
 
   const [store, setStore] = createStore({
     active: local.activeModal,
@@ -104,6 +108,8 @@ const ModalRoot: Component<ModalRoot> = (props) => {
       <div
         class={style.ModalRoot}
         classList={{
+          [style.ModalRoot__keyboard]: keyboard().touch,
+
           [style["ModalRoot--to-up"]]: store.to === "up",
           [style["ModalRoot--to-down"]]: store.to === "down",
           [style["ModalRoot--show"]]: store.show,

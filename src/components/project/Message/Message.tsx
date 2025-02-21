@@ -6,8 +6,16 @@ import Flex from "@ui/default/Blocks/Flex/Flex"
 import formatTime from "engine/utils/formatTime"
 import Gap from "@ui/default/Templates/Gap/Gap"
 
-import { type Component, Show, type ValidComponent, splitProps } from "solid-js"
+import {
+  type Component,
+  Show,
+  type ValidComponent,
+  onCleanup,
+  onMount,
+  splitProps,
+} from "solid-js"
 import { IconMessageEnd } from "source"
+import { DynamicProps } from "solid-js/web"
 
 interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   text?: string
@@ -27,7 +35,12 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   /** Отображает бейдж как новый */
   isNew?: boolean
   /** Отображать спинер */
-  loading?: boolean
+  isLoading?: boolean
+  /** Отображать изменение */
+  isEdit?: boolean
+  textEdit?: string
+
+  onRead: () => void
 }
 
 type ComponentMessage = Component<Message> & {
@@ -48,11 +61,33 @@ const Message: ComponentMessage = (props) => {
     "isRead",
     "isNotRead",
     "isNew",
-    "loading",
+    "isLoading",
+    "isEdit",
+    "textEdit",
+    "onRead",
   ])
+
+  let ref: HTMLDivElement
+
+  onMount(() => {
+    if (local.isNotRead) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          local.onRead()
+        }
+      })
+
+      observer.observe(ref!)
+
+      onCleanup(() => {
+        observer.disconnect()
+      })
+    }
+  })
 
   return (
     <Flex
+      ref={ref! as unknown as DynamicProps<"div">}
       class={style.Message}
       classList={{
         [style[`Message--${local.type}`]]: !!local.type,
@@ -83,6 +118,7 @@ const Message: ComponentMessage = (props) => {
           {(time) => (
             <Gap class={style.Message__time} count={"2px"}>
               <span class={style.Message__time_text}>
+                <Show when={local.isEdit}>{local.textEdit} </Show>
                 {formatTime(new Date(time))}
               </span>
               <Show when={local.type === "out"}>
@@ -91,7 +127,7 @@ const Message: ComponentMessage = (props) => {
                   isRead={local.isRead}
                   isNew={local.isNew}
                   isNotRead={local.isNotRead}
-                  loading={local.loading}
+                  isLoading={local.isLoading}
                   color={"inherit"}
                   size={"inherit"}
                 />

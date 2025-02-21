@@ -8,6 +8,7 @@ import {
   Title,
   UserName,
 } from "components"
+import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { MESSAGE_INFO_ATOM } from "engine/state"
 import { pages, useParams } from "router"
@@ -17,6 +18,8 @@ import { type JSX, type Component, createEffect, on } from "solid-js"
 interface Header extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Header: Component<Header> = (props) => {
+  const [lang] = loc()
+
   const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
   const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
     dialog: params().dialog,
@@ -74,7 +77,7 @@ const Header: Component<Header> = (props) => {
                 transition: "0.3s",
               }}
             >
-              <Message.Typing text={"печатает"} />
+              <Message.Typing text={lang("prints") || "prints"} />
             </SubTitle>
           </Cell.Content>
         </Cell.Container>

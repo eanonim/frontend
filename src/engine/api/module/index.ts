@@ -421,6 +421,16 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
 
             if (message) {
               message.readed = true
+
+              if (message) {
+                message.readed = true
+
+                for (const item of messages.history.filter(
+                  (x) => x.id <= message.id,
+                )) {
+                  item.readed = true
+                }
+              }
             }
 
             return messages

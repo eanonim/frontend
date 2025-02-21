@@ -156,7 +156,7 @@ export type Socket = {
       [key in SearchInteresting]?: boolean
     }
     response: {
-      uuid: string
+      dialog: string
     }
   }
   "store.delete": {

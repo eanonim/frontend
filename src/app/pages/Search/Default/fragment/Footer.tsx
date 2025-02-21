@@ -49,7 +49,7 @@ const Footer: Component<Footer> = (props) => {
     })
 
     if (response) {
-      pushPage({ pageId: pages.CHAT, params: { dialog: response.uuid } })
+      pushPage({ pageId: pages.CHAT, params: { dialog: response.dialog } })
     }
   }
 

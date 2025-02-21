@@ -5,6 +5,7 @@ import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { SEARCH_OPTIONS_ATOM } from "engine/state"
+import { pages, pushPage } from "router"
 
 import { type JSX, type Component } from "solid-js"
 
@@ -14,7 +15,7 @@ const Footer: Component<Footer> = (props) => {
   const [lang] = loc()
   const [searchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
 
-  const handlerSearch = () => {
+  const handlerSearch = async () => {
     var interests: Partial<Record<SearchInteresting, boolean>> = {}
 
     for (const [key, value] of Object.entries(searchOptions.interests)) {
@@ -36,7 +37,7 @@ const Footer: Component<Footer> = (props) => {
       },
     })
 
-    chatSearch({
+    const { response, error } = await chatSearch({
       language: "en",
       your_start: searchOptions.companion.age.from,
       your_end: searchOptions.companion.age.to,
@@ -46,6 +47,10 @@ const Footer: Component<Footer> = (props) => {
       music: true,
       ...interests,
     })
+
+    if (response) {
+      pushPage({ pageId: pages.CHAT, params: { dialog: response.uuid } })
+    }
   }
 
   return (

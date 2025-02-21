@@ -155,7 +155,9 @@ export type Socket = {
     } & {
       [key in SearchInteresting]?: boolean
     }
-    response: {}
+    response: {
+      uuid: string
+    }
   }
   "store.delete": {
     request: {

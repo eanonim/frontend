@@ -418,6 +418,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             const message = messages.history.find(
               (x) => x.id === data.response.message_id,
             )
+            console.log({ message }, messages.history)
             if (message) {
               message.readed = true
             }

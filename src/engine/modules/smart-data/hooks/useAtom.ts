@@ -52,8 +52,6 @@ export const useAtom = <VALUE, OPTIONS, KEY extends string>(
         const nextData = next?.[0]
         const prevData = prev?.[0] || nextData
 
-        console.log({ nextData, prevData })
-
         if (local.equals?.(prevData, nextData)) return
 
         setCache(next?.[1].data)

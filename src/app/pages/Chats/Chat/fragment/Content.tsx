@@ -41,6 +41,10 @@ const Content: Component<Content> = (props) => {
     }
   })
 
+  createEffect(() => {
+    console.log({ messageInfo })
+  })
+
   const getMessages = createMemo(
     () => groupObjectsByDay(messageInfo.history),
     messageInfo.history,
@@ -148,7 +152,7 @@ const Content: Component<Content> = (props) => {
                         isLoading={message.loading}
                         isEdit={message.edit}
                         onRead={() => {
-                          if (user.id !== message.author) {
+                          if (user.id !== message.author && !message.readed) {
                             messageRead({
                               dialog: params().dialog,
                               message_id: message.id,

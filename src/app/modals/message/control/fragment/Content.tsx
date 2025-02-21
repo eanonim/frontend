@@ -95,7 +95,11 @@ const Content: Component<Content> = (props) => {
           </Cell.Container>
         </Cell>
       </Show>
-      <Show when={messageInfo.history.find((x) => x.author === user.id)}>
+      <Show
+        when={messageInfo.history.find(
+          (x) => x.author === user.id && x.id === params().message_id,
+        )}
+      >
         <Cell onClick={handlerEdit} separator={"auto"}>
           <Cell.Before>
             <IconEdit width={24} height={24} />

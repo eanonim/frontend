@@ -188,7 +188,7 @@ export const MESSAGE_INFO_ATOM = atom<
   updateIntervalMs: 60_000,
 })
 
-let timer: NodeJS.Timeout
+let timer: Record<string, NodeJS.Timeout> = {}
 
 export const setTyping = (dialog: string) => {
   setter(
@@ -202,9 +202,9 @@ export const setTyping = (dialog: string) => {
   )
   setter(CHAT_LIST_ATOM, "history", dialog, "typing", true)
 
-  clearTimeout(timer)
+  clearTimeout(timer[dialog])
 
-  timer = setTimeout(() => {
+  timer[dialog] = setTimeout(() => {
     setter(
       [MESSAGE_INFO_ATOM, dialog],
       "message",

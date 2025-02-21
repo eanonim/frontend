@@ -11,7 +11,13 @@ const chatList = async (options: Socket["chat.list"]["request"]) => {
 
   console.log({ response })
 
-  setter(CHAT_LIST_ATOM, response)
+  let newResponse: Record<string, Socket["chat.list"]["response"][0]> = {}
+
+  for (const chat of response) {
+    newResponse[chat.uuid] = chat
+  }
+
+  setter(CHAT_LIST_ATOM, "history", newResponse)
 
   return { response, error }
 }

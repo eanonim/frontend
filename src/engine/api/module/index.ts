@@ -211,6 +211,8 @@ export type Socket = {
       uuid: string
       first_user: number
       second_user: number
+      /* CUSTOM */
+      typing?: boolean
     }[]
   }
   "chat.search": {

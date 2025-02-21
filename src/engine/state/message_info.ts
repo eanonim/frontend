@@ -2,6 +2,7 @@ import { atom, setter } from "engine/modules/smart-data"
 
 import { Socket } from "engine/api/module"
 import { produce } from "solid-js/store"
+import { CHAT_LIST_ATOM } from "./chat_list"
 
 export const MESSAGE_INFO_ATOM = atom<
   {
@@ -199,6 +200,7 @@ export const setTyping = (dialog: string) => {
       return message
     }),
   )
+  setter(CHAT_LIST_ATOM, "history", dialog, "typing", true)
 
   clearTimeout(timer)
 
@@ -212,5 +214,7 @@ export const setTyping = (dialog: string) => {
         return message
       }),
     )
+
+    setter(CHAT_LIST_ATOM, "history", dialog, "typing", false)
   }, 5000)
 }

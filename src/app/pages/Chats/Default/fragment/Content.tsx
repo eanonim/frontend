@@ -8,13 +8,15 @@ import {
   SubTitle,
   Title,
   UserName,
+  Flex,
 } from "components"
 
-import { type JSX, type Component, For, Show } from "solid-js"
+import { type JSX, type Component, For, Show, createMemo } from "solid-js"
 import { timeAgo } from "@minsize/utils"
 import { pages, pushPage } from "router"
 import { useAtom } from "engine/modules/smart-data"
 import { CHAT_LIST_ATOM } from "engine/state"
+import loc from "engine/languages"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -31,68 +33,21 @@ const textProps: TextProps = {
 }
 
 const Content: Component<Content> = (props) => {
+  const [lang] = loc()
   const [chatList] = useAtom(CHAT_LIST_ATOM)
-
-  const history: {
-    id: number
-    first_name: string
-    last_name: string
-    icon?: string
-    photo?: string
-    last_message: {
-      id: number
-      check?: boolean
-      message: string
-      time: Date
-    }
-  }[] = [
-    {
-      id: 1,
-      first_name: "Арман",
-      last_name: "Байжанов",
-      icon: "🖕",
-      photo: "",
-      last_message: {
-        id: 5,
-        message:
-          "Ахахаха asff asf asasf as fasf asf asfasf asf asf asfasf asf asf asf",
-        check: true,
-        time: new Date(Date.now() - 86_400_000),
-      },
-    },
-    {
-      id: 2,
-      first_name: "Алла",
-      last_name: "Проценко",
-      photo: "",
-      last_message: {
-        id: 2,
-        message: "Агась",
-        time: new Date(Date.now() - 86_400_000 * 30),
-      },
-    },
-    {
-      id: 3,
-      first_name: "Евгений",
-      last_name: "Таранов",
-      photo: "",
-      last_message: {
-        id: 5,
-        message: "да",
-        time: new Date(Date.now() - 86_400_000 * 366),
-      },
-    },
-  ]
 
   const handlerChat = (dialog: string) => {
     pushPage({ pageId: pages.CHAT, params: { dialog: dialog } })
   }
 
+  const getHistory = createMemo(() => Object.values(chatList.history))
+
   return (
     <Cell.List style={{ "overflow-y": "scroll" }}>
-      <For each={chatList}>
+      <For each={getHistory()}>
         {(chat, index) => (
           <Swipe
+            data-index={index()}
             onClick={() => handlerChat(chat.uuid)}
             after={
               <span
@@ -105,10 +60,7 @@ const Content: Component<Content> = (props) => {
               />
             }
           >
-            <Cell
-              data-index={index()}
-              separator={chatList.length > index() + 1}
-            >
+            <Cell separator={getHistory().length > index() + 1}>
               <Cell.Before>
                 <Avatar src={"chat.photo"} size={"48px"} />
               </Cell.Before>
@@ -127,14 +79,48 @@ const Content: Component<Content> = (props) => {
                     </SubTitle> */}
                   </Gap>
 
-                  {/* <Show keyed when={chat.last_message.message}>
-                    {(message) => (
-                      <Gap justifyContent={"space-between"} count={"6px"}>
-                        <SubTitle nowrap overflow>
-                          {message}
-                        </SubTitle>
+                  <Gap justifyContent={"space-between"} count={"6px"}>
+                    <Flex
+                      width={"100%"}
+                      direction={"column"}
+                      alignItems={"start"}
+                      style={{
+                        overflow: "hidden",
+                      }}
+                    >
+                      <SubTitle
+                        style={{
+                          transform: chat.typing
+                            ? "translateY(-100%)"
+                            : "translateY(0%)",
+                          "-webkit-transform": chat.typing
+                            ? "translateY(-100%)"
+                            : "translateY(0%)",
+                          transition: "0.3s",
+                        }}
+                        nowrap
+                        overflow
+                      >
+                        сообщение
+                      </SubTitle>
 
-                        <Message.Badge
+                      <SubTitle
+                        style={{
+                          position: "absolute",
+                          transform: !chat.typing
+                            ? "translateY(100%)"
+                            : "translateY(0%)",
+                          "-webkit-transform": !chat.typing
+                            ? "translateY(100%)"
+                            : "translateY(0%)",
+                          transition: "0.3s",
+                        }}
+                      >
+                        <Message.Typing text={lang("prints") || "prints"} />
+                      </SubTitle>
+                    </Flex>
+
+                    {/* <Message.Badge
                           isNew={
                             chat.id === chat.last_message.id &&
                             !chat.last_message.check
@@ -144,10 +130,8 @@ const Content: Component<Content> = (props) => {
                             chat.id !== chat.last_message.id &&
                             !chat.last_message.check
                           }
-                        />
-                      </Gap>
-                    )}
-                  </Show> */}
+                        /> */}
+                  </Gap>
                 </Cell.Content>
               </Cell.Container>
             </Cell>

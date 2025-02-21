@@ -350,16 +350,8 @@ function setter<VALUE, OPTIONS, KEY>(
         if (status === false) return
       }
 
-      setter(
-        "cache",
-        key,
-        produce((data) => {
-          data.data = next
-          data.update_at = update_at
-
-          return data
-        }),
-      )
+      ;(setter as any)(...["cache", key, "data"], ...args)
+      setter("cache", key, "update_at", update_at)
       setterStatus([signal, key], { load: false })
     })
   }

@@ -24,7 +24,7 @@ const Default: Component<Default> = (props) => {
       <div
         style={{
           position: "relative",
-          height: "calc(100% + 1px)",
+          "min-height": "calc(100% + 1px)",
           display: "flex",
           "flex-direction": "column",
         }}

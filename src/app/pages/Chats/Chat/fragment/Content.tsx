@@ -62,8 +62,9 @@ const Content: Component<Content> = (props) => {
       <Flex
         style={{
           overflow: "hidden",
+          "margin-top": "auto",
         }}
-        height={"100%"}
+        // height={"100%"}
       >
         <Message.Group ref={ref!}>
           <For each={getMessages()}>

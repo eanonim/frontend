@@ -212,5 +212,5 @@ export const setTyping = (dialog: string) => {
         return message
       }),
     )
-  }, 3000)
+  }, 5000)
 }

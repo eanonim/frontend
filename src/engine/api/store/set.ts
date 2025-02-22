@@ -18,9 +18,15 @@ const debounces: Record<
 > = {}
 
 const storeSet = async (options: Socket["store.set"]["request"]) => {
-  let func = debounces[options.key]
+  let key = String(options.key)
+
+  if (options.key === "interest") {
+    key = options.key + options.value
+  }
+
+  let func = debounces[key]
   if (!func) {
-    func = debounces[options.key] = debounce(
+    func = debounces[key] = debounce(
       async (
         resolve: (
           value:

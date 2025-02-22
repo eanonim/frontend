@@ -357,7 +357,19 @@ function setter<VALUE, OPTIONS, KEY>(
         getter.requests[key] === "end"
       ) {
         const status = await onUpdate({ prev, next: unlink(next) }, key as KEY)
-        if (status === false) return
+        if (status === false) {
+          setter(
+            "cache",
+            key,
+            produce((cache) => {
+              cache.data = prev
+              cache.update_at = update_at
+              return cache
+            }),
+          )
+
+          return
+        }
       }
       setter(
         "cache",
@@ -370,8 +382,8 @@ function setter<VALUE, OPTIONS, KEY>(
       )
 
       // ;(setter as any)(...["cache", key, "data"], ...args)
-      setter("cache", key, "data", next)
-      setter("cache", key, "update_at", update_at)
+      // setter("cache", key, "data", next)
+      // setter("cache", key, "update_at", update_at)
       setterStatus([signal, key], { load: false })
     })
   }

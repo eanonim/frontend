@@ -26,9 +26,7 @@ const Content: Component<Content> = (props) => {
   const [user] = useAtom(USER_ATOM)
 
   const handlerCopy = () => {
-    const message = messageInfo.history.find(
-      (x) => x.id === params().message_id,
-    )
+    const message = messageInfo.history.get(params().message_id)
     if (message) {
       copyText(message.message)
       backPage()
@@ -78,12 +76,7 @@ const Content: Component<Content> = (props) => {
           </Cell.Content>
         </Cell.Container>
       </Cell>
-      <Show
-        when={
-          !!messageInfo.history.find((x) => x.id === params().message_id)
-            ?.message
-        }
-      >
+      <Show when={!!messageInfo.history.get(params().message_id)}>
         <Cell onClick={handlerCopy} separator={"auto"}>
           <Cell.Before>
             <IconCopy width={24} height={24} />
@@ -96,9 +89,7 @@ const Content: Component<Content> = (props) => {
         </Cell>
       </Show>
       <Show
-        when={messageInfo.history.find(
-          (x) => x.author === user.id && x.id === params().message_id,
-        )}
+        when={messageInfo.history.get(params().message_id)?.author === user.id}
       >
         <Cell onClick={handlerEdit} separator={"auto"}>
           <Cell.Before>

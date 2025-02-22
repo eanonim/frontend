@@ -13,18 +13,21 @@ const messageRead = async (options: Socket["message.read"]["request"]) => {
   if (response.result) {
     setter(
       [MESSAGE_INFO_ATOM, options.dialog],
-      "history",
-      produce((history) => {
-        const message = history.find((x) => x.id === options.message_id)
+      produce((messages) => {
+        const message = messages.history.get(options.message_id)
         if (message) {
-          message.readed = true
-
-          for (const item of history.filter((x) => x.id <= message.id)) {
-            item.readed = true
+          if (
+            messages.dialogs[message.dialog_index][1][message.message_index]
+          ) {
+            messages.dialogs[message.dialog_index][1][
+              message.message_index
+            ].readed = true
           }
         }
 
-        return history
+        messages.last_read_message_id = options.message_id
+
+        return messages
       }),
     )
   }

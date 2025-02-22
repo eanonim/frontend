@@ -1,12 +1,19 @@
 import { atom, setter } from "engine/modules/smart-data"
-
 import { Socket } from "engine/api/module"
 import { produce } from "solid-js/store"
 import { CHAT_LIST_ATOM } from "./chat_list"
 
 export const MESSAGE_INFO_ATOM = atom<
   {
-    history: Socket["message.info"]["response"]
+    dialogs: [string, Socket["message.info"]["response"]][]
+    history: Map<
+      number,
+      {
+        dialog_index: number
+        message_index: number
+      } & Socket["message.info"]["response"][0]
+    >
+    last_read_message_id?: number
     message: {
       message: string
       reply_id?: number
@@ -21,7 +28,8 @@ export const MESSAGE_INFO_ATOM = atom<
     return options.dialog
   },
   default: {
-    history: [],
+    dialogs: [],
+    history: new Map(),
     message: {
       message: "",
       typing: false,
@@ -32,158 +40,6 @@ export const MESSAGE_INFO_ATOM = atom<
   },
   onRequested: (options, key) => {
     console.log("onRequested", key, options)
-    // setter([MESSAGE_INFO_ATOM, key], "history", [
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    //   {
-    //     id: 1,
-    //     author: 2,
-    //     message: "Test",
-    //     time: new Date(Date.now() + 1_000),
-    //   },
-    // ])
   },
   updateIntervalMs: 60_000,
 })

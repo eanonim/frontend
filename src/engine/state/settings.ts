@@ -14,38 +14,6 @@ import {
 import ServerError from "engine/api/ServerError"
 import { STORE_THEME_COLOR_ATOM } from "./options"
 
-const onUpdate = leadingAndTrailing(
-  debounce,
-  async (resolve: (status: boolean) => void, { prev, next }, key) => {
-    const keysToCheck: Socket["store.set"]["request"]["key"][] = [
-      "backgroundColor",
-      "backgroundId",
-      "fontSize",
-      "theme",
-      "themeColor",
-    ]
-
-    let status = true
-
-    for (const key of keysToCheck) {
-      const value = next[key] as any
-      if (prev[key] !== value) {
-        const { error } = await storeSet({ key: key, value: value })
-
-        if (error?.code) {
-          status = false
-        } else {
-          if (key === "themeColor") {
-            document.documentElement.setAttribute("theme-color", value)
-          }
-        }
-      }
-    }
-    resolve(status)
-  },
-  500,
-)
-
 export const SETTINGS_ATOM = atom<
   Socket["store.list"]["response"],
   Socket["store.list"]["request"]
@@ -63,9 +31,27 @@ export const SETTINGS_ATOM = atom<
   },
   updateIntervalMs: 30_000,
   onUpdate: async ({ prev, next }, key) => {
-    return await new Promise<boolean>((resolve) => {
-      onUpdate(resolve, { prev, next }, key)
-    })
+    const keysToCheck: Socket["store.set"]["request"]["key"][] = [
+      "backgroundColor",
+      "backgroundId",
+      "fontSize",
+      "theme",
+      "themeColor",
+    ]
+
+    let status = true
+
+    for (const key of keysToCheck) {
+      const value = next[key] as any
+      if (prev[key] !== value) {
+        const { error } = await storeSet({ key: key, value: value })
+        if (error) {
+          status = false
+        }
+      }
+    }
+
+    return status
   },
 })
 

@@ -33,7 +33,7 @@ const Footer: Component<Footer> = (props) => {
     on(
       () => messageInfo.message.edit_id,
       (edit_id) => {
-        const message = messageInfo.history.find((x) => x.id === edit_id)
+        const message = edit_id && messageInfo.history.get(edit_id)
         if (message && message.message) {
           setMessage(message.message)
         }
@@ -103,7 +103,7 @@ const Footer: Component<Footer> = (props) => {
         keyed
         when={
           !!messageInfo.message.reply_id &&
-          messageInfo.history.find((x) => x.id === messageInfo.message.reply_id)
+          messageInfo.history.get(messageInfo.message.reply_id)
         }
       >
         {(message) => (
@@ -133,7 +133,7 @@ const Footer: Component<Footer> = (props) => {
         keyed
         when={
           !!messageInfo.message.edit_id &&
-          messageInfo.history.find((x) => x.id === messageInfo.message.edit_id)
+          messageInfo.history.get(messageInfo.message.edit_id)
         }
       >
         {(message) => (

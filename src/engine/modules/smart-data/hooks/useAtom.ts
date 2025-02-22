@@ -3,6 +3,7 @@ import { getDefault, getter, getValue, setter, setterStatus } from ".."
 
 import { createEffect, mergeProps, on, splitProps } from "solid-js"
 import { createStore, type SetStoreFunction } from "solid-js/store"
+import { unlink } from "@minsize/utils"
 
 /**
  * `useAtom` - хук SolidJS для работы с атомарными данными (состоянием).
@@ -53,7 +54,6 @@ export const useAtom = <VALUE, OPTIONS, KEY extends string>(
         const prevData = prev?.[0] || nextData
 
         if (local.equals?.(prevData, nextData)) return
-
         setCache(next?.[1].data)
       },
       { defer: true },

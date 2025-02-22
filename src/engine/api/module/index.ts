@@ -1,7 +1,8 @@
 import init, { Status } from "@elum/ews"
 import { Mutex } from "@minsize/mutex"
-import { sleep } from "@minsize/utils"
+import { sleep, unlink } from "@minsize/utils"
 import { getter } from "elum-state/solid"
+import { getFullDate } from "engine"
 import { setter } from "engine/modules/smart-data"
 import { AUTH_TOKEN_ATOM, MESSAGE_INFO_ATOM, setTyping } from "engine/state"
 import { HOST } from "root/configs"
@@ -397,13 +398,29 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
         setter(
-          [MESSAGE_INFO_ATOM, dialog],
+          [MESSAGE_INFO_ATOM, data.response.dialog],
           produce((messages) => {
-            if (
-              !messages.history.find((x) => x.id === data.response.message.id)
-            ) {
-              messages.history.push(data.response.message)
+            const message = data.response.message as {
+              dialog_index: number
+              message_index: number
+            } & Socket["message.info"]["response"][0]
+            const fullTime = getFullDate(message.time)
+
+            message.dialog_index = messages.dialogs.findIndex(
+              (x) => x[0] === fullTime,
+            )
+            if (message.dialog_index !== -1) {
+              message.message_index =
+                messages.dialogs[message.dialog_index][1].push(message)
+            } else {
+              message.dialog_index =
+                messages.dialogs.push([fullTime, [message]]) - 1
+              message.message_index = 0
             }
+            messages.message.message = ""
+            messages.message.reply_id = undefined
+
+            messages.history.set(message.id, message)
 
             return messages
           }),
@@ -415,28 +432,9 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
         setter(
-          [MESSAGE_INFO_ATOM, dialog],
-          produce((messages) => {
-            const message = messages.history.find(
-              (x) => x.id === data.response.message_id,
-            )
-
-            if (message) {
-              message.readed = true
-
-              if (message) {
-                message.readed = true
-
-                for (const item of messages.history.filter(
-                  (x) => x.id <= message.id,
-                )) {
-                  item.readed = true
-                }
-              }
-            }
-
-            return messages
-          }),
+          [MESSAGE_INFO_ATOM, data.response.dialog],
+          "last_read_message_id",
+          data.response.message_id,
         )
       }
     }
@@ -502,8 +500,8 @@ export const socketSend = async <KEY extends keyof Socket>(
     mutex.release({ key: "lock2" })
   }
 
+  console.log("socketSend", key, options)
   const data = await socket.send(key, options)
-
   if ([0, 1001].includes(data?.error?.code ?? -1)) {
     await sleep(1_000)
     return await socketSend(key, options)

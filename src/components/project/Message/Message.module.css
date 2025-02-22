@@ -6,7 +6,7 @@
 
 .Message__in {
   white-space: pre-wrap;
-  padding    : 4px 6px 4px 10px;
+  padding    : 5px 8px 6px 8px;
 
 
   max-width: 80%;
@@ -27,8 +27,9 @@
 .Message__time {
   float: right;
 
-  margin-top  : 4px;
-  padding-left: 4px;
+  padding-left: 7px;
+
+  transform: translateY(7px);
 
   -user-select       : none;
   -webkit-user-select: none;

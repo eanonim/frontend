@@ -8,7 +8,7 @@ import {
   Match,
   splitProps,
 } from "solid-js"
-import { SETTINGS_ATOM } from "engine/state"
+import { SETTINGS_ATOM, STORE_THEME_COLOR_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
 import { Socket } from "engine/api/module"
 import loc from "engine/languages"
@@ -20,6 +20,7 @@ interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const [settings] = useAtom(SETTINGS_ATOM)
+  const [themeColor] = useAtom(STORE_THEME_COLOR_ATOM)
 
   const handlerSet = (theme: Socket["store.list"]["response"]["theme"]) => {
     setTheme(theme)

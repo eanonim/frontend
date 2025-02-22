@@ -16,7 +16,13 @@ const atom = <VALUE, OPTIONS, KEY = Key>(
     }
   }
 
-  return createStore({ ...merged, onKey, cache: {}, requests: {} })
+  return createStore({
+    ...merged,
+    onKey,
+    cachePrev: {},
+    cache: {},
+    requests: {},
+  })
 }
 
 export default atom

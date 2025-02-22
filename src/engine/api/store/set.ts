@@ -49,6 +49,15 @@ const storeSet = async (options: Socket["store.set"]["request"]) => {
             errorServer = error
           }
 
+          if (response?.result) {
+            if (options.key === "themeColor") {
+              document.documentElement.setAttribute(
+                "theme-color",
+                options.value,
+              )
+            }
+          }
+
           resolve({ response, error } as any)
           return
         } finally {

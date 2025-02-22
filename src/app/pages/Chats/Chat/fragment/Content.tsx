@@ -1,3 +1,4 @@
+import { unlink } from "@minsize/utils"
 import { Background, Flex, Message } from "components"
 import { groupObjectsByDay, timeAgoOnlyDate } from "engine"
 import { messageRead } from "engine/api"
@@ -41,19 +42,20 @@ const Content: Component<Content> = (props) => {
     }
   })
 
-  createEffect(() => {
-    console.log({ messageInfo })
-  })
-
-  const getMessages = createMemo(
-    () => groupObjectsByDay(messageInfo.history),
-    messageInfo.history,
+  createEffect(
+    on(
+      () => messageInfo.dialogs,
+      (value) => {
+        console.log({ messageInfo: unlink(messageInfo) })
+      },
+    ),
   )
 
   createEffect(
     on(
-      () => messageInfo.history.length,
+      () => messageInfo.dialogs?.[messageInfo.dialogs.length - 1]?.[1]?.length,
       (next, prev) => {
+        console.log({ bottom: store.isBottom })
         if (next !== prev && store.isBottom && ref!) {
           ref.scrollTop = ref.scrollHeight
         }
@@ -111,18 +113,18 @@ const Content: Component<Content> = (props) => {
             setStore("isBottom", isBottom)
           }}
         >
-          <For each={getMessages()}>
-            {(messages, index) => (
+          <For each={messageInfo.dialogs}>
+            {([_, messages], index) => (
               <Message.Group.List data-index={index()}>
                 <Message.System key={index()}>
-                  {timeAgoOnlyDate(
-                    new Date(getMessages()[index()]?.[0]?.time)?.getTime(),
-                  )}
+                  {/* {timeAgoOnlyDate(new Date(messages[1].size)?.getTime())} */}
+                  test
                 </Message.System>
                 <For each={messages}>
                   {(message, index) => (
                     <Show when={!message.deleted}>
                       <Message
+                        data-index={index()}
                         onTouchStart={() =>
                           !message.loading &&
                           handlerContextMenu("start", message.id)
@@ -142,17 +144,29 @@ const Content: Component<Content> = (props) => {
                         onContextMenu={() =>
                           handlerContextMenu("any", message.id)
                         }
-                        data-index={index()}
                         forward={message.reply}
                         type={message.author === user.id ? "out" : "in"}
                         text={message.message}
                         time={message.time}
-                        isRead={message.readed}
-                        isNotRead={!message.readed}
+                        isRead={
+                          message.id <= (messageInfo.last_read_message_id || 0)
+                        }
+                        isNotRead={
+                          !(
+                            message.id <=
+                            (messageInfo.last_read_message_id || 0)
+                          )
+                        }
                         isLoading={message.loading}
                         isEdit={message.edit}
                         onRead={() => {
-                          if (user.id !== message.author && !message.readed) {
+                          if (
+                            user.id !== message.author &&
+                            !(
+                              message.id <=
+                              (messageInfo.last_read_message_id || 0)
+                            )
+                          ) {
                             console.log("rsead", message.id)
                             messageRead({
                               dialog: params().dialog,

@@ -1,11 +1,11 @@
 import { type Key, type AtomReturn } from "../types"
 
-import { comparison } from "@minsize/utils"
+import { comparison, unlink } from "@minsize/utils"
 
 import setterStatus from "../actions/setterStatus"
 import getDefault from "../utils/getDefault"
 
-import { batch } from "solid-js"
+import { batch, createEffect, on } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 
 type KeyOf<T> = keyof T
@@ -327,6 +327,15 @@ function setter<VALUE, OPTIONS, KEY>(
       const [getter, setter] = signal
       const update_at = new Date(Date.now() + getter.updateIntervalMs)
 
+      const cachePrev = getter.cachePrev[key]
+      if (!cachePrev) {
+        setter("cachePrev", key, {
+          data: getDefault(getter.default),
+          system: { error: false, load: false, fullLoad: false },
+          update_at: update_at,
+        })
+      }
+
       const cache = getter.cache[key]
       if (!cache) {
         setter("cache", key, {
@@ -336,9 +345,10 @@ function setter<VALUE, OPTIONS, KEY>(
         })
       }
 
-      const prev = getDefault(getter?.cache?.[key]?.data)
-
-      const next = getPreviewData(options, ...args)
+      const prev = unlink(getter?.cache?.[key]?.data)
+      // setter("cachePrev", key, "data", prev)
+      ;(setter as any)(...["cachePrev", key, "data"], ...args)
+      const next = getter?.cachePrev?.[key]?.data
 
       const onUpdate = getter.onUpdate
       if (
@@ -346,33 +356,25 @@ function setter<VALUE, OPTIONS, KEY>(
         !comparison(prev, next) &&
         getter.requests[key] === "end"
       ) {
-        const status = await onUpdate({ prev, next }, key as KEY)
+        const status = await onUpdate({ prev, next: unlink(next) }, key as KEY)
         if (status === false) return
       }
+      setter(
+        "cache",
+        key,
+        produce((cache) => {
+          cache.data = next
+          cache.update_at = update_at
+          return cache
+        }),
+      )
 
-      ;(setter as any)(...["cache", key, "data"], ...args)
+      // ;(setter as any)(...["cache", key, "data"], ...args)
+      setter("cache", key, "data", next)
       setter("cache", key, "update_at", update_at)
       setterStatus([signal, key], { load: false })
     })
   }
-}
-
-function getPreviewData<VALUE, OPTIONS, KEY>(
-  options: SetterOptions<VALUE, OPTIONS, KEY>,
-  ...args: (string | number | Function)[]
-) {
-  const [signal, key] = Array.isArray(options[0])
-    ? [options[0], options[1] as string]
-    : [options as AtomReturn<VALUE, OPTIONS, KEY>, "default"]
-
-  const [getter] = signal
-  const [store, setStore] = createStore<any>(
-    getDefault(getter.cache[key]?.data || getter.default),
-  )
-
-  ;(setStore as any)(...args)
-
-  return getDefault(store)
 }
 
 export default setter

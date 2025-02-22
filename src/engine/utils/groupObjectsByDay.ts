@@ -1,26 +1,34 @@
-const groupObjectsByDay = <T extends { time: Date }>(objects: T[]) => {
+const groupObjectsByDay = <T extends { time: Date }>(
+  objects: readonly T[],
+): T[][] => {
+  // readonly для входного массива
+
   if (!objects || objects.length === 0) {
     return []
   }
 
-  const groupedObjects: { [key: string]: T[] } = {}
+  const groupedObjects: Map<string, T[]> = new Map() // Используем Map для эффективного поиска
 
-  for (const obj of objects) {
+  for (let i = 0; i < objects.length; i++) {
+    // Используем индексный цикл
+    const obj = objects[i]
+
     if (!obj || !obj.time) {
-      continue // Пропускаем объекты без поля time или null/undefined.
+      continue // Пропускаем элементы без поля time или null/undefined.
     }
 
-    const dateObj = new Date(obj.time) // Получаем объект Date из поля time
-    const dateString = dateObj.toISOString().split("T")[0] // Получаем YYYY-MM-DD
+    const dateObj = obj.time // Используем существующий Date объект напрямую
+    const dateString = dateObj.toISOString().slice(0, 10) // Используем slice для избежания создания массива
 
-    if (!groupedObjects[dateString]) {
-      groupedObjects[dateString] = []
+    let group = groupedObjects.get(dateString)
+    if (!group) {
+      group = [] // Создаем массив только если его нет
+      groupedObjects.set(dateString, group)
     }
-    groupedObjects[dateString].push(obj)
+    group.push(obj)
   }
 
-  // Преобразовываем объект в массив массивов
-  return Object.values(groupedObjects)
+  return Array.from(groupedObjects.values()) // Преобразуем Map в массив массивов
 }
 
 export default groupObjectsByDay

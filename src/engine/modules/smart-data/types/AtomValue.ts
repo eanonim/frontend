@@ -8,7 +8,7 @@ export type AtomValue<VALUE extends unknown, OPTIONS, KEY> = {
   /**
    * Значение по умолчанию для данных в хранилище.
    */
-  default: VALUE
+  default: VALUE | (() => VALUE)
   /**
    * Интервал в миллисекундах, с которым данные считаются актуальными (по умолчанию: 5000 мс).  После этого интервала данные будут запрошены повторно.
    */
@@ -25,6 +25,10 @@ export type AtomValue<VALUE extends unknown, OPTIONS, KEY> = {
    * Кеш для хранения полученных данных.
    */
   cache: { [key in string]: SmartData<VALUE> }
+  /**
+   * Кеш для обновления данных в onUpdate
+   */
+  cachePrev: { [key in string]: SmartData<VALUE> }
   /**
    * Объект, отслеживающий статус текущих запросов данных.
    * Значение `true` означает, что запрос в процессе обработки.

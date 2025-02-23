@@ -37,7 +37,7 @@ const Content: Component<Content> = (props) => {
       (next, prev) => {
         if (next === prev) return
         let isScroll = store.isBottom
-        let isSmooth = (next || 0) - 1 === prev || (next || 0) + 1 === prev
+        let isSmooth = false //(next || 0) - 1 === prev || (next || 0) + 1 === prev
 
         const message = messageInfo.history.get(next || 0)
         if (message) {

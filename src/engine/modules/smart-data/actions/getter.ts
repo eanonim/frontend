@@ -6,7 +6,15 @@ const getter = <VALUE, OPTIONS, KEY extends string>(
   key?: KEY,
 ) => {
   const data = signal[0]
-  return data.cache?.[key ?? "default"]?.data || getDefault(data.default)
+
+  const cache = data?.cache?.[key ?? "default"]?.data
+  if (cache) {
+    const [getterData] = cache
+
+    return getterData
+  }
+
+  return getDefault(data.default)
 }
 
 export default getter

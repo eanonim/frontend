@@ -51,9 +51,9 @@ const Header: Component<Header> = (props) => {
           >
             <Title nowrap overflow>
               <UserName
-                justifyContent={"center"}
+                justifyContent={"start"}
                 // first_name={params().dialog}
-                last_name={"Test 2"}
+                last_name={params().dialog}
                 // icon={"icon"}
               />
             </Title>

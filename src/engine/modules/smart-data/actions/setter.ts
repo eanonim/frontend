@@ -327,65 +327,55 @@ function setter<VALUE, OPTIONS, KEY>(
       const [getter, setter] = signal
       const update_at = new Date(Date.now() + getter.updateIntervalMs)
 
-      const cachePrev = getter.cachePrev[key]
-      if (!cachePrev) {
-        setter("cachePrev", key, {
-          data: getDefault(getter.default),
-          system: { error: false, load: false, fullLoad: false },
-          update_at: update_at,
-        })
-      }
-
-      const cache = getter.cache[key]
-      if (!cache) {
-        setter("cache", key, {
-          data: getDefault(getter.default),
-          system: { error: false, load: false, fullLoad: false },
-          update_at: update_at,
-        })
-      }
       const onUpdate = getter.onUpdate
 
-      const prev = !!onUpdate && unlink(getter?.cache?.[key]?.data)
-      // setter("cachePrev", key, "data", prev)
-      ;(setter as any)(...["cache", key, "data"], ...args)
-      const next = getter?.cache?.[key]?.data
+      const prev = !!onUpdate && unlink(getter?.cache?.[key]?.data?.[0])
 
-      if (
-        prev &&
-        onUpdate &&
-        !comparison(prev, next) &&
-        getter.requests[key] === "end"
-      ) {
-        const status = await onUpdate({ prev, next: unlink(next) }, key as KEY)
-        if (status === false) {
+      try {
+        var cache = getter.cache[key]
+        if (!cache) {
           setter(
             "cache",
-            key,
             produce((cache) => {
-              cache.data = prev
-              cache.update_at = update_at
+              const [getterData, setterData] = createStore<any>(
+                getDefault(getter.default),
+              )
+              ;(setterData as any)(...args)
+              cache[key] = {
+                data: [getterData, setterData],
+                system: { error: false, load: false, fullLoad: false },
+                update_at: update_at,
+              }
               return cache
             }),
           )
-
+          cache = getter.cache[key]
           return
         }
-      }
-      // setter(
-      //   "cache",
-      //   key,
-      //   produce((cache) => {
-      //     cache.data = next
-      //     cache.update_at = update_at
-      //     return cache
-      //   }),
-      // )
 
-      // ;(setter as any)(...["cache", key, "data"], ...args)
-      // setter("cache", key, "data", next)
-      setter("cache", key, "update_at", update_at)
-      setterStatus([signal, key], { load: false })
+        if (cache && cache.data) {
+          const [getterData, setterData] = cache.data
+          ;(setterData as any)(...args)
+        }
+      } finally {
+        const [next, setterData] = getter?.cache?.[key]?.data
+
+        if (
+          prev &&
+          onUpdate &&
+          getter.requests[key] === "end" &&
+          !comparison(prev, next)
+        ) {
+          const status = await onUpdate({ prev, next }, key as KEY)
+          if (status === false) {
+            setterData(prev)
+            return
+          }
+        }
+
+        setter("cache", key, "update_at", update_at)
+        setterStatus([signal, key], { load: false })
+      }
     })
   }
 }

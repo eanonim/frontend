@@ -1,7 +1,7 @@
-import { type Key, type AtomReturn } from "../types"
-import { getDefault, getter, getValue, setter, setterStatus } from ".."
+import { type AtomReturn } from "../types"
+import { getter, getValue, setter, setterStatus } from ".."
 
-import { createEffect, mergeProps, on, splitProps } from "solid-js"
+import { createEffect, createMemo, mergeProps, on, splitProps } from "solid-js"
 import { createStore, type SetStoreFunction } from "solid-js/store"
 import { unlink } from "@minsize/utils"
 
@@ -33,30 +33,40 @@ export const useAtom = <VALUE, OPTIONS, KEY extends string>(
   const [storeCache, setStoreCache] = signal
 
   const getOptions = () => getValue(options)
-  const getKey = () =>
-    getValue(
-      local.key ? local.key : storeCache.onKey?.(getOptions()) ?? "default",
-    )
+  const getKey = createMemo(
+    () =>
+      getValue(
+        local.key ? local.key : storeCache.onKey?.(getOptions()) ?? "default",
+      ),
+    getOptions(),
+  )
   const getRequest = () => getValue(local.isRequest)
 
-  const [cache, setCache] = createStore(getter(signal, getKey()) as any)
+  let [cache, setCache] = createStore(unlink(getter(signal, getKey()) as any))
 
   createEffect(
     on(
       [
         () => getter(signal, getKey()),
-        () => storeCache.cache[getKey()],
         () => storeCache.cache[getKey()]?.update_at,
-        getKey,
       ],
       (next, prev) => {
+        // if (next[3] === "default" && !!params && params.hasOwnProperty("key"))
+        //   return
+
         const nextData = next?.[0]
         const prevData = prev?.[0] || nextData
 
         if (local.equals?.(prevData, nextData)) return
-        setCache(next?.[1].data)
+
+        const data = storeCache.cache[getKey()]?.data
+
+        if (data) {
+          const [getterData] = data
+
+          setCache(unlink(getterData))
+        }
       },
-      { defer: true },
     ),
   )
 

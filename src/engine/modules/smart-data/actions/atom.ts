@@ -10,7 +10,7 @@ const atom = <VALUE, OPTIONS, KEY = Key>(
 
   const onKey = (options: OPTIONS) => {
     try {
-      return merged.onKey?.(options) ?? "default"
+      return merged.onKey?.(options) ?? undefined
     } catch {
       return "default"
     }
@@ -18,7 +18,7 @@ const atom = <VALUE, OPTIONS, KEY = Key>(
 
   return createStore({
     ...merged,
-    onKey,
+    onKey: merged.onKey && onKey,
     cachePrev: {},
     cache: {},
     requests: {},

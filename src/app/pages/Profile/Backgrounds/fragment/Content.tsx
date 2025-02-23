@@ -12,10 +12,18 @@ import {
 
 import { chunks } from "@minsize/utils"
 
-import { type JSX, type Component, For, Show } from "solid-js"
+import {
+  type JSX,
+  type Component,
+  For,
+  Show,
+  createMemo,
+  createEffect,
+} from "solid-js"
 import { pages, pushPage } from "router"
 import { SETTINGS_ATOM, STORE_BACKGROUND_ATOM, USER_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
+import { isPremium } from "engine"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -40,11 +48,13 @@ const Content: Component<Content> = (props) => {
   const [settings] = useAtom(SETTINGS_ATOM)
   const [user] = useAtom(USER_ATOM)
   const handlerOpen = (type: number) => {
-    const isPremium = storeBackground[type]?.is_premium ?? true
+    const premium = storeBackground[type]?.is_premium ?? true
 
-    if (isPremium !== user.premium) return
+    if (premium && !isPremium(user.premium)) return
     pushPage({ pageId: pages.BACKGROUND_EDIT, params: { backgroundId: type } })
   }
+
+  const userPremium = createMemo(() => isPremium(user.premium))
 
   return (
     <Group>
@@ -76,42 +86,40 @@ const Content: Component<Content> = (props) => {
             {(chunk, chunkIndex) => (
               <Gap data-index={chunkIndex()} count={"6px"}>
                 <For each={chunk}>
-                  {(background, index) => {
-                    return (
-                      <Background.Preview
-                        onClick={() => handlerOpen(background.value)}
-                        data-index={index()}
-                        selected={background.value === settings.backgroundId}
-                      >
-                        <Background
-                          color={"#3F3F3F"}
-                          type={background.value}
-                          quality={0.5}
-                          onContext={(context) => {
-                            if (background.is_premium !== user.premium) {
-                              context.fillStyle = "rgba(0,0,0,0.6)"
-                              context.fillRect(
-                                0,
-                                0,
-                                window.innerWidth,
-                                window.innerHeight,
-                              )
-                            }
-                          }}
-                        />
+                  {(background, index) => (
+                    <Background.Preview
+                      onClick={() => handlerOpen(background.value)}
+                      data-index={index()}
+                      selected={background.value === settings.backgroundId}
+                    >
+                      <Background
+                        color={"#3F3F3F"}
+                        type={background.value}
+                        quality={0.5}
+                        onContext={(context) => {
+                          if (background.is_premium && !userPremium()) {
+                            context.fillStyle = "rgba(0,0,0,0.6)"
+                            context.fillRect(
+                              0,
+                              0,
+                              window.innerWidth,
+                              window.innerHeight,
+                            )
+                          }
+                        }}
+                      />
 
-                        <Show when={background.is_premium !== user.premium}>
-                          <Background.Overlay>
-                            <Flex height={"100%"}>
-                              <SubTitle align={"center"}>
-                                Только по <Link>подписке</Link>
-                              </SubTitle>
-                            </Flex>
-                          </Background.Overlay>
-                        </Show>
-                      </Background.Preview>
-                    )
-                  }}
+                      <Show when={background.is_premium && !userPremium()}>
+                        <Background.Overlay>
+                          <Flex height={"100%"}>
+                            <SubTitle align={"center"}>
+                              Только по <Link>подписке</Link>
+                            </SubTitle>
+                          </Flex>
+                        </Background.Overlay>
+                      </Show>
+                    </Background.Preview>
+                  )}
                 </For>
               </Gap>
             )}

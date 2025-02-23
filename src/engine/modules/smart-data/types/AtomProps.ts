@@ -5,7 +5,7 @@ export interface AtomProps<VALUE, OPTIONS, KEY> {
   /**
    * Функция, вызываемая для генерации ключа
    */
-  onKey?: (options: OPTIONS) => string
+  onKey?: (options: OPTIONS) => string | undefined
   /**
    * Функция, вызываемая при запросе новых данных. Используется для запуска процесса получения данных.
    */

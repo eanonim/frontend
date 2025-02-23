@@ -207,6 +207,10 @@ export type Socket = {
       second_user: number
       /* CUSTOM */
       typing?: boolean
+      message?: string
+      message_time?: Date
+      readed?: boolean
+      show?: boolean
     }[]
   }
   "chat.search": {
@@ -351,7 +355,7 @@ export type Socket = {
       emoji: number
       first_name: string
       last_name: string
-      premium: boolean
+      premium: Date
     }
   }
 }

@@ -67,6 +67,7 @@ const Group: ComponentGroup = (props) => {
     <div
       class={style.Group}
       classList={{
+        _visibleScroll: true,
         [`${local.class}`]: !!local.class,
         ...local.classList,
       }}

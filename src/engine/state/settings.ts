@@ -47,6 +47,10 @@ export const SETTINGS_ATOM = atom<
         const { error } = await storeSet({ key: key, value: value })
         if (error) {
           status = false
+
+          if (key === "themeColor") {
+            document.documentElement.setAttribute("theme-color", prev[key])
+          }
         }
       }
     }
@@ -62,6 +66,8 @@ export const setThemeColor = (
   if (set) {
     setter(SETTINGS_ATOM, "themeColor", themeColor)
   }
+
+  document.documentElement.setAttribute("theme-color", themeColor)
 
   if (themeColor === "standard") {
     bridgeRequestTheme()

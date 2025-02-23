@@ -1,3 +1,4 @@
+import { createStore, produce } from "solid-js/store"
 import { type Key, type AtomReturn, type System } from "../types"
 import getDefault from "../utils/getDefault"
 import { batch } from "solid-js"
@@ -18,7 +19,7 @@ const setterStatus = <VALUE, OPTIONS, KEY>(
     batch(() => {
       const [getter, setter] = signal
 
-      const cache = getter.cache[key]
+      let cache = getter.cache[key]
 
       const system = {
         error: params.error ?? !!cache?.system?.error ?? false,
@@ -27,16 +28,33 @@ const setterStatus = <VALUE, OPTIONS, KEY>(
       }
 
       if (!cache) {
-        setter("cache", key, {
-          data: getDefault(getter.default),
-          system: system,
-          update_at: new Date(),
-        })
+        setter(
+          "cache",
+          produce((cache) => {
+            const [getterData, setterData] = createStore<any>(
+              getDefault(getter.default),
+            )
+            cache[key] = {
+              data: [getterData, setterData],
+              system: system,
+              update_at: new Date(),
+            }
+            return cache
+          }),
+        )
+        return
       } else {
         setter("cache", key, "system", system)
       }
 
-      setter("requests", key, params.load ? "start" : "end")
+      setter(
+        "requests",
+        produce((requests) => {
+          requests[key] = params.load ? "start" : "end"
+
+          return requests
+        }),
+      )
     })
   }
 }

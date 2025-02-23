@@ -24,19 +24,6 @@ const Footer: Component<Footer> = (props) => {
       }
     }
 
-    console.log({
-      f: {
-        language: "en",
-        your_start: searchOptions.companion.age.from,
-        your_end: searchOptions.companion.age.to,
-        your_sex: getMaleOfNumber(searchOptions.companion.male),
-        my_age: searchOptions.you.age.from,
-        my_sex: getMaleOfNumber(searchOptions.you.male),
-        music: true,
-        ...interests,
-      },
-    })
-
     const { response, error } = await chatSearch({
       language: "en",
       your_start: searchOptions.companion.age.from,

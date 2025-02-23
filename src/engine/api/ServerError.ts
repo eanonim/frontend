@@ -5,6 +5,7 @@ import {
   STORE_THEME_COLOR_ATOM,
   USER_ATOM,
 } from "engine/state"
+import { isPremium } from "engine"
 
 const checkErrors = (
   errors: (SocketError | undefined)[],
@@ -31,7 +32,9 @@ const ServerError = {
 
     const option = options[value]
 
-    return checkErrors([Error1002(user?.premium, option?.is_premium)])
+    return checkErrors([
+      Error1002(isPremium(user?.premium), option?.is_premium),
+    ])
   },
   isThemeColor: (value: Socket["store.list"]["response"]["themeColor"]) => {
     const user = getter(USER_ATOM)
@@ -39,7 +42,9 @@ const ServerError = {
 
     const option = options[value]
 
-    return checkErrors([Error1002(user?.premium, option?.is_premium)])
+    return checkErrors([
+      Error1002(isPremium(user?.premium), option?.is_premium),
+    ])
   },
 }
 

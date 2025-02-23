@@ -29,6 +29,7 @@ const pushPage = <P extends Params>({
     return false
   }
 
+  setParams({ pageId, params })
   const lastView = getter(VIEW_ATOM)
 
   const { viewId, panelId } = {
@@ -85,8 +86,6 @@ const pushPage = <P extends Params>({
     value[page.viewId] = panelId
     return Object.assign({ ...value })
   })
-
-  setParams({ pageId, params })
 
   setter(VIEW_ATOM, page.viewId)
   setter(PANEL_ATOM, page.panels[pageId])

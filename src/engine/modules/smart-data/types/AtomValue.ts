@@ -24,7 +24,7 @@ export type AtomValue<VALUE extends unknown, OPTIONS, KEY> = {
   /**
    * Кеш для хранения полученных данных.
    */
-  cache: { [key in string]: SmartData<VALUE> }
+  cache: { [key in string]: SmartData<VALUE> } //
   /**
    * Кеш для обновления данных в onUpdate
    */

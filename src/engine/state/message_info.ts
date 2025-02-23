@@ -135,7 +135,6 @@ export const MESSAGE_INFO_ATOM = atom<
       offset: 0,
       count: messageListCountStart,
     })
-    console.log("onRequested", key, options)
   },
   updateIntervalMs: 600_000,
 })

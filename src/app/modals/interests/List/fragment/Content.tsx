@@ -1,4 +1,5 @@
 import { Background, Flex, Link, SubTitle, Tag, Title } from "components"
+import { isPremium } from "engine"
 import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { getDefault, getter, useAtom } from "engine/modules/smart-data"
@@ -78,7 +79,7 @@ const Content: Component<Content> = (props) => {
           )}
         </For>
 
-        <Show when={!user.premium} fallback={PremiumTags()}>
+        <Show when={!isPremium(user.premium)} fallback={PremiumTags()}>
           <span style={{ position: "relative" }}>
             <Tag.Group
               padding={false}

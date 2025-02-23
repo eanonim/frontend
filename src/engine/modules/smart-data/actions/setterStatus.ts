@@ -42,7 +42,6 @@ const setterStatus = <VALUE, OPTIONS, KEY>(
             return cache
           }),
         )
-        return
       } else {
         setter("cache", key, "system", system)
       }

@@ -7,6 +7,9 @@ const timeAgoOnlyDate = (timestamp: number) => {
   if (!timestamp) return "только что"
   const date = new Date(timestamp)
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
+
+  console.log({ seconds })
+
   const dayMonthString = (year: boolean = false) =>
     new Intl.DateTimeFormat(ISOLanguage[lang], {
       day: "numeric",

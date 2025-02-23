@@ -121,89 +121,94 @@ const Content: Component<Content> = (props) => {
         >
           <For each={messageInfo.dialogs}>
             {([time, messages], index) => (
-              <Message.Group.List data-index={index()}>
-                <Message.System key={index()}>
-                  {timeAgoOnlyDate(new Date(time)?.getTime())}
-                </Message.System>
-                <InfiniteScroll
-                  next={async () => {
-                    await messageList({
-                      dialog: params().dialog,
-                      offset: messageInfo.last_offset + messageListCount,
-                      count: messageListCount,
-                    })
-                    return true
-                  }}
-                  hasMore={
-                    index() === messageInfo.dialogs.length - 1
-                      ? !!!messageInfoSystem.fullLoad
-                      : false
-                  }
-                  each={messages}
-                >
-                  {(message, index) => (
-                    <Show when={message && !message.deleted}>
-                      <Message
-                        data-index={index()}
-                        data-message_id={message.id}
-                        onTouchStart={() =>
-                          !message.loading &&
-                          handlerContextMenu("start", message.id)
-                        }
-                        onTouchEnd={(e) => {
-                          if (isOpenModal) {
-                            e.preventDefault()
+              <Show when={messages.length}>
+                <Message.Group.List data-index={index()}>
+                  <Message.System key={index()}>
+                    {timeAgoOnlyDate(new Date(time)?.getTime())}
+                  </Message.System>
+                  <InfiniteScroll
+                    next={async () => {
+                      await messageList({
+                        dialog: params().dialog,
+                        offset: messageInfo.last_offset + messageListCount,
+                        count: messageListCount,
+                      })
+                      return true
+                    }}
+                    hasMore={
+                      index() === messageInfo.dialogs.length - 1
+                        ? !!!messageInfoSystem.fullLoad
+                        : false
+                    }
+                    each={messages}
+                  >
+                    {(message, index) => (
+                      <Show when={message && !message.deleted}>
+                        <Message
+                          data-index={index()}
+                          data-message_id={message.id}
+                          onTouchStart={() =>
+                            !message.loading &&
+                            handlerContextMenu("start", message.id)
                           }
-                          handlerContextMenu("end", message.id)
-                        }}
-                        onTouchMove={() =>
-                          handlerContextMenu("end", message.id)
-                        }
-                        onMouseMove={() =>
-                          handlerContextMenu("end", message.id)
-                        }
-                        onMouseDown={() =>
-                          !message.loading &&
-                          handlerContextMenu("start", message.id)
-                        }
-                        onMouseUp={() => handlerContextMenu("end", message.id)}
-                        onContextMenu={() =>
-                          handlerContextMenu("any", message.id)
-                        }
-                        forward={message.reply}
-                        type={message.author === user.id ? "out" : "in"}
-                        text={message.message}
-                        time={message.time}
-                        isRead={
-                          message.id <= (messageInfo.last_read_message_id || 0)
-                        }
-                        isNotRead={
-                          !(
+                          onTouchEnd={(e) => {
+                            if (isOpenModal) {
+                              e.preventDefault()
+                            }
+                            handlerContextMenu("end", message.id)
+                          }}
+                          onTouchMove={() =>
+                            handlerContextMenu("end", message.id)
+                          }
+                          onMouseMove={() =>
+                            handlerContextMenu("end", message.id)
+                          }
+                          onMouseDown={() =>
+                            !message.loading &&
+                            handlerContextMenu("start", message.id)
+                          }
+                          onMouseUp={() =>
+                            handlerContextMenu("end", message.id)
+                          }
+                          onContextMenu={() =>
+                            handlerContextMenu("any", message.id)
+                          }
+                          forward={message.reply}
+                          type={message.author === user.id ? "out" : "in"}
+                          text={message.message}
+                          time={message.time}
+                          isRead={
                             message.id <=
                             (messageInfo.last_read_message_id || 0)
-                          )
-                        }
-                        isLoading={message.loading}
-                        isEdit={message.edit}
-                        onRead={() => {
-                          if (
-                            user.id !== message.author &&
+                          }
+                          isNotRead={
                             !(
                               message.id <=
                               (messageInfo.last_read_message_id || 0)
                             )
-                          ) {
-                            messageRead({
-                              dialog: params().dialog,
-                              message_id: message.id,
-                            })
                           }
-                        }}
-                      />
-                    </Show>
-                  )}
-                </InfiniteScroll>
-              </Message.Group.List>
+                          isLoading={message.loading}
+                          isEdit={message.edit}
+                          onRead={() => {
+                            if (
+                              user.id !== message.author &&
+                              !(
+                                message.id <=
+                                (messageInfo.last_read_message_id || 0)
+                              )
+                            ) {
+                              messageRead({
+                                dialog: params().dialog,
+                                message_id: message.id,
+                              })
+                            }
+                          }}
+                        />
+                      </Show>
+                    )}
+                  </InfiniteScroll>
+                </Message.Group.List>
+              </Show>
             )}
           </For>
         </Message.Group>

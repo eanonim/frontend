@@ -369,7 +369,6 @@ function setter<VALUE, OPTIONS, KEY>(
           const status = await onUpdate({ prev, next }, key as KEY)
           if (status === false) {
             setterData(prev)
-            return
           }
         }
 

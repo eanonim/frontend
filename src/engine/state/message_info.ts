@@ -50,6 +50,14 @@ export const addMessage = (
 
   const countEmpty = 20 // Количество пустых ячеек
 
+  // добавляем группу сообщения за сегодняшний день
+  const fullTimeToday = getFullDate(new Date())
+  dialogIndex = messages.dialogs.findIndex((x) => x[0] === fullTimeToday)
+  if (dialogIndex === -1) {
+    dialogIndex = messages.dialogs.length
+    messages.dialogs.push([fullTimeToday, []])
+  }
+
   // Забиваем Array, для следующих сообщений, что бы Index`ы работали нормально
   dialogIndex = messages.dialogs.findIndex((x) => x[0] === fullTime)
   if (dialogIndex === -1) {
@@ -60,9 +68,13 @@ export const addMessage = (
     ])
   }
 
-  const dialog = messages.dialogs[dialogIndex][0]
+  let groupMessages = messages.dialogs[dialogIndex][1]
 
-  const groupMessages = messages.dialogs[dialogIndex][1]
+  if (groupMessages.length === 0) {
+    for (let i = 0; i < countEmpty; i++) {
+      messages.dialogs[dialogIndex][1][i] = []
+    }
+  }
 
   if (dialogIndex !== -1) {
     if (typePush === "push") {
@@ -87,6 +99,7 @@ export const addMessage = (
         (x, index) =>
           index < countEmpty && x.filter(Boolean).length < groupMessagesCount,
       )
+
       if (groupMessagesIndex === -1) {
         groupMessagesIndex = 0
       }
@@ -96,6 +109,7 @@ export const addMessage = (
       if (!!groupMessages[groupMessagesIndex][messageIndex]) {
         messageIndex += 1
       }
+
       groupMessages[groupMessagesIndex][messageIndex] = message
     }
   }
@@ -132,7 +146,6 @@ export const MESSAGE_INFO_ATOM = atom<
   //   console.log("onUpdate", key, { prev, next })
   // },
   onRequested: (options, key) => {
-    console.log("onRequested", "MESSAGE_INFO_ATOM")
     messageList({
       dialog: options.dialog,
       offset: 0,

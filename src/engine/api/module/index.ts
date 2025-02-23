@@ -6,6 +6,7 @@ import { setter, getter as getterSmart } from "engine/modules/smart-data"
 import {
   addMessage,
   AUTH_TOKEN_ATOM,
+  CHAT_LIST_ATOM,
   MESSAGE_INFO_ATOM,
   setTyping,
 } from "engine/state"
@@ -96,7 +97,7 @@ export type Socket = {
       author: number
       message?: string
       attach?: {
-        type: string
+        type: "photo" | "audio"
         items: Array<{
           name: string
           data: string
@@ -163,7 +164,7 @@ export type Socket = {
       message: {
         message?: string
         attach?: {
-          type: string
+          type: "photo" | "audio"
           items: Array<{
             name: string
             data: string
@@ -183,7 +184,7 @@ export type Socket = {
         author: number
         message?: string
         attach?: {
-          type: string
+          type: "photo" | "audio"
           items: Array<{
             name: string
             data: string
@@ -208,7 +209,9 @@ export type Socket = {
       /* CUSTOM */
       typing?: boolean
       message?: string
+      message_id?: number
       message_time?: Date
+      message_attack_type?: "photo" | "audio"
       readed?: boolean
       show?: boolean
     }[]
@@ -394,13 +397,33 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     if (event === "message.send") {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
+        const message = data.response.message
         const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
-        if (messageInfo.dialogs.length) {
+        if (messageInfo.history.size !== 0) {
           setter(
             [MESSAGE_INFO_ATOM, data.response.dialog],
             produce((messages) => {
-              addMessage(messages, data.response.message)
+              addMessage(messages, message)
               return messages
+            }),
+          )
+        }
+
+        const chatList = getterSmart(CHAT_LIST_ATOM)
+        if (!!chatList.history[dialog]) {
+          setter(
+            CHAT_LIST_ATOM,
+            produce((chats) => {
+              const chat = chats.history[dialog]
+              if (chat) {
+                chat.message = message.message
+                chat.message_id = message.id
+                chat.message_attack_type = message.attach?.type
+                chat.message_time = message.time
+                chat.readed = message.readed
+                chat.typing = false
+              }
+              return chats
             }),
           )
         }
@@ -411,7 +434,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
         const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
-        if (messageInfo.dialogs.length) {
+        if (messageInfo.history.size !== 0) {
           setter(
             [MESSAGE_INFO_ATOM, data.response.dialog],
             produce((messages) => {
@@ -442,17 +465,67 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             }),
           )
         }
+
+        const message = messageInfo.history.get(data.response.message_id)
+        if (message) {
+          const chatList = getterSmart(CHAT_LIST_ATOM)
+          if (!!chatList.history[dialog]) {
+            setter(
+              CHAT_LIST_ATOM,
+              produce((chats) => {
+                const chat = chats.history[dialog]
+                if (chat && chat.message_id === message.id) {
+                  for (let i = message.id; i > 0; i--) {
+                    const _message = messageInfo.history.get(i)
+                    if (_message) {
+                      chat.message = message.message
+                      chat.message_id = message.id
+                      chat.message_attack_type = message.attach?.type
+                      chat.message_time = message.time
+                      chat.readed = message.readed
+                      break
+                    }
+                    if (i === 0) {
+                      chat.message = undefined
+                      chat.message_id = undefined
+                      chat.message_attack_type = undefined
+                      chat.message_time = undefined
+                      chat.readed = undefined
+                    }
+                  }
+                }
+                return chats
+              }),
+            )
+          }
+        }
       }
     }
 
     if (event === "message.read") {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
-        setter(
-          [MESSAGE_INFO_ATOM, data.response.dialog],
-          "last_read_message_id",
-          data.response.message_id,
-        )
+        const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
+        if (messageInfo.history.size !== 0) {
+          setter(
+            [MESSAGE_INFO_ATOM, data.response.dialog],
+            "last_read_message_id",
+            data.response.message_id,
+          )
+        }
+        const chatList = getterSmart(CHAT_LIST_ATOM)
+        if (!!chatList.history[dialog]) {
+          setter(
+            CHAT_LIST_ATOM,
+            produce((chats) => {
+              const chat = chats.history[dialog]
+              if (chat && chat.message_id === data.response.message_id) {
+                chat.readed = true
+              }
+              return chats
+            }),
+          )
+        }
       }
     }
 

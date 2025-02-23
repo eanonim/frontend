@@ -193,10 +193,10 @@ const Content: Component<Content> = (props) => {
                               (messageInfo.last_read_message_id || 0)
                             )
                           ) {
-                            // messageRead({
-                            //   dialog: params().dialog,
-                            //   message_id: message.id,
-                            // })
+                            messageRead({
+                              dialog: params().dialog,
+                              message_id: message.id,
+                            })
                           }
                         }}
                       />

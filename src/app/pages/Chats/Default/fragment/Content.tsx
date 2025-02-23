@@ -12,11 +12,11 @@ import {
 } from "components"
 
 import { type JSX, type Component, For, Show, createMemo } from "solid-js"
-import { timeAgo } from "@minsize/utils"
 import { pages, pushPage } from "router"
 import { useAtom } from "engine/modules/smart-data"
 import { CHAT_LIST_ATOM } from "engine/state"
 import loc from "engine/languages"
+import { timeAgo } from "engine"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -30,6 +30,21 @@ const textProps: TextProps = {
   macOS: "iOS",
   windows: "iOS",
   others: "iOS",
+}
+
+const getStyle = (type: "first" | "last", typing: boolean) => {
+  if (type === "first") {
+    return {
+      transform: typing ? "translateY(-100%)" : "translateY(0%)",
+      "-webkit-transform": typing ? "translateY(-100%)" : "translateY(0%)",
+      transition: "0.3s",
+    }
+  }
+  return {
+    transform: typing ? "translateY(0%)" : "translateY(100%)",
+    "-webkit-transform": typing ? "translateY(0%)" : "translateY(100%)",
+    transition: "0.3s",
+  }
 }
 
 const Content: Component<Content> = (props) => {
@@ -74,9 +89,14 @@ const Content: Component<Content> = (props) => {
                         icon={"chat.icon"}
                       />
                     </Title>
-                    {/* <SubTitle {...textProps} nowrap>
-                      {timeAgo(chat.last_message.time.getTime())}
-                    </SubTitle> */}
+
+                    <Show keyed when={chat.message_time}>
+                      {(time) => (
+                        <SubTitle {...textProps} nowrap>
+                          {timeAgo(time.getTime())}
+                        </SubTitle>
+                      )}
+                    </Show>
                   </Gap>
 
                   <Gap justifyContent={"space-between"} count={"6px"}>
@@ -86,51 +106,34 @@ const Content: Component<Content> = (props) => {
                       alignItems={"start"}
                       style={{
                         overflow: "hidden",
+                        "min-height": "var(--font_height--small)",
                       }}
                     >
                       <SubTitle
-                        style={{
-                          transform: chat.typing
-                            ? "translateY(-100%)"
-                            : "translateY(0%)",
-                          "-webkit-transform": chat.typing
-                            ? "translateY(-100%)"
-                            : "translateY(0%)",
-                          transition: "0.3s",
-                        }}
+                        style={getStyle("first", !!chat.typing)}
                         nowrap
                         overflow
                       >
-                        сообщение
+                        {chat.message || chat.message_attack_type}
                       </SubTitle>
 
                       <SubTitle
                         style={{
                           position: "absolute",
-                          transform: !chat.typing
-                            ? "translateY(100%)"
-                            : "translateY(0%)",
-                          "-webkit-transform": !chat.typing
-                            ? "translateY(100%)"
-                            : "translateY(0%)",
-                          transition: "0.3s",
+                          ...getStyle("last", !!chat.typing),
                         }}
                       >
                         <Message.Typing text={lang("prints") || "prints"} />
                       </SubTitle>
                     </Flex>
 
-                    {/* <Message.Badge
-                          isNew={
-                            chat.id === chat.last_message.id &&
-                            !chat.last_message.check
-                          }
-                          isRead={chat.last_message.check}
-                          isNotRead={
-                            chat.id !== chat.last_message.id &&
-                            !chat.last_message.check
-                          }
-                        /> */}
+                    <Show when={chat.message || chat.message_attack_type}>
+                      <Message.Badge
+                        isNew={false}
+                        isRead={chat.readed}
+                        isNotRead={!chat.readed}
+                      />
+                    </Show>
                   </Gap>
                 </Cell.Content>
               </Cell.Container>

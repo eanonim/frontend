@@ -60,6 +60,8 @@ export const addMessage = (
     ])
   }
 
+  const dialog = messages.dialogs[dialogIndex][0]
+
   const groupMessages = messages.dialogs[dialogIndex][1]
 
   if (dialogIndex !== -1) {
@@ -130,6 +132,7 @@ export const MESSAGE_INFO_ATOM = atom<
   //   console.log("onUpdate", key, { prev, next })
   // },
   onRequested: (options, key) => {
+    console.log("onRequested", "MESSAGE_INFO_ATOM")
     messageList({
       dialog: options.dialog,
       offset: 0,
@@ -143,7 +146,7 @@ let timer: Record<string, NodeJS.Timeout> = {}
 
 export const setTyping = (dialog: string) => {
   const messageInfo = getter(MESSAGE_INFO_ATOM, dialog)
-  if (messageInfo.dialogs.length) {
+  if (messageInfo.history.size !== 0) {
     setter(
       [MESSAGE_INFO_ATOM, dialog],
       "message",

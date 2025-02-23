@@ -1,6 +1,7 @@
 import { type Platform, type HTMLAttributes, type TextObject } from "@ui/Types"
 
-export interface TextProps extends HTMLAttributes<HTMLSpanElement> {
+export interface TextProps
+  extends Omit<HTMLAttributes<HTMLSpanElement>, "color"> {
   iOS?: TextObject | Omit<Platform, "iOS">
   android?: TextObject | Omit<Platform, "android">
   macOS?: TextObject | Omit<Platform, "macOS">

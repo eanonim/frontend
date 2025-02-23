@@ -1,6 +1,6 @@
 .Message {
   position  : relative;
-  padding   : 4px;
+  padding   : 2px 4px;
   box-sizing: border-box;
 }
 
@@ -145,9 +145,9 @@
 
 
 /* out */
-.Message--out+.Message--out {
+/* .Message--out+.Message--out {
   padding-top: 1px;
-}
+} */
 
 /* .Message--out+.Message--out:has(+.Message--out) .Message__end,
 .Message--out:not(.Message--out + .Message--out):has(+ .Message--out) .Message__end {
@@ -171,9 +171,9 @@
 
 
 /* in */
-.Message--in+.Message--in {
+/* .Message--in+.Message--in {
   padding-top: 1px;
-}
+} */
 
 /* .Message--in:not(.Message--in + .Message--in):has(+ .Message--in) .Message__end,
 .Message--in+.Message--in:has(+.Message--in) .Message__end {

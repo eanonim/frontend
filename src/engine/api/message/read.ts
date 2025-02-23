@@ -16,11 +16,13 @@ const messageRead = async (options: Socket["message.read"]["request"]) => {
       produce((messages) => {
         const message = messages.history.get(options.message_id)
         if (message) {
+          const [dialogIndex, groupMessagesIndex, messageIndex] =
+            message.indexes
           if (
-            messages.dialogs[message.dialog_index][1][message.message_index]
+            messages.dialogs[dialogIndex][1][groupMessagesIndex][messageIndex]
           ) {
-            messages.dialogs[message.dialog_index][1][
-              message.message_index
+            messages.dialogs[dialogIndex][1][groupMessagesIndex][
+              messageIndex
             ].readed = true
           }
         }

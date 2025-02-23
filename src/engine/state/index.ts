@@ -16,4 +16,4 @@ export {
 } from "./options"
 export { SEARCH_OPTIONS_ATOM } from "./search_options"
 export { CHAT_LIST_ATOM } from "./chat_list"
-export { MESSAGE_INFO_ATOM, setTyping } from "./message_info"
+export { MESSAGE_INFO_ATOM, setTyping, addMessage } from "./message_info"

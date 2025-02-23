@@ -12,4 +12,7 @@
 
   padding   : 10px 4px;
   box-sizing: border-box;
+
+  display       : flex;
+  flex-direction: column-reverse;
 }

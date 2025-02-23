@@ -1,22 +1,13 @@
-import { unlink } from "@minsize/utils"
-import { Background, Flex, Message } from "components"
-import { groupObjectsByDay, timeAgoOnlyDate } from "engine"
-import { messageRead } from "engine/api"
-import { useAtom } from "engine/modules/smart-data"
+import { chunks, sleep, unlink } from "@minsize/utils"
+import { Background, Flex, InfiniteScroll, Message } from "components"
+import { timeAgoOnlyDate } from "engine"
+import { messageList, messageRead } from "engine/api"
+import { useAtom, useAtomSystem } from "engine/modules/smart-data"
 import { SETTINGS_ATOM, USER_ATOM } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { modals, pages, pushModal, useParams } from "router"
 
-import {
-  type JSX,
-  type Component,
-  onMount,
-  For,
-  createMemo,
-  Show,
-  createEffect,
-  on,
-} from "solid-js"
+import { type JSX, type Component, For, Show, createEffect, on } from "solid-js"
 import { createStore } from "solid-js/store"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
@@ -28,6 +19,9 @@ const Content: Component<Content> = (props) => {
   const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
     dialog: params().dialog,
   }))
+  const [messageInfoSystem] = useAtomSystem(MESSAGE_INFO_ATOM, {
+    key: () => params().dialog,
+  })
 
   const [store, setStore] = createStore({
     isBottom: true,
@@ -35,39 +29,37 @@ const Content: Component<Content> = (props) => {
 
   let timer: NodeJS.Timeout
   let ref: HTMLDivElement
-  onMount(() => {
-    if (ref!) {
-      ref.onsecuritypolicyviolation
-      ref.scrollTop = ref.scrollHeight
-    }
-  })
 
   createEffect(
     on(
-      () => messageInfo.dialogs,
-      (value) => {
-        console.log({ messageInfo: unlink(messageInfo) })
-      },
-    ),
-  )
-
-  createEffect(
-    on(
-      () => messageInfo.dialogs?.[messageInfo.dialogs.length - 1]?.[1]?.length,
+      () =>
+        messageInfo.dialogs?.[messageInfo.dialogs.length - 1]?.[1]?.[
+          messageInfo.dialogs?.[messageInfo.dialogs.length - 1]?.[1].length - 1
+        ]?.length,
       (next, prev) => {
-        console.log({ bottom: store.isBottom })
         if (next !== prev && store.isBottom && ref!) {
-          ref.scrollTop = ref.scrollHeight
+          let isSmooth = next - 1 === prev || next + 1 === prev
+
+          setTimeout(() => {
+            ref.scrollTo({
+              top: ref.scrollHeight * 2,
+              behavior: isSmooth ? "smooth" : "instant",
+            })
+          }, 0)
         }
       },
     ),
   )
 
+  let isOpenModal = false
+
   const handlerContextMenu = (
     type: "start" | "end" | "any",
     message_id: number,
   ) => {
-    const fn = () =>
+    isOpenModal = false
+    const fn = () => {
+      isOpenModal = true
       pushModal({
         modalId: modals.MESSAGE_CONTROL,
         params: {
@@ -75,6 +67,7 @@ const Content: Component<Content> = (props) => {
           message_id: message_id,
         },
       })
+    }
     if (type === "start") {
       timer = setTimeout(fn, 500)
     } else if (type === "end") {
@@ -114,22 +107,40 @@ const Content: Component<Content> = (props) => {
           }}
         >
           <For each={messageInfo.dialogs}>
-            {([_, messages], index) => (
+            {([time, messages], index) => (
               <Message.Group.List data-index={index()}>
                 <Message.System key={index()}>
-                  {/* {timeAgoOnlyDate(new Date(messages[1].size)?.getTime())} */}
-                  test
+                  {timeAgoOnlyDate(new Date(time)?.getTime())}
                 </Message.System>
-                <For each={messages}>
+                <InfiniteScroll
+                  next={async () => {
+                    await messageList({
+                      dialog: params().dialog,
+                      offset: messageInfo.last_offset + 100,
+                      count: 100,
+                    })
+                    return false
+                  }}
+                  hasMore={
+                    index() === 0 ? !!!messageInfoSystem.fullLoad : false
+                  }
+                  each={messages}
+                >
                   {(message, index) => (
-                    <Show when={!message.deleted}>
+                    <Show when={message && !message.deleted}>
                       <Message
                         data-index={index()}
+                        data-message_id={message.id}
                         onTouchStart={() =>
                           !message.loading &&
                           handlerContextMenu("start", message.id)
                         }
-                        onTouchEnd={() => handlerContextMenu("end", message.id)}
+                        onTouchEnd={(e) => {
+                          if (isOpenModal) {
+                            e.preventDefault()
+                          }
+                          handlerContextMenu("end", message.id)
+                        }}
                         onTouchMove={() =>
                           handlerContextMenu("end", message.id)
                         }
@@ -177,7 +188,7 @@ const Content: Component<Content> = (props) => {
                       />
                     </Show>
                   )}
-                </For>
+                </InfiniteScroll>
               </Message.Group.List>
             )}
           </For>

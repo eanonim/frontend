@@ -9,6 +9,8 @@ import { backPage, modals, useParams } from "router"
 import { routerParams } from "router/routerStruct"
 
 import { type JSX, type Component, Show } from "solid-js"
+import { produce } from "solid-js/store"
+import { DynamicProps } from "solid-js/web"
 import { IconCopy, IconEdit, IconShare3, IconTrash } from "source"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
@@ -25,7 +27,10 @@ const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const [user] = useAtom(USER_ATOM)
 
-  const handlerCopy = () => {
+  const handlerCopy: JSX.EventHandler<DynamicProps<"article">, MouseEvent> = (
+    event,
+  ) => {
+    event.preventDefault()
     const message = messageInfo.history.get(params().message_id)
     if (message) {
       copyText(message.message)
@@ -33,27 +38,44 @@ const Content: Component<Content> = (props) => {
     }
   }
 
-  const handlerDelete = () => {
+  const handlerDelete: JSX.EventHandler<DynamicProps<"article">, MouseEvent> = (
+    event,
+  ) => {
+    event.preventDefault()
     messageDelete({ dialog: params().dialog, message_id: params().message_id })
     backPage()
   }
 
-  const handlerReply = () => {
-    setter([MESSAGE_INFO_ATOM, params().dialog], "message", (message) => {
-      message.reply_id = params().message_id
-      message.edit_id = undefined
+  const handlerReply: JSX.EventHandler<DynamicProps<"article">, MouseEvent> = (
+    event,
+  ) => {
+    event.preventDefault()
+    setter(
+      [MESSAGE_INFO_ATOM, params().dialog],
+      "message",
+      produce((message) => {
+        message.reply_id = params().message_id
+        message.edit_id = undefined
 
-      return message
-    })
+        return message
+      }),
+    )
     backPage()
   }
-  const handlerEdit = () => {
-    setter([MESSAGE_INFO_ATOM, params().dialog], "message", (message) => {
-      message.reply_id = undefined
-      message.edit_id = params().message_id
+  const handlerEdit: JSX.EventHandler<DynamicProps<"article">, MouseEvent> = (
+    event,
+  ) => {
+    event.preventDefault()
+    setter(
+      [MESSAGE_INFO_ATOM, params().dialog],
+      "message",
+      produce((message) => {
+        message.reply_id = undefined
+        message.edit_id = params().message_id
 
-      return message
-    })
+        return message
+      }),
+    )
     backPage()
   }
 

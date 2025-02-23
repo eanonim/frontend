@@ -344,14 +344,15 @@ function setter<VALUE, OPTIONS, KEY>(
           update_at: update_at,
         })
       }
-
-      const prev = unlink(getter?.cache?.[key]?.data)
-      // setter("cachePrev", key, "data", prev)
-      ;(setter as any)(...["cachePrev", key, "data"], ...args)
-      const next = getter?.cachePrev?.[key]?.data
-
       const onUpdate = getter.onUpdate
+
+      const prev = !!onUpdate && unlink(getter?.cache?.[key]?.data)
+      // setter("cachePrev", key, "data", prev)
+      ;(setter as any)(...["cache", key, "data"], ...args)
+      const next = getter?.cache?.[key]?.data
+
       if (
+        prev &&
         onUpdate &&
         !comparison(prev, next) &&
         getter.requests[key] === "end"
@@ -371,19 +372,19 @@ function setter<VALUE, OPTIONS, KEY>(
           return
         }
       }
-      setter(
-        "cache",
-        key,
-        produce((cache) => {
-          cache.data = next
-          cache.update_at = update_at
-          return cache
-        }),
-      )
+      // setter(
+      //   "cache",
+      //   key,
+      //   produce((cache) => {
+      //     cache.data = next
+      //     cache.update_at = update_at
+      //     return cache
+      //   }),
+      // )
 
       // ;(setter as any)(...["cache", key, "data"], ...args)
       // setter("cache", key, "data", next)
-      // setter("cache", key, "update_at", update_at)
+      setter("cache", key, "update_at", update_at)
       setterStatus([signal, key], { load: false })
     })
   }

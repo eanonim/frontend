@@ -19,30 +19,31 @@ export const useAtomSystem = <VALUE, OPTIONS, KEY extends string>(
   const [storeCache, setStoreCache] = signal
 
   const getKey = () => {
-    return typeof local.key === "function"
-      ? String(local.key())
-      : String(local.key)
+    return typeof local.key === "function" ? local.key() : (local.key as KEY)
   }
 
-  const [cache, setCache] = createStore<{ data: System }>({
-    data: storeCache.cache[getKey()].system || {
+  const [cache, setCache] = createStore<System>(
+    storeCache.cache[getKey()]?.system || {
       error: false,
       load: false,
       fullLoad: false,
     },
-  })
+  )
 
   createEffect(
     on(
       [
         () => getter(signal, getKey()),
-        () => storeCache.cache[getKey()],
+        () => storeCache.cache[getKey()]?.system,
+        () => storeCache.cache[getKey()]?.system?.error,
+        () => storeCache.cache[getKey()]?.system?.fullLoad,
+        () => storeCache.cache[getKey()]?.system?.load,
         getKey,
       ],
       (next, prev) => {
-        const system = next?.[1]?.system
+        const system = next?.[1]
         if (system) {
-          setCache("data", system)
+          setCache(system)
         }
       },
     ),
@@ -53,7 +54,7 @@ export const useAtomSystem = <VALUE, OPTIONS, KEY extends string>(
     return setterStatus([signal, key], options)
   }
 
-  return [cache.data, _setCache]
+  return [cache, _setCache]
 }
 
 export default useAtomSystem

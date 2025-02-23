@@ -6,7 +6,7 @@ const getFullDate = (date: Date): string => {
   const year = date.getFullYear()
   const month = date.getMonth()
   const day = date.getDate()
-  return `${day}-${month}-${year}`
+  return `${year} ${month + 1} ${day}`
 }
 
 export default getFullDate

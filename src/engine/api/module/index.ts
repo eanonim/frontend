@@ -4,7 +4,12 @@ import { sleep, unlink } from "@minsize/utils"
 import { getter } from "elum-state/solid"
 import { getFullDate } from "engine"
 import { setter } from "engine/modules/smart-data"
-import { AUTH_TOKEN_ATOM, MESSAGE_INFO_ATOM, setTyping } from "engine/state"
+import {
+  addMessage,
+  AUTH_TOKEN_ATOM,
+  MESSAGE_INFO_ATOM,
+  setTyping,
+} from "engine/state"
 import { HOST } from "root/configs"
 import { pages, pushPage, replacePage } from "router"
 import { createEffect, createSignal, on } from "solid-js"
@@ -102,7 +107,7 @@ export type Socket = {
       offset: number
       count: number
     }
-    response: Array<{
+    response?: Array<{
       id: number
       author: number
       message?: string
@@ -400,28 +405,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
         setter(
           [MESSAGE_INFO_ATOM, data.response.dialog],
           produce((messages) => {
-            const message = data.response.message as {
-              dialog_index: number
-              message_index: number
-            } & Socket["message.info"]["response"][0]
-            const fullTime = getFullDate(message.time)
-
-            message.dialog_index = messages.dialogs.findIndex(
-              (x) => x[0] === fullTime,
-            )
-            if (message.dialog_index !== -1) {
-              message.message_index =
-                messages.dialogs[message.dialog_index][1].push(message)
-            } else {
-              message.dialog_index =
-                messages.dialogs.push([fullTime, [message]]) - 1
-              message.message_index = 0
-            }
-            messages.message.message = ""
-            messages.message.reply_id = undefined
-
-            messages.history.set(message.id, message)
-
+            addMessage(messages, data.response.message)
             return messages
           }),
         )

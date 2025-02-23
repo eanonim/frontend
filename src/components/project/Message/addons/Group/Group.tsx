@@ -2,7 +2,11 @@ import style from "./Group.module.css"
 import { List } from "./addons"
 
 import ContextGroup from "./context"
-import { leadingAndTrailing, debounce } from "@solid-primitives/scheduled"
+import {
+  leadingAndTrailing,
+  debounce,
+  throttle,
+} from "@solid-primitives/scheduled"
 
 import {
   type JSX,
@@ -54,7 +58,7 @@ const Group: ComponentGroup = (props) => {
   }
 
   const trigger = leadingAndTrailing(
-    debounce,
+    throttle,
     (scrollTop: number) => setStore("scrollTop", scrollTop),
     250,
   )

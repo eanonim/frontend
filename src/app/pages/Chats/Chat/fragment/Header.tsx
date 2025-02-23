@@ -25,15 +25,6 @@ const Header: Component<Header> = (props) => {
     dialog: params().dialog,
   }))
 
-  createEffect(
-    on(
-      () => messageInfo.message.typing,
-      (next) => {
-        console.log({ typing: next })
-      },
-    ),
-  )
-
   return (
     <FixedLayout
       position={"top"}

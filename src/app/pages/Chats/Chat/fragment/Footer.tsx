@@ -14,6 +14,7 @@ import { messageSend, messageTyping } from "engine/api"
 import { leading, throttle } from "@solid-primitives/scheduled"
 import { setter, useAtom } from "engine/modules/smart-data"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
+import { produce } from "solid-js/store"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -73,21 +74,29 @@ const Footer: Component<Footer> = (props) => {
   }
 
   const handlerRemoveReply = () => {
-    setter([MESSAGE_INFO_ATOM, params().dialog], "message", (message) => {
-      message.reply_id = undefined
-      message.edit_id = undefined
+    setter(
+      [MESSAGE_INFO_ATOM, params().dialog],
+      "message",
+      produce((message) => {
+        message.reply_id = undefined
+        message.edit_id = undefined
 
-      return message
-    })
+        return message
+      }),
+    )
   }
 
   const handlerRemoveEdit = () => {
-    setter([MESSAGE_INFO_ATOM, params().dialog], "message", (message) => {
-      message.reply_id = undefined
-      message.edit_id = undefined
+    setter(
+      [MESSAGE_INFO_ATOM, params().dialog],
+      "message",
+      produce((message) => {
+        message.reply_id = undefined
+        message.edit_id = undefined
 
-      return message
-    })
+        return message
+      }),
+    )
     setMessage("")
   }
 

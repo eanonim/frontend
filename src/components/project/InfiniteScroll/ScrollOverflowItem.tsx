@@ -160,6 +160,10 @@ const ScrollOverflowItem: Component<ScrollOverflowItem> = (props) => {
         class={style.ScrollOverflowItem__root}
         classList={local.lastClassList}
         ref={ref!}
+        // style={{
+        //   display: "flex",
+        //   "flex-direction": "column-reverse",
+        // }}
       >
         <Show when={store.when}>{local.children}</Show>
         <Show when={local.notLast}>

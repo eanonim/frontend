@@ -1,14 +1,14 @@
 import { getter, setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
-import { MESSAGE_INFO_ATOM, USER_ATOM } from "engine/state"
+import { addMessage, MESSAGE_INFO_ATOM, USER_ATOM } from "engine/state"
 import { produce } from "solid-js/store"
 import { getFullDate } from "engine"
 import { unlink } from "@minsize/utils"
+import { groupMessagesCount } from "root/configs"
 
 const messageSend = async (options: Socket["message.send"]["request"]) => {
   const messageId = Math.random()
-  let messageIndex = -1
-  let dialogIndex = -1
+  let [dialogIndex, groupMessagesIndex, messageIndex] = [0, 0, 0]
 
   const time = new Date()
   const fullTime = getFullDate(time)
@@ -29,24 +29,15 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
           ? { id: reply.id, message: reply.message || "UNDEFINED" }
           : undefined,
         time: new Date(),
-        message_index: messageIndex,
-        dialog_index: dialogIndex,
+        indexes: [0, 0, 0] as [number, number, number],
       }
 
-      dialogIndex = messages.dialogs.findIndex((x) => x[0] === fullTime)
-      if (dialogIndex !== -1) {
-        messageIndex = messages.dialogs[dialogIndex][1].push(message) - 1
-      } else {
-        dialogIndex = messages.dialogs.push([fullTime, [message]]) - 1
-        messageIndex = 0
-      }
+      const [_, indexes] = addMessage(messages, message)
+      ;[dialogIndex, groupMessagesIndex, messageIndex] = indexes
+
       messages.message.message = ""
       messages.message.reply_id = undefined
-
-      message.dialog_index = dialogIndex
-      message.message_index = messageIndex
-
-      messages.history.set(message.id, message)
+      messages.message.edit_id = undefined
 
       return messages
     }),
@@ -72,8 +63,18 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
 
           message = messages.history.get(response.id)
           if (message) {
-            if (messages.dialogs[dialogIndex][1][messageIndex]) {
-              messages.dialogs[dialogIndex][1][messageIndex] = message
+            if (
+              messages.dialogs[dialogIndex][1][groupMessagesIndex][messageIndex]
+            ) {
+              console.log({
+                f: messages.dialogs[dialogIndex][1][groupMessagesIndex][
+                  messageIndex
+                ],
+              })
+
+              messages.dialogs[dialogIndex][1][groupMessagesIndex][
+                messageIndex
+              ] = message
             }
           }
         }

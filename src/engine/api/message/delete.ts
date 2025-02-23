@@ -12,11 +12,13 @@ const messageDelete = async (options: Socket["message.delete"]["request"]) => {
       produce((messages) => {
         const message = unlink(messages.history.get(options.message_id))
         if (message) {
+          const [dialogIndex, groupMessagesIndex, messageIndex] =
+            message.indexes
           if (
-            messages.dialogs[message.dialog_index][1][message.message_index]
+            messages.dialogs[dialogIndex][1][groupMessagesIndex][messageIndex]
           ) {
-            messages.dialogs[message.dialog_index][1][
-              message.message_index
+            messages.dialogs[dialogIndex][1][groupMessagesIndex][
+              messageIndex
             ].deleted = status
           }
         }

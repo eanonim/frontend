@@ -1,7 +1,15 @@
 .InfiniteScroll {
-  position: relative;
-  height: inherit;
-  z-index: 1;
+  position      : relative;
+  height        : inherit;
+  z-index       : 1;
+  overflow      : hidden;
+  display       : flex;
+  flex-direction: column-reverse;
+}
+
+.InfiniteScroll__in {
+  display       : flex;
+  flex-direction: column-reverse;
 }
 
 /* .InfiniteScroll__in {
@@ -10,6 +18,6 @@
 } */
 
 .InfiniteScroll__observe {
-  z-index: -999;
+  z-index : -999;
   position: relative;
 }

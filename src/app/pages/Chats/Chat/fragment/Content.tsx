@@ -53,6 +53,12 @@ const Content: Component<Content> = (props) => {
               behavior: isSmooth ? "smooth" : "instant",
             })
           }, 1)
+          setTimeout(() => {
+            ref.scrollTo({
+              top: ref.scrollHeight,
+              behavior: isSmooth ? "smooth" : "instant",
+            })
+          }, 800)
         }
       },
     ),

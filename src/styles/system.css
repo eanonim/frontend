@@ -33,52 +33,30 @@ span {
   scrollbar-width   : none;
 }
 
-
 /* Общие стили для блока div, который будет скроллиться */
-._visibleScroll {
-  overflow-y                : auto;
-  /* Включаем вертикальную прокрутку */
-  -webkit-overflow-scrolling: touch;
-  /* Включаем плавную прокрутку на iOS */
-  scrollbar-width           : thin;
-  /* Делаем скроллбар тонким в Firefox */
-  scrollbar-color           : var(--accent_color) transparent;
-  /* Задаем цвет скроллбара и фона в Firefox */
+
+
+/* ._visibleScroll::-webkit-scrollbar {
+  display           : block;
+  width             : unset;
+  height            : unset;
+  -ms-overflow-style: unset !important;
+  scrollbar-width   : unset !important;
+} */
+
+._visibleScroll::-webkit-scrollbar:hover {
+  background-color: rgba(255, 255, 255, 0.172549) !important;
 }
 
-/* Стили для WebKit (Chrome, Safari) */
 ._visibleScroll::-webkit-scrollbar {
-  width: 5px;
-  /* Ширина скроллбара */
-}
-
-._visibleScroll::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3);
-  /* Цвет "бегунка" */
-  border-radius   : 2.5px;
-  /* Закругляем углы "бегунка" */
-}
-
-._visibleScroll::-webkit-scrollbar-track {
-  background-color: transparent;
-  /* Прозрачный фон "дорожки" */
-}
-
-/* Hover эффект для WebKit */
-._visibleScroll::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  /* Цвет "бегунка" при наведении */
-}
-
-/* Active эффект для WebKit (когда "бегунок" перетаскивается) */
-._visibleScroll::-webkit-scrollbar-thumb:active {
-  background-color: rgba(0, 0, 0, 0.7);
-  /* Цвет "бегунка" при перетаскивании */
-}
-
-
-/* Для скрытия скроллбара, когда он не нужен (работает не во всех случаях, лучше использовать JavaScript) */
-._visibleScroll:not(:hover)::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  /* Прозрачный "бегунок" */
+  display           : block !important;
+  width             : unset;
+  height            : unset;
+  -ms-overflow-style: unset;
+  scrollbar-width   : unset;
+  border-radius     : 5px !important;
+  border            : 3px solid transparent !important;
+  background-color  : rgba(255, 255, 255, 0.101961) !important;
+  background-clip   : content-box !important;
+  width             : 10px !important;
 }

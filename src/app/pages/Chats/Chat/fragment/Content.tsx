@@ -35,21 +35,22 @@ const Content: Component<Content> = (props) => {
     on(
       () => messageInfo.last_message_id,
       (next, prev) => {
+        console.log("ASF", store.isBottom)
         if (next === prev) return
         let isScroll = store.isBottom
-        let isSmooth = false //(next || 0) - 1 === prev || (next || 0) + 1 === prev
+        let isSmooth = (next || 0) - 1 === prev || (next || 0) + 1 === prev
 
         const message = messageInfo.history.get(next || 0)
         if (message) {
           if (message.target === "my") {
-            isSmooth = false
+            isSmooth = true
             isScroll = true
           }
         }
         if (isScroll && ref!) {
           setTimeout(() => {
             ref.scrollTo({
-              top: ref.scrollHeight,
+              top: 0,
               behavior: isSmooth ? "smooth" : "instant",
             })
           }, 1)
@@ -102,13 +103,17 @@ const Content: Component<Content> = (props) => {
         <Message.Group
           ref={ref!}
           onScroll={(e) => {
-            const isBottom =
-              e.target.scrollTop >=
-              e.target.scrollHeight - e.target.clientHeight - 40
+            const isBottom = Math.abs(e.target.scrollTop) <= 40
 
-            if (isBottom) {
-              e.target.scrollTop = e.target.scrollHeight
-            }
+            console.log(
+              { isBottom },
+              Math.abs(e.target.scrollTop),
+              e.target.scrollHeight - e.target.clientHeight,
+            )
+
+            // if (isBottom) {
+            //   e.target.scrollTop = e.target.scrollHeight
+            // }
 
             setStore("isBottom", isBottom)
           }}

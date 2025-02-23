@@ -515,6 +515,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             "last_read_message_id",
             data.response.message_id,
           )
+          console.log("message.read", data.response.message_id)
         }
         const chatList = getterSmart(CHAT_LIST_ATOM)
         if (!!chatList.history[dialog]) {

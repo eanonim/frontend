@@ -10,8 +10,8 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior       : none;
 
-  scroll-padding: 0px;
-  scroll-margin : 0px;
+  /* scroll-padding: 0px;
+  scroll-margin : 0px; */
 
   padding   : 10px 4px;
   box-sizing: border-box;

@@ -40,17 +40,19 @@ const Content: Component<Content> = (props) => {
         let isScroll = store.isBottom
         let isSmooth = (next || 0) - 1 === prev || (next || 0) + 1 === prev
 
-        const message = messageInfo.history.get(next || 0)
-        if (message) {
-          if (message.target === "my") {
-            isSmooth = true
-            isScroll = true
+        if (prev) {
+          const message = messageInfo.history.get(next || 0)
+          if (message) {
+            if (message.target === "my") {
+              isSmooth = false
+              isScroll = true
+            }
           }
         }
         if (isScroll && ref!) {
           setTimeout(() => {
             ref.scrollTo({
-              top: 0,
+              top: ref.scrollHeight,
               behavior: isSmooth ? "smooth" : "instant",
             })
           }, 1)
@@ -199,11 +201,9 @@ const Content: Component<Content> = (props) => {
                           isEdit={message.edit}
                           onRead={() => {
                             if (
-                              message.target === "you" &&
-                              !(
-                                message.id <=
+                              message.target !== "my" &&
+                              message.id <=
                                 (messageInfo.last_read_message_id || 0)
-                              )
                             ) {
                               messageRead({
                                 dialog: params().dialog,

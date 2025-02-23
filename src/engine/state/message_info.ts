@@ -122,6 +122,10 @@ export const addMessage = (
     messages.last_message_id = message.id
   }
 
+  if (message.id > (messages.last_read_message_id || 0)) {
+    messages.last_read_message_id = message.id
+  }
+
   return [messages, message.indexes]
 }
 

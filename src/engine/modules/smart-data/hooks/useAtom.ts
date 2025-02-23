@@ -64,7 +64,7 @@ export const useAtom = <VALUE, OPTIONS, KEY extends string>(
         if (data) {
           const [getterData] = data
 
-          setCache(unlink(getterData))
+          setCache(getterData)
         }
       },
     ),

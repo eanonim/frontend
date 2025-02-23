@@ -41,7 +41,7 @@ const Content: Component<Content> = (props) => {
 
         const message = messageInfo.history.get(next || 0)
         if (message) {
-          if (message.author === user.id) {
+          if (message.target === "my") {
             isSmooth = true
             isScroll = true
           }
@@ -121,7 +121,16 @@ const Content: Component<Content> = (props) => {
         >
           <For each={messageInfo.dialogs}>
             {([time, messages], index) => (
-              <Show when={messages.length}>
+              <Show
+                when={
+                  messages.length &&
+                  messages.some((x) => {
+                    if (!x || !x.length) return false
+
+                    return x.some((item) => item && !item.deleted)
+                  })
+                }
+              >
                 <Message.Group.List data-index={index()}>
                   <Message.System key={index()}>
                     {timeAgoOnlyDate(new Date(time)?.getTime())}
@@ -174,7 +183,7 @@ const Content: Component<Content> = (props) => {
                             handlerContextMenu("any", message.id)
                           }
                           forward={message.reply}
-                          type={message.author === user.id ? "out" : "in"}
+                          type={message.target === "my" ? "out" : "in"}
                           text={message.message}
                           time={message.time}
                           isRead={
@@ -191,7 +200,7 @@ const Content: Component<Content> = (props) => {
                           isEdit={message.edit}
                           onRead={() => {
                             if (
-                              user.id !== message.author &&
+                              message.target === "you" &&
                               !(
                                 message.id <=
                                 (messageInfo.last_read_message_id || 0)

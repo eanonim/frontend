@@ -2,16 +2,11 @@ import { getter, setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
 import { addMessage, Message, MESSAGE_INFO_ATOM, USER_ATOM } from "engine/state"
 import { produce } from "solid-js/store"
-import { getFullDate } from "engine"
 import { unlink } from "@minsize/utils"
-import { groupMessagesCount } from "root/configs"
 
 const messageSend = async (options: Socket["message.send"]["request"]) => {
   const messageId = Math.random()
   let [dialogIndex, groupMessagesIndex, messageIndex] = [0, 0, 0]
-
-  const time = new Date()
-  const fullTime = getFullDate(time)
 
   setter(
     [MESSAGE_INFO_ATOM, options.dialog],
@@ -22,7 +17,7 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
 
       const message: Message = {
         loading: true,
-        author: getter(USER_ATOM).id,
+        target: "my",
         id: messageId,
         message: options.message.message,
         reply: reply

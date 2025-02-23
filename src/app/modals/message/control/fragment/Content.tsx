@@ -111,7 +111,7 @@ const Content: Component<Content> = (props) => {
         </Cell>
       </Show>
       <Show
-        when={messageInfo.history.get(params().message_id)?.author === user.id}
+        when={messageInfo.history.get(params().message_id)?.target === "my"}
       >
         <Cell onClick={handlerEdit} separator={"auto"}>
           <Cell.Before>

@@ -94,8 +94,8 @@ export type Socket = {
     }
     response?: Array<{
       id: number
-      author: number
       message?: string
+      target: "my" | "you"
       attach?: {
         type: "photo" | "audio"
         items: Array<{
@@ -139,7 +139,6 @@ export type Socket = {
       dialog: string
       message: {
         id: number
-        author: number
         message?: string
         attach?: {
           type: string
@@ -181,8 +180,8 @@ export type Socket = {
       dialog: string
       message: {
         id: number
-        author: number
         message?: string
+        target: "my" | "you"
         attach?: {
           type: "photo" | "audio"
           items: Array<{
@@ -204,16 +203,17 @@ export type Socket = {
     request: {}
     response: {
       uuid: string
-      first_user: number
-      second_user: number
-      /* CUSTOM */
-      typing?: boolean
+
+      message_target?: "my" | "you"
+
       message?: string
       message_id?: number
       message_time?: Date
       message_attack_type?: "photo" | "audio"
       readed?: boolean
-      show?: boolean
+
+      /* CUSTOM */
+      typing?: boolean
     }[]
   }
   "chat.search": {
@@ -420,6 +420,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
                 chat.message_id = message.id
                 chat.message_attack_type = message.attach?.type
                 chat.message_time = message.time
+                chat.message_target = message.target
                 chat.readed = message.readed
                 chat.typing = false
               }
@@ -478,17 +479,19 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
                   for (let i = message.id; i > 0; i--) {
                     const _message = messageInfo.history.get(i)
                     if (_message) {
-                      chat.message = message.message
-                      chat.message_id = message.id
-                      chat.message_attack_type = message.attach?.type
-                      chat.message_time = message.time
-                      chat.readed = message.readed
+                      chat.message = _message.message
+                      chat.message_target = _message.target
+                      chat.message_id = _message.id
+                      chat.message_attack_type = _message.attach?.type
+                      chat.message_time = _message.time
+                      chat.readed = _message.readed
                       break
                     }
                     if (i === 0) {
                       chat.message = undefined
                       chat.message_id = undefined
                       chat.message_attack_type = undefined
+                      chat.message_target = undefined
                       chat.message_time = undefined
                       chat.readed = undefined
                     }

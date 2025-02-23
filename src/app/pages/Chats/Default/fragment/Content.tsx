@@ -129,9 +129,11 @@ const Content: Component<Content> = (props) => {
 
                     <Show when={chat.message || chat.message_attack_type}>
                       <Message.Badge
-                        isNew={false}
-                        isRead={chat.readed}
-                        isNotRead={!chat.readed}
+                        isNew={chat.message_target === "my" && !chat.readed}
+                        isRead={chat.message_target === "you" && chat.readed}
+                        isNotRead={
+                          chat.message_target === "you" && !chat.readed
+                        }
                       />
                     </Show>
                   </Gap>

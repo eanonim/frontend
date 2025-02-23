@@ -42,7 +42,7 @@ const Content: Component<Content> = (props) => {
         const message = messageInfo.history.get(next || 0)
         if (message) {
           if (message.target === "my") {
-            isSmooth = true
+            isSmooth = false
             isScroll = true
           }
         }
@@ -53,12 +53,6 @@ const Content: Component<Content> = (props) => {
               behavior: isSmooth ? "smooth" : "instant",
             })
           }, 1)
-          setTimeout(() => {
-            ref.scrollTo({
-              top: ref.scrollHeight,
-              behavior: isSmooth ? "smooth" : "instant",
-            })
-          }, 800)
         }
       },
     ),

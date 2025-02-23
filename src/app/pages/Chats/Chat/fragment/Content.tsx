@@ -110,7 +110,7 @@ const Content: Component<Content> = (props) => {
           onScroll={(e) => {
             const isBottom =
               e.target.scrollTop >=
-              e.target.scrollHeight - e.target.clientHeight - 4
+              e.target.scrollHeight - e.target.clientHeight - 40
 
             if (isBottom) {
               e.target.scrollTop = e.target.scrollHeight

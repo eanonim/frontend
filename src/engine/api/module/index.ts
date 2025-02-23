@@ -2,8 +2,7 @@ import init, { Status } from "@elum/ews"
 import { Mutex } from "@minsize/mutex"
 import { sleep, unlink } from "@minsize/utils"
 import { getter } from "elum-state/solid"
-import { getFullDate } from "engine"
-import { setter } from "engine/modules/smart-data"
+import { setter, getter as getterSmart } from "engine/modules/smart-data"
 import {
   addMessage,
   AUTH_TOKEN_ATOM,
@@ -48,25 +47,6 @@ export type SearchInteresting =
   | "lgbt"
 
 export type Socket = {
-  "message.info": {
-    request: {
-      dialog: string
-    }
-    response: {
-      id: number
-      author: number
-      message?: string
-      time: Date
-      reply?: {
-        id: number
-        message: string
-      }
-      edit?: boolean
-      readed?: boolean
-      deleted?: boolean
-      loading?: boolean
-    }[]
-  }
   "message.typing": {
     request: {
       dialog: string
@@ -86,6 +66,10 @@ export type Socket = {
     response: {
       result: boolean
       dialog: string
+    }
+    event: {
+      dialog: string
+      message_id: number
     }
   }
   "message.read": {
@@ -121,10 +105,14 @@ export type Socket = {
       reply?: {
         id: number
         message: string
+        attach_type?: "photo" | "audio"
       }
       readed: boolean
       time: Date
       deleted: boolean
+
+      edit?: boolean
+      loading?: boolean
     }>
   }
   "message.edit": {
@@ -402,13 +390,54 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     if (event === "message.send") {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
-        setter(
-          [MESSAGE_INFO_ATOM, data.response.dialog],
-          produce((messages) => {
-            addMessage(messages, data.response.message)
-            return messages
-          }),
-        )
+        const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
+        if (messageInfo.dialogs.length) {
+          setter(
+            [MESSAGE_INFO_ATOM, data.response.dialog],
+            produce((messages) => {
+              addMessage(messages, data.response.message)
+              return messages
+            }),
+          )
+        }
+      }
+    }
+
+    if (event === "message.delete") {
+      const dialog = data.response?.dialog
+      if (dialog && data.response) {
+        const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
+        if (messageInfo.dialogs.length) {
+          setter(
+            [MESSAGE_INFO_ATOM, data.response.dialog],
+            produce((messages) => {
+              let message = unlink(
+                messages.history.get(data.response.message_id),
+              )
+              if (message) {
+                message.deleted = true
+                messages.history.set(data.response.message_id, message)
+
+                message = messages.history.get(data.response.message_id)
+                if (message) {
+                  const [dialogIndex, groupMessagesIndex, messageIndex] =
+                    message.indexes
+                  if (
+                    messages.dialogs[dialogIndex][1][groupMessagesIndex][
+                      messageIndex
+                    ]
+                  ) {
+                    messages.dialogs[dialogIndex][1][groupMessagesIndex][
+                      messageIndex
+                    ] = message
+                  }
+                }
+              }
+
+              return messages
+            }),
+          )
+        }
       }
     }
 

@@ -1,6 +1,6 @@
 import { getter, setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
-import { addMessage, MESSAGE_INFO_ATOM, USER_ATOM } from "engine/state"
+import { addMessage, Message, MESSAGE_INFO_ATOM, USER_ATOM } from "engine/state"
 import { produce } from "solid-js/store"
 import { getFullDate } from "engine"
 import { unlink } from "@minsize/utils"
@@ -20,7 +20,7 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
         !!messages.message.reply_id &&
         messages.history.get(messages.message.reply_id)
 
-      const message = {
+      const message: Message = {
         loading: true,
         author: getter(USER_ATOM).id,
         id: messageId,
@@ -30,6 +30,8 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
           : undefined,
         time: new Date(),
         indexes: [0, 0, 0] as [number, number, number],
+        readed: true,
+        deleted: false,
       }
 
       const [_, indexes] = addMessage(messages, message)
@@ -61,17 +63,13 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
           messages.history.set(response.id, message)
           messages.history.delete(messageId)
 
+          messages.last_message_id = message.id
+
           message = messages.history.get(response.id)
           if (message) {
             if (
               messages.dialogs[dialogIndex][1][groupMessagesIndex][messageIndex]
             ) {
-              console.log({
-                f: messages.dialogs[dialogIndex][1][groupMessagesIndex][
-                  messageIndex
-                ],
-              })
-
               messages.dialogs[dialogIndex][1][groupMessagesIndex][
                 messageIndex
               ] = message
@@ -79,8 +77,6 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
           }
         }
 
-        console.log({ messages: unlink(messages) })
-        // console.log(unlink(messages))
         return messages
       }),
     )

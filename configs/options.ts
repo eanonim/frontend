@@ -1,2 +1,4 @@
 export const maxInterest = 5
-export const groupMessagesCount = 20
+export const groupMessagesCount = 50
+export const messageListCountStart = 50
+export const messageListCount = 250

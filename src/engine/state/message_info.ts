@@ -1,26 +1,31 @@
-import { atom, setter } from "engine/modules/smart-data"
+import { atom, getter, setter } from "engine/modules/smart-data"
 import { Socket } from "engine/api/module"
 import { produce } from "solid-js/store"
 import { CHAT_LIST_ATOM } from "./chat_list"
 import { messageList } from "engine/api"
-import { groupMessagesCount } from "root/configs"
+import {
+  groupMessagesCount,
+  messageListCount,
+  messageListCountStart,
+} from "root/configs"
 import { getFullDate } from "engine"
 import { clamp, unlink } from "@minsize/utils"
 
-type Message = {
+export type Message = {
   /**
    * index one = dialog index
    * index two = group messages index
    * index three = message index
    */
   indexes: [number, number, number]
-} & Socket["message.info"]["response"][0]
+} & NonNullable<Socket["message.list"]["response"]>[0]
 
 type MESSAGE_INFO_ATOM_RESPONSE = {
   dialogs: [string, Message[][]][]
   history: Map<number, Message>
   last_read_message_id?: number
   last_offset: number
+  last_message_id?: number
   message: {
     message: string
     reply_id?: number
@@ -97,12 +102,16 @@ export const addMessage = (
 
   messages.history.set(message.id, message)
 
+  if (typePush === "unshift") {
+    messages.last_message_id = message.id
+  }
+
   return [messages, message.indexes]
 }
 
 export const MESSAGE_INFO_ATOM = atom<
   MESSAGE_INFO_ATOM_RESPONSE,
-  Socket["message.info"]["request"],
+  Omit<Omit<Socket["message.list"]["request"], "offset">, "count">,
   string
 >({
   onKey: (options) => {
@@ -121,7 +130,11 @@ export const MESSAGE_INFO_ATOM = atom<
   //   console.log("onUpdate", key, { prev, next })
   // },
   onRequested: (options, key) => {
-    messageList({ dialog: options.dialog, offset: 0, count: 100 })
+    messageList({
+      dialog: options.dialog,
+      offset: 0,
+      count: messageListCountStart,
+    })
     console.log("onRequested", key, options)
   },
   updateIntervalMs: 600_000,
@@ -130,16 +143,23 @@ export const MESSAGE_INFO_ATOM = atom<
 let timer: Record<string, NodeJS.Timeout> = {}
 
 export const setTyping = (dialog: string) => {
-  setter(
-    [MESSAGE_INFO_ATOM, dialog],
-    "message",
-    produce((message) => {
-      message.typing = true
+  const messageInfo = getter(MESSAGE_INFO_ATOM, dialog)
+  if (messageInfo.dialogs.length) {
+    setter(
+      [MESSAGE_INFO_ATOM, dialog],
+      "message",
+      produce((message) => {
+        message.typing = true
 
-      return message
-    }),
-  )
-  setter(CHAT_LIST_ATOM, "history", dialog, "typing", true)
+        return message
+      }),
+    )
+  }
+
+  const chatList = getter(CHAT_LIST_ATOM)
+  if (!!chatList.history[dialog]) {
+    setter(CHAT_LIST_ATOM, "history", dialog, "typing", true)
+  }
 
   clearTimeout(timer[dialog])
 

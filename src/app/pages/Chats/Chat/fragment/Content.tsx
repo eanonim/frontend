@@ -5,6 +5,7 @@ import { messageList, messageRead } from "engine/api"
 import { useAtom, useAtomSystem } from "engine/modules/smart-data"
 import { SETTINGS_ATOM, USER_ATOM } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
+import { messageListCount } from "root/configs"
 import { modals, pages, pushModal, useParams } from "router"
 
 import { type JSX, type Component, For, Show, createEffect, on } from "solid-js"
@@ -32,20 +33,26 @@ const Content: Component<Content> = (props) => {
 
   createEffect(
     on(
-      () =>
-        messageInfo.dialogs?.[messageInfo.dialogs.length - 1]?.[1]?.[
-          messageInfo.dialogs?.[messageInfo.dialogs.length - 1]?.[1].length - 1
-        ]?.length,
+      () => messageInfo.last_message_id,
       (next, prev) => {
-        if (next !== prev && store.isBottom && ref!) {
-          let isSmooth = next - 1 === prev || next + 1 === prev
+        if (next === prev) return
+        let isScroll = store.isBottom
+        let isSmooth = (next || 0) - 1 === prev || (next || 0) + 1 === prev
 
+        const message = messageInfo.history.get(next || 0)
+        if (message) {
+          if (message.author === user.id) {
+            isSmooth = true
+            isScroll = true
+          }
+        }
+        if (isScroll && ref!) {
           setTimeout(() => {
             ref.scrollTo({
-              top: ref.scrollHeight * 2,
+              top: ref.scrollHeight,
               behavior: isSmooth ? "smooth" : "instant",
             })
-          }, 0)
+          }, 1)
         }
       },
     ),
@@ -116,13 +123,15 @@ const Content: Component<Content> = (props) => {
                   next={async () => {
                     await messageList({
                       dialog: params().dialog,
-                      offset: messageInfo.last_offset + 100,
-                      count: 100,
+                      offset: messageInfo.last_offset + messageListCount,
+                      count: messageListCount,
                     })
-                    return false
+                    return true
                   }}
                   hasMore={
-                    index() === 0 ? !!!messageInfoSystem.fullLoad : false
+                    index() === messageInfo.dialogs.length - 1
+                      ? !!!messageInfoSystem.fullLoad
+                      : false
                   }
                   each={messages}
                 >

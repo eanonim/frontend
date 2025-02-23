@@ -1,3 +1,8 @@
 export { backgrounds } from "./backgrounds"
 export { HOST } from "./server"
-export { maxInterest, groupMessagesCount } from "./options"
+export {
+  maxInterest,
+  groupMessagesCount,
+  messageListCount,
+  messageListCountStart,
+} from "./options"

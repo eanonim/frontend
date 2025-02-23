@@ -11,7 +11,7 @@ const messageList = async (options: Socket["message.list"]["request"]) => {
     console.log({ error })
     return { response, error }
   }
-
+  console.log({ response })
   if (!response) {
     setterStatus([MESSAGE_INFO_ATOM, options.dialog], { fullLoad: true })
   }
@@ -29,7 +29,8 @@ const messageList = async (options: Socket["message.list"]["request"]) => {
           addMessage(messages, message as any, "push")[0]
         }
 
-        messages.last_offset = options.offset
+        messages.last_offset =
+          options.offset === 0 ? options.count : options.offset
       }
 
       return messages

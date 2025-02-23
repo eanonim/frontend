@@ -53,7 +53,7 @@ const Content: Component<Content> = (props) => {
           <Cell onClick={() => handlerOpen(0)}>
             <Cell.Container>
               <Cell.Content>
-                <Title {...textProps}>Задать цвет</Title>
+                <Title color={"accent"}>Задать цвет</Title>
               </Cell.Content>
             </Cell.Container>
           </Cell>

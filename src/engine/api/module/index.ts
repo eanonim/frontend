@@ -214,6 +214,7 @@ export type Socket = {
 
       /* CUSTOM */
       typing?: boolean
+      loading?: boolean
     }[]
   }
   "chat.search": {
@@ -515,7 +516,6 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             "last_read_message_id",
             data.response.message_id,
           )
-          console.log("message.read", data.response.message_id)
         }
         const chatList = getterSmart(CHAT_LIST_ATOM)
         if (!!chatList.history[dialog]) {
@@ -523,6 +523,11 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             CHAT_LIST_ATOM,
             produce((chats) => {
               const chat = chats.history[dialog]
+              console.log(
+                "message.read",
+                chat.message_id,
+                data.response.message_id,
+              )
               if (chat && chat.message_id === data.response.message_id) {
                 chat.readed = true
               }

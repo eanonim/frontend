@@ -1,6 +1,12 @@
 import { getter, setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
-import { addMessage, Message, MESSAGE_INFO_ATOM, USER_ATOM } from "engine/state"
+import {
+  addMessage,
+  CHAT_LIST_ATOM,
+  Message,
+  MESSAGE_INFO_ATOM,
+  USER_ATOM,
+} from "engine/state"
 import { produce } from "solid-js/store"
 import { unlink } from "@minsize/utils"
 
@@ -25,8 +31,29 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
           : undefined,
         time: new Date(),
         indexes: [0, 0, 0] as [number, number, number],
-        readed: true,
+        readed: false,
         deleted: false,
+      }
+
+      const chatList = getter(CHAT_LIST_ATOM)
+      if (!!chatList.history[options.dialog]) {
+        setter(
+          CHAT_LIST_ATOM,
+          produce((chats) => {
+            const chat = chats.history[options.dialog]
+            if (chat && message) {
+              chat.message = message.message
+              chat.message_id = message.id
+              chat.message_attack_type = message.attach?.type
+              chat.message_time = message.time
+              chat.message_target = message.target
+              chat.readed = message.readed
+              chat.loading = true
+              chat.typing = false
+            }
+            return chats
+          }),
+        )
       }
 
       const [_, indexes] = addMessage(messages, message)
@@ -68,6 +95,21 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
               messages.dialogs[dialogIndex][1][groupMessagesIndex][
                 messageIndex
               ] = message
+            }
+
+            const chatList = getter(CHAT_LIST_ATOM)
+            if (!!chatList.history[options.dialog]) {
+              setter(
+                CHAT_LIST_ATOM,
+                produce((chats) => {
+                  const chat = chats.history[options.dialog]
+                  if (chat && message) {
+                    chat.message_id = message.id
+                    chat.loading = false
+                  }
+                  return chats
+                }),
+              )
             }
           }
         }

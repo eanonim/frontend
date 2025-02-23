@@ -132,6 +132,7 @@ const Content: Component<Content> = (props) => {
                         // isNew={chat.message_target !== "you" && !chat.readed}
                         isRead={chat.message_target === "my" && chat.readed}
                         isNotRead={chat.message_target === "my" && !chat.readed}
+                        isLoading={chat.loading}
                       />
                     </Show>
                   </Gap>

@@ -107,16 +107,6 @@ const Content: Component<Content> = (props) => {
           onScroll={(e) => {
             const isBottom = Math.abs(e.target.scrollTop) <= 40
 
-            console.log(
-              { isBottom },
-              Math.abs(e.target.scrollTop),
-              e.target.scrollHeight - e.target.clientHeight,
-            )
-
-            // if (isBottom) {
-            //   e.target.scrollTop = e.target.scrollHeight
-            // }
-
             setStore("isBottom", isBottom)
           }}
         >
@@ -202,7 +192,7 @@ const Content: Component<Content> = (props) => {
                           onRead={() => {
                             if (
                               message.target !== "my" &&
-                              message.id <=
+                              message.id >=
                                 (messageInfo.last_read_message_id || 0)
                             ) {
                               messageRead({

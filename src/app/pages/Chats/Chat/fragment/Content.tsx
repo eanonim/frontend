@@ -1,9 +1,8 @@
-import { chunks, sleep, unlink } from "@minsize/utils"
 import { Background, Flex, InfiniteScroll, Message } from "components"
 import { timeAgoOnlyDate } from "engine"
 import { messageList, messageRead } from "engine/api"
 import { useAtom, useAtomSystem } from "engine/modules/smart-data"
-import { SETTINGS_ATOM, USER_ATOM } from "engine/state"
+import { SETTINGS_ATOM } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { messageListCount } from "root/configs"
 import { modals, pages, pushModal, useParams } from "router"
@@ -15,7 +14,6 @@ interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
   const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
-  const [user] = useAtom(USER_ATOM)
   const [settings] = useAtom(SETTINGS_ATOM)
   const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
     dialog: params().dialog,
@@ -26,6 +24,7 @@ const Content: Component<Content> = (props) => {
 
   const [store, setStore] = createStore({
     isBottom: true,
+    isSmooth: false,
   })
 
   let timer: NodeJS.Timeout
@@ -35,8 +34,7 @@ const Content: Component<Content> = (props) => {
     on(
       () => messageInfo.last_message_id,
       (next, prev) => {
-        console.log("ASF", store.isBottom)
-        if (next === prev) return
+        if (next === prev && next !== undefined) return
         let isScroll = store.isBottom
         let isSmooth = (next || 0) - 1 === prev || (next || 0) + 1 === prev
 
@@ -44,11 +42,12 @@ const Content: Component<Content> = (props) => {
           const message = messageInfo.history.get(next || 0)
           if (message) {
             if (message.target === "my") {
-              isSmooth = false
+              isSmooth = store.isSmooth
               isScroll = true
             }
           }
         }
+
         if (isScroll && ref!) {
           setTimeout(() => {
             ref.scrollTo({
@@ -105,12 +104,24 @@ const Content: Component<Content> = (props) => {
         <Message.Group
           ref={ref!}
           onScroll={(e) => {
-            const isBottom = Math.abs(e.target.scrollTop) <= 40
+            const isBottom =
+              e.target.scrollTop >=
+              e.target.scrollHeight - e.target.clientHeight - 40
 
-            setStore("isBottom", isBottom)
+            const isSmooth =
+              e.target.scrollTop >=
+              e.target.scrollHeight - e.target.clientHeight - 600
+
+            setStore({
+              isBottom,
+              isSmooth,
+            })
           }}
         >
-          <For each={messageInfo.dialogs}>
+          <For
+            each={messageInfo.dialogs}
+            fallback={<span style={{ height: "200vh", display: "block" }} />}
+          >
             {([time, messages], index) => (
               <Show
                 when={

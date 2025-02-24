@@ -118,7 +118,7 @@ export const addMessage = (
 
   messages.history.set(message.id, message)
 
-  if (typePush === "unshift") {
+  if ((messages.last_message_id || 0) < message.id) {
     messages.last_message_id = message.id
   }
 

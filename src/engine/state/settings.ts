@@ -113,10 +113,10 @@ export const setBackground = (
 }
 
 export const setFontSize = (count: number) => {
-  const font_size = clamp(count, 10, 16)
+  const font_size = clamp(count, 14, 22)
 
-  document.body.style.setProperty("--message_font_size", `${font_size}pt`)
-  document.body.style.setProperty("--message_line_height", `${font_size + 4}pt`)
+  document.body.style.setProperty("--message_font_size", `${font_size}px`)
+  document.body.style.setProperty("--message_line_height", `${font_size + 4}px`)
 
   setter(SETTINGS_ATOM, "fontSize", font_size)
 }

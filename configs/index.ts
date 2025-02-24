@@ -5,4 +5,5 @@ export {
   groupMessagesCount,
   messageListCount,
   messageListCountStart,
+  messageMaxSize,
 } from "./options"

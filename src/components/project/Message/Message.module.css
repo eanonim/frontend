@@ -172,9 +172,6 @@
 
 
 /* in */
-/* .Message--in+.Message--in {
-  padding-top: 1px;
-} */
 
 /* .Message--in:not(.Message--in + .Message--in):has(+ .Message--in) .Message__end,
 .Message--in+.Message--in:has(+.Message--in) .Message__end {
@@ -194,9 +191,3 @@
 .Message--in:not(:not(.Message--in+.Message--in):not(:has(~.Message--in):has(+.Message--in))):last-child .Message__in {
   border-radius: 6px 13px 13px 13px;
 }
-
-
-
-/* @supports () {
-
-} */

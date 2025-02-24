@@ -76,15 +76,17 @@ const Group: ComponentGroup = (props) => {
       }}
       {...others}
     >
-      <ContextGroup.Provider
-        value={{
-          getScrollTop: () => store.scrollTop,
-          setVisible,
-          getIsVisible,
-        }}
-      >
-        {local.children}
-      </ContextGroup.Provider>
+      <div class={style.Group__in}>
+        <ContextGroup.Provider
+          value={{
+            getScrollTop: () => store.scrollTop,
+            setVisible,
+            getIsVisible,
+          }}
+        >
+          {local.children}
+        </ContextGroup.Provider>
+      </div>
     </div>
   )
 }

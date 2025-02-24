@@ -15,6 +15,7 @@ import { leading, throttle } from "@solid-primitives/scheduled"
 import { setter, useAtom } from "engine/modules/smart-data"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { produce } from "solid-js/store"
+import { messageMaxSize } from "root/configs"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -44,15 +45,28 @@ const Footer: Component<Footer> = (props) => {
 
   const handlerSend = () => {
     ref!?.focus()
-    const messageTest = message()
-    if (messageTest) {
-      messageSend({
-        dialog: params().dialog,
-        message: {
-          message: messageTest.trim(),
-          reply_id: messageInfo.message.reply_id,
-        },
-      })
+    const messageText = message().trim()
+    if (messageText) {
+      let last_index = 0
+      while (messageText.length > last_index) {
+        const messageChunk = messageText.slice(
+          last_index,
+          messageMaxSize + last_index,
+        )
+        last_index += messageChunk.length
+
+        if (messageChunk) {
+          messageSend({
+            dialog: params().dialog,
+            message: {
+              message: messageChunk.trim(),
+              reply_id: messageInfo.message.reply_id,
+            },
+          })
+        } else {
+          last_index = messageText.length
+        }
+      }
 
       setMessage("")
     }

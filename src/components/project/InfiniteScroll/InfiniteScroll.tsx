@@ -103,36 +103,32 @@ function InfiniteScroll<T extends unknown, U extends JSX.Element>(
     <div class={style.InfiniteScroll}>
       <div class={style.InfiniteScroll__in} ref={contentRef!}>
         <For each={props.each}>
-          {(content, rootIndex) => {
-            return (
-              <Show when={content.length}>
-                <ScrollOverflowItem
-                  contentRef={contentRef!}
-                  data-index={rootIndex() - empty()}
-                  lastClassList={{
-                    ["_firstChild"]: rootIndex() - empty() === 0,
-                    ["_lastChild"]:
-                      rootIndex() - empty() === (props.each || []).length - 1,
-                  }}
-                  notLast={
-                    rootIndex() - empty() < (props.each || []).length - 1
+          {(content, rootIndex) => (
+            <Show when={content.length}>
+              <ScrollOverflowItem
+                contentRef={contentRef!}
+                data-index={rootIndex() - empty()}
+                lastClassList={{
+                  ["_firstChild"]: rootIndex() - empty() === 0,
+                  ["_lastChild"]:
+                    rootIndex() - empty() === (props.each || []).length - 1,
+                }}
+                notLast={rootIndex() - empty() < (props.each || []).length - 1}
+              >
+                <For each={content?.filter(Boolean)}>
+                  {(item, index) =>
+                    props.children(
+                      item,
+                      () =>
+                        index() +
+                        (props.each?.[0]?.length || 0) *
+                          (rootIndex() - empty()),
+                    )
                   }
-                >
-                  <For each={content?.filter(Boolean)}>
-                    {(item, index) =>
-                      props.children(
-                        item,
-                        () =>
-                          index() +
-                          (props.each?.[0]?.length || 0) *
-                            (rootIndex() - empty()),
-                      )
-                    }
-                  </For>
-                </ScrollOverflowItem>
-              </Show>
-            )
-          }}
+                </For>
+              </ScrollOverflowItem>
+            </Show>
+          )}
         </For>
       </div>
       <div

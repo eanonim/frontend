@@ -18,8 +18,8 @@ const Footer: Component<Footer> = (props) => {
   const handlerCancel = () => {
     backPage()
     setValue(settings.fontSize)
-    document.body.style.setProperty("--message_font_size", `${value()}pt`)
-    document.body.style.setProperty("--message_line_height", `${value() + 4}pt`)
+    document.body.style.setProperty("--message_font_size", `${value()}px`)
+    document.body.style.setProperty("--message_line_height", `${value() + 4}px`)
   }
 
   const handlerAccept = () => {
@@ -29,8 +29,8 @@ const Footer: Component<Footer> = (props) => {
 
   const onInput = (value: number) => {
     setValue(value)
-    document.body.style.setProperty("--message_font_size", `${value}pt`)
-    document.body.style.setProperty("--message_line_height", `${value + 4}pt`)
+    document.body.style.setProperty("--message_font_size", `${value}px`)
+    document.body.style.setProperty("--message_line_height", `${value + 4}px`)
   }
 
   return (
@@ -50,8 +50,8 @@ const Footer: Component<Footer> = (props) => {
         </Range.Icon>
         <Range.Input
           onRange={onInput}
-          min={10}
-          max={16}
+          min={14}
+          max={22}
           value={value() || settings.fontSize}
         />
         <Range.Icon>

@@ -36,34 +36,40 @@ const System: Component<System> = (props) => {
 
   const [store, setStore] = createStore({
     isHidden: !context?.getIsVisible(local.key),
+    isStop: false,
   })
 
   let timer: NodeJS.Timeout
-
-  createEffect(() => {
-    context?.setVisible(local.key, !!contextList?.getVisible())
-  })
+  let timerHeight: NodeJS.Timeout
 
   createEffect(
-    on(
-      [
-        () => context?.getScrollTop(),
-        () => context?.getIsVisible(local.key),
-        () => contextList?.getVisible(),
-      ],
-      () => {
-        if (!contextList?.getVisible()) {
-          if (timer) {
-            clearTimeout(timer)
-          }
+    on(contextList!?.getHeight, (height) => {
+      context?.setVisible(local.key, height)
 
-          setStore("isHidden", false)
-          timer = setTimeout(() => {
-            setStore("isHidden", !!!context?.getIsVisible(local.key)) // !!!context?.getIsVisible(local.key)
-          }, 3000)
-        }
-      },
-    ),
+      setStore("isStop", true)
+
+      if (timerHeight) {
+        clearTimeout(timerHeight)
+      }
+
+      timerHeight = setTimeout(() => {
+        setStore("isStop", false)
+      }, 400)
+    }),
+  )
+
+  createEffect(
+    on(context!?.getScrollTop, () => {
+      if (store.isStop) return
+      if (timer) {
+        clearTimeout(timer)
+      }
+
+      setStore("isHidden", false)
+      timer = setTimeout(() => {
+        setStore("isHidden", !!!context?.getIsVisible(local.key))
+      }, 1000)
+    }),
   )
 
   return (

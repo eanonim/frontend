@@ -203,6 +203,20 @@ const Footer: Component<Footer> = (props) => {
         <WriteBar.Icon onClick={handlerSend}>
           <IconSend
             style={{
+              transform: message().length ? "scale(1.2)" : "scale(1)",
+              "-webkit-transform": message().length ? "scale(1.2)" : "scale(1)",
+              transition: "0.3s",
+            }}
+            color={
+              message().length ? "var(--accent_color)" : "var(--text_secondary)"
+            }
+            width={36}
+            height={36}
+          />
+        </WriteBar.Icon>
+        {/* <WriteBar.Icon onClick={handlerSend}>
+          <IconSend
+            style={{
               "z-index": 1,
               transform: message().length ? "scale(1.2)" : "scale(0)",
               "-webkit-transform": message().length ? "scale(1.2)" : "scale(0)",
@@ -223,7 +237,7 @@ const Footer: Component<Footer> = (props) => {
           >
             <IconGiftFilled color={"var(--separator_primary)"} />
           </span>
-        </WriteBar.Icon>
+        </WriteBar.Icon> */}
       </WriteBar>
     </FixedLayout>
   )

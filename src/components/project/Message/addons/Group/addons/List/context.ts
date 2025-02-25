@@ -1,7 +1,7 @@
 import { createContext } from "solid-js"
 
 type Context = {
-  getVisible: () => boolean
+  getHeight: () => number
 }
 
 const ContextList = createContext<Context>()

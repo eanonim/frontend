@@ -25,9 +25,6 @@ const timeAgoOnlyDate = (timestamp: number) => {
   switch (true) {
     case seconds < 0:
       return ""
-
-    case date.getDay() !== new Date().getDay():
-      return lasing(getLoc("yesterday"), "", Math.floor(seconds / 86400))
     case seconds < 86400:
       return lasing(getLoc("today"), "", Math.floor(seconds / 3600))
     case seconds < 172800:

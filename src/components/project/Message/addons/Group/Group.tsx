@@ -33,28 +33,45 @@ const Group: ComponentGroup = (props) => {
   const merged = mergeProps({}, props)
   const [local, others] = splitProps(merged, ["class", "classList", "children"])
 
-  const [systems, setSystems] = createSignal<{ key: number; value: boolean }[]>(
-    [],
-  )
+  const [systems, setSystems] = createSignal<
+    { key: number; scrollTop: number; height: number }[]
+  >([])
+  const [scrollTops, setScrollTops] = createStore<Record<number, number>>({})
 
   const [store, setStore] = createStore<Store>({
     scrollTop: 0,
   })
 
-  const setVisible = (key: number, value: boolean) => {
+  const setVisible = (key: number, height: number) => {
     setSystems((store) => {
       const elem = store.find((x) => x.key === key)
+
       if (elem) {
-        elem.value = value
+        elem.height = height
       } else {
-        store.push({ key, value })
+        store.push({ key, height, scrollTop: 0 })
       }
+
+      for (const item of store) {
+        const heightKey = store.reduce(
+          (acb, value) => (value.key <= item.key ? acb + value.height : acb),
+          0,
+        )
+        const elem = store.find((x) => x.key === key)
+
+        if (elem) {
+          elem.scrollTop = heightKey
+          setScrollTops(item.key, heightKey)
+        }
+      }
+
       return store
     })
   }
 
   const getIsVisible = (key: number) => {
-    return !!systems().find((x) => x.key <= key && x.value === true)
+    console.log({ key }, store.scrollTop, scrollTops[key])
+    return store.scrollTop >= scrollTops[key]
   }
 
   const trigger = leadingAndTrailing(
@@ -72,7 +89,7 @@ const Group: ComponentGroup = (props) => {
         ...local.classList,
       }}
       onScroll={(e) => {
-        trigger(e.target.scrollTop)
+        trigger(e.target.scrollHeight - e.target.scrollTop)
       }}
       {...others}
     >

@@ -1,13 +1,15 @@
 import style from "./List.module.css"
 import ContextList from "./context"
 
-import { createVisibilityObserver } from "@solid-primitives/intersection-observer"
 import {
   type JSX,
   type Component,
   mergeProps,
   splitProps,
   createEffect,
+  on,
+  onMount,
+  onCleanup,
 } from "solid-js"
 import { createStore } from "solid-js/store"
 
@@ -17,19 +19,24 @@ const List: Component<List> = (props) => {
   const merged = mergeProps({}, props)
   const [local, others] = splitProps(merged, ["class", "classList", "children"])
 
-  const [store, setStore] = createStore({ isVisible: false })
+  const [store, setStore] = createStore({ height: 0 })
 
   let ref: HTMLDivElement
 
-  const useVisibilityObserver = createVisibilityObserver({
-    initialValue: false,
-    threshold: 0.9,
-  })
+  onMount(() => {
+    if (ref!) {
+      const observer = new ResizeObserver((entries) => {
+        entries.forEach((entry) => {
+          setStore("height", entry.contentRect.height)
+        })
+      })
 
-  const visible = useVisibilityObserver(() => ref!)
+      observer.observe(ref)
 
-  createEffect(() => {
-    setStore("isVisible", visible())
+      onCleanup(() => {
+        observer.disconnect()
+      })
+    }
   })
 
   return (
@@ -42,7 +49,7 @@ const List: Component<List> = (props) => {
       }}
       {...others}
     >
-      <ContextList.Provider value={{ getVisible: () => store.isVisible }}>
+      <ContextList.Provider value={{ getHeight: () => store.height }}>
         {local.children}
       </ContextList.Provider>
     </div>

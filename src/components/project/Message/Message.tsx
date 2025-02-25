@@ -99,7 +99,8 @@ const Message: ComponentMessage = (props) => {
       classList={{
         [style[`Message--${local.type}`]]: !!local.type,
         [style[`Message__type--forward`]]: !!local.forward,
-        [style[`Message--only_attach`]]: !!!local.text,
+        [style[`Message--only_attach`]]: !!!local.text && !!local.attach,
+        [style[`Message--attach`]]: !!local.attach,
 
         [`${local.class}`]: !!local.class,
         ...local.classList,

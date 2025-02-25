@@ -5,9 +5,11 @@ import { type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
 import formatTime from "engine/utils/formatTime"
 import Gap from "@ui/default/Templates/Gap/Gap"
+import Image from "@ui/default/Blocks/Image/Image"
 
 import {
   type Component,
+  For,
   Show,
   type ValidComponent,
   createEffect,
@@ -28,6 +30,10 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   forward?: {
     message?: string
     time?: Date
+  }
+  attach?: {
+    type: "photo" | "audio"
+    items: { name: string; data: string }[]
   }
 
   /** Отображает бейдж как прочитанный */
@@ -60,6 +66,7 @@ const Message: ComponentMessage = (props) => {
     "time",
     "type",
     "forward",
+    "attach",
     "isRead",
     "isNotRead",
     "isNew",
@@ -92,6 +99,7 @@ const Message: ComponentMessage = (props) => {
       classList={{
         [style[`Message--${local.type}`]]: !!local.type,
         [style[`Message__type--forward`]]: !!local.forward,
+        [style[`Message--only_attach`]]: !!!local.text,
 
         [`${local.class}`]: !!local.class,
         ...local.classList,
@@ -101,40 +109,60 @@ const Message: ComponentMessage = (props) => {
       {...others}
     >
       <span class={style.Message__in}>
-        <Show keyed when={local.forward}>
-          {(forward) => (
-            <Flex
-              class={style.Message__forward}
-              height={"100%"}
-              justifyContent={"start"}
+        <Show keyed when={local.attach}>
+          {(attach) => (
+            <span
+              class={style.Message__images}
+              classList={{
+                [style[`Message__images--${attach.items.length}`]]: true,
+              }}
             >
-              {/* <span class={style.Message__forward_separator} /> */}
-              <span class={style.Message__forward_text}>{forward.message}</span>
-            </Flex>
+              <For each={attach.items}>
+                {(item) => (
+                  <Image class={style.Message__image} src={item.data} />
+                )}
+              </For>
+            </span>
           )}
         </Show>
-        {local.text}
-        <Show keyed when={local.time}>
-          {(time) => (
-            <Gap class={style.Message__time} count={"2px"}>
-              <span class={style.Message__time_text}>
-                <Show when={local.isEdit}>{local.textEdit} </Show>
-                {formatTime(new Date(time))}
-              </span>
-              <Show when={local.type === "out"}>
-                <Badge
-                  class={style.Message__time_badge}
-                  isRead={local.isRead}
-                  isNew={local.isNew}
-                  isNotRead={local.isNotRead}
-                  isLoading={local.isLoading}
-                  color={"inherit"}
-                  size={"inherit"}
-                />
-              </Show>
-            </Gap>
-          )}
-        </Show>
+        <div class={style.Message__text}>
+          <Show keyed when={local.forward}>
+            {(forward) => (
+              <Flex
+                class={style.Message__forward}
+                height={"100%"}
+                justifyContent={"start"}
+              >
+                {/* <span class={style.Message__forward_separator} /> */}
+                <span class={style.Message__forward_text}>
+                  {forward.message}
+                </span>
+              </Flex>
+            )}
+          </Show>
+          {local.text}
+          <Show keyed when={local.time}>
+            {(time) => (
+              <Gap class={style.Message__time} count={"2px"}>
+                <span class={style.Message__time_text}>
+                  <Show when={local.isEdit}>{local.textEdit} </Show>
+                  {formatTime(new Date(time))}
+                </span>
+                <Show when={local.type === "out"}>
+                  <Badge
+                    class={style.Message__time_badge}
+                    isRead={local.isRead}
+                    isNew={local.isNew}
+                    isNotRead={local.isNotRead}
+                    isLoading={local.isLoading}
+                    color={"inherit"}
+                    size={"inherit"}
+                  />
+                </Show>
+              </Gap>
+            )}
+          </Show>
+        </div>
       </span>
       {/* <span class={style.Message__end}>
         <IconMessageEnd />

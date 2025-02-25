@@ -6,8 +6,6 @@ import {
   type Component,
   mergeProps,
   splitProps,
-  createEffect,
-  on,
   onMount,
   onCleanup,
 } from "solid-js"

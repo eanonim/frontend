@@ -185,6 +185,7 @@ const Content: Component<Content> = (props) => {
                             handlerContextMenu("any", message.id)
                           }
                           forward={message.reply}
+                          attach={message.attach}
                           type={message.target === "my" ? "out" : "in"}
                           text={message.message}
                           time={message.time}

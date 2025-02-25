@@ -10,12 +10,15 @@ interface Image extends JSX.HTMLAttributes<HTMLDivElement> {
 
 type Store = {
   isHidden: boolean
+  isLoading: boolean
 }
 
 type ComponentImage = Component<Image> & {
   Badge: typeof ImageBadge
   Overlay: typeof ImageOverlay
 }
+
+const cache = new Map<string, Store>()
 
 const Image: ComponentImage = (props) => {
   const merged = mergeProps({}, props)
@@ -24,13 +27,42 @@ const Image: ComponentImage = (props) => {
     "classList",
     "children",
     "onError",
+    "onLoad",
     "src",
   ])
 
-  const [store, setStore] = createStore<Store>({ isHidden: false })
+  const [store, setStore] = createStore<Store>(
+    cache.get(local.src || "") || {
+      isHidden: true,
+      isLoading: true,
+    },
+  )
+
+  const onLoad: JSX.EventHandlerUnion<HTMLImageElement, Event> = (event) => {
+    setStore({
+      isLoading: false,
+      isHidden: false,
+    })
+    cache.set(local.src || "", store)
+    local.onLoad && (local.onLoad as any)(event)
+  }
 
   const onError: JSX.EventHandlerUnion<HTMLImageElement, Event> = (event) => {
-    setStore("isHidden", true)
+    setStore({
+      isLoading: false,
+      isHidden: true,
+    })
+    cache.set(local.src || "", store)
+    local.onError && (local.onError as any)(event)
+  }
+
+  const onLoadedMetadata: JSX.EventHandlerUnion<HTMLImageElement, Event> = (
+    event,
+  ) => {
+    setStore({
+      isHidden: false,
+    })
+    cache.set(local.src || "", store)
     local.onError && (local.onError as any)(event)
   }
 
@@ -39,13 +71,19 @@ const Image: ComponentImage = (props) => {
       class={style.Image}
       classList={{
         [style[`Image--hidden`]]: store.isHidden,
+        [style[`Image--loading`]]: store.isLoading,
 
         [`${local.class}`]: !!local.class,
         ...local.classList,
       }}
       {...others}
     >
-      <img onError={onError} src={local.src} />
+      <img
+        onError={onError}
+        onLoad={onLoad}
+        onLoadedMetadata={onLoadedMetadata}
+        src={local.src}
+      />
       {local.children}
     </div>
   )

@@ -70,7 +70,6 @@ const Group: ComponentGroup = (props) => {
   }
 
   const getIsVisible = (key: number) => {
-    console.log({ key }, store.scrollTop, scrollTops[key])
     return store.scrollTop >= scrollTops[key]
   }
 

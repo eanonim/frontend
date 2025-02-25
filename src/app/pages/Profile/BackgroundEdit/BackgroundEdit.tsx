@@ -11,6 +11,8 @@ interface Backgrounds extends JSX.HTMLAttributes<HTMLDivElement> {
 const Backgrounds: Component<Backgrounds> = (props) => {
   return (
     <Panel
+      safeTop={false}
+      safeContentTop={false}
       {...props}
       onScroll={(e) => {
         e.target.scrollTop = 1

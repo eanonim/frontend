@@ -88,21 +88,23 @@ const Group: ComponentGroup = (props) => {
         ...local.classList,
       }}
       onScroll={(e) => {
-        trigger(e.target.scrollHeight - e.target.scrollTop)
+        const scrollY = Math.abs(e.target.scrollTop) + e.target.clientHeight
+        // e.target.scrollHeight - e.target.scrollTop
+        trigger(scrollY)
       }}
       {...others}
     >
-      <div class={style.Group__in}>
-        <ContextGroup.Provider
-          value={{
-            getScrollTop: () => store.scrollTop,
-            setVisible,
-            getIsVisible,
-          }}
-        >
-          {local.children}
-        </ContextGroup.Provider>
-      </div>
+      {/* <div class={style.Group__in}> */}
+      <ContextGroup.Provider
+        value={{
+          getScrollTop: () => store.scrollTop,
+          setVisible,
+          getIsVisible,
+        }}
+      >
+        {local.children}
+      </ContextGroup.Provider>
+      {/* </div> */}
     </div>
   )
 }

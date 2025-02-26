@@ -51,7 +51,7 @@ const Content: Component<Content> = (props) => {
         if (isScroll && ref!) {
           setTimeout(() => {
             ref.scrollTo({
-              top: ref.scrollHeight,
+              top: 0,
               behavior: isSmooth ? "smooth" : "instant",
             })
           }, 1)
@@ -104,13 +104,17 @@ const Content: Component<Content> = (props) => {
         <Message.Group
           ref={ref!}
           onScroll={(e) => {
-            const isBottom =
-              e.target.scrollTop >=
-              e.target.scrollHeight - e.target.clientHeight - 40
+            const isBottom = Math.abs(e.target.scrollTop) <= 40
 
-            const isSmooth =
-              e.target.scrollTop >=
-              e.target.scrollHeight - e.target.clientHeight - 600
+            const isSmooth = Math.abs(e.target.scrollTop) <= 600
+
+            // const isBottom =
+            //   e.target.scrollTop >=
+            //   e.target.scrollHeight - e.target.clientHeight - 40
+
+            // const isSmooth =
+            //   e.target.scrollTop >=
+            //   e.target.scrollHeight - e.target.clientHeight - 600
 
             setStore({
               isBottom,
@@ -138,6 +142,7 @@ const Content: Component<Content> = (props) => {
                     {timeAgoOnlyDate(new Date(time)?.getTime())}
                   </Message.System>
                   <InfiniteScroll
+                    scrollTreshold={window.innerHeight}
                     next={async () => {
                       await messageList({
                         dialog: params().dialog,

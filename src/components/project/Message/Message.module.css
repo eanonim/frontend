@@ -40,7 +40,8 @@
 
   padding-left: 7px;
 
-  transform: translateY(7px);
+  transform     : translateY(7px);
+  padding-bottom: 10px;
 
   -user-select       : none;
   -webkit-user-select: none;
@@ -75,7 +76,8 @@
   right   : 8px;
   bottom  : 8px;
 
-  padding-left: 0px;
+  padding-left  : 0px;
+  padding-bottom: 0px;
 
   transform    : translateY(0px);
   padding      : 2px 6px;
@@ -323,7 +325,8 @@
   right   : 0px;
   bottom  : 0px;
 
-  padding-left: 0px;
+  padding-left  : 0px;
+  padding-bottom: 0px;
 
   transform    : translateY(0px);
   padding      : 2px 6px;

@@ -37,7 +37,7 @@ export default defineConfig({
     host: "0.0.0.0",
   },
   plugins: [
-    // eruda(),
+    eruda(),
     tsconfigPaths(),
     solidPlugin(),
     solidSVG({

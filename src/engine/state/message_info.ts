@@ -186,16 +186,22 @@ export const setTyping = (dialog: string) => {
   clearTimeout(timer[dialog])
 
   timer[dialog] = setTimeout(() => {
-    setter(
-      [MESSAGE_INFO_ATOM, dialog],
-      "message",
-      produce((message) => {
-        message.typing = false
+    const messageInfo = getter(MESSAGE_INFO_ATOM, dialog)
+    if (messageInfo.history.size !== 0) {
+      setter(
+        [MESSAGE_INFO_ATOM, dialog],
+        "message",
+        produce((message) => {
+          message.typing = false
 
-        return message
-      }),
-    )
+          return message
+        }),
+      )
+    }
 
-    setter(CHAT_LIST_ATOM, "history", dialog, "typing", false)
+    const chatList = getter(CHAT_LIST_ATOM)
+    if (!!chatList.history[dialog]) {
+      setter(CHAT_LIST_ATOM, "history", dialog, "typing", false)
+    }
   }, 5000)
 }

@@ -47,6 +47,7 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   /** Отображать изменение */
   isEdit?: boolean
   textEdit?: string
+  isEmoji?: boolean
 
   onRead: () => void
 }
@@ -73,6 +74,7 @@ const Message: ComponentMessage = (props) => {
     "isLoading",
     "isEdit",
     "textEdit",
+    "isEmoji",
     "onRead",
   ])
 
@@ -101,6 +103,7 @@ const Message: ComponentMessage = (props) => {
         [style[`Message__type--forward`]]: !!local.forward,
         [style[`Message--only_attach`]]: !!!local.text && !!local.attach,
         [style[`Message--attach`]]: !!local.attach,
+        [style[`Message--is_emoji`]]: !!local.isEmoji,
 
         [`${local.class}`]: !!local.class,
         ...local.classList,

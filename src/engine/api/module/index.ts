@@ -114,6 +114,7 @@ export type Socket = {
 
       edit?: boolean
       loading?: boolean
+      is_emoji?: boolean
     }>
   }
   "message.edit": {

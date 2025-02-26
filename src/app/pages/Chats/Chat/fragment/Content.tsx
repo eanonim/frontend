@@ -189,6 +189,7 @@ const Content: Component<Content> = (props) => {
                           type={message.target === "my" ? "out" : "in"}
                           text={message.message}
                           time={message.time}
+                          isEmoji={message.is_emoji}
                           isRead={
                             message.id <=
                             (messageInfo.last_read_message_id || 0)

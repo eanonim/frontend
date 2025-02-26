@@ -8,7 +8,7 @@ import {
   messageListCount,
   messageListCountStart,
 } from "root/configs"
-import { getFullDate } from "engine"
+import { getFullDate, isEmoji } from "engine"
 import { clamp, unlink } from "@minsize/utils"
 
 export type Message = {
@@ -42,6 +42,9 @@ export const addMessage = (
   typePush: "push" | "unshift" = "unshift",
 ): [MESSAGE_INFO_ATOM_RESPONSE, Message["indexes"]] => {
   const message = _message as Message
+
+  message.is_emoji = isEmoji(message.message)
+
   const fullTime = getFullDate(message.time)
 
   let dialogIndex = 0

@@ -56,11 +56,13 @@
   font-size  : calc(var(--message_font_size) - 4px);
   line-height: calc(var(--message_line_height) - 4px);
   opacity    : 0.6;
+  z-index    : 1;
 }
 
 .Message__time_badge {
-  width : calc(var(--message_font_size) - 2px);
-  height: calc(var(--message_font_size) - 2px);
+  width  : calc(var(--message_font_size) - 2px);
+  height : calc(var(--message_font_size) - 2px);
+  z-index: 1;
 }
 
 .Message--only_attach .Message__text {
@@ -75,10 +77,21 @@
 
   padding-left: 0px;
 
-  transform       : translateY(0px);
-  padding         : 2px 6px;
-  border-radius   : 13px;
-  background-color: rgba(0, 0, 0, .2);
+  transform    : translateY(0px);
+  padding      : 2px 6px;
+  border-radius: 13px;
+}
+
+.Message--only_attach .Message__time::after {
+  content         : " ";
+  position        : absolute;
+  left            : 0;
+  right           : 0;
+  top             : 0;
+  bottom          : 0;
+  border-radius   : inherit;
+  background-color: var(--bg_color);
+  opacity         : 0.6;
 }
 
 .Message__forward {
@@ -291,3 +304,40 @@
 .Message--in:not(:not(.Message--in+.Message--in):not(:has(~.Message--in):has(+.Message--in))):last-child .Message__images {
   border-radius: 6px 13px 0px 0px;
 } */
+
+/* isEmoji */
+.Message--is_emoji .Message__in {
+  background-color: transparent;
+  font-size       : calc(100vh / 10);
+  line-height     : calc(100vh / 9);
+  border-radius   : 0px;
+}
+
+.Message--is_emoji .Message__text {
+  padding: 0px;
+}
+
+.Message--is_emoji .Message__time {
+  float   : unset;
+  position: absolute;
+  right   : 0px;
+  bottom  : 0px;
+
+  padding-left: 0px;
+
+  transform    : translateY(0px);
+  padding      : 2px 6px;
+  border-radius: 13px;
+}
+
+.Message--is_emoji .Message__time::after {
+  content         : " ";
+  position        : absolute;
+  left            : 0;
+  right           : 0;
+  top             : 0;
+  bottom          : 0;
+  border-radius   : inherit;
+  background-color: var(--bg_color);
+  opacity         : 0.6;
+}

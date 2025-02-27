@@ -117,42 +117,20 @@ const List = <Message extends unknown>(props: List<Message>) => {
         each={store.messages}
         children={local.children}
       />
-      {/* <div
-        ref={observerRef!}
-        class={style.InfiniteScroll__observe}
-        style={{
-          top: 0,
-          position: "absolute",
-          width: "100%",
-          height: Math.abs(scrollTreshold) + "px",
-          "margin-bottom": "-" + Math.abs(scrollTreshold) + "px",
-        }}
-      />
-      <For each={local.messages}>
-        {(messages) => (
-          <Show when={messages.length}>
-            <div
-              style={{
-                display: "flex",
-                "flex-direction": "column",
-              }}
-            >
-              <For each={messages} children={local.children} />
-            </div>
-          </Show>
-        )}
-      </For> */}
+      <Show
+        when={
+          store.messages.length &&
+          store.messages.some((x) => {
+            if (!x || !x.length) return false
 
-      <ContextList.Provider value={{ getHeight: () => store.height }}>
-        {local.footer}
-      </ContextList.Provider>
-      {/* <InfiniteScroll
-        scrollTreshold={window.innerHeight}
-        next={onNext}
-        hasMore={store.hasMore} // store.messages.length < local.messages.length
-        each={store.messages}
-        children={local.children}
-      /> */}
+            return x.some((item) => item && !item.deleted)
+          })
+        }
+      >
+        <ContextList.Provider value={{ getHeight: () => store.height }}>
+          {local.footer}
+        </ContextList.Provider>
+      </Show>
     </div>
   )
 }

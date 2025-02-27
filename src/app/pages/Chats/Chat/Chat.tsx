@@ -20,9 +20,9 @@ const Default: Component<Default> = (props) => {
     <Panel
       fixed
       {...props}
-      // onScroll={(e) => {
-      //   e.target.scrollTop = 1
-      // }}
+      onScroll={(e) => {
+        e.target.scrollTop = 1
+      }}
     >
       <div
         style={{

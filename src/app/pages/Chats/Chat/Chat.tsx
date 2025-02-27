@@ -1,4 +1,4 @@
-import { Panel } from "components"
+import { Panel, usePlatform } from "components"
 
 import { Content, Footer, Header } from "./fragment"
 
@@ -14,6 +14,8 @@ const Default: Component<Default> = (props) => {
     setHeaderColor({ type: "bg_color" })
   })
 
+  const platform = usePlatform()
+
   return (
     <Panel
       fixed
@@ -22,36 +24,36 @@ const Default: Component<Default> = (props) => {
       //   e.target.scrollTop = 1
       // }}
     >
-      {/* <div
+      <div
         style={{
           position: "relative",
-          "min-height": "calc(100% + 1px)",
+          "min-height": platform() === "iOS" ? "calc(100% + 1px)" : "100%",
           display: "flex",
           "flex-direction": "column",
         }}
-      > */}
-      <Header />
-      <div
-        style={{
-          height: "100%",
-          width: "100%",
-          overflow: "hidden",
-        }}
       >
+        <Header />
         <div
           style={{
             height: "100%",
             width: "100%",
-            display: "flex",
-            "flex-direction": "column",
-            "align-items": "center",
+            overflow: "hidden",
           }}
         >
-          <Content />
-          <Footer />
+          <div
+            style={{
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              "flex-direction": "column",
+              "align-items": "center",
+            }}
+          >
+            <Content />
+            <Footer />
+          </div>
         </div>
       </div>
-      {/* </div> */}
     </Panel>
   )
 }

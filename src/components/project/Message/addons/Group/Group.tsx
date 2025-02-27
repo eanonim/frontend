@@ -102,6 +102,7 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
   }
 
   const getIsVisible = (key: number) => {
+    if (!scrollTops[key]) return true
     return store.scrollTop >= scrollTops[key]?.scrollTop
   }
 

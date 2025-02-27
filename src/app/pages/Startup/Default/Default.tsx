@@ -56,7 +56,6 @@ const Default: Component<Default> = (props) => {
   }
 
   onMount(() => {
-    console.log("STARTUP")
     initAuth()
   })
 

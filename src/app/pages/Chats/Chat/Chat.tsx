@@ -16,23 +16,42 @@ const Default: Component<Default> = (props) => {
 
   return (
     <Panel
+      fixed
       {...props}
-      onScroll={(e) => {
-        e.target.scrollTop = 1
-      }}
+      // onScroll={(e) => {
+      //   e.target.scrollTop = 1
+      // }}
     >
-      <div
+      {/* <div
         style={{
           position: "relative",
           "min-height": "calc(100% + 1px)",
           display: "flex",
           "flex-direction": "column",
         }}
+      > */}
+      <Header />
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          overflow: "hidden",
+        }}
       >
-        <Header />
-        <Content />
-        <Footer />
+        <div
+          style={{
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            "flex-direction": "column",
+            "align-items": "center",
+          }}
+        >
+          <Content />
+          <Footer />
+        </div>
       </div>
+      {/* </div> */}
     </Panel>
   )
 }

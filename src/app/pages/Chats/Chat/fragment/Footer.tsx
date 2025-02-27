@@ -120,6 +120,7 @@ const Footer: Component<Footer> = (props) => {
       style={{
         "z-index": 3,
       }}
+      width={"100%"}
       background={"section_bg_color"}
     >
       <Show

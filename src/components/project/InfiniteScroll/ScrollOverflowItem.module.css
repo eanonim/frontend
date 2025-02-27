@@ -1,13 +1,11 @@
 .ScrollOverflowItem {
   position  : relative;
-  height    : 100%;
   box-sizing: border-box;
   overflow  : hidden;
 }
 
 .ScrollOverflowItem__root {
   position  : relative;
-  height    : 100%;
   box-sizing: border-box;
   overflow  : hidden;
   z-index   : 1;

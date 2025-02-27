@@ -5,6 +5,7 @@ import {
   STORE_INTEREST_ATOM,
   STORE_THEME_COLOR_ATOM,
 } from "engine/state"
+import { sleep } from "@minsize/utils"
 
 const storeOptions = async (options: Socket["store.options"]["request"]) => {
   const atoms = {

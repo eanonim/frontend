@@ -1,86 +1,130 @@
 import style from "./Group.module.css"
+import MessageSystem from "../System/System"
 import { List } from "./addons"
 
 import ContextGroup from "./context"
-import {
-  leadingAndTrailing,
-  debounce,
-  throttle,
-} from "@solid-primitives/scheduled"
+import { leadingAndTrailing, throttle } from "@solid-primitives/scheduled"
 
 import {
   type JSX,
-  type Component,
   mergeProps,
   splitProps,
-  onMount,
-  onCleanup,
-  createSignal,
+  batch,
+  For,
+  Accessor,
+  createEffect,
+  on,
 } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, produce } from "solid-js/store"
+import { timeAgoOnlyDate } from "engine"
 
-interface Group extends JSX.HTMLAttributes<HTMLDivElement> {}
+interface Group<Message extends unknown>
+  extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "children"> {
+  dialogs: [string, Message[][]][]
+  onNext: () => Promise<boolean>
+  hasMore?: boolean
 
-type ComponentGroup = Component<Group> & {
-  List: typeof List
+  children: (item: Message, index: Accessor<number>) => JSX.Element
 }
 
-type Store = {
+type Store<Message extends unknown> = {
   scrollTop: number
+  dialogs: [string, Message[][]][]
+  safeScrollTop: number
 }
 
-const Group: ComponentGroup = (props) => {
+type ScrollTops = Record<
+  number,
+  {
+    height: number
+    scrollTop: number
+  }
+>
+
+const Group = <Message extends unknown>(props: Group<Message>) => {
   const merged = mergeProps({}, props)
-  const [local, others] = splitProps(merged, ["class", "classList", "children"])
+  const [local, others] = splitProps(merged, [
+    "class",
+    "classList",
+    "children",
+    "dialogs",
+    "onNext",
+    "hasMore",
+  ])
 
-  const [systems, setSystems] = createSignal<
-    { key: number; scrollTop: number; height: number }[]
-  >([])
-  const [scrollTops, setScrollTops] = createStore<Record<number, number>>({})
+  let ref: HTMLDivElement
 
-  const [store, setStore] = createStore<Store>({
+  const [scrollTops, setScrollTops] = createStore<ScrollTops>({})
+
+  const [store, setStore] = createStore<Store<Message>>({
     scrollTop: 0,
+    dialogs: local.dialogs.slice(0, 1),
+    safeScrollTop: 0,
   })
 
   const setVisible = (key: number, height: number) => {
-    setSystems((store) => {
-      const elem = store.find((x) => x.key === key)
+    if (scrollTops[key]?.height === height) return
 
-      if (elem) {
-        elem.height = height
-      } else {
-        store.push({ key, height, scrollTop: 0 })
-      }
+    setScrollTops(
+      produce((store) => {
+        store[key] = { height: height, scrollTop: store[key]?.scrollTop || 0 }
 
-      for (const item of store) {
-        const heightKey = store.reduce(
-          (acb, value) => (value.key <= item.key ? acb + value.height : acb),
+        return store
+      }),
+    )
+
+    const scrolls = Object.entries(scrollTops) as unknown as [
+      number,
+      {
+        height: number
+        scrollTop: number
+      },
+    ][]
+
+    batch(() => {
+      for (const [key] of scrolls) {
+        const heightKey = scrolls.reduce(
+          (acb, value) => (value[0] <= key ? acb + value[1].height : acb),
           0,
         )
-        const elem = store.find((x) => x.key === key)
 
-        if (elem) {
-          elem.scrollTop = heightKey
-          setScrollTops(item.key, heightKey)
-        }
+        setScrollTops(key, "scrollTop", heightKey)
       }
-
-      return store
     })
   }
 
   const getIsVisible = (key: number) => {
-    return store.scrollTop >= scrollTops[key]
+    return store.scrollTop >= scrollTops[key]?.scrollTop
   }
 
   const trigger = leadingAndTrailing(
     throttle,
-    (scrollTop: number) => setStore("scrollTop", scrollTop),
+    (scrollTop: number) => setStore("scrollTop", Math.abs(scrollTop)),
     250,
   )
 
+  createEffect(
+    on(
+      () => local.dialogs,
+      (dialogs) => {
+        setStore("dialogs", dialogs.slice(0, store.dialogs.length || 1))
+      },
+    ),
+  )
+
+  const onNext = async () => {
+    if (local.dialogs.length > store.dialogs.length) {
+      setStore("dialogs", local.dialogs.slice(0, store.dialogs.length + 1))
+      return
+    }
+    await local.onNext()
+  }
+
+  let lastScroll = 0
+
   return (
     <div
+      ref={ref!}
       class={style.Group}
       classList={{
         _visibleScroll: true,
@@ -88,23 +132,49 @@ const Group: ComponentGroup = (props) => {
         ...local.classList,
       }}
       onScroll={(e) => {
-        const scrollY = Math.abs(e.target.scrollTop) + e.target.clientHeight
+        if (e.target.scrollTop < lastScroll - e.target.clientHeight) {
+          e.target.scrollTop = lastScroll
+        }
+        const scrollY = e.target.scrollTop - e.target.clientHeight
         // e.target.scrollHeight - e.target.scrollTop
         trigger(scrollY)
+
+        lastScroll = e.target.scrollTop
       }}
       {...others}
     >
-      {/* <div class={style.Group__in}> */}
-      <ContextGroup.Provider
-        value={{
-          getScrollTop: () => store.scrollTop,
-          setVisible,
-          getIsVisible,
-        }}
-      >
-        {local.children}
-      </ContextGroup.Provider>
-      {/* </div> */}
+      <div class={style.Group__in}>
+        <ContextGroup.Provider
+          value={{
+            getScrollTop: () => store.scrollTop,
+            setVisible,
+            getIsVisible,
+          }}
+        >
+          <For
+            each={store.dialogs}
+            fallback={<span style={{ height: "200vh", display: "block" }} />}
+          >
+            {([time, messages], index) => (
+              <List
+                data-index={index()}
+                onNext={onNext}
+                // hasMore={store.dialogs.length < local.dialogs.length}
+                hasMore={
+                  index() === local.dialogs.length - 1 ? local.hasMore : false
+                }
+                messages={messages}
+                footer={
+                  <MessageSystem key={index()}>
+                    {timeAgoOnlyDate(new Date(time)?.getTime())}
+                  </MessageSystem>
+                }
+                children={local.children}
+              />
+            )}
+          </For>
+        </ContextGroup.Provider>
+      </div>
     </div>
   )
 }

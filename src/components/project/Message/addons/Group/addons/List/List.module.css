@@ -1,6 +1,5 @@
 .List {
-  display : block;
-  position: relative;
-  width   : 100%;
-  height  : auto;
+  position      : relative;
+  display       : flex;
+  flex-direction: column-reverse;
 }

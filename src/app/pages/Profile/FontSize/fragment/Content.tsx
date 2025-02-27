@@ -27,34 +27,40 @@ const Content: Component<Content> = (props) => {
           "margin-top": "auto",
         }}
       >
-        <Message.Group>
-          <Message.Group.List>
-            <Message.System key={0}>
-              {timeAgoOnlyDate(new Date().getTime())}
-            </Message.System>
-            <Message
-              type={"out"}
-              text={lang("font_size.templates.1")}
-              time={new Date()}
-              isRead={true}
-            />
-            <Message
-              forward={{
-                message: lang("font_size.templates.1"),
-              }}
-              type={"in"}
-              text={lang("font_size.templates.2")}
-              time={new Date()}
-              isRead={true}
-            />
-            <Message
-              type={"out"}
-              text={lang("font_size.templates.3")}
-              time={new Date()}
-              isRead={true}
-            />
-          </Message.Group.List>
-        </Message.Group>
+        <div
+          style={{
+            padding: "10px 4px",
+            "box-sizing": "border-box",
+          }}
+        >
+          <Message.System key={0}>
+            {timeAgoOnlyDate(new Date().getTime())}
+          </Message.System>
+          <Message
+            type={"out"}
+            text={lang("font_size.templates.1")}
+            time={new Date()}
+            isRead={true}
+            onRead={() => {}}
+          />
+          <Message
+            forward={{
+              message: lang("font_size.templates.1"),
+            }}
+            type={"in"}
+            text={lang("font_size.templates.2")}
+            time={new Date()}
+            isRead={true}
+            onRead={() => {}}
+          />
+          <Message
+            type={"out"}
+            text={lang("font_size.templates.3")}
+            time={new Date()}
+            isRead={true}
+            onRead={() => {}}
+          />
+        </div>
       </Flex>
     </>
   )

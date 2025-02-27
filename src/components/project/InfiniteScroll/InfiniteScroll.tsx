@@ -59,7 +59,6 @@ function InfiniteScroll<T extends unknown, U extends JSX.Element>(
     root: contentRef!,
   })
   const visibleObserver = useVisibilityObserver(() => observerRef!)
-  const visibleContent = useVisibilityObserver(() => contentRef!)
 
   const handleNext = async () => {
     if (props.hasMore && store.when) {
@@ -68,7 +67,7 @@ function InfiniteScroll<T extends unknown, U extends JSX.Element>(
       setLoading(false)
 
       const _loading = untrack(loading)
-      if (untrack(visibleObserver) && untrack(visibleContent) && !_loading) {
+      if (untrack(visibleObserver) && !_loading) {
         handleNext()
       }
     }
@@ -76,7 +75,7 @@ function InfiniteScroll<T extends unknown, U extends JSX.Element>(
 
   createEffect(() => {
     const _loading = untrack(loading)
-    if (visibleObserver() && visibleContent() && !_loading) {
+    if (visibleObserver() && !_loading) {
       handleNext()
     } else if (
       visibleObserver() &&

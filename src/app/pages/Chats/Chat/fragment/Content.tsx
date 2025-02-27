@@ -1,5 +1,4 @@
-import { Background, Flex, InfiniteScroll, Message } from "components"
-import { timeAgoOnlyDate } from "engine"
+import { Background, Flex, Message } from "components"
 import { messageList, messageRead } from "engine/api"
 import { useAtom, useAtomSystem } from "engine/modules/smart-data"
 import { SETTINGS_ATOM } from "engine/state"
@@ -7,7 +6,14 @@ import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { messageListCount } from "root/configs"
 import { modals, pages, pushModal, useParams } from "router"
 
-import { type JSX, type Component, For, Show, createEffect, on } from "solid-js"
+import {
+  type JSX,
+  type Component,
+  Show,
+  createEffect,
+  on,
+  onMount,
+} from "solid-js"
 import { createStore } from "solid-js/store"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
@@ -30,6 +36,18 @@ const Content: Component<Content> = (props) => {
   let timer: NodeJS.Timeout
   let ref: HTMLDivElement
 
+  onMount(() => {
+    if (ref!) {
+      setTimeout(() => {
+        console.log("ONSCROLLL")
+        ref.scrollTo({
+          top: ref.scrollHeight,
+          behavior: "instant",
+        })
+      }, 0)
+    }
+  })
+
   createEffect(
     on(
       () => messageInfo.last_message_id,
@@ -49,9 +67,10 @@ const Content: Component<Content> = (props) => {
         }
 
         if (isScroll && ref!) {
+          console.log("ONSCROLLL")
           setTimeout(() => {
             ref.scrollTo({
-              top: 0,
+              top: ref.scrollHeight,
               behavior: isSmooth ? "smooth" : "instant",
             })
           }, 1)
@@ -86,9 +105,18 @@ const Content: Component<Content> = (props) => {
     }
   }
 
+  const onNext = async () => {
+    await messageList({
+      dialog: params().dialog,
+      offset: messageInfo.last_offset,
+      count: messageListCount,
+    })
+    return true
+  }
+
   return (
     <>
-      <Background
+      {/* <Background
         fixed
         type={settings.backgroundId}
         quality={2}
@@ -100,135 +128,81 @@ const Content: Component<Content> = (props) => {
           "margin-top": "auto",
         }}
         // height={"100%"}
+      > */}
+      <Message.Group
+        ref={ref!}
+        onScroll={(e) => {
+          const isBottom = Math.abs(e.target.scrollTop) <= 40
+
+          const isSmooth = Math.abs(e.target.scrollTop) <= 600
+
+          // const isBottom =
+          //   e.target.scrollTop >=
+          //   e.target.scrollHeight - e.target.clientHeight - 40
+
+          // const isSmooth =
+          //   e.target.scrollTop >=
+          //   e.target.scrollHeight - e.target.clientHeight - 600
+
+          setStore({
+            isBottom,
+            isSmooth,
+          })
+        }}
+        dialogs={messageInfo.dialogs}
+        onNext={onNext}
+        hasMore={!!!messageInfoSystem.fullLoad}
       >
-        <Message.Group
-          ref={ref!}
-          onScroll={(e) => {
-            const isBottom = Math.abs(e.target.scrollTop) <= 40
-
-            const isSmooth = Math.abs(e.target.scrollTop) <= 600
-
-            // const isBottom =
-            //   e.target.scrollTop >=
-            //   e.target.scrollHeight - e.target.clientHeight - 40
-
-            // const isSmooth =
-            //   e.target.scrollTop >=
-            //   e.target.scrollHeight - e.target.clientHeight - 600
-
-            setStore({
-              isBottom,
-              isSmooth,
-            })
-          }}
-        >
-          <For
-            each={messageInfo.dialogs}
-            fallback={<span style={{ height: "200vh", display: "block" }} />}
-          >
-            {([time, messages], index) => (
-              <Show
-                when={
-                  messages.length &&
-                  messages.some((x) => {
-                    if (!x || !x.length) return false
-
-                    return x.some((item) => item && !item.deleted)
+        {(message, index) => (
+          <Show when={message && !message.deleted}>
+            <Message
+              data-index={index()}
+              data-message_id={message.id}
+              onTouchStart={() =>
+                !message.loading && handlerContextMenu("start", message.id)
+              }
+              onTouchEnd={(e) => {
+                if (isOpenModal) {
+                  e.preventDefault()
+                }
+                handlerContextMenu("end", message.id)
+              }}
+              onTouchMove={() => handlerContextMenu("end", message.id)}
+              onMouseMove={() => handlerContextMenu("end", message.id)}
+              onMouseDown={() =>
+                !message.loading && handlerContextMenu("start", message.id)
+              }
+              onMouseUp={() => handlerContextMenu("end", message.id)}
+              onContextMenu={() => handlerContextMenu("any", message.id)}
+              forward={message.reply}
+              attach={message.attach}
+              type={message.target === "my" ? "out" : "in"}
+              // text={message.message}
+              text={String(message.id)}
+              time={message.time}
+              isEmoji={message.is_emoji}
+              isRead={message.id <= (messageInfo.last_read_message_id || 0)}
+              isNotRead={
+                !(message.id <= (messageInfo.last_read_message_id || 0))
+              }
+              isLoading={message.loading}
+              isEdit={message.edit}
+              onRead={() => {
+                if (
+                  message.target !== "my" &&
+                  message.id >= (messageInfo.last_read_message_id || 0)
+                ) {
+                  messageRead({
+                    dialog: params().dialog,
+                    message_id: message.id,
                   })
                 }
-              >
-                <Message.Group.List data-index={index()}>
-                  <Message.System key={index()}>
-                    {timeAgoOnlyDate(new Date(time)?.getTime())}
-                  </Message.System>
-                  <InfiniteScroll
-                    scrollTreshold={window.innerHeight}
-                    next={async () => {
-                      await messageList({
-                        dialog: params().dialog,
-                        offset: messageInfo.last_offset + messageListCount,
-                        count: messageListCount,
-                      })
-                      return true
-                    }}
-                    hasMore={
-                      index() === messageInfo.dialogs.length - 1
-                        ? !!!messageInfoSystem.fullLoad
-                        : false
-                    }
-                    each={messages}
-                  >
-                    {(message, index) => (
-                      <Show when={message && !message.deleted}>
-                        <Message
-                          data-index={index()}
-                          data-message_id={message.id}
-                          onTouchStart={() =>
-                            !message.loading &&
-                            handlerContextMenu("start", message.id)
-                          }
-                          onTouchEnd={(e) => {
-                            if (isOpenModal) {
-                              e.preventDefault()
-                            }
-                            handlerContextMenu("end", message.id)
-                          }}
-                          onTouchMove={() =>
-                            handlerContextMenu("end", message.id)
-                          }
-                          onMouseMove={() =>
-                            handlerContextMenu("end", message.id)
-                          }
-                          onMouseDown={() =>
-                            !message.loading &&
-                            handlerContextMenu("start", message.id)
-                          }
-                          onMouseUp={() =>
-                            handlerContextMenu("end", message.id)
-                          }
-                          onContextMenu={() =>
-                            handlerContextMenu("any", message.id)
-                          }
-                          forward={message.reply}
-                          attach={message.attach}
-                          type={message.target === "my" ? "out" : "in"}
-                          text={message.message}
-                          time={message.time}
-                          isEmoji={message.is_emoji}
-                          isRead={
-                            message.id <=
-                            (messageInfo.last_read_message_id || 0)
-                          }
-                          isNotRead={
-                            !(
-                              message.id <=
-                              (messageInfo.last_read_message_id || 0)
-                            )
-                          }
-                          isLoading={message.loading}
-                          isEdit={message.edit}
-                          onRead={() => {
-                            if (
-                              message.target !== "my" &&
-                              message.id >=
-                                (messageInfo.last_read_message_id || 0)
-                            ) {
-                              messageRead({
-                                dialog: params().dialog,
-                                message_id: message.id,
-                              })
-                            }
-                          }}
-                        />
-                      </Show>
-                    )}
-                  </InfiniteScroll>
-                </Message.Group.List>
-              </Show>
-            )}
-          </For>
-        </Message.Group>
-      </Flex>
+              }}
+            />
+          </Show>
+        )}
+      </Message.Group>
+      {/* </Flex> */}
     </>
   )
 }

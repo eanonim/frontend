@@ -34,7 +34,7 @@ const setHistory = (
     //   path + window.location.search + window.location.hash,
     // )
   } catch (e) {
-    console.log({ e })
+    console.error({ e })
   }
 
   bridgeSessionStorageSet({

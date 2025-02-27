@@ -18,7 +18,6 @@ const Default: Component<Default> = (props) => {
 
   return (
     <Panel
-      fixed
       {...props}
       onScroll={(e) => {
         e.target.scrollTop = 1

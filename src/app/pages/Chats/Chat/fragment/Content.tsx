@@ -177,8 +177,7 @@ const Content: Component<Content> = (props) => {
               forward={message.reply}
               attach={message.attach}
               type={message.target === "my" ? "out" : "in"}
-              // text={message.message}
-              text={String(message.id)}
+              text={message.message}
               time={message.time}
               isEmoji={message.is_emoji}
               isRead={message.id <= (messageInfo.last_read_message_id || 0)}

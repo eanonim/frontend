@@ -149,18 +149,18 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
         ...local.classList,
       }}
       onScroll={(e) => {
-        if (!store.isLoading) {
-          if (e.target.scrollTop < lastScroll - e.target.clientHeight) {
-            e.target.scrollTop = lastScroll
-          }
-          const scrollY = e.target.scrollTop - e.target.clientHeight
-          // e.target.scrollHeight - e.target.scrollTop
-          trigger(scrollY)
-
-          lastScroll = e.target.scrollTop
-        } else {
+        // if (!store.isLoading) {
+        if (e.target.scrollTop < lastScroll - e.target.clientHeight) {
           e.target.scrollTop = lastScroll
         }
+        const scrollY = e.target.scrollTop - e.target.clientHeight
+        // e.target.scrollHeight - e.target.scrollTop
+        trigger(scrollY)
+
+        lastScroll = e.target.scrollTop
+        // } else {
+        //   e.target.scrollTop = lastScroll
+        // }
       }}
       {...others}
     >

@@ -474,6 +474,18 @@
   resolved "https://registry.yarnpkg.com/@solid-primitives/utils/-/utils-6.3.0.tgz#5659e9788e8fe385c75c78c2f12a5e7bcc9f448d"
   integrity sha512-e7hTlJ1Ywh2+g/Qug+n4L1mpfxsikoIS4/sHE2EK9WatQt8UJqop/vE6bsLnXlU1xuhb/jo94Ah5Y27rd4wP7A==
 
+"@tanstack/solid-virtual@^3.13.2":
+  version "3.13.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/solid-virtual/-/solid-virtual-3.13.2.tgz#2efc349c4f5fcde65279e87b72ae42148d868b63"
+  integrity sha512-ahIsiHBBQPabZ9UmEXXCi0FLIuwGfgthkbsJmYPeKQbJKGoLJdOXZ48OLYleyvXzsg4nrVemXYd74wT5ibi5Zw==
+  dependencies:
+    "@tanstack/virtual-core" "3.13.2"
+
+"@tanstack/virtual-core@3.13.2":
+  version "3.13.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.13.2.tgz#132fde09a19cc4b10dff24a2df1fc7be40635866"
+  integrity sha512-Qzz4EgzMbO5gKrmqUondCjiHcuu4B1ftHb0pjCut661lXZdGoHeze9f/M8iwsK1t5LGR6aNuNGU7mxkowaW6RQ==
+
 "@trysound/sax@0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.2.0.tgz#cccaab758af56761eb7bf37af6f03f326dd798ad"

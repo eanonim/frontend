@@ -14,9 +14,14 @@ import {
   Accessor,
   createEffect,
   on,
+  createUniqueId,
+  createSignal,
+  onMount,
+  Show,
 } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { timeAgoOnlyDate } from "engine"
+import { sleep } from "@minsize/utils"
 
 interface Group<Message extends unknown>
   extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "children"> {
@@ -31,6 +36,7 @@ type Store<Message extends unknown> = {
   scrollTop: number
   dialogs: [string, Message[][]][]
   safeScrollTop: number
+  isLoading: boolean
 }
 
 type ScrollTops = Record<
@@ -53,6 +59,7 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
   ])
 
   let ref: HTMLDivElement
+  let refHidden: HTMLSpanElementE
 
   const [scrollTops, setScrollTops] = createStore<ScrollTops>({})
 
@@ -60,6 +67,7 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
     scrollTop: 0,
     dialogs: local.dialogs.slice(0, 1),
     safeScrollTop: 0,
+    isLoading: false,
   })
 
   const setVisible = (key: number, height: number) => {
@@ -113,11 +121,18 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
   )
 
   const onNext = async () => {
-    if (local.dialogs.length > store.dialogs.length) {
-      setStore("dialogs", local.dialogs.slice(0, store.dialogs.length + 1))
-      return
+    setStore("isLoading", true)
+    try {
+      if (local.dialogs.length > store.dialogs.length) {
+        setStore("dialogs", local.dialogs.slice(0, store.dialogs.length + 1))
+        return
+      }
+      await local.onNext()
+    } finally {
+      requestAnimationFrame(() => {
+        setStore("isLoading", false)
+      })
     }
-    await local.onNext()
   }
 
   let lastScroll = 0
@@ -127,19 +142,25 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
       ref={ref!}
       class={style.Group}
       classList={{
-        _visibleScroll: true,
+        // _visibleScroll: true,
+        // [style[`Group--hidden`]]: store.isLoading,
+
         [`${local.class}`]: !!local.class,
         ...local.classList,
       }}
       onScroll={(e) => {
-        if (e.target.scrollTop < lastScroll - e.target.clientHeight) {
+        if (!store.isLoading) {
+          if (e.target.scrollTop < lastScroll - e.target.clientHeight) {
+            e.target.scrollTop = lastScroll
+          }
+          const scrollY = e.target.scrollTop - e.target.clientHeight
+          // e.target.scrollHeight - e.target.scrollTop
+          trigger(scrollY)
+
+          lastScroll = e.target.scrollTop
+        } else {
           e.target.scrollTop = lastScroll
         }
-        const scrollY = e.target.scrollTop - e.target.clientHeight
-        // e.target.scrollHeight - e.target.scrollTop
-        trigger(scrollY)
-
-        lastScroll = e.target.scrollTop
       }}
       {...others}
     >

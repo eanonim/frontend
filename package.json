@@ -29,6 +29,7 @@
     "@minsize/utils": "^0.0.9",
     "@solid-primitives/map": "^0.6.0",
     "@solid-primitives/scheduled": "^1.5.0",
+    "@tanstack/solid-virtual": "^3.13.2",
     "elum-state": "^0.8.4",
     "solid-js": "^1.9.5"
   }

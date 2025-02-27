@@ -22,6 +22,10 @@
   flex-direction: column-reverse;
 }
 
+.Group--hidden {
+  overflow: hidden;
+}
+
 .Group::before {
   content   : "";
   display   : block;

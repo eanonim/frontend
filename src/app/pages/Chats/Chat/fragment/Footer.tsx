@@ -201,11 +201,18 @@ const Footer: Component<Footer> = (props) => {
             onInput={onInput}
           />
         </WriteBar.Field>
-        <WriteBar.Icon onClick={handlerSend}>
+        <WriteBar.Icon
+          onClick={handlerSend}
+          style={{
+            transform: message().length ? "scale(1.5)" : "scale(1)",
+            "-webkit-transform": message().length ? "scale(1.5)" : "scale(1)",
+            transition: "0.3s",
+          }}
+        >
           <IconSend
             style={{
-              transform: message().length ? "scale(1.2)" : "scale(1)",
-              "-webkit-transform": message().length ? "scale(1.2)" : "scale(1)",
+              transform: message().length ? "scale(0.8)" : "scale(1)",
+              "-webkit-transform": message().length ? "scale(0.8)" : "scale(1)",
               transition: "0.3s",
             }}
             color={

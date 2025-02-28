@@ -14,12 +14,14 @@ interface Link<T extends ValidComponent> extends IEvents<T> {
   component?: T
 
   platform?: Platform
+
+  color?: "accentColor" | "accent"
 }
 
 const Link = <T extends ValidComponent>(props: Link<T>): JSX.Element => {
   const style = useStyle(styles, props.platform)
   const merged = mergeProps(
-    { component: props.href ? "a" : "button" },
+    { component: props.href ? "a" : "button", color: "accentColor" },
     props,
   ) as Link<T>
   const [local, others] = splitProps(merged, [
@@ -27,12 +29,15 @@ const Link = <T extends ValidComponent>(props: Link<T>): JSX.Element => {
     "class",
     "classList",
     "children",
+    "color",
   ])
 
   return (
     <Events
       class={style.Link}
       classList={{
+        [style[`Link__color--${local.color}`]]: !!local.color,
+
         [`${local.class}`]: !!local.class,
         ...local.classList,
       }}

@@ -59,7 +59,6 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
   ])
 
   let ref: HTMLDivElement
-  let refHidden: HTMLSpanElementE
 
   const [scrollTops, setScrollTops] = createStore<ScrollTops>({})
 

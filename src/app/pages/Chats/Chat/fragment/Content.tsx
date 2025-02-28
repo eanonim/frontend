@@ -1,7 +1,7 @@
 import { Background, Flex, Message } from "components"
 import { messageList, messageRead } from "engine/api"
 import { useAtom, useAtomSystem } from "engine/modules/smart-data"
-import { SETTINGS_ATOM } from "engine/state"
+import { SETTINGS_ATOM, type Message as TMessage } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { messageListCount } from "root/configs"
 import { modals, pages, pushModal, useParams } from "router"
@@ -33,18 +33,18 @@ const Content: Component<Content> = (props) => {
     isSmooth: false,
   })
 
+  let isOpenModal = false
   let timer: NodeJS.Timeout
   let ref: HTMLDivElement
 
   onMount(() => {
     if (ref!) {
-      setTimeout(() => {
-        console.log("ONSCROLLL")
+      requestAnimationFrame(() => {
         ref.scrollTo({
           top: ref.scrollHeight,
           behavior: "instant",
         })
-      }, 0)
+      })
     }
   })
 
@@ -67,19 +67,16 @@ const Content: Component<Content> = (props) => {
         }
 
         if (isScroll && ref!) {
-          console.log("ONSCROLLL")
-          setTimeout(() => {
+          requestAnimationFrame(() => {
             ref.scrollTo({
               top: ref.scrollHeight,
               behavior: isSmooth ? "smooth" : "instant",
             })
-          }, 1)
+          })
         }
       },
     ),
   )
-
-  let isOpenModal = false
 
   const handlerContextMenu = (
     type: "start" | "end" | "any",
@@ -114,9 +111,21 @@ const Content: Component<Content> = (props) => {
     return true
   }
 
+  const onRead = (message: TMessage) => {
+    if (
+      message.target !== "my" &&
+      message.id >= (messageInfo.last_read_message_id || 0)
+    ) {
+      messageRead({
+        dialog: params().dialog,
+        message_id: message.id,
+      })
+    }
+  }
+
   return (
     <>
-      {/* <Background
+      <Background
         fixed
         type={settings.backgroundId}
         quality={2}
@@ -128,80 +137,70 @@ const Content: Component<Content> = (props) => {
           "margin-top": "auto",
         }}
         // height={"100%"}
-      > */}
-      <Message.Group
-        ref={ref!}
-        onScroll={(e) => {
-          const isBottom = Math.abs(e.target.scrollTop) <= 40
-
-          const isSmooth = Math.abs(e.target.scrollTop) <= 600
-
-          // const isBottom =
-          //   e.target.scrollTop >=
-          //   e.target.scrollHeight - e.target.clientHeight - 40
-
-          // const isSmooth =
-          //   e.target.scrollTop >=
-          //   e.target.scrollHeight - e.target.clientHeight - 600
-
-          setStore({
-            isBottom,
-            isSmooth,
-          })
-        }}
-        dialogs={messageInfo.dialogs}
-        onNext={onNext}
-        hasMore={!!!messageInfoSystem.fullLoad}
       >
-        {(message, index) => (
-          <Show when={message && !message.deleted}>
-            <Message
-              data-index={index()}
-              data-message_id={message.id}
-              onTouchStart={() =>
-                !message.loading && handlerContextMenu("start", message.id)
-              }
-              onTouchEnd={(e) => {
-                if (isOpenModal) {
-                  e.preventDefault()
+        <Message.Group
+          ref={ref!}
+          onScroll={(e) => {
+            const isBottom = Math.abs(e.target.scrollTop) <= 40
+
+            const isSmooth = Math.abs(e.target.scrollTop) <= 600
+
+            // const isBottom =
+            //   e.target.scrollTop >=
+            //   e.target.scrollHeight - e.target.clientHeight - 40
+
+            // const isSmooth =
+            //   e.target.scrollTop >=
+            //   e.target.scrollHeight - e.target.clientHeight - 600
+
+            setStore({
+              isBottom,
+              isSmooth,
+            })
+          }}
+          dialogs={messageInfo.dialogs}
+          onNext={onNext}
+          hasMore={!!!messageInfoSystem.fullLoad}
+        >
+          {(message, index) => (
+            <Show when={message && !message.deleted}>
+              <Message
+                data-index={index()}
+                data-message_id={message.id}
+                onTouchStart={() =>
+                  !message.loading && handlerContextMenu("start", message.id)
                 }
-                handlerContextMenu("end", message.id)
-              }}
-              onTouchMove={() => handlerContextMenu("end", message.id)}
-              onMouseMove={() => handlerContextMenu("end", message.id)}
-              onMouseDown={() =>
-                !message.loading && handlerContextMenu("start", message.id)
-              }
-              onMouseUp={() => handlerContextMenu("end", message.id)}
-              onContextMenu={() => handlerContextMenu("any", message.id)}
-              forward={message.reply}
-              attach={message.attach}
-              type={message.target === "my" ? "out" : "in"}
-              text={message.message}
-              time={message.time}
-              isEmoji={message.is_emoji}
-              isRead={message.id <= (messageInfo.last_read_message_id || 0)}
-              isNotRead={
-                !(message.id <= (messageInfo.last_read_message_id || 0))
-              }
-              isLoading={message.loading}
-              isEdit={message.edit}
-              onRead={() => {
-                if (
-                  message.target !== "my" &&
-                  message.id >= (messageInfo.last_read_message_id || 0)
-                ) {
-                  messageRead({
-                    dialog: params().dialog,
-                    message_id: message.id,
-                  })
+                onTouchEnd={(e) => {
+                  if (isOpenModal) {
+                    e.preventDefault()
+                  }
+                  handlerContextMenu("end", message.id)
+                }}
+                onTouchMove={() => handlerContextMenu("end", message.id)}
+                onMouseMove={() => handlerContextMenu("end", message.id)}
+                onMouseDown={() =>
+                  !message.loading && handlerContextMenu("start", message.id)
                 }
-              }}
-            />
-          </Show>
-        )}
-      </Message.Group>
-      {/* </Flex> */}
+                onMouseUp={() => handlerContextMenu("end", message.id)}
+                onContextMenu={() => handlerContextMenu("any", message.id)}
+                forward={message.reply}
+                attach={message.attach}
+                type={message.target === "my" ? "out" : "in"}
+                text={message.message}
+                time={message.time}
+                isEmoji={message.is_emoji}
+                isRead={message.id <= (messageInfo.last_read_message_id || 0)}
+                isNotRead={
+                  !(message.id <= (messageInfo.last_read_message_id || 0))
+                }
+                isLoading={message.loading}
+                isEdit={message.edit}
+                onRead={() => onRead(message)}
+              />
+            </Show>
+          )}
+        </Message.Group>
+      </Flex>
     </>
   )
 }

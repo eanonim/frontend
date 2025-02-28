@@ -8,11 +8,11 @@
 }
 
 .Link._hover::after {
-  background-color: var(--link_color);
+  background-color: var(--comp_link_color);
   opacity         : 0.2;
 }
 
 .Link._active::after {
-  background-color: var(--link_color);
+  background-color: var(--comp_link_color);
   opacity         : 0.4;
 }

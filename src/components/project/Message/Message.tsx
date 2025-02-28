@@ -1,7 +1,7 @@
 import style from "./Message.module.css"
 import { Badge, Group, System, Typing } from "./addons"
 
-import { type TypeFlex } from "@ui/index"
+import { Link, type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
 import formatTime from "engine/utils/formatTime"
 import Gap from "@ui/default/Templates/Gap/Gap"
@@ -13,13 +13,11 @@ import {
   Show,
   type ValidComponent,
   createEffect,
-  onCleanup,
-  onMount,
   splitProps,
 } from "solid-js"
-import { IconMessageEnd } from "source"
 import { DynamicProps } from "solid-js/web"
 import { createVisibilityObserver } from "@solid-primitives/intersection-observer"
+import { textParserUrl } from "@minsize/utils"
 
 interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   text?: string
@@ -144,7 +142,24 @@ const Message: ComponentMessage = (props) => {
               </Flex>
             )}
           </Show>
-          {local.text}
+          {/* {local.text} */}
+          <For each={textParserUrl(local.text || "")}>
+            {(parse, index) => (
+              <Show
+                data-index={index()}
+                when={parse.type === "url"}
+                fallback={parse.value}
+              >
+                <Link
+                  color={local.type === "in" ? "accent" : "accentColor"}
+                  target={"_blank"}
+                  href={"https://" + parse.value.replace(/^(https?:\/\/)/i, "")}
+                >
+                  {parse.value.replace(/^(https?:\/\/)/i, "")}
+                </Link>
+              </Show>
+            )}
+          </For>
           <Show keyed when={local.time}>
             {(time) => (
               <Gap class={style.Message__time} count={"2px"}>

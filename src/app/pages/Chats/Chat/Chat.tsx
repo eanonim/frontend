@@ -32,26 +32,8 @@ const Default: Component<Default> = (props) => {
         }}
       >
         <Header />
-        <div
-          style={{
-            height: "100%",
-            width: "100%",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              height: "100%",
-              width: "100%",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-            }}
-          >
-            <Content />
-            <Footer />
-          </div>
-        </div>
+        <Content />
+        <Footer />
       </div>
     </Panel>
   )

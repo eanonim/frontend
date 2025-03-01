@@ -58,7 +58,10 @@ export const addMessage = (
   dialogIndex = messages.dialogs.findIndex((x) => x[0] === fullTimeToday)
   if (dialogIndex === -1) {
     dialogIndex = messages.dialogs.length
-    messages.dialogs.push([fullTimeToday, []])
+    messages.dialogs.push([
+      fullTimeToday,
+      Array.from({ length: countEmpty }, () => []),
+    ])
   }
 
   // Забиваем Array, для следующих сообщений, что бы Index`ы работали нормально

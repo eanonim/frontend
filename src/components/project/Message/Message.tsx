@@ -13,6 +13,7 @@ import {
   Show,
   type ValidComponent,
   createEffect,
+  createMemo,
   splitProps,
 } from "solid-js"
 import { DynamicProps } from "solid-js/web"
@@ -92,6 +93,8 @@ const Message: ComponentMessage = (props) => {
     }
   })
 
+  const message = createMemo(() => textParserUrl(local.text || ""))
+
   return (
     <Flex
       ref={ref! as unknown as DynamicProps<"div">}
@@ -136,14 +139,16 @@ const Message: ComponentMessage = (props) => {
                 justifyContent={"start"}
               >
                 {/* <span class={style.Message__forward_separator} /> */}
-                <span class={style.Message__forward_text}>
-                  {forward.message}
+                <span class={style.Message__forward_content}>
+                  <span class={style.Message__forward_text}>
+                    {forward.message}
+                  </span>
                 </span>
               </Flex>
             )}
           </Show>
           {/* {local.text} */}
-          <For each={textParserUrl(local.text || "")}>
+          <For each={message()}>
             {(parse, index) => (
               <Show
                 data-index={index()}
@@ -160,6 +165,26 @@ const Message: ComponentMessage = (props) => {
               </Show>
             )}
           </For>
+          {/* <Show keyed when={local.forward}>
+            {(forward) => (
+              <Flex
+                class={style.Message__forward}
+                classList={{
+                  [style[`Message__forward--bottom`]]: true,
+                  [style[`Message__forward--image`]]: true,
+                }}
+                height={"100%"}
+                justifyContent={"start"}
+              >
+                <span class={style.Message__forward_content}>
+                  <span class={style.Message__forward_text}>YouTube</span>
+                  <img
+                    src={"https://i.ytimg.com/vi/1kw7AHKhPbI/maxresdefault.jpg"}
+                  />
+                </span>
+              </Flex>
+            )}
+          </Show> */}
           <Show keyed when={local.time}>
             {(time) => (
               <Gap class={style.Message__time} count={"2px"}>

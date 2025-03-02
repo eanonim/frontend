@@ -112,12 +112,9 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
   )
 
   createEffect(
-    on(
-      () => local.dialogs,
-      (dialogs) => {
-        setStore("dialogs", dialogs.slice(0, store.dialogs.length || 1))
-      },
-    ),
+    on([() => local.dialogs, () => local.dialogs.length], ([dialogs]) => {
+      setStore("dialogs", dialogs.slice(0, store.dialogs.length || 1))
+    }),
   )
 
   const onNext = async () => {

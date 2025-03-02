@@ -113,6 +113,7 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
 
   createEffect(
     on([() => local.dialogs, () => local.dialogs.length], ([dialogs]) => {
+      // comment
       setStore("dialogs", dialogs.slice(0, store.dialogs.length || 1))
     }),
   )

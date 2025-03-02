@@ -1,21 +1,28 @@
-const timeAgo = (timestamp: number) => {
+import { getLocale, ISOLanguage } from "engine/languages"
+
+const timeAgo = (timestamp: number): string => {
   if (!timestamp) return "только что"
+
   const date = new Date(timestamp)
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
+  const lang = getLocale()
+  const options: Intl.DateTimeFormatOptions = {}
 
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  const day = String(date.getDate()).padStart(2, "0")
-  const hour = String(date.getHours()).padStart(2, "0")
-  const min = String(date.getMinutes()).padStart(2, "0")
-
-  let text = `${day}.${month}.${year}`
-
-  if (seconds < 86400 || date.getDay() !== new Date().getDay()) {
-    text = `${hour}:${min}`
+  if (seconds < 86400) {
+    options.hour = "2-digit"
+    options.minute = "2-digit"
+  } else if (date.getFullYear() === new Date().getFullYear()) {
+    options.day = "numeric"
+    options.month = "short"
+  } else {
+    options.day = "numeric"
+    options.month = "short"
+    options.year = "numeric"
   }
 
-  return text
+  return new Intl.DateTimeFormat(ISOLanguage[lang], options)
+    .format(date)
+    .replace(".", "")
 }
 
 export default timeAgo

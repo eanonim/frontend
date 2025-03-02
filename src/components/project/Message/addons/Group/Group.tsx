@@ -63,7 +63,7 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
   const [scrollTops, setScrollTops] = createStore<ScrollTops>({})
 
   const [store, setStore] = createStore<Store<Message>>({
-    scrollTop: 0,
+    scrollTop: window.innerHeight,
     dialogs: local.dialogs.slice(0, 1),
     safeScrollTop: 0,
     isLoading: false,

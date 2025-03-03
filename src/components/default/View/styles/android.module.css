@@ -43,23 +43,3 @@
     transform: translateY(20%)
   }
 }
-
-@keyframes _toLeft {
-  from {
-    transform: translateY(0%)
-  }
-
-  to {
-    transform: translateY(-10%)
-  }
-}
-
-@keyframes _fromLeft {
-  from {
-    transform: translateY(-10%)
-  }
-
-  to {
-    transform: translateY(0%)
-  }
-}

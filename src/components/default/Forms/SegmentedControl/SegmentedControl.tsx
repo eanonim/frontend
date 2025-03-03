@@ -1,10 +1,11 @@
-import style from "./SegmentedControl.module.css"
+import { styles } from "./styles"
 import SegmentedControlContext from "./context"
 import { Button } from "./addons"
 
-import { TypeFlex } from "@ui/index"
+import { type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
 import Separator from "@ui/default/Blocks/Separator/Separator"
+import useStyle from "@ui/default/utils/useStyle"
 
 import {
   type Accessor,
@@ -33,9 +34,11 @@ type ComponentSegmentedControl = Component<SegmentedControl> & {
 type Store = {
   buttons: { [key in string]: boolean }
   selected?: string
+  anim?: boolean
 }
 
 const SegmentedControl: ComponentSegmentedControl = (props) => {
+  const style = useStyle(styles)
   const merged = mergeProps({}, props)
   const [local, others] = splitProps(merged, [
     "class",
@@ -45,7 +48,7 @@ const SegmentedControl: ComponentSegmentedControl = (props) => {
     "selected",
   ])
 
-  const [store, setStore] = createStore<Store>({ buttons: {} })
+  const [store, setStore] = createStore<Store>({ buttons: {}, anim: false })
 
   const getChild = (elem: JSX.Element) =>
     children(
@@ -61,11 +64,12 @@ const SegmentedControl: ComponentSegmentedControl = (props) => {
     return !!store.buttons[key]
   }
 
-  const setSelected = (key: string, status: boolean) => {
+  const setSelected = (key: string, status: boolean, anim = true) => {
     for (const _key in store.buttons) {
       setStore("buttons", _key, false)
     }
     setStore("buttons", key, status)
+    setStore("anim", anim)
     if (status) {
       setStore("selected", key)
       local.onSelected?.(key)
@@ -74,7 +78,7 @@ const SegmentedControl: ComponentSegmentedControl = (props) => {
 
   onMount(() => {
     if (local.selected) {
-      setSelected(local.selected, true)
+      setSelected(local.selected, true, false)
     }
   })
 
@@ -85,37 +89,40 @@ const SegmentedControl: ComponentSegmentedControl = (props) => {
         setSelected: setSelected,
       }}
     >
-      <Flex
-        class={style.SegmentedControl}
-        classList={{
-          [`${local.class}`]: !!local.class,
-          ...local.classList,
-        }}
-        width={"100%"}
-        height={"100%"}
-        {...others}
-      >
-        <For each={getChild(local.children)()}>
-          {(elem, index) => (
-            <>
-              {elem}
-              <Show when={index() + 1 < getChild(local.children)().length}>
-                <Separator
-                  class={style.SegmentedControl__separator}
-                  type={"vertical"}
-                />
-              </Show>
-            </>
-          )}
-        </For>
-        <span
-          class={style.SegmentedControl__hover}
-          style={{
-            width: `calc(100% / ${getChild(local.children)().length})`,
-            transform: `translateX(calc(100% * ${getIndexSelected()}))`,
+      <span class={style.SegmentedControl}>
+        <Flex
+          class={style.SegmentedControl__in}
+          classList={{
+            [style[`SegmentedControl--anim`]]: store.anim,
+            [`${local.class}`]: !!local.class,
+            ...local.classList,
           }}
-        ></span>
-      </Flex>
+          width={"100%"}
+          height={"100%"}
+          {...others}
+        >
+          <For each={getChild(local.children)()}>
+            {(elem, index) => (
+              <>
+                {elem}
+                <Show when={index() + 1 < getChild(local.children)().length}>
+                  <Separator
+                    class={style.SegmentedControl__separator}
+                    type={"vertical"}
+                  />
+                </Show>
+              </>
+            )}
+          </For>
+          <span
+            class={style.SegmentedControl__hover}
+            style={{
+              width: `calc(100% / ${getChild(local.children)().length})`,
+              transform: `translateX(calc(100% * ${getIndexSelected()}))`,
+            }}
+          ></span>
+        </Flex>
+      </span>
     </SegmentedControlContext.Provider>
   )
 }

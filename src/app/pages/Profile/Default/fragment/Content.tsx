@@ -117,65 +117,67 @@ const Content: Component<Content> = (props) => {
   ]
 
   return (
-    <For each={elements}>
-      {(group, index) => (
-        <Group data-index={index()}>
-          <Group.Container>
-            <Cell.List>
-              <For each={group}>
-                {(cell, index) => (
-                  <Cell data-index={index()} separator onClick={cell.handler}>
-                    <Cell.Before>
-                      <Switch
-                        fallback={
-                          <cell.icon
-                            width={28}
-                            height={28}
-                            color={cell.isAccent ? "var(--accent_color)" : ""}
-                          />
-                        }
-                      >
-                        <Match keyed when={cell.color}>
-                          {(color) => (
-                            <IconBackground
-                              padding={"4px"}
-                              border-radius={"8px"}
-                              color={color}
-                            >
-                              <cell.icon
-                                width={20}
-                                height={20}
-                                color={"white"}
-                              />
-                            </IconBackground>
-                          )}
-                        </Match>
-                      </Switch>
-                    </Cell.Before>
-                    <Cell.Container>
-                      <Cell.Content>
-                        <Title {...(cell.isAccent ? textProps : {})}>
-                          {lang(cell.title)}
-                        </Title>
-                      </Cell.Content>
-                      <Show when={!!cell.color}>
-                        <Cell.After>
-                          <IconChevron
-                            type={"right"}
-                            size={"20px"}
-                            color={"var(--separator_secondary)"}
-                          />
-                        </Cell.After>
-                      </Show>
-                    </Cell.Container>
-                  </Cell>
-                )}
-              </For>
-            </Cell.List>
-          </Group.Container>
-        </Group>
-      )}
-    </For>
+    <Group.List>
+      <For each={elements}>
+        {(group, index) => (
+          <Group data-index={index()}>
+            <Group.Container>
+              <Cell.List>
+                <For each={group}>
+                  {(cell, index) => (
+                    <Cell data-index={index()} separator onClick={cell.handler}>
+                      <Cell.Before>
+                        <Switch
+                          fallback={
+                            <cell.icon
+                              width={28}
+                              height={28}
+                              color={cell.isAccent ? "var(--accent_color)" : ""}
+                            />
+                          }
+                        >
+                          <Match keyed when={cell.color}>
+                            {(color) => (
+                              <IconBackground
+                                padding={"4px"}
+                                border-radius={"8px"}
+                                color={color}
+                              >
+                                <cell.icon
+                                  width={20}
+                                  height={20}
+                                  color={"white"}
+                                />
+                              </IconBackground>
+                            )}
+                          </Match>
+                        </Switch>
+                      </Cell.Before>
+                      <Cell.Container>
+                        <Cell.Content>
+                          <Title {...(cell.isAccent ? textProps : {})}>
+                            {lang(cell.title)}
+                          </Title>
+                        </Cell.Content>
+                        <Show when={!!cell.color}>
+                          <Cell.After>
+                            <IconChevron
+                              type={"right"}
+                              size={"20px"}
+                              color={"var(--separator_secondary)"}
+                            />
+                          </Cell.After>
+                        </Show>
+                      </Cell.Container>
+                    </Cell>
+                  )}
+                </For>
+              </Cell.List>
+            </Group.Container>
+          </Group>
+        )}
+      </For>
+    </Group.List>
   )
 }
 

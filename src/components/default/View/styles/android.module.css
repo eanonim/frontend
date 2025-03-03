@@ -1,0 +1,65 @@
+.View--to-next>.View--first {
+  -webkit-animation: _nextAnimation .2s ease forwards;
+  animation        : _nextAnimation .2s ease forwards;
+}
+
+/* .View--to-next>.View--last {
+  -webkit-animation: _toLeft .4s ease forwards;
+  animation        : _toLeft .4s ease forwards;
+}
+
+
+.View--to-back>.View--first {
+  -webkit-animation: _fromLeft .4s ease forwards;
+  animation        : _fromLeft .4s ease forwards;
+} */
+
+.View--to-back>.View--last {
+  -webkit-animation: _backAnimation .2s ease forwards;
+  animation        : _backAnimation .2s ease forwards;
+}
+
+
+@keyframes _nextAnimation {
+  from {
+    opacity  : 0;
+    transform: translateY(20%)
+  }
+
+  to {
+    opacity  : 1;
+    transform: translateY(0%)
+  }
+}
+
+@keyframes _backAnimation {
+  from {
+    opacity  : 1;
+    transform: translateY(0%)
+  }
+
+  to {
+    opacity  : 0;
+    transform: translateY(20%)
+  }
+}
+
+@keyframes _toLeft {
+  from {
+    transform: translateY(0%)
+  }
+
+  to {
+    transform: translateY(-10%)
+  }
+}
+
+@keyframes _fromLeft {
+  from {
+    transform: translateY(-10%)
+  }
+
+  to {
+    transform: translateY(0%)
+  }
+}

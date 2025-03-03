@@ -33,49 +33,52 @@ const Content: Component<Content> = (props) => {
   }
 
   return (
-    <Group>
-      <Group.Container>
-        <Cell.List>
-          <For
-            each={
-              Object.keys(
-                lang("theme") as any,
-              ) as Socket["store.list"]["response"]["theme"][]
-            }
-          >
-            {(theme, index) => (
-              <Element
-                data-index={index()}
-                onClick={() => handlerSet(theme)}
-                when={settings.theme === theme}
-                locale={lang(`theme.${theme}`)}
-              />
-            )}
-          </For>
-        </Cell.List>
-      </Group.Container>
-
-      <Group.Container>
-        <Cell.List>
-          <For
-            each={
-              Object.keys(
-                lang("themeColor") as any,
-              ) as Socket["store.list"]["response"]["themeColor"][]
-            }
-          >
-            {(theme, index) => (
-              <Element
-                data-index={index()}
-                onClick={() => handlerSetColor(theme)}
-                when={settings.themeColor === theme}
-                locale={lang(`themeColor.${theme}` as any)}
-              />
-            )}
-          </For>
-        </Cell.List>
-      </Group.Container>
-    </Group>
+    <Group.List>
+      <Group>
+        <Group.Container>
+          <Cell.List>
+            <For
+              each={
+                Object.keys(
+                  lang("theme") as any,
+                ) as Socket["store.list"]["response"]["theme"][]
+              }
+            >
+              {(theme, index) => (
+                <Element
+                  data-index={index()}
+                  onClick={() => handlerSet(theme)}
+                  when={settings.theme === theme}
+                  locale={lang(`theme.${theme}`)}
+                />
+              )}
+            </For>
+          </Cell.List>
+        </Group.Container>
+      </Group>
+      <Group>
+        <Group.Container>
+          <Cell.List>
+            <For
+              each={
+                Object.keys(
+                  lang("themeColor") as any,
+                ) as Socket["store.list"]["response"]["themeColor"][]
+              }
+            >
+              {(theme, index) => (
+                <Element
+                  data-index={index()}
+                  onClick={() => handlerSetColor(theme)}
+                  when={settings.themeColor === theme}
+                  locale={lang(`themeColor.${theme}` as any)}
+                />
+              )}
+            </For>
+          </Cell.List>
+        </Group.Container>
+      </Group>
+    </Group.List>
   )
 }
 

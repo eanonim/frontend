@@ -1,4 +1,5 @@
-import style from "./Header.module.css"
+import useStyle from "@component/default/utils/useStyle"
+import { styles } from "./styles"
 
 import Text from "@ui/default/Templates/Text/Text"
 
@@ -9,6 +10,7 @@ interface Header extends JSX.HTMLAttributes<HTMLSpanElement> {
 }
 
 const Header: Component<Header> = (props) => {
+  const style = useStyle(styles)
   const merged = mergeProps({ mode: "accent" }, props)
   const [local, others] = splitProps(merged, [
     "class",

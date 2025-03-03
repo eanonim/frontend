@@ -4,6 +4,7 @@ import { panels, useRouterPanel } from "router"
 import { type JSX, type Component, createEffect } from "solid-js"
 
 import Default from "./Default/Default"
+import { useHeaderColor } from "engine"
 
 interface Startup extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -11,6 +12,8 @@ interface Startup extends JSX.HTMLAttributes<HTMLDivElement> {
 
 const Startup: Component<Startup> = (props) => {
   const activePanel = useRouterPanel(props.nav)
+
+  useHeaderColor({ iOS: "bg_color", android: "bg_color" })
 
   return (
     <View {...props} activePanel={activePanel()}>

@@ -1,0 +1,8 @@
+.Container {
+  border-radius   : 10px;
+  background-color: var(--section_bg_color);
+}
+
+.Container+.Container {
+  margin-top: 12px;
+}

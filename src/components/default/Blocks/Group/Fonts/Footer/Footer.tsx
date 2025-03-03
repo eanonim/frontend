@@ -1,4 +1,5 @@
-import style from "./Footer.module.css"
+import useStyle from "@component/default/utils/useStyle"
+import { styles } from "./styles"
 
 import Text from "@ui/default/Templates/Text/Text"
 
@@ -7,6 +8,7 @@ import { type JSX, type Component, mergeProps, splitProps } from "solid-js"
 interface Footer extends JSX.HTMLAttributes<HTMLSpanElement> {}
 
 const Footer: Component<Footer> = (props) => {
+  const style = useStyle(styles)
   const merged = mergeProps({ mode: "accent" }, props)
   const [local, others] = splitProps(merged, [
     "class",

@@ -1,1 +1,4 @@
-.Group {}
+.Group {
+  padding: 12px;
+  gap    : 12px;
+}

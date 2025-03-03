@@ -1,8 +1,12 @@
-.SegmentedControl {
+.SegmentedControl__in {
   position  : relative;
   box-sizing: border-box;
   overflow  : hidden;
   border    : 2px solid transparent;
+}
+
+.SegmentedControl--anim .SegmentedControl__hover {
+  transition: 0.3s ease-in-out;
 }
 
 .SegmentedControl__hover {
@@ -13,10 +17,13 @@
   background-color: var(--accent_color);
   border-radius   : 8px;
   pointer-events  : none;
-  transition      : 0.3s ease-in-out;
 }
 
 .SegmentedControl__separator {
   height    : calc(100% - 10px);
   box-sizing: border-box;
+}
+
+.SegmentedControl {
+  display: block;
 }

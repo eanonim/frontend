@@ -1,2 +1,2 @@
-export { default as GroupList } from "./GroupList/GroupList"
-export { default as Container } from './Container/Container';
+export { default as List } from "./GroupList/GroupList"
+export { default as Container } from "./Container/Container"

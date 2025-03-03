@@ -1,1 +1,13 @@
-.Group {}
+.Group {
+  margin          : 6px 0px;
+  background-color: var(--section_bg_color);
+}
+
+
+.Group:not(:only-child):first-child {
+  margin-top: 0px;
+}
+
+.Group:not(:only-child):last-child {
+  margin-bottom: 0px;
+}

@@ -1,4 +1,4 @@
-import { Panel } from "components"
+import { Panel, usePlatform } from "components"
 
 import { Content, Footer } from "./fragment"
 
@@ -9,6 +9,8 @@ interface Backgrounds extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 const Backgrounds: Component<Backgrounds> = (props) => {
+  const platform = usePlatform()
+
   return (
     <Panel
       safeTop={false}
@@ -21,7 +23,7 @@ const Backgrounds: Component<Backgrounds> = (props) => {
       <div
         style={{
           position: "relative",
-          "min-height": "calc(100% + 1px)",
+          "min-height": platform() === "iOS" ? "calc(100% + 1px)" : "100%",
           display: "flex",
           "flex-direction": "column",
         }}

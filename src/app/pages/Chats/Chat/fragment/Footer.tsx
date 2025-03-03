@@ -189,6 +189,7 @@ const Footer: Component<Footer> = (props) => {
         </WriteBar.Icon>
         <WriteBar.Field>
           <WriteBar.Field.Textarea
+            placeholder={"Сообщение"}
             maxHeight={window.innerHeight / 3 + "px"}
             ref={ref!}
             onKeyDown={(event) => {

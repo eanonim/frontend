@@ -1,5 +1,5 @@
 import { styles } from "./styles"
-import { Container } from "./addons"
+import { Container, List } from "./addons"
 import { Footer, Header } from "./Fonts"
 
 import { type HTMLAttributes } from "@ui/Types"
@@ -13,6 +13,7 @@ interface ComponentGroup extends Component<Group> {
   Header: typeof Header
   Footer: typeof Footer
   Container: typeof Container
+  List: typeof List
 }
 
 const Group: ComponentGroup = (props) => {
@@ -42,5 +43,6 @@ const Group: ComponentGroup = (props) => {
 Group.Header = Header
 Group.Footer = Footer
 Group.Container = Container
+Group.List = List
 
 export default Group

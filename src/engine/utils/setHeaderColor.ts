@@ -4,7 +4,7 @@ const setHeaderColor = ({
   type,
   color,
 }: {
-  type?: "secondary" | "bg_color"
+  type?: "secondary" | "bg_color" | "section_bg_color"
   color?: string
 }) => {
   if (type) {

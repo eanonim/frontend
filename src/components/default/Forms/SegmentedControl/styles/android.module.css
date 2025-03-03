@@ -1,0 +1,10 @@
+.SegmentedControl__in {
+  border          : unset;
+  border-radius   : 8px;
+  background-color: var(--secondary_color);
+}
+
+.SegmentedControl {
+  display: block;
+  padding: 12px;
+}

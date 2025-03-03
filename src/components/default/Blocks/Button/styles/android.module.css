@@ -1,1 +1,44 @@
 .Button {}
+
+/* Size */
+.Button__type--default.Button__size--small {
+  --button__padding-horizontal: 12px;
+  --button__padding-vertical  : 8px;
+  --button__gap               : 4px;
+  border-radius               : 20px;
+}
+
+.Button__type--default.Button__size--medium {
+  --button__padding-horizontal: 16px;
+  --button__padding-vertical  : 12px;
+  --button__gap               : 6px;
+  border-radius               : 12px;
+}
+
+.Button__type--default.Button__size--large {
+  --button__padding-horizontal: 12px;
+  --button__padding-vertical  : 15px;
+  --button__gap               : 8px;
+  border-radius               : 12px;
+}
+
+.Button__type--icon.Button__size--small {
+  --button__padding-horizontal: 4px;
+  --button__padding-vertical  : 4px;
+  --button__gap               : 4px;
+  border-radius               : 12px;
+}
+
+.Button__type--icon.Button__size--medium {
+  --button__padding-horizontal: 6px;
+  --button__padding-vertical  : 6px;
+  --button__gap               : 6px;
+  border-radius               : 12px;
+}
+
+.Button__type--icon.Button__size--large {
+  --button__padding-horizontal: 10px;
+  --button__padding-vertical  : 10px;
+  --button__gap               : 8px;
+  border-radius               : 12px;
+}

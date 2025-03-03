@@ -235,8 +235,8 @@ export type Socket = {
        * 1 - женское
        */
       my_sex: number
-    } & {
-      [key in SearchInteresting]?: boolean
+
+      interests: SearchInteresting[]
     }
     response: {
       dialog: string

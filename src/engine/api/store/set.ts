@@ -35,33 +35,10 @@ const storeSet = async (options: Socket["store.set"]["request"]) => {
         ) => void,
         options: Socket["store.set"]["request"],
       ) => {
-        let errorServer
+        options.value = String(options.value)
+        const { response, error } = await socketSend("store.set", options)
 
-        if (options.key === "backgroundId") {
-          errorServer = ServerError.isBackgroundId(options.value)
-        } else if (options.key === "themeColor") {
-          errorServer = ServerError.isThemeColor(options.value)
-        }
-
-        try {
-          if (errorServer) {
-            resolve({ response: undefined, error: errorServer } as any)
-            return
-          }
-          options.value = String(options.value)
-          const { response, error } = await socketSend("store.set", options)
-
-          if (error) {
-            errorServer = error
-          }
-
-          resolve({ response, error } as any)
-          return
-        } finally {
-          if (errorServer) {
-            handlerError(errorServer)
-          }
-        }
+        resolve({ response, error } as any)
       },
       800,
     )
@@ -71,6 +48,20 @@ const storeSet = async (options: Socket["store.set"]["request"]) => {
     | { error: SocketError; response: undefined }
     | { error: undefined; response: Socket["store.set"]["response"] }
   >((resolve) => {
+    let errorServer
+
+    if (options.key === "backgroundId") {
+      errorServer = ServerError.isBackgroundId(options.value)
+    } else if (options.key === "themeColor") {
+      errorServer = ServerError.isThemeColor(options.value)
+    }
+
+    if (errorServer) {
+      resolve({ response: undefined, error: errorServer } as any)
+      handlerError(errorServer)
+      return
+    }
+
     func(resolve, options)
   })
 }

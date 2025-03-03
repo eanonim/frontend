@@ -16,11 +16,11 @@ const Footer: Component<Footer> = (props) => {
   const [searchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
 
   const handlerSearch = async () => {
-    var interests: Partial<Record<SearchInteresting, boolean>> = {}
+    var interests: SearchInteresting[] = []
 
     for (const [key, value] of Object.entries(searchOptions.interests)) {
       if (value.isSelected) {
-        interests[key as SearchInteresting] = value.isSelected
+        interests.push(key as SearchInteresting)
       }
     }
 
@@ -31,8 +31,7 @@ const Footer: Component<Footer> = (props) => {
       your_sex: getMaleOfNumber(searchOptions.companion.male),
       my_age: searchOptions.you.age.from,
       my_sex: getMaleOfNumber(searchOptions.you.male),
-      music: true,
-      ...interests,
+      interests,
     })
 
     if (response?.dialog) {

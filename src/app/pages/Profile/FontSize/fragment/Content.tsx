@@ -26,6 +26,8 @@ const Content: Component<Content> = (props) => {
           overflow: "hidden",
           "margin-top": "auto",
         }}
+        alignItems={"end"}
+        justifyContent={"end"}
       >
         <div
           style={{

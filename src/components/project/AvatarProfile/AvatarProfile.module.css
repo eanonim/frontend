@@ -12,6 +12,11 @@
 
 
   backdrop-filter: blur(8px);
+
+  display        : flex;
+  justify-content: space-between;
+  align-items    : center;
+
 }
 
 .AvatarProfile__name_title {

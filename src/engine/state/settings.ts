@@ -2,7 +2,6 @@ import { clamp } from "@minsize/utils"
 import { atom, getter, setter } from "engine/modules/smart-data"
 import { produce } from "solid-js/store"
 
-import { debounce, leadingAndTrailing } from "@solid-primitives/scheduled"
 import { storeList, storeSet } from "engine/api"
 import { Socket } from "engine/api/module"
 import {
@@ -11,8 +10,6 @@ import {
   bridgeSetBottomBarColor,
   bridgeSetHeaderColor,
 } from "@apiteam/twa-bridge/solid"
-import ServerError from "engine/api/ServerError"
-import { STORE_THEME_COLOR_ATOM } from "./options"
 
 export const SETTINGS_ATOM = atom<
   Socket["store.list"]["response"],
@@ -30,7 +27,7 @@ export const SETTINGS_ATOM = atom<
     storeList(options)
   },
   updateIntervalMs: 30_000,
-  onUpdate: async ({ prev, next }, key) => {
+  onUpdate: ({ prev, next }, key) => {
     const keysToCheck: Socket["store.set"]["request"]["key"][] = [
       "backgroundColor",
       "backgroundId",
@@ -39,23 +36,21 @@ export const SETTINGS_ATOM = atom<
       "themeColor",
     ]
 
-    let status = true
+    ;(async () => {
+      for (const key of keysToCheck) {
+        const value = next[key] as any
+        if (prev[key] !== value) {
+          const { error } = await storeSet({ key: key, value: value })
+          if (error) {
+            setter(SETTINGS_ATOM, prev)
 
-    for (const key of keysToCheck) {
-      const value = next[key] as any
-      if (prev[key] !== value) {
-        const { error } = await storeSet({ key: key, value: value })
-        if (error) {
-          status = false
-
-          if (key === "themeColor") {
-            document.documentElement.setAttribute("theme-color", prev[key])
+            if (key === "themeColor") {
+              document.documentElement.setAttribute("theme-color", prev[key])
+            }
           }
         }
       }
-    }
-
-    return status
+    })()
   },
 })
 

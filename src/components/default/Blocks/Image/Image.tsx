@@ -1,5 +1,5 @@
 import style from "./Image.module.css"
-import { ImageBadge, ImageOverlay } from "./addons"
+import { ImageBadge, ImageOverlay, Preview } from "./addons"
 
 import { type JSX, type Component, splitProps, mergeProps } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -16,6 +16,7 @@ type Store = {
 type ComponentImage = Component<Image> & {
   Badge: typeof ImageBadge
   Overlay: typeof ImageOverlay
+  Preview: typeof Preview
 }
 
 const cache = new Map<string, Store>()
@@ -91,5 +92,6 @@ const Image: ComponentImage = (props) => {
 
 Image.Badge = ImageBadge
 Image.Overlay = ImageOverlay
+Image.Preview = Preview
 
 export default Image

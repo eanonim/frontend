@@ -1,0 +1,10 @@
+.Preview {
+  position        : relative;
+  overflow        : hidden;
+  border-radius   : 13px;
+  min-width       : 72px;
+  min-height      : 72px;
+  width           : 72px;
+  height          : 72px;
+  background-color: var(--secondary_color);
+}

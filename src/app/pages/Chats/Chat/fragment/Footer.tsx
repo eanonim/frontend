@@ -1,5 +1,21 @@
-import { Cell, FixedLayout, SubTitle, Title, WriteBar } from "components"
-import { IconGiftFilled, IconPaperclip, IconSend, IconX } from "source"
+import {
+  Button,
+  Cell,
+  FixedLayout,
+  Separator,
+  SubTitle,
+  Title,
+  WriteBar,
+  Image,
+  Flex,
+} from "components"
+import {
+  IconCameraPlus,
+  IconPaperclip,
+  IconPlus,
+  IconSend,
+  IconX,
+} from "source"
 
 import {
   type JSX,
@@ -8,6 +24,7 @@ import {
   Show,
   createEffect,
   on,
+  For,
 } from "solid-js"
 import { pages, useParams } from "router"
 import { messageSend, messageTyping } from "engine/api"
@@ -87,6 +104,18 @@ const Footer: Component<Footer> = (props) => {
     setTyping()
   }
 
+  const handlerAddAttach = () => {
+    setter(
+      [MESSAGE_INFO_ATOM, params().dialog],
+      "message",
+      produce((message) => {
+        message.is_add_attach = !message.is_add_attach
+
+        return message
+      }),
+    )
+  }
+
   const handlerRemoveReply = () => {
     setter(
       [MESSAGE_INFO_ATOM, params().dialog],
@@ -123,6 +152,27 @@ const Footer: Component<Footer> = (props) => {
       width={"100%"}
       background={"section_bg_color"}
     >
+      <Show when={messageInfo.message.is_add_attach}>
+        <Separator />
+        <Button.Group>
+          <Button.Group.Container justifyContent={"start"}>
+            <For each={[1, 2]}>
+              {(image, index) => (
+                <Image.Preview data-index={index()}>
+                  <Image
+                    src={
+                      "https://c1.35photo.pro/photos_temp/sizes/339/1697287_500n.jpg"
+                    }
+                  />
+                </Image.Preview>
+              )}
+            </For>
+            <Image.Preview>
+              <IconPlus color={"var(--accent_color)"} />
+            </Image.Preview>
+          </Button.Group.Container>
+        </Button.Group>
+      </Show>
       <Show
         keyed
         when={
@@ -184,7 +234,7 @@ const Footer: Component<Footer> = (props) => {
         )}
       </Show>
       <WriteBar>
-        <WriteBar.Icon>
+        <WriteBar.Icon onClick={handlerAddAttach}>
           <IconPaperclip color={"var(--separator_primary)"} />
         </WriteBar.Icon>
         <WriteBar.Field>

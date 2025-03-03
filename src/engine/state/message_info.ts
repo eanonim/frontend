@@ -31,6 +31,7 @@ type MESSAGE_INFO_ATOM_RESPONSE = {
     reply_id?: number
     edit_id?: number
     typing?: boolean
+    is_add_attach?: boolean
   }
 }
 

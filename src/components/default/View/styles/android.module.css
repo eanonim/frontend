@@ -1,6 +1,6 @@
 .View--to-next>.View--first {
-  -webkit-animation: _nextAnimation .2s ease forwards;
-  animation        : _nextAnimation .2s ease forwards;
+  -webkit-animation: _nextAnimationAndroid .2s ease forwards;
+  animation        : _nextAnimationAndroid .2s ease forwards;
 }
 
 /* .View--to-next>.View--last {
@@ -15,12 +15,12 @@
 } */
 
 .View--to-back>.View--last {
-  -webkit-animation: _backAnimation .2s ease forwards;
-  animation        : _backAnimation .2s ease forwards;
+  -webkit-animation: _backAnimationAndroid .2s ease forwards;
+  animation        : _backAnimationAndroid .2s ease forwards;
 }
 
 
-@keyframes _nextAnimation {
+@keyframes _nextAnimationAndroid {
   from {
     opacity  : 0;
     transform: translateY(20%)
@@ -32,7 +32,7 @@
   }
 }
 
-@keyframes _backAnimation {
+@keyframes _backAnimationAndroid {
   from {
     opacity  : 1;
     transform: translateY(0%)

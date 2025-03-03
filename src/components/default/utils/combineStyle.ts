@@ -6,7 +6,7 @@ const combineStyle = (
   style: string | JSX.CSSProperties | undefined,
   others: string | JSX.CSSProperties | undefined,
 ) => {
-  return { ...cssStringToJson(others), ...cssStringToJson(style) }
+  return { ...cssStringToJson(style), ...cssStringToJson(others) }
 }
 
 export default combineStyle

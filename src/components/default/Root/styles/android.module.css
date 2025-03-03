@@ -1,5 +1,5 @@
 .Root--to-next>.Root--first {
-  animation: _AndroidRootNextAnimation .4s cubic-bezier(0.36, 0.66, 0.04, 1) forwards;
+  animation: _AndroidRootNextAnimation .4s ease-in-out forwards;
 }
 
 /* .Root--to-next::before {
@@ -7,7 +7,7 @@
 } */
 
 .Root--to-back>.Root--last {
-  animation: _AndroidRootBackAnimation .41s cubic-bezier(0.36, 0.66, 0.04, 1) forwards;
+  animation: _AndroidRootBackAnimation .41s ease-in-out forwards;
 }
 
 /* .Root--to-back::before {

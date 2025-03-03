@@ -3,4 +3,5 @@
   padding: 8px;
 
   background-color: var(--section_bg_color);
+  padding-bottom  : calc(var(--safe-area-inset-bottom) + 8px);
 }

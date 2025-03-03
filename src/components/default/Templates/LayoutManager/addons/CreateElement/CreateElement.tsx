@@ -39,10 +39,7 @@ const CreateElement: Component<CreateElement> = (props) => {
         if (anim && ref!) {
           const styles = window.getComputedStyle(ref)
 
-          if (
-            styles &&
-            styles.animation === "none 0s ease 0s 1 normal none running"
-          ) {
+          if (styles && (styles.animation || "none").includes("none")) {
             onAnimationEnd()
           }
         }

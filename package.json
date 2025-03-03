@@ -26,7 +26,7 @@
     "@apiteam/twa-bridge": "^8.0.2-beta",
     "@elum/ews": "^0.0.15",
     "@minsize/mutex": "^0.0.6",
-    "@minsize/utils": "^0.0.13",
+    "@minsize/utils": "^0.0.15",
     "@solid-primitives/map": "^0.6.0",
     "@solid-primitives/scheduled": "^1.5.0",
     "@tanstack/solid-virtual": "^3.13.2",

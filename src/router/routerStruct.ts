@@ -15,6 +15,7 @@ export enum views {
 export enum panels {
   STARTUP = "panel_startup",
   DUPLICATED = "panel_duplicated",
+  BAD = "panel_bad",
 
   PROFILE = "panel_profile",
   SETTINGS = "panel_settings",

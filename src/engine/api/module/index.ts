@@ -602,6 +602,7 @@ export const socketSend = async <KEY extends keyof Socket>(
 
   console.log("socketSend", key, options)
   const data = await socket.send(key, options)
+  console.log({ data })
   if ([0, 1001].includes(data?.error?.code ?? -1)) {
     await sleep(1_000)
     return await socketSend(key, options)

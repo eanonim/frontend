@@ -12,16 +12,18 @@ const chatSearch = async (options: Socket["chat.search"]["request"]) => {
 
   console.log({ response })
 
-  const chatList = getter(CHAT_LIST_ATOM)
-  if (Object.keys(chatList.history).length) {
-    setter(
-      CHAT_LIST_ATOM,
-      "history",
-      produce((history) => {
-        history[response.dialog] = { uuid: response.dialog }
-        return history
-      }),
-    )
+  if (response.dialog) {
+    const chatList = getter(CHAT_LIST_ATOM)
+    if (Object.keys(chatList.history).length) {
+      setter(
+        CHAT_LIST_ATOM,
+        "history",
+        produce((history) => {
+          history[response.dialog] = { uuid: response.dialog }
+          return history
+        }),
+      )
+    }
   }
 
   return { response, error }

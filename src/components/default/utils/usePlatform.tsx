@@ -14,7 +14,7 @@ const setPlatform = () => {
     platform = "android"
   }
 
-  platform = "android"
+  // platform = "android"
 
   setSignal(platform)
 }

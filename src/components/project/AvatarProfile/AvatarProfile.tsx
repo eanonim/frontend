@@ -8,12 +8,13 @@ import Badge from "@component/default/Blocks/Badge/Badge"
 import Title from "@component/default/Typography/Title/Title"
 
 import { type JSX, type Component, mergeProps, splitProps } from "solid-js"
+import { emojis } from "root/configs"
 
 interface AvatarProfile extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "id"> {
   src?: string
   first_name: string
   last_name: string
-  icon?: string
+  emoji?: number
   id: number
 }
 
@@ -26,7 +27,7 @@ const AvatarProfile: Component<AvatarProfile> = (props) => {
     "src",
     "first_name",
     "last_name",
-    "icon",
+    "emoji",
     "id",
   ])
 
@@ -51,7 +52,7 @@ const AvatarProfile: Component<AvatarProfile> = (props) => {
               class={style.AvatarProfile__name_title}
               first_name={local.first_name}
               last_name={local.last_name}
-              icon={local.icon}
+              emoji={local.emoji}
             />
             <UserName
               class={style.AvatarProfile__name_subtitle}

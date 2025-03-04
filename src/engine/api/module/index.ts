@@ -48,6 +48,14 @@ export type SearchInteresting =
   | "lgbt"
 
 export type Socket = {
+  "user.emojiSet": {
+    request: {
+      emoji: number
+    }
+    response: {
+      result: boolean
+    }
+  }
   "message.typing": {
     request: {
       dialog: string

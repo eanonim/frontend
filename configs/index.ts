@@ -7,3 +7,4 @@ export {
   messageListCountStart,
   messageMaxSize,
 } from "./options"
+export { emojis } from "./emoji"

@@ -21,7 +21,7 @@ import {
 } from "source"
 
 import { type JSX, type Component, For, Switch, Match, Show } from "solid-js"
-import { pages, pushPage } from "router"
+import { modals, pages, pushModal, pushPage } from "router"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -70,6 +70,7 @@ const Content: Component<Content> = (props) => {
         icon: IconMoodEdit,
         title: "change_emoji_status",
         isAccent: true,
+        handler: () => pushModal({ modalId: modals.USER_EMOJI }),
       },
       {
         icon: IconCameraPlus,

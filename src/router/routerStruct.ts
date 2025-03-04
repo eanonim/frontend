@@ -51,6 +51,7 @@ export enum modals {
   STORE_MONEY = "modal_store_money",
   INTERESTS_LIST = "modal_interests_list",
   MESSAGE_CONTROL = "modal_message_control",
+  USER_EMOJI = "modal_user_emoji",
 }
 
 export enum popouts {
@@ -63,6 +64,7 @@ export type routerParams = {
     dialog: string
     message_id: number
   }
+  [modals.USER_EMOJI]: undefined
 }
 
 // type GORouting = {

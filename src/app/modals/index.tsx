@@ -6,6 +6,7 @@ import { modals, useRouter } from "router"
 
 import InterestsList from "./interests/List/List"
 import MessageControl from "./message/control/Control"
+import UserEmoji from "./user/Emoji/Emoji"
 
 interface Modal extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -16,6 +17,7 @@ const Modal: Component<Modal> = (props) => {
     <ModalRoot activeModal={activeModal()}>
       <Path nav={modals.INTERESTS_LIST} component={InterestsList} />
       <Path nav={modals.MESSAGE_CONTROL} component={MessageControl} />
+      <Path nav={modals.USER_EMOJI} component={UserEmoji} />
     </ModalRoot>
   )
 }

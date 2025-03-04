@@ -20,7 +20,7 @@
 
   --bg_input: #000000;
 
-  --min_height_input: 34px;
+  --min_height_input: 38px;
 
   --link_color: #5470C3;
 
@@ -110,8 +110,6 @@ html[theme="light"][theme-color="pink"] {
 
   /* --bg_input: #FFFFFF; */
 
-  --min_height_input: 34px;
-
   --link_color: #d5107f;
 
   /* --primary_color      : #000000;
@@ -151,8 +149,6 @@ html[theme="dark"][theme-color="pink"] {
   --section_bg_color--active: #2b0019;
 
   /* --bg_input: #FFFFFF; */
-
-  --min_height_input: 34px;
 
   --link_color: #d5107f;
 

@@ -12,8 +12,6 @@ const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const [user] = useAtom(USER_ATOM, {}, { key: "edit" })
 
-  console.log({ f: user })
-
   const handlerEmoji = (value: number) => {
     setter([USER_ATOM, "edit"], "emoji", value)
   }

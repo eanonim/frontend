@@ -16,14 +16,15 @@ const Footer: Component<Footer> = (props) => {
 
   const [user] = useAtom(USER_ATOM, {}, { key: "edit" })
 
-  const handlerDelete = () => {
-    setter(USER_ATOM, "emoji", 0)
-    setter([USER_ATOM, "edit"], "emoji", 0)
-    backPage()
-  }
-
   const handlerSave = () => {
-    setter(USER_ATOM, "emoji", user.emoji)
+    setter(
+      USER_ATOM,
+      produce((_user) => {
+        _user.first_name = user.first_name
+        _user.last_name = user.last_name
+        return _user
+      }),
+    )
     backPage()
   }
 
@@ -31,16 +32,6 @@ const Footer: Component<Footer> = (props) => {
     <FixedLayout position={"bottom"}>
       <Button.Group>
         <Button.Group.Container>
-          <Button
-            onClick={handlerDelete}
-            stretched
-            size={"large"}
-            appearance={"red"}
-          >
-            <Button.Container>
-              <Title>{lang("delete")}</Title>
-            </Button.Container>
-          </Button>
           <Button onClick={handlerSave} stretched size={"large"}>
             <Button.Container>
               <Title>{lang("apply")}</Title>

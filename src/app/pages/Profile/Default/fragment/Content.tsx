@@ -65,6 +65,7 @@ const Content: Component<Content> = (props) => {
         icon: IconUserEdit,
         title: "change_name",
         isAccent: true,
+        handler: () => pushModal({ modalId: modals.USER_CHANGE_NAME }),
       },
       {
         icon: IconMoodEdit,

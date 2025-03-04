@@ -48,6 +48,15 @@ export type SearchInteresting =
   | "lgbt"
 
 export type Socket = {
+  "user.nameSet": {
+    request: {
+      first_name: string
+      last_name: string
+    }
+    response: {
+      result: boolean
+    }
+  }
   "user.emojiSet": {
     request: {
       emoji: number

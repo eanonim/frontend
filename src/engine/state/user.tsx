@@ -1,4 +1,4 @@
-import { userEmojiSet, userGet } from "engine/api"
+import { userEmojiSet, userGet, userNameSet } from "engine/api"
 import { Socket } from "engine/api/module"
 import { atom } from "engine/modules/smart-data"
 
@@ -20,10 +20,15 @@ export const USER_ATOM = atom<
   },
   updateIntervalMs: 15_000,
   onUpdate: ({ prev, next }, key) => {
-    console.log({ prev, next }, key)
     if (key === "default") {
       if (next.emoji !== prev.emoji) {
         userEmojiSet({ emoji: next.emoji })
+      }
+      if (
+        next.first_name !== prev.first_name ||
+        next.last_name !== prev.last_name
+      ) {
+        userNameSet({ first_name: next.first_name, last_name: next.last_name })
       }
     }
   },

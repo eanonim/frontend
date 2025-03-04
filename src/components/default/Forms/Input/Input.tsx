@@ -21,11 +21,19 @@ interface Input extends HTMLAttributes<HTMLInputElement> {
    */
   disabled?: boolean
   value?: string
+  placeholder?: string
+
+  safe?: boolean
 }
 
 const Input: Component<Input> = (props) => {
-  const merged = mergeProps({ type: "text" }, props)
-  const [local, others] = splitProps(merged, ["class", "classList", "children"])
+  const merged = mergeProps({ type: "text", safe: true }, props)
+  const [local, others] = splitProps(merged, [
+    "class",
+    "classList",
+    "children",
+    "safe",
+  ])
 
   let ref: HTMLInputElement
 
@@ -40,7 +48,7 @@ const Input: Component<Input> = (props) => {
   }
 
   onMount(() => {
-    if (ref!) {
+    if (ref! && local.safe) {
       ref.addEventListener("touchstart", onStart)
 
       onCleanup(() => {

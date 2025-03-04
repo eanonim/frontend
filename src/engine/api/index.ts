@@ -2,6 +2,7 @@ export { default as authTwa } from "./auth/twa"
 
 export { default as userGet } from "./user/get"
 export { default as userEmojiSet } from "./user/emojiSet"
+export { default as userNameSet } from "./user/nameSet"
 
 /* store */
 export { default as storeSet } from "./store/set"

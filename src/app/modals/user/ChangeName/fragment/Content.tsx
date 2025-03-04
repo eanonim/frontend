@@ -24,7 +24,6 @@ const Content: Component<Content> = (props) => {
       <Button.Group>
         <Field>
           <Input
-            safe={false}
             placeholder={"First Name"}
             onInput={(e) => onFirst(e.target.value)}
             value={user.first_name}
@@ -32,7 +31,6 @@ const Content: Component<Content> = (props) => {
         </Field>
         <Field>
           <Input
-            safe={false}
             placeholder={"Last Name"}
             onInput={(e) => onLast(e.target.value)}
             value={user.last_name}

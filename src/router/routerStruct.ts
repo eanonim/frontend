@@ -53,6 +53,7 @@ export enum modals {
   MESSAGE_CONTROL = "modal_message_control",
   USER_EMOJI = "modal_user_emoji",
   USER_CHANGE_NAME = "modal_user_change_name",
+  MESSAGE_COMPLAINT = "modal_complaint",
 }
 
 export enum popouts {
@@ -67,6 +68,10 @@ export type routerParams = {
   }
   [modals.USER_EMOJI]: undefined
   [modals.USER_CHANGE_NAME]: undefined
+  [modals.MESSAGE_COMPLAINT]: {
+    dialog: string
+    message_id: number
+  }
 }
 
 // type GORouting = {

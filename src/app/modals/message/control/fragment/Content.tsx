@@ -5,7 +5,7 @@ import loc from "engine/languages"
 import { setter, useAtom } from "engine/modules/smart-data"
 import { USER_ATOM } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
-import { backPage, modals, useParams } from "router"
+import { backPage, modals, pushModal, useParams } from "router"
 import { routerParams } from "router/routerStruct"
 
 import { type JSX, type Component, Show } from "solid-js"
@@ -78,6 +78,17 @@ const Content: Component<Content> = (props) => {
     )
     backPage()
   }
+  const handlerComplain: JSX.EventHandler<
+    DynamicProps<"article">,
+    MouseEvent
+  > = (event) => {
+    event.preventDefault()
+
+    pushModal({
+      modalId: modals.MESSAGE_COMPLAINT,
+      params: { dialog: params().dialog, message_id: params().message_id },
+    })
+  }
 
   return (
     <Cell.List>
@@ -130,6 +141,20 @@ const Content: Component<Content> = (props) => {
           <Cell.Container>
             <Cell.Content>
               <Title color={"red"}>{lang("delete")}</Title>
+            </Cell.Content>
+          </Cell.Container>
+        </Cell>
+      </Show>
+      <Show
+        when={messageInfo.history.get(params().message_id)?.target !== "my"}
+      >
+        <Cell onClick={handlerComplain} separator={"auto"}>
+          <Cell.Before>
+            <IconEdit width={24} height={24} />
+          </Cell.Before>
+          <Cell.Container>
+            <Cell.Content>
+              <Title>{lang("complain")}</Title>
             </Cell.Content>
           </Cell.Container>
         </Cell>

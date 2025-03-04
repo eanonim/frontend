@@ -12,6 +12,7 @@ import {
 } from "../atom"
 import { setHistory, setParams } from "../utils"
 import { bridgeClose, bridgeSessionStorageSet } from "@apiteam/twa-bridge/solid"
+import { unlink } from "@minsize/utils"
 
 const backPage = leading(
   debounce,
@@ -20,8 +21,8 @@ const backPage = leading(
     //   window.history.go((backIndex - 1) * -1)
     // }
     const history = getter(HISTORY_ATOM)
-
     const activeView = getter(VIEW_ATOM)
+
     if (activeView) {
       let back_view
 
@@ -40,6 +41,13 @@ const backPage = leading(
 
       if (!!lastView?.popoutId) {
         backIndex++
+        lastView = history.view[back_view || activeView]?.array?.slice(
+          back_view ? -2 : -3,
+        )[0]
+      }
+
+      if (!!lastView?.modalId) {
+        // backIndex++
         lastView = history.view[back_view || activeView]?.array?.slice(
           back_view ? -2 : -3,
         )[0]
@@ -122,6 +130,10 @@ const backPage = leading(
       setter(MODAL_ATOM, lastView.modalId)
       setter(POPOUT_ATOM, lastView.popoutId)
 
+      console.log({
+        test: unlink(history.view[activeView]),
+        lastView: unlink(lastView),
+      })
       setHistory({
         pageId: pageId,
         modalId: lastView.modalId,

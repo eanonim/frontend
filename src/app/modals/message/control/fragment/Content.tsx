@@ -11,7 +11,7 @@ import { routerParams } from "router/routerStruct"
 import { type JSX, type Component, Show } from "solid-js"
 import { produce } from "solid-js/store"
 import { DynamicProps } from "solid-js/web"
-import { IconCopy, IconEdit, IconShare3, IconTrash } from "source"
+import { IconAlert, IconCopy, IconEdit, IconShare3, IconTrash } from "source"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -150,7 +150,7 @@ const Content: Component<Content> = (props) => {
       >
         <Cell onClick={handlerComplain} separator={"auto"}>
           <Cell.Before>
-            <IconEdit width={24} height={24} />
+            <IconAlert width={24} height={24} />
           </Cell.Before>
           <Cell.Container>
             <Cell.Content>

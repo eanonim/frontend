@@ -1,6 +1,7 @@
 .FixedLayout {
-  position: sticky;
-  z-index : 3;
+  position  : sticky;
+  z-index   : 3;
+  margin-top: auto;
 }
 
 .FixedLayout__position--top {

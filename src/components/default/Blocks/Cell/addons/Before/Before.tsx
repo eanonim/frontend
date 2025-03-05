@@ -1,6 +1,7 @@
 import style from "./Before.module.css"
 import { CellStore } from "../../context"
 
+import { type TypeFlex } from "@ui/index"
 import Align from "@ui/default/Templates/Align/Align"
 import Flex from "@ui/default/Blocks/Flex/Flex"
 import GapContext from "@ui/default/Templates/Gap/context"
@@ -12,10 +13,10 @@ import {
   mergeProps,
   splitProps,
   useContext,
+  ValidComponent,
 } from "solid-js"
-import { type DynamicProps } from "solid-js/web"
 
-interface Before extends JSX.HTMLAttributes<DynamicProps<"span">> {}
+interface Before<T extends ValidComponent = "span"> extends TypeFlex<T> {}
 
 const Before: Component<Before> = (props) => {
   const context = useContext(CellStore)

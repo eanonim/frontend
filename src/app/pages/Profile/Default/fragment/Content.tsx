@@ -1,9 +1,11 @@
 import {
   type TextProps,
+  Button,
   Cell,
   Group,
   IconBackground,
   IconChevron,
+  SubTitle,
   Title,
 } from "components"
 import loc from "engine/languages"
@@ -12,6 +14,7 @@ import {
   IconAlignBoxLeftTopFilled,
   IconBugFilled,
   IconCameraPlus,
+  IconCarambolaFilled,
   IconCircleHalf,
   IconDiamondFilled,
   IconLetterCase,
@@ -22,6 +25,9 @@ import {
 
 import { type JSX, type Component, For, Switch, Match, Show } from "solid-js"
 import { modals, pages, pushModal, pushPage } from "router"
+import { timeAgo, timeAgoOnlyDate } from "engine"
+import { useAtom } from "engine/modules/smart-data"
+import { USER_ATOM } from "engine/state"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -43,6 +49,7 @@ const textProps: TextProps = {
 
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
+  const [user] = useAtom(USER_ATOM)
 
   const elements: {
     icon: Component<JSX.SvgSVGAttributes<SVGSVGElement>>
@@ -118,8 +125,44 @@ const Content: Component<Content> = (props) => {
     ],
   ]
 
+  const goPremium = () => {
+    pushPage({ pageId: pages.PREMIUM })
+  }
+
   return (
     <Group.List>
+      <Group>
+        <Group.Container>
+          <Cell onClick={goPremium}>
+            <Cell.Before>
+              <IconCarambolaFilled
+                width={28}
+                height={28}
+                fill={"var(--accent_color)"}
+              />
+            </Cell.Before>
+            <Cell.Container>
+              <Cell.Content>
+                <Title>Premium</Title>
+                <Show keyed when={user.premium}>
+                  {(premium) => (
+                    <SubTitle>
+                      Активен до: {timeAgo(premium.getTime())}
+                    </SubTitle>
+                  )}
+                </Show>
+              </Cell.Content>
+              <Cell.After>
+                <IconChevron
+                  type={"right"}
+                  size={"20px"}
+                  color={"var(--separator_secondary)"}
+                />
+              </Cell.After>
+            </Cell.Container>
+          </Cell>
+        </Group.Container>
+      </Group>
       <For each={elements}>
         {(group, index) => (
           <Group data-index={index()}>

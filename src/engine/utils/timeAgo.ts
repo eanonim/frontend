@@ -3,9 +3,20 @@ import { getLocale, ISOLanguage } from "engine/languages"
 const timeAgo = (timestamp: number): string => {
   if (!timestamp) return "только что"
 
-  const date = new Date(timestamp)
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
   const lang = getLocale()
+  const date = new Date(timestamp)
+
+  if (date.getTime() > Date.now()) {
+    return new Intl.DateTimeFormat(ISOLanguage[lang], {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
+      .format(date)
+      .replace(".", "")
+  }
+
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
   const options: Intl.DateTimeFormatOptions = {}
 
   if (seconds < 86400) {

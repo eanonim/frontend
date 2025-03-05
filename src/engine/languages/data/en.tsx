@@ -85,6 +85,40 @@ export default {
     11: "Does not violate the law, but should be removed.",
   },
   complain: "Complain",
+  benefits_of_subscription: "Benefits of Subscription",
+  premiums: {
+    1: {
+      icon_type: "IconFilterUp",
+      title: "Advanced filters",
+      subtitle: "More opportunities to find the perfect conversation partner.",
+    },
+    2: {
+      icon_type: "IconMessage2Search",
+      title: "Chat History",
+      subtitle: "Don't miss the chat thread: full access to chat history.",
+    },
+    3: {
+      icon_type: "IconCoins",
+      title: "More coins",
+      subtitle: "Earn more coins for socializing and completing tasks.",
+    },
+    4: {
+      icon_type: "IconPhotoFilled",
+      title: "Sending photos",
+      subtitle: "Share your moments: send photos to your interlocutors.",
+    },
+    5: {
+      icon_type: "IconBrush",
+      title: "Exclusive topics",
+      subtitle: "Personalize your chat: choose exclusive design themes.",
+    },
+  },
+  premium_times: {
+    12: "Ежегодно",
+    6: "Полгода",
+    3: "Три месяца",
+    1: "Ежемесячно",
+  },
   errors: {
     1002: "This action requires premium access",
   },

@@ -1,24 +1,27 @@
-import { AvatarProfile } from "components"
-import { useAtom } from "engine/modules/smart-data"
-
-import { USER_ATOM } from "engine/state"
-
+import { Plug, SubTitle, Title } from "components"
 import { type JSX, type Component } from "solid-js"
+import { IconCarambolaFilled } from "source"
 
-interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
+interface Header extends JSX.HTMLAttributes<HTMLDivElement> {}
 
-const Content: Component<Content> = (props) => {
-  const [user] = useAtom(USER_ATOM)
-
+const Header: Component<Header> = (props) => {
   return (
-    <AvatarProfile
-      src={user.image}
-      id={user.id}
-      emoji={user.emoji}
-      first_name={user.first_name}
-      last_name={user.last_name}
-    />
+    <Plug>
+      <Plug.Container>
+        <Plug.Icon>
+          <IconCarambolaFilled
+            fill={"var(--accent_color)"}
+            width={72}
+            height={72}
+          />
+        </Plug.Icon>
+        <Title>Premium</Title>
+        <SubTitle>
+          Больше свободы и десятки эксклюзивных функций с подпиской.
+        </SubTitle>
+      </Plug.Container>
+    </Plug>
   )
 }
 
-export default Content
+export default Header

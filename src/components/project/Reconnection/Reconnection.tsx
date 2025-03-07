@@ -26,7 +26,10 @@ const Reconnection: Component<Reconnection> = (props) => {
       () => socket.status(),
       (status, prevStatus) => {
         let visible = false
-        if (prevStatus === Status.OPEN) {
+        if (
+          prevStatus !== undefined &&
+          [(Status.OPEN, Status.CLOSE, Status.CONNECTING)].includes(prevStatus)
+        ) {
           if (status === Status.CLOSE || status === Status.CONNECTING) {
             visible = true
           }
@@ -38,20 +41,21 @@ const Reconnection: Component<Reconnection> = (props) => {
 
         clearTimeout(timer)
 
+        const bodyStyles = window.getComputedStyle(document.body)
+        const safeContentTop = bodyStyles.getPropertyValue(
+          "--content-safe-area-inset-top",
+        )
+        if (!safeContentTop || safeContentTop === "0px") {
+          document.body.style.setProperty(
+            "--reconnection_height",
+            visible
+              ? `calc(${store.height}px + var(--safe-area-inset-top, 0px))`
+              : "0px",
+          )
+        }
+
         timer = setTimeout(
           () => {
-            const bodyStyles = window.getComputedStyle(document.body)
-            const safeContentTop = bodyStyles.getPropertyValue(
-              "--content-safe-area-inset-top",
-            )
-            if (!safeContentTop || safeContentTop === "0px") {
-              document.body.style.setProperty(
-                "--reconnection_height",
-                visible
-                  ? `calc(${store.height}px + var(--safe-area-inset-top, 0px))`
-                  : "0px",
-              )
-            }
             setHeaderColor(
               visible ? { type: "red_color", isFixed: true } : { isLast: true },
             )

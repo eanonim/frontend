@@ -32,7 +32,8 @@
 }
 
 .Root__Container {
-  top: var(--reconnection_height, 0px);
+  top       : var(--reconnection_height, 0px);
+  transition: top 0.3s ease-in-out;
 }
 
 .Root--to-next::before,

@@ -19,32 +19,47 @@ const Reconnection: Component<Reconnection> = (props) => {
     height: 0,
   })
 
-  createEffect(
-    on(socket.status, (status) => {
-      const visible = status === Status.CLOSE || status === Status.CONNECTING
-      setStore("isVisible", visible)
+  let timer: NodeJS.Timeout
 
-      setTimeout(
-        () => {
-          const bodyStyles = window.getComputedStyle(document.body)
-          const safeContentTop = bodyStyles.getPropertyValue(
-            "--content-safe-area-inset-top",
-          )
-          if (!safeContentTop || safeContentTop === "0px") {
-            document.body.style.setProperty(
-              "--reconnection_height",
-              visible
-                ? `calc(${store.height}px + var(--safe-area-inset-top, 0px))`
-                : "0px",
-            )
+  createEffect(
+    on(
+      () => socket.status(),
+      (status, prevStatus) => {
+        let visible = false
+        if (prevStatus === Status.OPEN) {
+          if (status === Status.CLOSE || status === Status.CONNECTING) {
+            visible = true
           }
-          setHeaderColor(
-            visible ? { type: "red_color", isFixed: true } : { isLast: true },
-          )
-        },
-        visible ? 0 : 300,
-      )
-    }),
+        }
+        if (status === Status.OPEN) {
+          visible = false
+        }
+        setStore("isVisible", visible)
+
+        clearTimeout(timer)
+
+        timer = setTimeout(
+          () => {
+            const bodyStyles = window.getComputedStyle(document.body)
+            const safeContentTop = bodyStyles.getPropertyValue(
+              "--content-safe-area-inset-top",
+            )
+            if (!safeContentTop || safeContentTop === "0px") {
+              document.body.style.setProperty(
+                "--reconnection_height",
+                visible
+                  ? `calc(${store.height}px + var(--safe-area-inset-top, 0px))`
+                  : "0px",
+              )
+            }
+            setHeaderColor(
+              visible ? { type: "red_color", isFixed: true } : { isLast: true },
+            )
+          },
+          visible ? 0 : 300,
+        )
+      },
+    ),
   )
 
   onMount(() => {
@@ -55,10 +70,10 @@ const Reconnection: Component<Reconnection> = (props) => {
 
   return (
     <div
+      class={style.Reconnection}
       classList={{
         [style[`Reconnection--hidden`]]: !store.isVisible,
       }}
-      class={style.Reconnection}
       ref={ref!}
     >
       <Cell>

@@ -151,6 +151,7 @@ const Footer: Component<Footer> = (props) => {
       }}
       width={"100%"}
       background={"section_bg_color"}
+      isMargin={false}
     >
       <Show when={messageInfo.message.is_add_attach}>
         <Separator />

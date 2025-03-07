@@ -1,9 +1,7 @@
 import {
   Cell,
-  Flex,
   Gap,
   Group,
-  HTMLAttributes,
   IconBackground,
   IconCheck,
   SubTitle,

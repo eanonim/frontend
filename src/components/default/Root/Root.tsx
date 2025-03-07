@@ -10,6 +10,7 @@ import { type JSX, type Component, splitProps, createEffect } from "solid-js"
 interface Root extends HTMLAttributes<HTMLDivElement> {
   activeView: string
   children: JSX.Element
+  header?: JSX.Element
 
   modal?: JSX.Element
   popup?: JSX.Element
@@ -28,6 +29,7 @@ const Root: Component<Root> = (props) => {
     "modal",
     "popup",
     "tabbar",
+    "header",
   ])
 
   const platform = usePlatform(props.platform)
@@ -54,6 +56,7 @@ const Root: Component<Root> = (props) => {
         back: style[`Root--to-back`],
       }}
     >
+      {local.header}
       <LayoutManager.Last class={style.Root__Container} />
       <LayoutManager.First class={style.Root__Container} />
 

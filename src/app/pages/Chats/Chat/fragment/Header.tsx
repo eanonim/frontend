@@ -27,6 +27,7 @@ const Header: Component<Header> = (props) => {
 
   return (
     <FixedLayout
+      isMargin={false}
       position={"top"}
       style={{
         background: "var(--bg_color)",

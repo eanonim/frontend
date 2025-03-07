@@ -110,3 +110,4 @@ export { default as InfiniteScroll } from "./project/InfiniteScroll/InfiniteScro
 export { default as AvatarProfile } from "./project/AvatarProfile/AvatarProfile"
 export { default as Snackbar } from "./project/Snackbar/Snackbar"
 export { default as PopoutRoot } from "./project/PopoutRoot/PopoutRoot"
+export { default as Reconnection } from "./project/Reconnection/Reconnection"

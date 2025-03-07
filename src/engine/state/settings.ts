@@ -86,7 +86,6 @@ export const setTheme = (
   const bodyStyles = window.getComputedStyle(document.body)
   const color = bodyStyles.getPropertyValue("--bg_color")
 
-  bridgeSetHeaderColor({ color })
   bridgeSetBackgroundColor({ color })
 
   const colorBottom = bodyStyles.getPropertyValue("--section_bg_color")

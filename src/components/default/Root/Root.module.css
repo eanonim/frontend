@@ -19,6 +19,7 @@
   height : 100%;
 }
 
+
 .Root__Container,
 .Root--to-next::before,
 .Root--to-back::before {
@@ -28,6 +29,10 @@
   top       : 0;
   bottom    : 0;
   background: var(--bg_color);
+}
+
+.Root__Container {
+  top: var(--reconnection_height, 0px);
 }
 
 .Root--to-next::before,

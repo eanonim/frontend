@@ -1,7 +1,6 @@
 .FixedLayout {
-  position  : sticky;
-  z-index   : 3;
-  margin-top: auto;
+  position: sticky;
+  z-index : 3;
 }
 
 .FixedLayout__position--top {
@@ -12,7 +11,14 @@
   bottom: 0;
 }
 
+.FixedLayout--margin {
+  margin-top: auto;
+}
+
 /* Background */
+.FixedLayout__background--red {
+  background-color: var(--red_color);
+}
 
 .FixedLayout__background--section_bg_color {
   background-color: var(--section_bg_color);

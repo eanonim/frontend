@@ -1,0 +1,58 @@
+.Reconnection__badge {
+  width           : 4px;
+  height          : 4px;
+  background-color: var(--text_primary);
+  border-radius   : 50%;
+  margin          : 0 2px;
+  transform       : scale(0.8);
+
+  animation: _typing 1s infinite ease-in-out;
+
+}
+
+.Reconnection__badge:nth-child(2) {
+  margin-left    : 6px;
+  animation-delay: 0.2s;
+}
+
+.Reconnection__badge:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.Reconnection__badge:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+
+@keyframes _typing {
+  0% {
+    transform: scale(0.8);
+  }
+
+  30% {
+    transform: scale(1.3);
+  }
+
+  60%,
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+.Reconnection {
+  padding-top     : var(--safe-area-inset-top);
+  background-color: var(--red_color);
+  position        : absolute;
+  left            : 0;
+  right           : 0;
+  top             : 0;
+  transform       : translateY(0%);
+  transition      : 0.3s ease-in-out;
+  z-index         : 1000;
+  min-height      : calc(var(--content-safe-area-inset-top));
+}
+
+
+.Reconnection--hidden {
+  transform: translateY(-100%);
+}

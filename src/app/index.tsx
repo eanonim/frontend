@@ -1,6 +1,6 @@
 import { createEffect, onCleanup, onMount, type Component } from "solid-js"
 
-import { Path, Root } from "components"
+import { Path, Reconnection, Root } from "components"
 import { pages, useRouter, views } from "router"
 import { getLastPage } from "router/src/utils"
 
@@ -53,7 +53,6 @@ const App: Component = () => {
 
   onMount(() => {
     const data = getAppData()
-    console.log({ data })
 
     bridgeSetupFullScreen({ is_full: false })
 
@@ -216,7 +215,12 @@ const App: Component = () => {
   })
 
   return (
-    <Root activeView={activeView()} popup={<Popup />} modal={<Modals />}>
+    <Root
+      activeView={activeView()}
+      popup={<Popup />}
+      modal={<Modals />}
+      header={<Reconnection />}
+    >
       <Path
         tabbar={[`${pages.CHATS}`].includes(getLastPage(views.CHATS) || "")}
         nav={views.CHATS}

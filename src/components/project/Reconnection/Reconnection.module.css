@@ -48,11 +48,29 @@
   top             : 0;
   transform       : translateY(0%);
   transition      : 0.3s ease-in-out;
-  z-index         : 1000;
+  z-index         : 1001;
   min-height      : calc(var(--content-safe-area-inset-top));
+  pointer-events  : none;
 }
-
 
 .Reconnection--hidden {
   transform: translateY(-100%);
+}
+
+.Reconnection__Plug {
+  pointer-events  : all;
+  z-index         : 1000;
+  position        : absolute;
+  left            : 0;
+  right           : 0;
+  top             : 0;
+  bottom          : 0;
+  background-color: var(--bg_color);
+  transition      : opacity 0.3s ease-in-out;
+  opacity         : 1;
+}
+
+.Reconnection__Plug--hidden {
+  pointer-events: none;
+  opacity       : 0;
 }

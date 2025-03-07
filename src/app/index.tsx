@@ -1,7 +1,7 @@
 import { createEffect, onCleanup, onMount, type Component } from "solid-js"
 
 import { Path, Reconnection, Root } from "components"
-import { pages, useRouter, views } from "router"
+import { pages, pushPage, replacePage, useRouter, views } from "router"
 import { getLastPage } from "router/src/utils"
 
 import Startup from "./pages/Startup/Startup"
@@ -219,7 +219,13 @@ const App: Component = () => {
       activeView={activeView()}
       popup={<Popup />}
       modal={<Modals />}
-      header={<Reconnection />}
+      header={
+        <Reconnection
+          handlerReconnect={() => {
+            replacePage({ pageId: pages.STARTUP })
+          }}
+        />
+      }
     >
       <Path
         tabbar={[`${pages.CHATS}`].includes(getLastPage(views.CHATS) || "")}

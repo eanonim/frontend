@@ -17,11 +17,12 @@ const setHeaderColor = ({
   isLast?: boolean
   isFixed?: boolean
 }) => {
-  if (last[last.length - 1]?.isFixed) return
   if (isLast) {
     if (!last[last.length - 2]) return
     color = last[last.length - 2].color
     type = last[last.length - 2].type
+  } else {
+    if (last[last.length - 1]?.isFixed) return
   }
 
   if (type) {

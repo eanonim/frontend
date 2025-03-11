@@ -6,7 +6,7 @@ const timeAgo = (timestamp: number): string => {
   const lang = getLocale()
   const date = new Date(timestamp)
 
-  if (date.getTime() > Date.now()) {
+  if (date.getTime() - 1_000 > Date.now()) {
     return new Intl.DateTimeFormat(ISOLanguage[lang], {
       day: "numeric",
       month: "short",

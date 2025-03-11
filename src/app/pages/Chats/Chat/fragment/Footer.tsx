@@ -27,7 +27,7 @@ import {
   For,
 } from "solid-js"
 import { pages, useParams } from "router"
-import { messageSend, messageTyping } from "engine/api"
+import { messageEdit, messageSend, messageTyping } from "engine/api"
 import { leading, throttle } from "@solid-primitives/scheduled"
 import { setter, useAtom } from "engine/modules/smart-data"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
@@ -61,30 +61,46 @@ const Footer: Component<Footer> = (props) => {
   )
 
   const handlerSend = () => {
-    ref!?.focus()
-    const messageText = message().trim()
-    if (messageText) {
-      let last_index = 0
-      while (messageText.length > last_index) {
-        const messageChunk = messageText.slice(
-          last_index,
-          messageMaxSize + last_index,
-        )
-        last_index += messageChunk.length
+    try {
+      const dialog = params().dialog
+      ref!?.focus()
+      const messageText = message().trim()
 
-        if (messageChunk) {
-          messageSend({
-            dialog: params().dialog,
-            message: {
-              message: messageChunk.trim(),
-              reply_id: messageInfo.message.reply_id,
-            },
-          })
-        } else {
-          last_index = messageText.length
-        }
+      if (messageInfo.message.edit_id) {
+        messageEdit({
+          dialog: dialog,
+          message: {
+            id: messageInfo.message.edit_id,
+            message: messageText.slice(0, messageMaxSize),
+          },
+        })
+        handlerRemoveEdit()
+        return
       }
 
+      if (messageText) {
+        let last_index = 0
+        while (messageText.length > last_index) {
+          const messageChunk = messageText.slice(
+            last_index,
+            messageMaxSize + last_index,
+          )
+          last_index += messageChunk.length
+
+          if (messageChunk) {
+            messageSend({
+              dialog: params().dialog,
+              message: {
+                message: messageChunk.trim(),
+                reply_id: messageInfo.message.reply_id,
+              },
+            })
+          } else {
+            last_index = messageText.length
+          }
+        }
+      }
+    } finally {
       setMessage("")
     }
   }

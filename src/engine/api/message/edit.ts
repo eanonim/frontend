@@ -1,53 +1,91 @@
 import { getter, setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
-import { MESSAGE_INFO_ATOM, USER_ATOM } from "engine/state"
+import { CHAT_LIST_ATOM, MESSAGE_INFO_ATOM, USER_ATOM } from "engine/state"
 import { produce } from "solid-js/store"
+import { unlink } from "@minsize/utils"
+import isEmoji from "engine/utils/isEmoji"
 
 const messageEdit = async (options: Socket["message.edit"]["request"]) => {
-  console.log("message.edit [OPTIONS]", options)
-  const messageId = Math.random()
   setter(
     [MESSAGE_INFO_ATOM, options.dialog],
     produce((messages) => {
-      const reply = messages.history.find(
-        (x) => x.id === messages.message.reply_id,
-      )
+      let message = unlink(messages.history.get(options.message.id))
+      if (message) {
+        message.loading = true
+        message.message = options.message.message
+        message.is_emoji = isEmoji(message.message)
+        message.attach = options.message.attach
+        messages.history.delete(options.message.id)
+        messages.history.set(options.message.id, message)
 
-      messages.history.push({
-        loading: true,
-        author: getter(USER_ATOM).id,
-        id: messageId,
-        message: options.message.message,
-        reply: reply
-          ? { id: reply.id, message: reply.message || "UNDEFINED" }
-          : undefined,
-        time: new Date(),
-      })
+        let [dialogIndex, groupMessagesIndex, messageIndex] = message.indexes
+        messages.dialogs[dialogIndex][1][groupMessagesIndex][messageIndex] =
+          message
+      }
 
-      messages.message.message = ""
-      messages.message.reply_id = undefined
+      const chatList = getter(CHAT_LIST_ATOM)
+      if (!!chatList.history[options.dialog]) {
+        setter(
+          CHAT_LIST_ATOM,
+          produce((chats) => {
+            const chat = chats.history[options.dialog]
+            if (
+              chat &&
+              chat.message_id &&
+              message &&
+              chat.message_id === message.id
+            ) {
+              chat.message = message.message
+              chat.loading = true
+            }
+            return chats
+          }),
+        )
+      }
 
       return messages
     }),
   )
 
-  const { response, error } = await socketSend("message.send", options)
+  const { response, error } = await socketSend("message.edit", options)
 
   if (error) {
     console.log({ error })
     return { response, error }
   }
 
-  console.log({ response })
-
   if (response.result) {
     setter(
       [MESSAGE_INFO_ATOM, options.dialog],
       produce((messages) => {
-        const message = messages.history.find((x) => x.id === messageId)
+        let message = unlink(messages.history.get(options.message.id))
         if (message) {
-          message.id = response.id // new message id
           message.loading = false
+          messages.history.delete(options.message.id)
+          messages.history.set(options.message.id, message)
+
+          let [dialogIndex, groupMessagesIndex, messageIndex] = message.indexes
+          messages.dialogs[dialogIndex][1][groupMessagesIndex][messageIndex] =
+            message
+        }
+
+        const chatList = getter(CHAT_LIST_ATOM)
+        if (!!chatList.history[options.dialog]) {
+          setter(
+            CHAT_LIST_ATOM,
+            produce((chats) => {
+              const chat = chats.history[options.dialog]
+              if (
+                chat &&
+                chat.message_id &&
+                message &&
+                chat.message_id === message.id
+              ) {
+                chat.loading = false
+              }
+              return chats
+            }),
+          )
         }
 
         return messages

@@ -138,20 +138,19 @@ export type Socket = {
     request: {
       dialog: string
       message: {
+        id: number
         message?: string
         attach?: {
-          type: string
+          type: "photo" | "audio"
           items: Array<{
             name: string
             data: string
           }>
         }
-        reply_id?: number
       }
     }
     response: {
       result: boolean
-      id: number
     }
     event: {
       dialog: string
@@ -159,19 +158,12 @@ export type Socket = {
         id: number
         message?: string
         attach?: {
-          type: string
+          type: "photo" | "audio"
           items: Array<{
             name: string
             data: string
           }>
         }
-        reply?: {
-          id: number
-          message: string
-        }
-        readed: boolean
-        time: Date
-        deleted: boolean
       }
     }
   }
@@ -442,6 +434,60 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
                 chat.message_target = message.target
                 chat.readed = message.readed
                 chat.typing = false
+              }
+              return chats
+            }),
+          )
+        }
+      }
+    }
+
+    if (event === "message.edit") {
+      const dialog = data.response?.dialog
+      if (dialog && data.response) {
+        const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
+        if (messageInfo.history.size !== 0) {
+          setter(
+            [MESSAGE_INFO_ATOM, data.response.dialog],
+            produce((messages) => {
+              let message = unlink(
+                messages.history.get(data.response.message.id),
+              )
+              if (message) {
+                message.message = data.response.message.message
+                message.attach = data.response.message.attach
+                messages.history.set(data.response.message.id, message)
+
+                message = messages.history.get(data.response.message.id)
+                if (message) {
+                  const [dialogIndex, groupMessagesIndex, messageIndex] =
+                    message.indexes
+                  if (
+                    messages.dialogs[dialogIndex][1][groupMessagesIndex][
+                      messageIndex
+                    ]
+                  ) {
+                    messages.dialogs[dialogIndex][1][groupMessagesIndex][
+                      messageIndex
+                    ] = message
+                  }
+                }
+              }
+
+              return messages
+            }),
+          )
+        }
+
+        const chatList = getterSmart(CHAT_LIST_ATOM)
+        if (!!chatList.history[dialog]) {
+          setter(
+            CHAT_LIST_ATOM,
+            produce((chats) => {
+              const chat = chats.history[dialog]
+              if (chat && chat.message_id === data.response.message.id) {
+                chat.message = data.response.message.message
+                chat.message_attack_type = data.response.message.attach?.type
               }
               return chats
             }),

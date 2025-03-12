@@ -3,7 +3,14 @@ import style from "./UserName.module.css"
 import { type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
 
-import { type JSX, type Component, ValidComponent, splitProps } from "solid-js"
+import {
+  type JSX,
+  type Component,
+  ValidComponent,
+  splitProps,
+  Match,
+  Switch,
+} from "solid-js"
 import { emojis } from "root/configs"
 
 interface UserName<T extends ValidComponent = "span"> extends TypeFlex<T> {
@@ -21,17 +28,20 @@ const UserName: Component<UserName> = (props) => {
     "spoiler",
   ])
   return (
-    <Flex
-      class={style.UserName}
-      classList={{
-        [style[`UserName--spoiler`]]: local.spoiler,
-      }}
-      justifyContent={"start"}
-      {...others}
-    >
-      {local.spoiler ? "spoiler name" : ""}
-      {local.first_name} {local.last_name}{" "}
-      {emojis[(local.emoji || -1) - 1]?.text}
+    <Flex class={style.UserName} justifyContent={"start"} {...others}>
+      <Switch
+        fallback={
+          <>
+            {local.first_name} {local.last_name}{" "}
+            {emojis[(local.emoji || -1) - 1]?.text}
+          </>
+        }
+      >
+        <Match when={local.spoiler}>
+          <span class={style[`UserName--spoiler__first`]} />
+          <span class={style[`UserName--spoiler__last`]} />
+        </Match>
+      </Switch>
     </Flex>
   )
 }

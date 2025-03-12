@@ -42,12 +42,7 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
           produce((chats) => {
             const chat = chats.history[options.dialog]
             if (chat && message) {
-              chat.message = message.message
-              chat.message_id = message.id
-              chat.message_attack_type = message.attach?.type
-              chat.message_time = message.time
-              chat.message_target = message.target
-              chat.readed = message.readed
+              chat.message = message
               chat.loading = true
               chat.typing = false
             }
@@ -103,8 +98,8 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
                 CHAT_LIST_ATOM,
                 produce((chats) => {
                   const chat = chats.history[options.dialog]
-                  if (chat && message) {
-                    chat.message_id = message.id
+                  if (chat && chat.message && message) {
+                    chat.message.id = message.id
                     chat.loading = false
                   }
                   return chats

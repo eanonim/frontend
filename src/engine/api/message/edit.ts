@@ -31,11 +31,11 @@ const messageEdit = async (options: Socket["message.edit"]["request"]) => {
             const chat = chats.history[options.dialog]
             if (
               chat &&
-              chat.message_id &&
+              chat.message?.id &&
               message &&
-              chat.message_id === message.id
+              chat.message?.id === message.id
             ) {
-              chat.message = message.message
+              chat.message.message = message.message
               chat.loading = true
             }
             return chats
@@ -77,9 +77,9 @@ const messageEdit = async (options: Socket["message.edit"]["request"]) => {
               const chat = chats.history[options.dialog]
               if (
                 chat &&
-                chat.message_id &&
+                chat.message?.id &&
                 message &&
-                chat.message_id === message.id
+                chat.message.id === message.id
               ) {
                 chat.loading = false
               }

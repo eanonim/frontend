@@ -214,13 +214,21 @@ export type Socket = {
     response: {
       uuid: string
 
-      message_target?: "my" | "you"
+      message?: {
+        id: number
+        message?: string
+        target: "my" | "you"
+        attack_type?: "photo" | "audio"
+        time: Date
+        readed: boolean
+      }
 
-      message?: string
-      message_id?: number
-      message_time?: Date
-      message_attack_type?: "photo" | "audio"
-      readed?: boolean
+      user: {
+        first_name: string
+        last_name: string
+        image: string
+        emoji?: number
+      }
 
       /* CUSTOM */
       typing?: boolean
@@ -427,12 +435,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             produce((chats) => {
               const chat = chats.history[dialog]
               if (chat) {
-                chat.message = message.message
-                chat.message_id = message.id
-                chat.message_attack_type = message.attach?.type
-                chat.message_time = message.time
-                chat.message_target = message.target
-                chat.readed = message.readed
+                chat.message = message
                 chat.typing = false
               }
               return chats
@@ -485,9 +488,11 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             CHAT_LIST_ATOM,
             produce((chats) => {
               const chat = chats.history[dialog]
-              if (chat && chat.message_id === data.response.message.id) {
-                chat.message = data.response.message.message
-                chat.message_attack_type = data.response.message.attach?.type
+              if (chat && chat.message?.id === data.response.message.id) {
+                if (chat.message) {
+                  chat.message.message = data.response.message.message
+                  chat.message.attack_type = data.response.message.attach?.type
+                }
               }
               return chats
             }),
@@ -540,25 +545,15 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
               CHAT_LIST_ATOM,
               produce((chats) => {
                 const chat = chats.history[dialog]
-                if (chat && chat.message_id === message.id) {
+                if (chat && chat.message?.id === message.id) {
                   for (let i = message.id; i > 0; i--) {
                     const _message = messageInfo.history.get(i)
                     if (_message) {
-                      chat.message = _message.message
-                      chat.message_target = _message.target
-                      chat.message_id = _message.id
-                      chat.message_attack_type = _message.attach?.type
-                      chat.message_time = _message.time
-                      chat.readed = _message.readed
+                      chat.message = _message
                       break
                     }
                     if (i === 0) {
                       chat.message = undefined
-                      chat.message_id = undefined
-                      chat.message_attack_type = undefined
-                      chat.message_target = undefined
-                      chat.message_time = undefined
-                      chat.readed = undefined
                     }
                   }
                 }
@@ -587,13 +582,8 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             CHAT_LIST_ATOM,
             produce((chats) => {
               const chat = chats.history[dialog]
-              console.log(
-                "message.read",
-                chat.message_id,
-                data.response.message_id,
-              )
-              if (chat && chat.message_id === data.response.message_id) {
-                chat.readed = true
+              if (chat && chat.message?.id === data.response.message_id) {
+                if (chat.message) chat.message.readed = true
               }
               return chats
             }),

@@ -84,13 +84,13 @@ const Content: Component<Content> = (props) => {
                   <Gap justifyContent={"space-between"} count={"6px"}>
                     <Title nowrap overflow>
                       <UserName
-                        first_name={"chat.first_name"}
-                        last_name={"chat.last_name"}
-                        icon={"chat.icon"}
+                        first_name={chat.user.first_name}
+                        last_name={chat.user.last_name}
+                        emoji={chat.user.emoji}
                       />
                     </Title>
 
-                    <Show keyed when={chat.message_time}>
+                    <Show keyed when={chat.message?.time}>
                       {(time) => (
                         <SubTitle {...textProps} nowrap>
                           {timeAgo(time.getTime())}
@@ -114,7 +114,7 @@ const Content: Component<Content> = (props) => {
                         nowrap
                         overflow
                       >
-                        {chat.message || chat.message_attack_type}
+                        {chat.message?.message || chat.message?.attack_type}
                       </SubTitle>
 
                       <SubTitle
@@ -127,11 +127,17 @@ const Content: Component<Content> = (props) => {
                       </SubTitle>
                     </Flex>
 
-                    <Show when={chat.message || chat.message_attack_type}>
+                    <Show
+                      when={chat.message?.message || chat.message?.attack_type}
+                    >
                       <Message.Badge
                         // isNew={chat.message_target !== "you" && !chat.readed}
-                        isRead={chat.message_target === "my" && chat.readed}
-                        isNotRead={chat.message_target === "my" && !chat.readed}
+                        isRead={
+                          chat.message?.target === "my" && chat.message.readed
+                        }
+                        isNotRead={
+                          chat.message?.target === "my" && !chat.message.readed
+                        }
                         isLoading={chat.loading}
                       />
                     </Show>

@@ -10,10 +10,10 @@ import {
 } from "components"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
-import { MESSAGE_INFO_ATOM } from "engine/state"
+import { CHAT_LIST_ATOM, MESSAGE_INFO_ATOM } from "engine/state"
 import { pages, useParams } from "router"
 
-import { type JSX, type Component, createEffect, on } from "solid-js"
+import { type JSX, type Component, createEffect, on, Show } from "solid-js"
 
 interface Header extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -24,6 +24,7 @@ const Header: Component<Header> = (props) => {
   const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
     dialog: params().dialog,
   }))
+  const [chatList] = useAtom(CHAT_LIST_ATOM)
 
   return (
     <FixedLayout
@@ -51,12 +52,16 @@ const Header: Component<Header> = (props) => {
             }}
           >
             <Title nowrap overflow>
-              <UserName
-                justifyContent={"start"}
-                // first_name={params().dialog}
-                last_name={params().dialog}
-                // icon={"icon"}
-              />
+              <Show keyed when={chatList.history[params()?.dialog || ""]}>
+                {(chat) => (
+                  <UserName
+                    justifyContent={"center"}
+                    first_name={chat.user.first_name || "undefined"}
+                    last_name={chat.user.last_name || "undefined"}
+                    emoji={chat.user.emoji}
+                  />
+                )}
+              </Show>
             </Title>
             <SubTitle
               style={{

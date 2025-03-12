@@ -389,13 +389,17 @@ const [store, setStore] = createStore({
     autoConnect: false,
     autoReconnect: false,
   }),
+  duplicated: false,
+  status: Status.CLOSE,
 })
 
 export const socket = store.socket
+export const socketStore = store
 
 export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
   socket.disconnect()
   socket.terminate()
+  setStore("duplicated", false)
   setStore(
     "socket",
     init<Socket, SocketError>({
@@ -410,6 +414,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     console.log("server socket", data, event)
 
     if (event === "connection.duplicated") {
+      setStore("duplicated", true)
       replacePage({ pageId: pages.DUPLICATED, is_back: false })
     }
 
@@ -618,6 +623,7 @@ createEffect(
   on(
     () => store.socket.status(),
     (status) => {
+      setStore("status", status)
       console.log({ status })
       if (status === Status.OPEN) {
         mutex.release({ key: "lock1" })

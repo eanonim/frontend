@@ -7,7 +7,7 @@ import Plug from "@component/default/Blocks/Plug/Plug"
 import Title from "@component/default/Typography/Title/Title"
 import { Status } from "@elum/ews"
 import { setHeaderColor } from "engine"
-import { socket } from "engine/api/module"
+import { socketStore } from "engine/api/module"
 import { type JSX, type Component, onMount, createEffect, on } from "solid-js"
 import { createStore } from "solid-js/store"
 
@@ -28,26 +28,30 @@ const Reconnection: Component<Reconnection> = (props) => {
 
   createEffect(
     on(
-      () => socket.status(),
-      (status, prevStatus) => {
+      [() => socketStore.socket.status(), () => socketStore.duplicated],
+      (next, prev) => {
         let visible = false
         let abort = false
         if (
-          prevStatus !== undefined &&
-          [(Status.OPEN, Status.CLOSE, Status.CONNECTING)].includes(prevStatus)
+          prev?.[0] !== undefined &&
+          [(Status.OPEN, Status.CLOSE, Status.CONNECTING)].includes(prev?.[0])
         ) {
-          if (status === Status.CLOSE || status === Status.CONNECTING) {
+          if (next[0] === Status.CLOSE || next[0] === Status.CONNECTING) {
             visible = true
           }
         }
-        if (status === Status.OPEN) {
+        if (next[0] === Status.OPEN) {
           visible = false
         }
-        if (status === Status.ABORT) {
+        if (next[0] === Status.ABORT) {
           visible = true
           abort = true
         }
 
+        if (next[1]) {
+          visible = false
+          abort = false
+        }
         setStore("isVisible", visible)
         setStore("isAbort", abort)
 

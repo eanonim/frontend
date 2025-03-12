@@ -55,6 +55,7 @@ const Footer: Component<Footer> = (props) => {
         const message = edit_id && messageInfo.history.get(edit_id)
         if (message && message.message) {
           setMessage(message.message)
+          ref!?.focus()
         }
       },
     ),

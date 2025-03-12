@@ -59,6 +59,7 @@ const Header: Component<Header> = (props) => {
                     first_name={chat.user.first_name || "undefined"}
                     last_name={chat.user.last_name || "undefined"}
                     emoji={chat.user.emoji}
+                    spoiler={!chat.user.first_name && !chat.user.last_name}
                   />
                 )}
               </Show>

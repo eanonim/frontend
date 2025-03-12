@@ -1,0 +1,34 @@
+.UserName {
+  position: relative;
+}
+
+.UserName--spoiler {
+  color: transparent;
+}
+
+.UserName--spoiler::after {
+  content         : " ";
+  position        : absolute;
+  left            : 0;
+  right           : 0;
+  top             : 0;
+  bottom          : 0;
+  background-image: url(/public/spoiler-dots-white.png);
+  background-size : auto min(100%, 1.125rem);
+  border-radius   : .5rem;
+  animation       : _pulse-opacity-light 1.75s linear infinite;
+}
+
+@keyframes _pulse-opacity-light {
+  25% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .25;
+  }
+
+  75% {
+    opacity: 1;
+  }
+}

@@ -10,6 +10,7 @@ interface UserName<T extends ValidComponent = "span"> extends TypeFlex<T> {
   first_name: string
   last_name: string
   emoji?: number
+  spoiler?: boolean
 }
 
 const UserName: Component<UserName> = (props) => {
@@ -17,9 +18,18 @@ const UserName: Component<UserName> = (props) => {
     "first_name",
     "last_name",
     "emoji",
+    "spoiler",
   ])
   return (
-    <Flex justifyContent={"start"} {...others}>
+    <Flex
+      class={style.UserName}
+      classList={{
+        [style[`UserName--spoiler`]]: local.spoiler,
+      }}
+      justifyContent={"start"}
+      {...others}
+    >
+      {local.spoiler ? "spoiler name" : ""}
       {local.first_name} {local.last_name}{" "}
       {emojis[(local.emoji || -1) - 1]?.text}
     </Flex>

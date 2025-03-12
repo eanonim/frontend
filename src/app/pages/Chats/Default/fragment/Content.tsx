@@ -87,6 +87,7 @@ const Content: Component<Content> = (props) => {
                         first_name={chat.user.first_name}
                         last_name={chat.user.last_name}
                         emoji={chat.user.emoji}
+                        spoiler={!chat.user.first_name && !chat.user.last_name}
                       />
                     </Title>
 

@@ -113,11 +113,12 @@ export default {
       subtitle: "Personalize your chat: choose exclusive design themes.",
     },
   },
+  message: "Message",
   premium_times: {
-    12: "Ежегодно",
+    12: "Год",
     6: "Полгода",
     3: "Три месяца",
-    1: "Ежемесячно",
+    1: "Месяц",
   },
   errors: {
     1002: "This action requires premium access",

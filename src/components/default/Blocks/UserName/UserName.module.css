@@ -48,7 +48,7 @@
   right              : 0;
   top                : 0;
   bottom             : 0;
-  background-image   : url(/public/spoiler-dots-white.png);
+  background-image   : url(/spoiler-dots-white.png);
   background-size    : auto min(100%, 1.125rem);
   border-radius      : .5rem;
   /* animation       : _pulse-opacity-light 1.75s linear infinite; */

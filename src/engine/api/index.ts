@@ -21,3 +21,6 @@ export { default as messageTyping } from "./message/typing"
 export { default as messageSend } from "./message/send"
 export { default as messageEdit } from "./message/edit"
 export { default as messageList } from "./message/list"
+
+/* product */
+export { default as productGet } from "./product/get"

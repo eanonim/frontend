@@ -209,6 +209,39 @@ export type Socket = {
       }
     }
   }
+  "product.get": {
+    request: { currency: "XTR" | "TON"; lang: string; group: "premium" }
+    response: Record<
+      string,
+      {
+        code: string
+        title: string
+        description: string
+        position: number
+        product?: {
+          currency: string
+          item_id: string
+          group: string
+          size: "full" | "short"
+          link?: string
+          items: {
+            id: "ticket" | "energy"
+            title: string
+            description: string
+            count: number
+            type?: "numeric" | "time" | "input"
+            grade?: "common" | "special" | "rare" | "epic" | "legendary"
+          }[]
+          discount: number
+          price: number
+          title: string
+          description: string
+          user_lock?: Date
+          global_lock?: Date
+        }[]
+      }
+    >
+  }
   "chat.list": {
     request: {}
     response: {

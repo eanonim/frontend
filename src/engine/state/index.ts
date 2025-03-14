@@ -22,3 +22,4 @@ export {
   addMessage,
   type Message,
 } from "./message_info"
+export { PRODUCT_ATOM } from "./product"

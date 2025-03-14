@@ -16,8 +16,9 @@ import {
   Match,
   createSignal,
   Show,
+  createEffect,
 } from "solid-js"
-import loc from "engine/languages"
+import loc, { getLocale } from "engine/languages"
 import {
   IconBrush,
   IconCoins,
@@ -26,6 +27,9 @@ import {
   IconPhotoFilled,
   IconTelegramStar,
 } from "source"
+import { useAtom } from "engine/modules/smart-data"
+import { PRODUCT_ATOM } from "engine/state"
+import { Socket } from "engine/api/module"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -46,34 +50,23 @@ const icons: Record<string, Component<JSX.SvgSVGAttributes<SVGSVGElement>>> = {
   IconBrush,
 }
 
-const prices = [
-  {
-    price: 2500,
-    discount: 501,
-    month_price: 166,
-  },
-  {
-    price: 1250,
-    discount: 151,
-    month_price: 183,
-  },
-  {
-    price: 624,
-    discount: 51,
-    month_price: 190,
-  },
-  {
-    price: 208,
-    discount: 0,
-    month_price: 208,
-  },
-]
-
 const Content: Component<Content> = (props) => {
-  const [selected, setSelected] = createSignal(12)
+  const [selected, setSelected] = createSignal("")
   const [lang] = loc()
 
-  const handlerSelect = (value: number) => {
+  const [product] = useAtom(PRODUCT_ATOM, {
+    lang: getLocale(),
+    group: "premium",
+    currency: "XTR",
+  })
+
+  createEffect(() => {
+    if (!selected()) {
+      setSelected(product.product?.[0]?.item_id || "")
+    }
+  })
+
+  const handlerSelect = (value: string) => {
     setSelected(value)
   }
 
@@ -82,10 +75,10 @@ const Content: Component<Content> = (props) => {
       <Group>
         <Group.Container>
           <Cell.List>
-            <For each={[12, 6, 3, 1] as (12 | 6 | 3 | 1)[]}>
-              {(time, index) => (
+            <For each={product.product}>
+              {(product, index) => (
                 <Cell
-                  onClick={() => handlerSelect(time)}
+                  onClick={() => handlerSelect(product.item_id)}
                   data-index={index()}
                   separator
                 >
@@ -101,7 +94,7 @@ const Content: Component<Content> = (props) => {
                         />
                       }
                     >
-                      <Match when={selected() === time}>
+                      <Match when={selected() === product.item_id}>
                         <IconCheck
                           color={"var(--accent_color)"}
                           width={20}
@@ -112,15 +105,19 @@ const Content: Component<Content> = (props) => {
                   </Cell.Before>
                   <Cell.Container>
                     <Cell.Content>
-                      <Title>{lang(`premium_times.${time}`)}</Title>
+                      <Title>{product.title}</Title>
                       <SubTitle>
                         <Gap justifyContent={"start"} count={"2px"}>
-                          <Show when={time === 12}>
+                          <Show when={product.discount}>
                             <span style={{ "text-decoration": "line-through" }}>
-                              {prices[index()].price}
+                              {product.price + product.discount}
                             </span>{" "}
                           </Show>
-                          <span>{prices[index()].month_price * 12}</span>{" "}
+                          <span>
+                            {(product.price * [1, 2, 4, 12][index()]).toFixed(
+                              0,
+                            )}
+                          </span>{" "}
                           <IconTelegramStar width={12} height={12} />
                           <span>в год</span>
                         </Gap>
@@ -129,7 +126,11 @@ const Content: Component<Content> = (props) => {
                     <Cell.After>
                       <SubTitle nowrap overflow>
                         <Gap justifyContent={"start"} count={"2px"}>
-                          <span>{prices[index()].month_price}</span>{" "}
+                          <span>
+                            {(product.price / [12, 6, 3, 1][index()]).toFixed(
+                              2,
+                            )}
+                          </span>{" "}
                           <IconTelegramStar width={12} height={12} />
                           <span>/месяц</span>
                         </Gap>

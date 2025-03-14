@@ -349,7 +349,7 @@ function setter<VALUE, OPTIONS, KEY>(
               return cache
             }),
           )
-          cache = getter.cache[key]
+          // cache = getter.cache[key]
           return
         }
 

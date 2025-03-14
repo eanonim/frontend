@@ -33,12 +33,15 @@ import { setter, useAtom } from "engine/modules/smart-data"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { produce } from "solid-js/store"
 import { messageMaxSize } from "root/configs"
+import loc from "engine/languages"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const isTouchSupport = window && "ontouchstart" in window
 
 const Footer: Component<Footer> = (props) => {
+  const [lang] = loc()
+
   const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
   const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
     dialog: params().dialog,
@@ -257,7 +260,7 @@ const Footer: Component<Footer> = (props) => {
         </WriteBar.Icon>
         <WriteBar.Field>
           <WriteBar.Field.Textarea
-            placeholder={"Сообщение"}
+            placeholder={lang("message")}
             maxHeight={window.innerHeight / 3 + "px"}
             ref={ref!}
             onKeyDown={(event) => {

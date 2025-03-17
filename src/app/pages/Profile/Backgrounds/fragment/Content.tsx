@@ -77,12 +77,17 @@ const Content: Component<Content> = (props) => {
             <For
               each={chunks(
                 3,
-                (
-                  Object.values(storeBackground) as {
-                    key: "backgroundId"
-                    value: number
-                    is_premium: boolean
-                  }[]
+                (storeBackground
+                  ? (Object.values(storeBackground) as {
+                      key: "backgroundId"
+                      value: number
+                      is_premium: boolean
+                    }[])
+                  : Array.from({ length: 30 }).map((x, index) => ({
+                      key: "backgroundId",
+                      value: index,
+                      is_premium: false,
+                    }))
                 ).sort((a, b) => a.value - b.value),
               )}
             >

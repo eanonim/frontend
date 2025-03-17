@@ -29,7 +29,6 @@ import {
 } from "source"
 import { useAtom } from "engine/modules/smart-data"
 import { PRODUCT_ATOM } from "engine/state"
-import { Socket } from "engine/api/module"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 

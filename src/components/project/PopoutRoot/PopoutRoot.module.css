@@ -1,13 +1,13 @@
 .PopoutRoot {
-  display: flex;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  display       : flex;
+  position      : fixed;
+  top           : 0;
+  right         : 0;
+  bottom        : 0;
+  left          : 0;
   flex-direction: column;
-  z-index: 201;
-  margin-bottom: calc(var(--tabbar_height) + var(--safe-area-inset-bottom) + 8px);
+  z-index       : 201;
+  margin-bottom : calc(var(--tabbar_height) + var(--safe-area-inset-bottom) + 8px);
 }
 
 .PopoutRoot__mode--snackbar {
@@ -16,26 +16,26 @@
 
 
 .PopoutRoot__inner {
-  display: flex;
-  flex: 1 1;
+  display       : flex;
+  flex          : 1 1;
   flex-direction: column-reverse;
-  flex-wrap: nowrap;
+  flex-wrap     : nowrap;
 }
 
 .PopoutRoot__container {
-  display: flex;
-  width: 100%;
+  display   : flex;
+  width     : 100%;
   min-height: 100%;
 }
 
 .PopoutRoot__mode--popover.PopoutRoot--to-up .PopoutRoot__container {
   -webkit-animation: _PopoverUp .4s forwards;
-  animation: _PopoverUp .4s forwards;
+  animation        : _PopoverUp .4s forwards;
 }
 
 .PopoutRoot__mode--popover.PopoutRoot--to-down .PopoutRoot__container {
   -webkit-animation: _PopoverDown .4s forwards;
-  animation: _PopoverDown .4s forwards;
+  animation        : _PopoverDown .4s forwards;
 }
 
 @keyframes _PopoverUp {
@@ -60,34 +60,76 @@
 
 .PopoutRoot__mode--snackbar.PopoutRoot--to-up .PopoutRoot__container {
   -webkit-animation: _SnackbarUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-  animation: _SnackbarUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation        : _SnackbarUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .PopoutRoot__mode--snackbar.PopoutRoot--to-down .PopoutRoot__container {
   -webkit-animation: _SnackbarDown 0.3s ease-out;
-  animation: _SnackbarDown 0.3s ease-out;
+  animation        : _SnackbarDown 0.3s ease-out;
 }
 
 @keyframes _SnackbarUp {
   0% {
     transform: translateY(50%);
-    opacity: 0;
+    opacity  : 0;
   }
 
   100% {
-    opacity: 1;
+    opacity  : 1;
     transform: translateY(0%);
   }
 }
 
 @keyframes _SnackbarDown {
   0% {
-    opacity: 1;
+    opacity  : 1;
     transform: translateY(0%);
   }
 
   100% {
-    opacity: 0;
+    opacity  : 0;
     transform: translateY(50%);
+  }
+}
+
+.PopoutRoot__mode--snackbar__top {
+  top: 0;
+}
+
+.PopoutRoot__mode--snackbar__top .PopoutRoot__inner {
+  flex: unset;
+}
+
+.PopoutRoot__mode--snackbar__top.PopoutRoot--to-up .PopoutRoot__container {
+  -webkit-animation: _SnackbarTopUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation        : _SnackbarTopUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.PopoutRoot__mode--snackbar__top.PopoutRoot--to-down .PopoutRoot__container {
+  -webkit-animation: _SnackbarTopDown 0.3s ease-out;
+  animation        : _SnackbarTopDown 0.3s ease-out;
+}
+
+@keyframes _SnackbarTopUp {
+  0% {
+    transform: translateY(-100%);
+    opacity  : 0;
+  }
+
+  100% {
+    opacity  : 1;
+    transform: translateY(0%);
+  }
+}
+
+@keyframes _SnackbarTopDown {
+  0% {
+    opacity  : 1;
+    transform: translateY(0%);
+  }
+
+  100% {
+    opacity  : 0;
+    transform: translateY(-100%);
   }
 }

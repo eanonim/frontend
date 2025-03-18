@@ -61,6 +61,7 @@ export enum modals {
 
 export enum popouts {
   ERROR = "snackbar_error",
+  NEW_MESSAGE = "snackbar_top_new_message",
 }
 
 export type routerParams = {

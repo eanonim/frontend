@@ -11,7 +11,18 @@ import {
   setTyping,
 } from "engine/state"
 import { HOST } from "root/configs"
-import { pages, pushPage, replacePage } from "router"
+import {
+  pages,
+  panels,
+  popouts,
+  pushPage,
+  pushPopout,
+  replacePage,
+  useParams,
+  useRouter,
+  useRouterPanel,
+  views,
+} from "router"
 import { createEffect, createSignal, on } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 
@@ -454,6 +465,30 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     if (event === "message.send") {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
+        const view = useRouter("view")
+
+        let notification = false
+
+        if (view() === views.CHATS) {
+          const panel = useRouterPanel(view)
+          if (panel() === panels.CHAT) {
+            const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
+            if (params().dialog !== dialog) {
+              notification = true
+            }
+          } else notification = true
+        } else notification = true
+
+        if (notification) {
+          pushPopout({
+            popoutId: popouts.NEW_MESSAGE,
+            params: {
+              dialog: dialog,
+              message: data.response.message,
+            },
+          })
+        }
+
         const message = data.response.message
         const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
         if (messageInfo.history.size !== 0) {

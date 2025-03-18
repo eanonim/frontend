@@ -1,25 +1,32 @@
-import { Component, For, Show, children, createEffect, splitProps } from "solid-js";
-import { JSX } from "solid-js/jsx-runtime";
-import style from "./PopoutRoot.module.css";
-import { toArray } from "engine";
-import { createStore } from "solid-js/store";
+import {
+  Component,
+  For,
+  Show,
+  children,
+  createEffect,
+  splitProps,
+} from "solid-js"
+import { JSX } from "solid-js/jsx-runtime"
+import style from "./PopoutRoot.module.css"
+import { toArray } from "engine"
+import { createStore } from "solid-js/store"
 
-interface PopoutRoot extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "children"> {
-  activePopout: string;
-  children: JSX.Element;
-  onClose?(): void;
-  onClick?(): void;
-};
+interface PopoutRoot
+  extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "children"> {
+  activePopout: string
+  children: JSX.Element
+  onClose?(): void
+  onClick?(): void
+}
 
 const PopoutRoot: Component<PopoutRoot> = (props) => {
-
   const [local, others] = splitProps(props, [
     "class",
     "activePopout",
     "classList",
     "children",
     "onClose",
-    "onClick"
+    "onClick",
   ])
 
   const [store, setStore] = createStore({
@@ -27,10 +34,10 @@ const PopoutRoot: Component<PopoutRoot> = (props) => {
     to: "up",
     show: false,
     anim: false,
-    clear: !local.activePopout
+    clear: !local.activePopout,
   })
 
-  const childs = toArray(children(() => local.children));
+  const childs = toArray(children(() => local.children))
 
   createEffect(() => {
     if (!store.anim) {
@@ -40,7 +47,7 @@ const PopoutRoot: Component<PopoutRoot> = (props) => {
           to: "up",
           active: local.activePopout,
           anim: true,
-          clear: false
+          clear: false,
         })
       }
 
@@ -49,7 +56,7 @@ const PopoutRoot: Component<PopoutRoot> = (props) => {
         setStore({
           to: "down",
           anim: true,
-          clear: false
+          clear: false,
         })
       }
 
@@ -58,19 +65,22 @@ const PopoutRoot: Component<PopoutRoot> = (props) => {
         setStore({
           to: "down",
           anim: true,
-          clear: false
+          clear: false,
         })
       }
 
-      if (!!store.active && !!local.activePopout && store.active === local.activePopout) {
+      if (
+        !!store.active &&
+        !!local.activePopout &&
+        store.active === local.activePopout
+      ) {
         setStore({
           to: "up",
           active: local.activePopout,
           anim: false,
-          clear: false
+          clear: false,
         })
       }
-
     }
   })
 
@@ -79,12 +89,12 @@ const PopoutRoot: Component<PopoutRoot> = (props) => {
       setStore({
         active: local.activePopout,
         anim: false,
-        clear: !local.activePopout
+        clear: !local.activePopout,
       })
     }
     if (store.to === "up") {
       setStore({
-        anim: false
+        anim: false,
       })
     }
   }
@@ -93,32 +103,41 @@ const PopoutRoot: Component<PopoutRoot> = (props) => {
       <div
         class={style.PopoutRoot}
         classList={{
-          [style["PopoutRoot__mode--popover"]]: store.active.toLowerCase().indexOf("popover") != -1,
-          [style["PopoutRoot__mode--snackbar"]]: store.active.toLowerCase().indexOf("snackbar") != -1,
+          [style["PopoutRoot__mode--popover"]]:
+            store.active.toLowerCase().indexOf("popover") != -1,
+          [style["PopoutRoot__mode--snackbar"]]:
+            store.active.toLowerCase().indexOf("snackbar") != -1,
+          [style["PopoutRoot__mode--snackbar__top"]]:
+            store.active.toLowerCase().indexOf("snackbar_top") != -1,
 
           [style["PopoutRoot--to-up"]]: store.to === "up",
           [style["PopoutRoot--to-down"]]: store.to === "down",
           [style["PopoutRoot--show"]]: store.show,
 
           [`${local.class}`]: !!local.class,
-          ...local.classList
+          ...local.classList,
         }}
         {...others}
       >
         <div class={style.PopoutRoot__inner}>
-          <For each={childs} children={(element, index) =>
-            <Show when={element.nav === store.active}>
-              <div
-                data-name={element.nav}
-                class={style.PopoutRoot__container}
-                onAnimationEnd={handlerSwap}
-              >{element.component({ nav: element.nav })}</div>
-            </Show>
-          } />
+          <For
+            each={childs}
+            children={(element, index) => (
+              <Show when={element.nav === store.active}>
+                <div
+                  data-name={element.nav}
+                  class={style.PopoutRoot__container}
+                  onAnimationEnd={handlerSwap}
+                >
+                  {element.component({ nav: element.nav })}
+                </div>
+              </Show>
+            )}
+          />
         </div>
       </div>
-    </Show >
+    </Show>
   )
 }
 
-export default PopoutRoot;
+export default PopoutRoot

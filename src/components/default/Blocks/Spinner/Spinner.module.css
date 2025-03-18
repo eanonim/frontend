@@ -52,7 +52,7 @@
 
 /* Colors */
 .Spinner__color--secondary svg {
-  color: var(--secondary_bg_color);
+  color: var(--secondary_color);
 }
 
 .Spinner__color--inherit svg {

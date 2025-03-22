@@ -1,5 +1,11 @@
 import { Background, Flex, Message } from "components"
-import { messageList, messageRead } from "engine/api"
+import {
+  chatInviteAccept,
+  chatInviteReject,
+  messageList,
+  messageRead,
+} from "engine/api"
+import { Socket } from "engine/api/module"
 import { useAtom, useAtomSystem } from "engine/modules/smart-data"
 import { SETTINGS_ATOM, type Message as TMessage } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
@@ -123,6 +129,16 @@ const Content: Component<Content> = (props) => {
     }
   }
 
+  const keyboardEvents: Record<
+    NonNullable<
+      Socket["message.send"]["event"]["message"]["keyboard"]
+    >[0][0]["event"],
+    () => void
+  > = {
+    "chat.inviteAccept": () => chatInviteAccept({ dialog: params().dialog }),
+    "chat.inviteReject": () => chatInviteReject({ dialog: params().dialog }),
+  }
+
   return (
     <>
       <Background
@@ -165,6 +181,7 @@ const Content: Component<Content> = (props) => {
           {(message, index) => (
             <Show when={message && !message.deleted}>
               <Message
+                keyboardEvents={keyboardEvents}
                 data-index={index()}
                 data-message_id={message.id}
                 onTouchStart={() =>
@@ -196,6 +213,7 @@ const Content: Component<Content> = (props) => {
                 isLoading={message.loading}
                 isEdit={message.edit}
                 onRead={() => onRead(message)}
+                keyboard={message.keyboard}
               />
             </Show>
           )}

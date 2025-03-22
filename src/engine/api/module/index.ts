@@ -59,6 +59,8 @@ export type SearchInteresting =
   | "anime"
   | "lgbt"
 
+type Target = "my" | "you" | "system"
+
 export type Socket = {
   "user.nameSet": {
     request: {
@@ -124,7 +126,7 @@ export type Socket = {
     response?: Array<{
       id: number
       message?: string
-      target: "my" | "you"
+      target: Target
       attach?: {
         type: "photo" | "audio"
         items: Array<{
@@ -132,6 +134,11 @@ export type Socket = {
           data: string
         }>
       }
+      keyboard?: {
+        key: "chat_invite_accept" | "chat_invite_reject"
+        text: "accept" | "reject"
+        event: "chat.inviteAccept" | "chat.inviteReject"
+      }[][]
       reply?: {
         id: number
         message: string
@@ -203,7 +210,12 @@ export type Socket = {
       message: {
         id: number
         message?: string
-        target: "my" | "you"
+        target: Target
+        keyboard?: {
+          key: "chat_invite_accept" | "chat_invite_reject"
+          text: "accept" | "reject"
+          event: "chat.inviteAccept" | "chat.inviteReject"
+        }[][]
         attach?: {
           type: "photo" | "audio"
           items: Array<{
@@ -262,7 +274,7 @@ export type Socket = {
       message?: {
         id: number
         message?: string
-        target: "my" | "you"
+        target: Target
         attack_type?: "photo" | "audio"
         time: Date
         readed: boolean
@@ -280,6 +292,33 @@ export type Socket = {
       loading?: boolean
     }[]
   }
+  "chat.inviteMake": {
+    request: {
+      dialog: string
+    }
+    response: {
+      result: boolean
+    }
+    event: undefined
+  }
+  "chat.inviteAccept": {
+    request: {
+      dialog: string
+    }
+    response: {
+      result: boolean
+    }
+    event: undefined
+  }
+  "chat.inviteReject": {
+    request: {
+      dialog: string
+    }
+    response: {
+      result: boolean
+    }
+    event: undefined
+  }
   "chat.info": {
     request: {
       dialog: string
@@ -290,7 +329,7 @@ export type Socket = {
       message?: {
         id: number
         message?: string
-        target: "my" | "you"
+        target: Target
         attack_type?: "photo" | "audio"
         time: Date
         readed: boolean

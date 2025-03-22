@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Cell,
   FixedLayout,
   Message,
@@ -8,12 +9,14 @@ import {
   Title,
   UserName,
 } from "components"
+import { chatInviteMake } from "engine/api"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { CHAT_LIST_ATOM, MESSAGE_INFO_ATOM } from "engine/state"
 import { pages, useParams } from "router"
 
 import { type JSX, type Component, createEffect, on, Show } from "solid-js"
+import { IconBugFilled } from "source"
 
 interface Header extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -26,6 +29,10 @@ const Header: Component<Header> = (props) => {
   }))
   const [chatList] = useAtom(CHAT_LIST_ATOM)
 
+  const handlerInviteMake = () => {
+    chatInviteMake({ dialog: params().dialog })
+  }
+
   return (
     <FixedLayout
       isMargin={false}
@@ -36,8 +43,13 @@ const Header: Component<Header> = (props) => {
       }}
     >
       <Cell>
-        <Cell.Before style={{ opacity: 0 }}>
-          <span style={{ width: "36px" }} />
+        <Cell.Before>
+          <Button onClick={handlerInviteMake} size={"small"} type={"icon"}>
+            <Button.Container>
+              <IconBugFilled />
+            </Button.Container>
+          </Button>
+          {/* <span onClick={handlerInviteMake} style={{ width: "36px" }} /> */}
         </Cell.Before>
         <Cell.Container>
           <Cell.Content

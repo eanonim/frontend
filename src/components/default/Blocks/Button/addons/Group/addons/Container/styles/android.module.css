@@ -1,1 +1,3 @@
-.Container {}
+.Container {
+  gap: 12px;
+}

@@ -1,6 +1,6 @@
 import { Button, FixedLayout, Separator, Title } from "components"
 import { getMaleOfNumber } from "engine"
-import { chatSearch } from "engine/api"
+import { chatInfo, chatSearch } from "engine/api"
 import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
@@ -35,6 +35,7 @@ const Footer: Component<Footer> = (props) => {
     })
 
     if (response?.dialog) {
+      await chatInfo({ dialog: response?.dialog })
       pushPage({ pageId: pages.CHAT, params: { dialog: response.dialog } })
     }
   }

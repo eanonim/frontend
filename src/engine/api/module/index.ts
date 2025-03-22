@@ -25,6 +25,7 @@ import {
 } from "router"
 import { createEffect, createSignal, on } from "solid-js"
 import { createStore, produce } from "solid-js/store"
+import { chatInfo } from ".."
 
 export type SocketError = {
   code: number
@@ -279,6 +280,34 @@ export type Socket = {
       loading?: boolean
     }[]
   }
+  "chat.info": {
+    request: {
+      dialog: string
+    }
+    response: {
+      uuid: string
+
+      message?: {
+        id: number
+        message?: string
+        target: "my" | "you"
+        attack_type?: "photo" | "audio"
+        time: Date
+        readed: boolean
+      }
+
+      user: {
+        first_name: string
+        last_name: string
+        image: string
+        emoji?: number
+      }
+
+      /* CUSTOM */
+      typing?: boolean
+      loading?: boolean
+    }
+  }
   "chat.search": {
     request: {
       language: string
@@ -454,7 +483,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     }),
   )
 
-  socket.onEvents(({ data, event }) => {
+  socket.onEvents(async ({ data, event }) => {
     console.log("server socket", data, event)
 
     if (event === "connection.duplicated") {
@@ -490,16 +519,15 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
         }
 
         const message = data.response.message
-        const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
-        if (messageInfo.history.size !== 0) {
-          setter(
-            [MESSAGE_INFO_ATOM, data.response.dialog],
-            produce((messages) => {
-              addMessage(messages, message)
-              return messages
-            }),
-          )
-        }
+        // const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
+        // if (messageInfo.history.size !== 0) {
+        setter(
+          [MESSAGE_INFO_ATOM, data.response.dialog],
+          produce((messages) => {
+            addMessage(messages, message)
+            return messages
+          }),
+        )
 
         const chatList = getterSmart(CHAT_LIST_ATOM)
         if (!!chatList.history[dialog]) {
@@ -667,6 +695,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
 
     if (event === "chat.search") {
       if (data.response?.dialog) {
+        await chatInfo({ dialog: data.response.dialog })
         pushPage({
           pageId: pages.CHAT,
           params: { dialog: data.response?.dialog },

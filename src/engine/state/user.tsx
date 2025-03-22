@@ -16,7 +16,7 @@ export const USER_ATOM = atom<
     last_name: "Иванов",
     image: "https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg", //https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg
     emoji: 0,
-    premium: new Date(Date.now() - 1_000),
+    premium: new Date(Date.now() + 1_000),
   },
   updateIntervalMs: 15_000,
   onUpdate: ({ prev, next }, key) => {

@@ -144,7 +144,13 @@ const Content: Component<Content> = (props) => {
             <Cell.Container>
               <Cell.Content>
                 <Title>Premium</Title>
-                <Show keyed when={user.premium}>
+                <Show
+                  keyed
+                  when={
+                    (user.premium || new Date()).getTime() > Date.now() &&
+                    user.premium
+                  }
+                >
                   {(premium) => (
                     <SubTitle>
                       Активен до: {timeAgo(premium.getTime())}

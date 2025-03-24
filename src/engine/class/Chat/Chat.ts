@@ -1,4 +1,5 @@
-import { Message } from "./Message/Message"
+import { DIALOGS, REQUESTS } from "./createChats"
+import { Message as ClassMessage, Message } from "./Message/Message"
 
 import {
   ObjectMessage,
@@ -7,49 +8,18 @@ import {
   Dialog,
   DefaultUser,
   Requests,
+  ClassMessageProps,
 } from "./types"
 import { getFullDate } from "./utils"
 import { createStore, produce } from "solid-js/store"
-import { unlink } from "@minsize/utils"
-import { createSignal } from "solid-js"
 
-export const [DIALOGS, SetDIALOGS] = createStore<
-  Record<
-    string,
-    Dialog<
-      DefaultTarget,
-      DefaultUser,
-      DefaultKeyboard,
-      ObjectMessage<DefaultTarget, DefaultKeyboard>
-    >
-  >
->({})
-const MESSAGES = new Map<
-  { dialog: string; message_id: number },
-  Message<
-    DefaultTarget,
-    DefaultUser,
-    DefaultKeyboard,
-    ObjectMessage<DefaultTarget, DefaultKeyboard>
-  >
->()
-
-export var REQUESTS: Partial<
-  Requests<DefaultTarget, DefaultUser, DefaultKeyboard>
-> = {}
-
-export const initChatRequests = (
-  requests: Requests<DefaultTarget, DefaultUser, DefaultKeyboard>,
-) => {
-  REQUESTS = requests
-}
-
-export class createChats<
+export class Chat<
   Target extends DefaultTarget,
   User extends DefaultUser,
   Keyboard extends DefaultKeyboard,
-  Message extends ObjectMessage<Target, Keyboard> = ObjectMessage<
+  Message extends ObjectMessage<Target, User, Keyboard> = ObjectMessage<
     Target,
+    User,
     Keyboard
   >,
   _Dialog extends Dialog<Target, User, Keyboard, Message> = Dialog<
@@ -59,42 +29,21 @@ export class createChats<
     Message
   >,
 > {
-  public readonly requests: Partial<
-    Requests<Target, User, Keyboard, Message, _Dialog>
-  > = {}
+  private initStore = createStore<
+    Dialog<Target, User, Keyboard, ObjectMessage<Target, User, Keyboard>>
+  >({
+    id: "",
+    user: {} as any,
+    messages: {
+      dialogs: [] as any,
+      history: new Map(),
+      lastOffset: 0,
+    },
+    isFullLoad: false,
+  } as _Dialog)
+  private store = this.initStore[0]
+  private setStore = this.initStore[1]
 
-  constructor({
-    requests,
-  }: {
-    requests: Requests<Target, User, Keyboard, Message, _Dialog>
-  }) {
-    REQUESTS = requests
-  }
-
-  public getClass() {
-    return Chat<Target, User, Keyboard, Message, _Dialog>
-  }
-}
-
-// setInterval(() => {
-//   console.log({ DIALOGS })
-// }, 2000)
-
-class Chat<
-  Target extends DefaultTarget,
-  User extends DefaultUser,
-  Keyboard extends DefaultKeyboard,
-  Message extends ObjectMessage<Target, Keyboard> = ObjectMessage<
-    Target,
-    Keyboard
-  >,
-  _Dialog extends Dialog<Target, User, Keyboard, Message> = Dialog<
-    Target,
-    User,
-    Keyboard,
-    Message
-  >,
-> {
   private chatId: string = ""
 
   private requests: Partial<
@@ -106,32 +55,30 @@ class Chat<
     this.requests = REQUESTS as Partial<
       Requests<Target, User, Keyboard, Message, _Dialog>
     >
-    const chat = DIALOGS[params.dialog]
-    if (!chat) {
-      SetDIALOGS(
-        produce((store) => {
-          store[this.chatId] = {
-            id: this.chatId,
-            user: {} as any,
-            messages: {
-              dialogs: [] as any,
-              history: new Map(),
-              lastOffset: 0,
-            },
-            isFullLoad: false,
-          }
 
+    const chat = DIALOGS.get(params.dialog) as _Dialog
+    if (!chat) {
+      this.setStore(
+        produce((store) => {
+          store.id = this.chatId
           return store
         }),
       )
       this.uploadChats()
+    } else {
+      this.setStore(
+        produce((store) => {
+          Object.assign(store, chat)
+          return store
+        }),
+      )
     }
 
     this.getHistory = this.getHistory.bind(this)
     this.uploadChats = this.uploadChats.bind(this)
     this.uploadChatHistory = this.uploadChatHistory.bind(this)
-    this.addMessage = this.addMessage.bind(this)
-    this.createMessage = this.createMessage.bind(this)
+    this.newMessage = this.newMessage.bind(this)
+    this.initMessage = this.initMessage.bind(this)
     this.get = this.get.bind(this)
     this.uploadChatById = this.uploadChatById.bind(this)
     this.getFullLoad = this.getFullLoad
@@ -139,58 +86,63 @@ class Chat<
 
   /* Загрузка чата в кеш */
   private setDIALOG(item: Omit<_Dialog, "messages">) {
-    const chat = DIALOGS[item.id]
+    const chat = DIALOGS.get(item.id)
     if (chat) {
-      SetDIALOGS(
-        item.id,
-        produce((store) => {
-          Object.assign(store, item)
-          // store = { ...chat, ...item }
-
-          return store
-        }),
-      )
+      DIALOGS.set(chat.id, Object.assign(chat, item))
     } else {
-      SetDIALOGS(
-        produce((store) => {
-          store[item.id] = {
-            id: item.id,
-            user: item.user,
-            messages: {
-              dialogs: [] as any,
-              history: new Map(),
-              lastOffset: 0,
-            },
-            isFullLoad: false,
-          }
-
-          return store
-        }),
-      )
+      const data = {
+        id: item.id,
+        user: item.user,
+        messages: {
+          dialogs: [] as any,
+          history: new Map(),
+          lastOffset: 0,
+        },
+        isFullLoad: false,
+      }
+      DIALOGS.set(item.id, data)
+    }
+    const chat2 = DIALOGS.get(item.id) as _Dialog
+    if (chat2) {
+      if (this.chatId === item.id) {
+        this.setStore(
+          produce((store) => {
+            Object.assign(store, chat2)
+            console.log({ store })
+            return store
+          }),
+        )
+      }
     }
   }
 
   /* Добавление сообщения */
-  private addMessage(
-    _message: Message,
+  private initMessage(
+    _message: Omit<ClassMessageProps<Target, Keyboard>, "indexes">,
     typePush: "push" | "unshift" = "unshift",
   ) {
     const groupMessagesCount = 20
 
-    if (!DIALOGS[this.chatId]) {
+    const chat = DIALOGS.get(this.chatId) as _Dialog
+
+    if (!chat) {
       this.uploadChats()
       console.error("Чата не существует")
       return undefined
     }
 
-    SetDIALOGS(
+    const isMessage = this.store.messages.history.has(_message.id)
+    if (isMessage) {
+      return this.getMessageById(_message.id)
+    }
+
+    const message = new ClassMessage<Target, User, Keyboard>({
+      ..._message,
+      ...{ chatId: this.chatId, indexes: [0, 0, 0] },
+    })
+
+    this.setStore(
       produce((store) => {
-        const message = unlink(_message) as Message & {
-          indexes: [number, number, number]
-        }
-
-        if (store[this.chatId].messages.history.has(message.id)) return store
-
         const fullTime = getFullDate(message.time)
 
         let dialogIndex = 0
@@ -201,34 +153,32 @@ class Chat<
 
         // добавляем группу сообщения за сегодняшний день
         const fullTimeToday = getFullDate(new Date())
-        dialogIndex = store[this.chatId].messages.dialogs.findIndex(
+        dialogIndex = store.messages.dialogs.findIndex(
           (x) => x[0] === fullTimeToday,
         )
         if (dialogIndex === -1) {
-          dialogIndex = store[this.chatId].messages.dialogs.length
-          store[this.chatId].messages.dialogs.push([
+          dialogIndex = store.messages.dialogs.length
+          store.messages.dialogs.push([
             fullTimeToday,
             Array.from({ length: countEmpty }, () => []),
           ])
         }
 
         // Забиваем Array, для следующих сообщений, что бы Index`ы работали нормально
-        dialogIndex = store[this.chatId].messages.dialogs.findIndex(
-          (x) => x[0] === fullTime,
-        )
+        dialogIndex = store.messages.dialogs.findIndex((x) => x[0] === fullTime)
         if (dialogIndex === -1) {
-          dialogIndex = store[this.chatId].messages.dialogs.length
-          store[this.chatId].messages.dialogs.push([
+          dialogIndex = store.messages.dialogs.length
+          store.messages.dialogs.push([
             fullTime,
             Array.from({ length: countEmpty }, () => []),
           ])
         }
 
-        let groupMessages = store[this.chatId].messages.dialogs[dialogIndex][1]
+        let groupMessages = store.messages.dialogs[dialogIndex][1]
 
         if (groupMessages.length === 0) {
           for (let i = 0; i < countEmpty; i++) {
-            store[this.chatId].messages.dialogs[dialogIndex][1][i] = []
+            store.messages.dialogs[dialogIndex][1][i] = []
           }
         }
 
@@ -274,74 +224,75 @@ class Chat<
 
         message.indexes = [dialogIndex, groupMessagesIndex, messageIndex]
 
-        store[this.chatId].messages.history.set(message.id, message)
+        store.messages.history.set(message.id, message)
 
         if (
           message.isRead &&
-          message.id > (store[this.chatId].messages.lastReadMessageId || 0)
+          message.id > (store.messages.lastReadMessageId || 0)
         ) {
-          store[this.chatId].messages.lastReadMessageId = message.id
+          store.messages.lastReadMessageId = message.id
         }
 
+        if (store.lastMessageId) {
+          if (store.lastMessageId < message.id) {
+            store.lastMessageId = message.id
+          }
+        }
+
+        DIALOGS.set(store.id, store)
         return store
       }),
     )
-
-    return true
+    return message
   }
 
   /* Получение статуса о полной загрузки истории сообщений */
   public getFullLoad() {
-    return !!DIALOGS[this.chatId].isFullLoad
+    return !!this.store.isFullLoad
   }
 
   /* Получение статуса прочитанного сообщения */
   public checkRead(messageId: number) {
-    return messageId < (DIALOGS[this.chatId].messages.lastReadMessageId || 0)
+    return messageId < (this.store.messages.lastReadMessageId || 0)
   }
 
   /* Получение данных чата */
   public get() {
-    return DIALOGS[this.chatId]
+    return this.store
   }
 
   /* Получить данные собеседника */
   public getUser() {
-    return DIALOGS[this.chatId].user
+    return this.store.user
   }
 
   /* Добавляет новое сообщение */
-  public createMessage(message: Message) {
-    return this.addMessage(message, "push")
+  public newMessage(
+    message: Omit<ClassMessageProps<Target, Keyboard>, "indexes">,
+  ) {
+    return this.initMessage(message, "unshift")
   }
 
   public getHistory() {
-    if (!DIALOGS[this.chatId].messages.dialogs.length) {
+    if (!this.store.messages.dialogs.length) {
       this.uploadChatHistory()
     }
-    return DIALOGS[this.chatId].messages.dialogs
+    return this.store.messages.dialogs
   }
 
   /* Поиск сообщения */
   public getMessageById(message_id: number) {
-    if (!DIALOGS[this.chatId]) {
+    if (!this.store) {
       console.error("Чата не существует")
       return undefined
     }
     /* Проверка на существование сообщения */
-    if (!DIALOGS[this.chatId].messages.history.has(message_id)) {
+    if (!this.store.messages.history.has(message_id)) {
       console.error("Сообщения не существует")
       return undefined
     }
 
-    const key = { dialog: this.chatId, message_id }
-
-    let message = MESSAGES.get(key)
-    if (!message) {
-      let message = new Message(this.chatId, message_id)
-      MESSAGES.set(key, message)
-    }
-    return message
+    return this.store.messages.history.get(message_id)
   }
 
   /* Загрузка чата по идентификатору */
@@ -377,6 +328,9 @@ class Chat<
     if (response) {
       for (const item of response) {
         this.setDIALOG(item)
+        if (item.lastMessage) {
+          this.initMessage(item.lastMessage)
+        }
       }
       return true
     }
@@ -385,16 +339,16 @@ class Chat<
 
   /* Загрузка истории чата */
   public async uploadChatHistory() {
-    if (DIALOGS[this.chatId].messages.isLoading) return false
+    if (this.store.messages.isLoading) return false
 
     const request = this.requests["message.getHistory"]
     if (!request) {
       console.error('Нет функции для вызова "message.getHistory"')
       return false
     }
-    SetDIALOGS(this.chatId, "messages", "isLoading", true)
+    this.setStore("messages", "isLoading", true)
     try {
-      const offset = DIALOGS[this.chatId].messages.lastOffset || 0
+      const offset = this.store.messages.lastOffset || 0
       const { response, error } = await request({
         id: this.chatId,
         offset: offset,
@@ -402,18 +356,18 @@ class Chat<
       })
 
       if (!error && (response.length === 0 || !response)) {
-        SetDIALOGS(this.chatId, "isFullLoad", true)
+        this.setStore("isFullLoad", true)
       }
 
       if (response) {
-        SetDIALOGS(this.chatId, "messages", "lastOffset", offset + 200)
+        this.setStore("messages", "lastOffset", offset + 200)
         for (const message of response) {
-          this.addMessage(message)
+          this.initMessage(message, "push")
         }
         return true
       }
     } finally {
-      SetDIALOGS(this.chatId, "messages", "isLoading", false)
+      this.setStore("messages", "isLoading", false)
     }
     return false
   }

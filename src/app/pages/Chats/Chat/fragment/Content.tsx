@@ -1,4 +1,3 @@
-import { unlink } from "@minsize/utils"
 import {
   Background,
   Button,
@@ -8,14 +7,13 @@ import {
   SubTitle,
   Title,
 } from "components"
-import { chatInviteAccept, chatInviteReject, messageList } from "engine/api"
+import { chatInviteAccept, chatInviteReject } from "engine/api"
 import { Socket } from "engine/api/module"
 import { Chat } from "engine/class"
 import loc from "engine/languages"
 import { useAtom, useAtomSystem } from "engine/modules/smart-data"
 import { SETTINGS_ATOM, type Message as TMessage } from "engine/state"
 import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
-import { messageListCount } from "root/configs"
 import { modals, pages, pushModal, useParams } from "router"
 
 import {
@@ -67,7 +65,7 @@ const Content: Component<Content> = (props) => {
 
   createEffect(
     on(
-      () => messageInfo.last_message_id,
+      () => chat.get().lastMessageId,
       (next, prev) => {
         if (next === prev && next !== undefined) return
         let isScroll = store.isBottom
@@ -119,16 +117,6 @@ const Content: Component<Content> = (props) => {
     }
   }
 
-  const onNext = async () => {
-    await chat.uploadChatHistory()
-    // await messageList({
-    //   dialog: params().dialog,
-    //   offset: messageInfo.last_offset,
-    //   count: messageListCount,
-    // })
-    return true
-  }
-
   const keyboardEvents: Record<
     NonNullable<
       Socket["message.send"]["event"]["message"]["keyboard"]
@@ -137,6 +125,7 @@ const Content: Component<Content> = (props) => {
   > = {
     "chat.inviteAccept": async (message) => {
       const msg = chat.getMessageById(message.id)
+      console.log({ message }, msg)
       if (!msg) return
       msg.setDeleteStatus(true)
 
@@ -192,92 +181,99 @@ const Content: Component<Content> = (props) => {
             })
           }}
           dialogs={chat.getHistory()}
-          onNext={onNext}
+          onNext={chat.uploadChatHistory}
           hasMore={!chat.getFullLoad()}
         >
           {(message, index) => (
-            <Show when={message && !message.isDeleted}>
-              <Switch
-                fallback={
-                  <Message
-                    data-index={index()}
-                    data-message_id={message.id}
-                    onTouchStart={() =>
-                      !message.isLoading &&
-                      handlerContextMenu("start", message.id)
-                    }
-                    onTouchEnd={(e) => {
-                      if (isOpenModal) {
-                        e.preventDefault()
+            <Show
+              keyed
+              when={message && !message.isDeleted && message.getSignal()}
+            >
+              {(message) => (
+                <Switch
+                  fallback={
+                    <Message
+                      data-index={index()}
+                      data-message_id={message.id}
+                      onTouchStart={() =>
+                        !message.isLoading &&
+                        handlerContextMenu("start", message.id)
                       }
-                      handlerContextMenu("end", message.id)
-                    }}
-                    onTouchMove={() => handlerContextMenu("end", message.id)}
-                    onMouseMove={() => handlerContextMenu("end", message.id)}
-                    onMouseDown={() =>
-                      !message.isLoading &&
-                      handlerContextMenu("start", message.id)
-                    }
-                    onMouseUp={() => handlerContextMenu("end", message.id)}
-                    onContextMenu={() => handlerContextMenu("any", message.id)}
-                    forward={message.reply}
-                    attach={message.attach}
-                    type={message.target === "my" ? "out" : "in"}
-                    text={message.text}
-                    time={message.time}
-                    isEmoji={false}
-                    isRead={chat.checkRead(message.id)}
-                    isNotRead={!chat.checkRead(message.id)}
-                    isLoading={message.isLoading}
-                    isEdit={message.isEdit}
-                    onRead={() => {
-                      const msg = chat.getMessageById(message.id)
-                      if (msg) {
-                        msg.setRead(true)
+                      onTouchEnd={(e) => {
+                        if (isOpenModal) {
+                          e.preventDefault()
+                        }
+                        handlerContextMenu("end", message.id)
+                      }}
+                      onTouchMove={() => handlerContextMenu("end", message.id)}
+                      onMouseMove={() => handlerContextMenu("end", message.id)}
+                      onMouseDown={() =>
+                        !message.isLoading &&
+                        handlerContextMenu("start", message.id)
                       }
-                    }}
-                  />
-                }
-              >
-                <Match
-                  keyed
-                  when={message.target === "system" && chat.getUser()}
+                      onMouseUp={() => handlerContextMenu("end", message.id)}
+                      onContextMenu={() =>
+                        handlerContextMenu("any", message.id)
+                      }
+                      forward={message.reply}
+                      attach={message.attach}
+                      type={message.target === "my" ? "out" : "in"}
+                      text={message.text}
+                      time={message.time}
+                      isEmoji={false}
+                      isRead={chat.checkRead(message.id)}
+                      isNotRead={!chat.checkRead(message.id)}
+                      isLoading={message.isLoading}
+                      isEdit={message.isEdit}
+                      onRead={() => {
+                        const msg = chat.getMessageById(message.id)
+                        if (msg) {
+                          msg.setRead(true)
+                        }
+                      }}
+                    />
+                  }
                 >
-                  {(user) => (
-                    <Message.System>
-                      <Plug size={"small"}>
-                        <Plug.Container>
-                          <Title>
-                            {user.first_name} хочет сохранить переписку с Вами
-                          </Title>
-                          <SubTitle>
-                            Если вы согласитесь, вам будет проще найти и
-                            продолжить общение в будущем.
-                          </SubTitle>
-                        </Plug.Container>
-                        <Plug.Action stretched>
-                          <Message.Keyboard each={message.keyboard}>
-                            {(button) => (
-                              <Button
-                                stretched
-                                onClick={() =>
-                                  keyboardEvents[button.event]?.(message)
-                                }
-                              >
-                                <Button.Container>
-                                  <Title>
-                                    {lang(button.text) || button.text}
-                                  </Title>
-                                </Button.Container>
-                              </Button>
-                            )}
-                          </Message.Keyboard>
-                        </Plug.Action>
-                      </Plug>
-                    </Message.System>
-                  )}
-                </Match>
-              </Switch>
+                  <Match
+                    keyed
+                    when={message.target === "system" && chat.getUser()}
+                  >
+                    {(user) => (
+                      <Message.System>
+                        <Plug size={"small"}>
+                          <Plug.Container>
+                            <Title>
+                              {user.first_name} хочет сохранить переписку с Вами
+                            </Title>
+                            <SubTitle>
+                              Если вы согласитесь, вам будет проще найти и
+                              продолжить общение в будущем.
+                            </SubTitle>
+                          </Plug.Container>
+                          <Plug.Action stretched>
+                            <Message.Keyboard each={message.keyboard}>
+                              {(button) => (
+                                <Button
+                                  stretched
+                                  onClick={() =>
+                                    keyboardEvents[button.event]?.(message)
+                                  }
+                                >
+                                  <Button.Container>
+                                    <Title>
+                                      {lang(button.text) || button.text}
+                                    </Title>
+                                  </Button.Container>
+                                </Button>
+                              )}
+                            </Message.Keyboard>
+                          </Plug.Action>
+                        </Plug>
+                      </Message.System>
+                    )}
+                  </Match>
+                </Switch>
+              )}
             </Show>
           )}
         </Message.Group>

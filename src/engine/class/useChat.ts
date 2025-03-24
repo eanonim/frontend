@@ -5,17 +5,18 @@ import {
   messageList,
   messageRead,
 } from "engine/api"
-import { createChats } from "./Chat/Chat"
 import { Socket } from "engine/api/module"
-import { Dialog, ObjectMessage } from "./Chat/types"
+import { ClassMessageProps, Dialog, ObjectMessage } from "./Chat/types"
+import { createChats } from "./Chat/createChats"
 
 type Target = NonNullable<Socket["message.list"]["response"]>[0]["target"]
 type User = NonNullable<Socket["chat.list"]["response"]>[0]["user"]
 type Keyboard = NonNullable<
   NonNullable<Socket["message.list"]["response"]>[0]["keyboard"]
 >[0][0]
+type Message = ObjectMessage<Target, User, Keyboard>
 
-const useChat = new createChats<Target, User, Keyboard>({
+const useChat = new createChats<Target, User, Keyboard, Message>({
   requests: {
     "message.delete": async ({ chatId, messageId }) => {
       const { response, error } = await messageDelete({
@@ -77,7 +78,7 @@ const useChat = new createChats<Target, User, Keyboard>({
         offset,
       })
       if (error) return { response: undefined, error: true }
-      const data: ObjectMessage<Target, Keyboard>[] = []
+      const data: ClassMessageProps<Target, Keyboard>[] = []
 
       for (const message of response || []) {
         // Тут добавить если есть lastMessageId то добавлять в addMessage
@@ -91,6 +92,7 @@ const useChat = new createChats<Target, User, Keyboard>({
           isRead: message.readed,
           isDeleted: message.deleted,
           keyboard: message.keyboard,
+          indexes: [0, 0, 0],
         })
       }
       return { response: data, error: undefined }

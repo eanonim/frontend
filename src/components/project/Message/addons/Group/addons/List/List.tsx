@@ -118,7 +118,7 @@ const List = <Message extends unknown>(props: List<Message>) => {
           store.messages.some((x) => {
             if (!x || !x.length) return false
 
-            return x.some((item) => item && !item.deleted)
+            return x.some((item) => item && !item.isDeleted)
           })
         }
       >

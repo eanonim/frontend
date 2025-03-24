@@ -1,12 +1,6 @@
-export type DefaultTarget = "my" | "system" | "you"
-export type DefaultKeyboard = unknown
+import { Message as ClassMessage } from "../Message/Message"
 
-export type DefaultUser = {
-  first_name: string
-  last_name: string
-}
-
-export type ObjectMessage<
+export type ClassMessageProps<
   Target extends DefaultTarget,
   Keyboard extends DefaultKeyboard,
 > = {
@@ -36,19 +30,36 @@ export type ObjectMessage<
   isRead?: boolean
   isDeleted?: boolean
 
-  // indexes: [number, number, number]
+  indexes: [number, number, number]
 }
+
+export type DefaultTarget = "my" | "system" | "you"
+export type DefaultKeyboard = unknown
+
+export type DefaultUser = {
+  first_name: string
+  last_name: string
+}
+
+export type ObjectMessage<
+  Target extends DefaultTarget,
+  User extends DefaultUser,
+  Keyboard extends DefaultKeyboard,
+> = ClassMessage<Target, User, Keyboard>
 
 export type Dialog<
   Target extends DefaultTarget,
   User extends DefaultUser,
   Keyboard extends DefaultKeyboard,
-  Message extends ObjectMessage<Target, Keyboard> = ObjectMessage<
+  Message extends ObjectMessage<Target, User, Keyboard> = ObjectMessage<
     Target,
+    User,
     Keyboard
   >,
 > = {
   id: string
+
+  lastMessageId?: number
 
   lastMessage?: {
     id: number
@@ -102,8 +113,9 @@ export type Requests<
   Target extends DefaultTarget,
   User extends DefaultUser,
   Keyboard extends DefaultKeyboard,
-  Message extends ObjectMessage<Target, Keyboard> = ObjectMessage<
+  Message extends ObjectMessage<Target, User, Keyboard> = ObjectMessage<
     Target,
+    User,
     Keyboard
   >,
   _Dialog extends Dialog<Target, User, Keyboard, Message> = Dialog<
@@ -147,5 +159,5 @@ export type Requests<
     id: string
     count: number
     offset: number
-  }) => Promise<Result<Message[]>>
+  }) => Promise<Result<Omit<ClassMessageProps<Target, Keyboard>, "indexes">[]>>
 }

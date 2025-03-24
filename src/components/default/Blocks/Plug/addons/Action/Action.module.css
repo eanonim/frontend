@@ -14,3 +14,7 @@
 .Action:not(:only-child):last-child {
   padding-bottom: 0;
 }
+
+.Action--stretched {
+  width: 100%;
+}

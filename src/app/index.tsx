@@ -1,7 +1,7 @@
 import { createEffect, onCleanup, onMount, type Component } from "solid-js"
 
 import { Path, Reconnection, Root } from "components"
-import { pages, pushPage, replacePage, useRouter, views } from "router"
+import { pages, replacePage, useRouter, views } from "router"
 import { getLastPage } from "router/src/utils"
 
 import Startup from "./pages/Startup/Startup"

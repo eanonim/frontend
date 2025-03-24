@@ -3,13 +3,8 @@ import { Socket } from "engine/api/module"
 import { produce } from "solid-js/store"
 import { CHAT_LIST_ATOM } from "./chat_list"
 import { messageList } from "engine/api"
-import {
-  groupMessagesCount,
-  messageListCount,
-  messageListCountStart,
-} from "root/configs"
+import { groupMessagesCount, messageListCountStart } from "root/configs"
 import { getFullDate, isEmoji } from "engine"
-import { clamp, unlink } from "@minsize/utils"
 
 export type Message = {
   /**

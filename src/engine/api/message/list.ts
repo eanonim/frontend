@@ -8,7 +8,6 @@ const messageList = async (
   options: Socket["message.list"]["request"],
   cbLoad?: () => void,
 ) => {
-  if (!options.dialog) return
   const { response, error } = await socketSend("message.list", options)
   if (error) {
     console.log({ error })

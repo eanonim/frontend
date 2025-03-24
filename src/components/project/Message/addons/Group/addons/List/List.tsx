@@ -11,14 +11,9 @@ import {
   Accessor,
   createEffect,
   on,
-  For,
-  createSignal,
   Show,
-  createUniqueId,
 } from "solid-js"
 import { createStore } from "solid-js/store"
-import { sleep, unlink } from "@minsize/utils"
-import { createVisibilityObserver } from "@solid-primitives/intersection-observer"
 
 interface List<Message extends unknown>
   extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "children"> {

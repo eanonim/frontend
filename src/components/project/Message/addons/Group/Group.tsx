@@ -1,5 +1,5 @@
 import style from "./Group.module.css"
-import MessageSystem from "../System/System"
+import MessageSystemDate from "../SystemDate/SystemDate"
 import { List } from "./addons"
 
 import ContextGroup from "./context"
@@ -14,14 +14,9 @@ import {
   Accessor,
   createEffect,
   on,
-  createUniqueId,
-  createSignal,
-  onMount,
-  Show,
 } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { timeAgoOnlyDate } from "engine"
-import { sleep } from "@minsize/utils"
 
 interface Group<Message extends unknown>
   extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "children"> {
@@ -184,9 +179,9 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
                 }
                 messages={messages}
                 footer={
-                  <MessageSystem key={index()}>
+                  <MessageSystemDate key={index()}>
                     {timeAgoOnlyDate(new Date(time)?.getTime())}
-                  </MessageSystem>
+                  </MessageSystemDate>
                 }
                 children={local.children}
               />

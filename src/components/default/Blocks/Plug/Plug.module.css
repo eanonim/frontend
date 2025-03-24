@@ -19,3 +19,12 @@
 .Plug--full {
   height: 100%;
 }
+
+/* size */
+.Plug__size-small {
+  padding: 12px;
+}
+
+.Plug__size-medium {
+  padding: 24px;
+}

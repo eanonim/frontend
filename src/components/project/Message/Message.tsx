@@ -1,7 +1,7 @@
 import style from "./Message.module.css"
-import { Badge, Group, System, Typing } from "./addons"
+import { Badge, Group, SystemDate, Typing, System, Keyboard } from "./addons"
 
-import { Button, Link, Title, type TypeFlex } from "@ui/index"
+import { Link, type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
 import formatTime from "engine/utils/formatTime"
 import Gap from "@ui/default/Templates/Gap/Gap"
@@ -19,7 +19,6 @@ import {
 import { DynamicProps } from "solid-js/web"
 import { createVisibilityObserver } from "@solid-primitives/intersection-observer"
 import { textParserUrl } from "@minsize/utils"
-import { Socket } from "engine/api/module"
 
 interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   text?: string
@@ -48,13 +47,6 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   isEdit?: boolean
   textEdit?: string
   isEmoji?: boolean
-  keyboard?: Socket["message.send"]["event"]["message"]["keyboard"]
-  keyboardEvents: Record<
-    NonNullable<
-      Socket["message.send"]["event"]["message"]["keyboard"]
-    >[0][0]["event"],
-    () => void
-  >
 
   onRead: () => void
 }
@@ -62,7 +54,9 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
 type ComponentMessage = Component<Message> & {
   Badge: typeof Badge
   Group: typeof Group
+  SystemDate: typeof SystemDate
   System: typeof System
+  Keyboard: typeof Keyboard
   Typing: typeof Typing
 }
 
@@ -83,8 +77,6 @@ const Message: ComponentMessage = (props) => {
     "textEdit",
     "isEmoji",
     "onRead",
-    "keyboard",
-    "keyboardEvents",
   ])
 
   let ref: HTMLDivElement
@@ -217,31 +209,6 @@ const Message: ComponentMessage = (props) => {
             )}
           </Show>
         </div>
-        <Show keyed when={local.keyboard}>
-          {(keyboards) => (
-            <Button.Group>
-              <For each={keyboards}>
-                {(keyboard) => (
-                  <Button.Group.Container>
-                    <For each={keyboard}>
-                      {(button) => (
-                        <Button
-                          onClick={() =>
-                            local.keyboardEvents?.[button.event]?.()
-                          }
-                        >
-                          <Button.Container>
-                            <Title>{button.text}</Title>
-                          </Button.Container>
-                        </Button>
-                      )}
-                    </For>
-                  </Button.Group.Container>
-                )}
-              </For>
-            </Button.Group>
-          )}
-        </Show>
       </span>
       {/* <span class={style.Message__end}>
         <IconMessageEnd />
@@ -252,6 +219,8 @@ const Message: ComponentMessage = (props) => {
 
 Message.Badge = Badge
 Message.Group = Group
+Message.Keyboard = Keyboard
+Message.SystemDate = SystemDate
 Message.System = System
 Message.Typing = Typing
 

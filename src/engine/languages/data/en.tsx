@@ -15,6 +15,8 @@ export default {
   help: "Help",
   apply: "Apply",
   cancel: "Cancel",
+  accept: "Accept",
+  reject: "Reject",
   apply_in_all_chats: "Apply in all chats",
   font_size: {
     templates: {

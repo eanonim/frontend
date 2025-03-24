@@ -3,6 +3,7 @@ import { Socket, SocketError, socketSend } from "../module"
 import { MESSAGE_INFO_ATOM } from "engine/state"
 import { produce } from "solid-js/store"
 import { debounce } from "@solid-primitives/scheduled"
+import { Chat } from "engine/class"
 
 const debounceMessageRead = debounce(
   async (
@@ -20,27 +21,11 @@ const debounceMessageRead = debounce(
     }
 
     if (response.result) {
-      setter(
-        [MESSAGE_INFO_ATOM, options.dialog],
-        produce((messages) => {
-          const message = messages.history.get(options.message_id)
-          if (message) {
-            const [dialogIndex, groupMessagesIndex, messageIndex] =
-              message.indexes
-            if (
-              messages.dialogs[dialogIndex][1][groupMessagesIndex][messageIndex]
-            ) {
-              messages.dialogs[dialogIndex][1][groupMessagesIndex][
-                messageIndex
-              ].readed = true
-            }
-          }
-
-          messages.last_read_message_id = options.message_id
-
-          return messages
-        }),
-      )
+      const chat = new Chat({ dialog: options.dialog })
+      const msg = chat.getMessageById(options.message_id)
+      if (msg) {
+        msg.setRead(true)
+      }
     }
 
     resolve({ response, error })
@@ -57,7 +42,10 @@ const messageRead = async (options: Socket["message.read"]["request"]) => {
   }
   lastMessage[options.dialog] = options.message_id
 
-  return await new Promise((resolve) => {
+  return await new Promise<
+    | { error: SocketError; response: undefined }
+    | { error: undefined; response: Socket["message.read"]["response"] }
+  >((resolve) => {
     debounceMessageRead(resolve, options)
   })
 }

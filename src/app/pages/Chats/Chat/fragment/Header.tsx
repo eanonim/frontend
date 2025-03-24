@@ -10,12 +10,11 @@ import {
   UserName,
 } from "components"
 import { chatInviteMake } from "engine/api"
+import { Chat } from "engine/class"
 import loc from "engine/languages"
-import { useAtom } from "engine/modules/smart-data"
-import { CHAT_LIST_ATOM, MESSAGE_INFO_ATOM } from "engine/state"
 import { pages, useParams } from "router"
 
-import { type JSX, type Component, createEffect, on, Show } from "solid-js"
+import { type JSX, type Component, Show } from "solid-js"
 import { IconBugFilled } from "source"
 
 interface Header extends JSX.HTMLAttributes<HTMLDivElement> {}
@@ -24,10 +23,10 @@ const Header: Component<Header> = (props) => {
   const [lang] = loc()
 
   const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
-  const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
-    dialog: params().dialog,
-  }))
-  const [chatList] = useAtom(CHAT_LIST_ATOM)
+
+  const chat = new Chat({ dialog: params().dialog })
+
+  const chatInfo = chat.get()
 
   const handlerInviteMake = () => {
     chatInviteMake({ dialog: params().dialog })
@@ -54,17 +53,17 @@ const Header: Component<Header> = (props) => {
         <Cell.Container>
           <Cell.Content
             style={{
-              transform: !messageInfo.message.typing
+              transform: !chatInfo.isTyping
                 ? "translateY(25%)"
                 : "translateY(0%)",
-              "-webkit-transform": !messageInfo.message.typing
+              "-webkit-transform": !chatInfo.isTyping
                 ? "translateY(25%)"
                 : "translateY(0%)",
               transition: "0.3s",
             }}
           >
             <Title nowrap overflow>
-              <Show keyed when={chatList.history[params()?.dialog || ""]}>
+              <Show keyed when={chatInfo}>
                 {(chat) => (
                   <UserName
                     justifyContent={"center"}
@@ -78,10 +77,10 @@ const Header: Component<Header> = (props) => {
             </Title>
             <SubTitle
               style={{
-                transform: !messageInfo.message.typing
+                transform: !chatInfo.isTyping
                   ? "translateY(100%)"
                   : "translateY(0%)",
-                "-webkit-transform": !messageInfo.message.typing
+                "-webkit-transform": !chatInfo.isTyping
                   ? "translateY(100%)"
                   : "translateY(0%)",
                 transition: "0.3s",

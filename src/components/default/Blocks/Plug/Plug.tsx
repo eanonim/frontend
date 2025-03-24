@@ -15,6 +15,8 @@ interface Plug extends Omit<HTMLAttributes<DynamicProps<"div">>, "title"> {
    * Определяет, должен ли элемент отображаться в полноэкранном режиме.
    */
   full?: boolean
+
+  size?: "small" | "medium"
 }
 
 type ComponentPlug = Component<Plug> & {
@@ -25,12 +27,13 @@ type ComponentPlug = Component<Plug> & {
 
 const Plug: ComponentPlug = (props) => {
   const style = useStyle(styles, props.platform)
-  const merged = mergeProps({ mode: "bottom" }, props)
+  const merged = mergeProps({ mode: "bottom", size: "medium" }, props)
   const [local, others] = splitProps(merged, [
     "class",
     "classList",
     "children",
     "full",
+    "size",
   ])
 
   return (
@@ -48,6 +51,8 @@ const Plug: ComponentPlug = (props) => {
         component={"div"}
         class={style.Plug}
         classList={{
+          [style[`Plug__size-${local.size}`]]: !!local.size,
+
           [`${local.class}`]: !!local.class,
           ...local.classList,
 

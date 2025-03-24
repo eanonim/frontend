@@ -151,24 +151,14 @@ const Content: Component<Content> = (props) => {
     (message: TMessage) => void
   > = {
     "chat.inviteAccept": async (message) => {
-      const msg = chat.getMessageById(message.id)
-      console.log({ message }, msg)
-      if (!msg) return
-      msg.setDeleteStatus(true)
-
       const { response, error } = await chatInviteAccept({
         dialog: params().dialog,
       })
-      msg.setDeleteStatus(!!response?.result)
     },
     "chat.inviteReject": async (message) => {
-      const msg = chat.getMessageById(message.id)
-      if (!msg) return
-      msg.setDeleteStatus(true)
       const { response, error } = await chatInviteReject({
         dialog: params().dialog,
       })
-      msg.setDeleteStatus(!!response?.result)
     },
   }
 

@@ -8,76 +8,58 @@ import {
 } from "engine/state"
 import { produce } from "solid-js/store"
 import { unlink } from "@minsize/utils"
-import { Chat } from "engine/class"
 
 const messageSend = async (options: Socket["message.send"]["request"]) => {
   const messageId = Math.random()
   let [dialogIndex, groupMessagesIndex, messageIndex] = [0, 0, 0]
 
-  const chat = new Chat({ dialog: options.dialog })
-  const chatInfo = chat.get()
+  setter(
+    [MESSAGE_INFO_ATOM, options.dialog],
+    produce((messages) => {
+      const reply =
+        !!messages.message.reply_id &&
+        messages.history.get(messages.message.reply_id)
 
-  const reply = chatInfo.messages.message?.replyId
-  const replyMsg = reply ? chat.getMessageById(reply) : undefined
+      const message: Message = {
+        loading: true,
+        target: "my",
+        id: messageId,
+        message: options.message.message,
+        reply: reply
+          ? { id: reply.id, message: reply.message || "UNDEFINED" }
+          : undefined,
+        time: new Date(),
+        indexes: [0, 0, 0] as [number, number, number],
+        readed: false,
+        deleted: false,
+      }
 
-  const message = chat.newMessage({
-    isLoading: true,
-    target: "my",
-    id: messageId,
-    text: options.message.message,
-    reply: replyMsg
-      ? { id: replyMsg.id, message: replyMsg.text || "UNDEFINED" }
-      : undefined,
-    time: new Date(),
-  })
+      const chatList = getter(CHAT_LIST_ATOM)
+      if (!!chatList.history[options.dialog]) {
+        setter(
+          CHAT_LIST_ATOM,
+          produce((chats) => {
+            const chat = chats.history[options.dialog]
+            if (chat && message) {
+              chat.message = message
+              chat.loading = true
+              chat.typing = false
+            }
+            return chats
+          }),
+        )
+      }
 
-  // setter(
-  //   [MESSAGE_INFO_ATOM, options.dialog],
-  //   produce((messages) => {
-  //     const reply =
-  //       !!messages.message.reply_id &&
-  //       messages.history.get(messages.message.reply_id)
+      const [_, indexes] = addMessage(messages, message)
+      ;[dialogIndex, groupMessagesIndex, messageIndex] = indexes
 
-  //     const message: Message = {
-  //       loading: true,
-  //       target: "my",
-  //       id: messageId,
-  //       message: options.message.message,
-  //       reply: reply
-  //         ? { id: reply.id, message: reply.message || "UNDEFINED" }
-  //         : undefined,
-  //       time: new Date(),
-  //       indexes: [0, 0, 0] as [number, number, number],
-  //       readed: false,
-  //       deleted: false,
-  //     }
+      messages.message.message = ""
+      messages.message.reply_id = undefined
+      messages.message.edit_id = undefined
 
-  //     const chatList = getter(CHAT_LIST_ATOM)
-  //     if (!!chatList.history[options.dialog]) {
-  //       setter(
-  //         CHAT_LIST_ATOM,
-  //         produce((chats) => {
-  //           const chat = chats.history[options.dialog]
-  //           if (chat && message) {
-  //             chat.message = message
-  //             chat.loading = true
-  //             chat.typing = false
-  //           }
-  //           return chats
-  //         }),
-  //       )
-  //     }
-
-  //     const [_, indexes] = addMessage(messages, message)
-  //     ;[dialogIndex, groupMessagesIndex, messageIndex] = indexes
-
-  //     messages.message.message = ""
-  //     messages.message.reply_id = undefined
-  //     messages.message.edit_id = undefined
-
-  //     return messages
-  //   }),
-  // )
+      return messages
+    }),
+  )
 
   const { response, error } = await socketSend("message.send", options)
 
@@ -87,14 +69,6 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
   }
 
   if (response.result) {
-    if (message) {
-      console.log({ message })
-      // message.id = response.id
-      // message.isLoading = false
-      message.setId(response.id)
-      message.setLoading(false)
-    }
-
     setter(
       [MESSAGE_INFO_ATOM, options.dialog],
       produce((messages) => {

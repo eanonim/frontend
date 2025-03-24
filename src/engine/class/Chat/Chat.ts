@@ -1,4 +1,4 @@
-import { DIALOGS, REQUESTS } from "./createChats"
+import { dialogs, setDialogs, REQUESTS } from "./createChats"
 import { Message as ClassMessage, Message } from "./Message/Message"
 
 import {
@@ -56,7 +56,7 @@ export class Chat<
       Requests<Target, User, Keyboard, Message, _Dialog>
     >
 
-    const chat = DIALOGS.get(params.dialog) as _Dialog
+    const chat = dialogs[params.dialog] as _Dialog
     if (!chat) {
       this.setStore(
         produce((store) => {
@@ -86,9 +86,15 @@ export class Chat<
 
   /* Загрузка чата в кеш */
   private setDIALOG(item: Omit<_Dialog, "messages">) {
-    const chat = DIALOGS.get(item.id)
+    const chat = dialogs[item.id]
     if (chat) {
-      DIALOGS.set(chat.id, Object.assign(chat, item))
+      setDialogs(
+        chat.id,
+        produce((store) => {
+          Object.assign(store, item)
+          return store
+        }),
+      )
     } else {
       const data = {
         id: item.id,
@@ -100,15 +106,19 @@ export class Chat<
         },
         isFullLoad: false,
       }
-      DIALOGS.set(item.id, data)
+      setDialogs(
+        produce((store) => {
+          store[item.id] = data
+          return store
+        }),
+      )
     }
-    const chat2 = DIALOGS.get(item.id) as _Dialog
+    const chat2 = dialogs[item.id] as _Dialog
     if (chat2) {
       if (this.chatId === item.id) {
         this.setStore(
           produce((store) => {
             Object.assign(store, chat2)
-            console.log({ store })
             return store
           }),
         )
@@ -123,7 +133,7 @@ export class Chat<
   ) {
     const groupMessagesCount = 20
 
-    const chat = DIALOGS.get(this.chatId) as _Dialog
+    const chat = dialogs[this.chatId] as _Dialog
 
     if (!chat) {
       this.uploadChats()
@@ -239,7 +249,13 @@ export class Chat<
           }
         }
 
-        DIALOGS.set(store.id, store)
+        setDialogs(
+          store.id,
+          produce((chat) => {
+            Object.assign(chat, store)
+            return chat
+          }),
+        )
         return store
       }),
     )
@@ -314,7 +330,7 @@ export class Chat<
 
   /* Загрузка чатов */
   public async uploadChats() {
-    if (Object.keys(DIALOGS).length !== 0) {
+    if (Object.keys(dialogs).length !== 0) {
       return await this.uploadChatById(this.chatId)
     }
 

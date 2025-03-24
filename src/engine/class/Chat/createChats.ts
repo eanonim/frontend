@@ -1,3 +1,4 @@
+import { createStore } from "solid-js/store"
 import { Chat } from "../Chat/Chat"
 import {
   DefaultKeyboard,
@@ -12,15 +13,17 @@ export var REQUESTS: Partial<
   Requests<DefaultTarget, DefaultUser, DefaultKeyboard>
 > = {}
 
-export const DIALOGS = new Map<
-  string,
-  Dialog<
-    DefaultTarget,
-    DefaultUser,
-    DefaultKeyboard,
-    ObjectMessage<DefaultTarget, DefaultUser, DefaultKeyboard>
+export const [dialogs, setDialogs] = createStore<
+  Record<
+    string,
+    Dialog<
+      DefaultTarget,
+      DefaultUser,
+      DefaultKeyboard,
+      ObjectMessage<DefaultTarget, DefaultUser, DefaultKeyboard>
+    >
   >
->()
+>({})
 
 export function setREQUESTS(
   params: Partial<Requests<DefaultTarget, DefaultUser, DefaultKeyboard>>,
@@ -56,6 +59,11 @@ export class createChats<
   public async loadChats() {
     const chat = new Chat({ dialog: "" })
     chat.uploadChats()
+  }
+
+  /* Получение историю диалогов */
+  public get() {
+    return dialogs
   }
 
   public getClass() {

@@ -8,7 +8,7 @@ import {
   ClassMessageProps,
 } from "../types"
 import { createStore, produce, SetStoreFunction, Store } from "solid-js/store"
-import { DIALOGS, REQUESTS } from "../createChats"
+import { dialogs, setDialogs, REQUESTS } from "../createChats"
 
 export class Message<
   Target extends DefaultTarget,
@@ -148,7 +148,7 @@ export class Message<
 
   /* Изменяет ID сообщения */
   public setId(newId: number) {
-    const chat = DIALOGS.get(this.chatId)
+    const chat = dialogs[this.chatId]
     if (!chat) return false
 
     this.initStore[1](
@@ -195,11 +195,17 @@ export class Message<
 
   /* Установка статуса прочтения */
   public setRead(status: boolean) {
-    const chat = DIALOGS.get(this.chatId)
+    const chat = dialogs[this.chatId]
     if (!chat) return false
 
     if (status && (chat.messages.lastReadMessageId || 0) < this.id) {
-      chat.messages.lastReadMessageId = this.id
+      setDialogs(
+        chat.id,
+        produce((store) => {
+          store.messages.lastReadMessageId = this.id
+          return store
+        }),
+      )
       this.requestRead()
     }
     this.initStore[1](

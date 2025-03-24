@@ -16,7 +16,7 @@ type Keyboard = NonNullable<
 >[0][0]
 type Message = ObjectMessage<Target, User, Keyboard>
 
-const useChat = new createChats<Target, User, Keyboard, Message>({
+export const useChats = new createChats<Target, User, Keyboard, Message>({
   requests: {
     "message.delete": async ({ chatId, messageId }) => {
       const { response, error } = await messageDelete({
@@ -100,4 +100,4 @@ const useChat = new createChats<Target, User, Keyboard, Message>({
   },
 })
 
-export const Chat = useChat.getClass()
+export const Chat = useChats.getClass()

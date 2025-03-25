@@ -1,15 +1,8 @@
 import init, { Status } from "@elum/ews"
 import { Mutex } from "@minsize/mutex"
-import { sleep, unlink } from "@minsize/utils"
+import { sleep } from "@minsize/utils"
 import { getter } from "elum-state/solid"
-import { setter, getter as getterSmart } from "engine/modules/smart-data"
-import {
-  addMessage,
-  AUTH_TOKEN_ATOM,
-  CHAT_LIST_ATOM,
-  MESSAGE_INFO_ATOM,
-  setTyping,
-} from "engine/state"
+import { AUTH_TOKEN_ATOM } from "engine/state"
 import { HOST } from "root/configs"
 import {
   pages,
@@ -24,8 +17,9 @@ import {
   views,
 } from "router"
 import { createEffect, createSignal, on } from "solid-js"
-import { createStore, produce } from "solid-js/store"
+import { createStore } from "solid-js/store"
 import { chatInfo } from ".."
+import { Chats } from "engine/class/useChat"
 
 export type SocketError = {
   code: number
@@ -544,6 +538,8 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
             if (params().dialog !== dialog) {
               notification = true
             }
+          } else if (panel() === panels.CHATS) {
+            notification = false
           } else notification = true
         } else notification = true
 
@@ -557,86 +553,34 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
           })
         }
 
-        const message = data.response.message
-        // const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
-        // if (messageInfo.history.size !== 0) {
-        setter(
-          [MESSAGE_INFO_ATOM, data.response.dialog],
-          produce((messages) => {
-            addMessage(messages, message)
-            return messages
-          }),
-        )
+        const chat = Chats.getById(dialog)
 
-        const chatList = getterSmart(CHAT_LIST_ATOM)
-        if (!!chatList.history[dialog]) {
-          setter(
-            CHAT_LIST_ATOM,
-            produce((chats) => {
-              const chat = chats.history[dialog]
-              if (chat) {
-                chat.message = message
-                chat.typing = false
-              }
-              return chats
-            }),
-          )
-        }
+        const message = data.response.message
+
+        chat?.newMessage({
+          id: message.id,
+          text: message.message,
+          target: message.target,
+          attach: message.attach,
+          reply: message.reply,
+          time: message.time,
+
+          keyboard: message.keyboard,
+          isRead: message.readed,
+          isDeleted: message.deleted,
+        })
       }
     }
 
     if (event === "message.edit") {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
-        const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
-        if (messageInfo.history.size !== 0) {
-          setter(
-            [MESSAGE_INFO_ATOM, data.response.dialog],
-            produce((messages) => {
-              let message = unlink(
-                messages.history.get(data.response.message.id),
-              )
-              if (message) {
-                message.message = data.response.message.message
-                message.attach = data.response.message.attach
-                messages.history.set(data.response.message.id, message)
+        const chat = Chats.getById(dialog)
 
-                message = messages.history.get(data.response.message.id)
-                if (message) {
-                  const [dialogIndex, groupMessagesIndex, messageIndex] =
-                    message.indexes
-                  if (
-                    messages.dialogs[dialogIndex][1][groupMessagesIndex][
-                      messageIndex
-                    ]
-                  ) {
-                    messages.dialogs[dialogIndex][1][groupMessagesIndex][
-                      messageIndex
-                    ] = message
-                  }
-                }
-              }
-
-              return messages
-            }),
-          )
-        }
-
-        const chatList = getterSmart(CHAT_LIST_ATOM)
-        if (!!chatList.history[dialog]) {
-          setter(
-            CHAT_LIST_ATOM,
-            produce((chats) => {
-              const chat = chats.history[dialog]
-              if (chat && chat.message?.id === data.response.message.id) {
-                if (chat.message) {
-                  chat.message.message = data.response.message.message
-                  chat.message.attack_type = data.response.message.attach?.type
-                }
-              }
-              return chats
-            }),
-          )
+        const message = chat?.getMessageById(data.response.message.id)
+        if (message) {
+          message.setter("attach", data.response.message.attach)
+          message.setter("text", data.response.message.message)
         }
       }
     }
@@ -644,63 +588,11 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     if (event === "message.delete") {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
-        const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
-        if (messageInfo.history.size !== 0) {
-          setter(
-            [MESSAGE_INFO_ATOM, data.response.dialog],
-            produce((messages) => {
-              let message = unlink(
-                messages.history.get(data.response.message_id),
-              )
-              if (message) {
-                message.deleted = true
-                messages.history.set(data.response.message_id, message)
+        const chat = Chats.getById(dialog)
 
-                message = messages.history.get(data.response.message_id)
-                if (message) {
-                  const [dialogIndex, groupMessagesIndex, messageIndex] =
-                    message.indexes
-                  if (
-                    messages.dialogs[dialogIndex][1][groupMessagesIndex][
-                      messageIndex
-                    ]
-                  ) {
-                    messages.dialogs[dialogIndex][1][groupMessagesIndex][
-                      messageIndex
-                    ] = message
-                  }
-                }
-              }
-
-              return messages
-            }),
-          )
-        }
-
-        const message = messageInfo.history.get(data.response.message_id)
+        const message = chat?.getMessageById(data.response.message_id)
         if (message) {
-          const chatList = getterSmart(CHAT_LIST_ATOM)
-          if (!!chatList.history[dialog]) {
-            setter(
-              CHAT_LIST_ATOM,
-              produce((chats) => {
-                const chat = chats.history[dialog]
-                if (chat && chat.message?.id === message.id) {
-                  for (let i = message.id; i > 0; i--) {
-                    const _message = messageInfo.history.get(i)
-                    if (_message) {
-                      chat.message = _message
-                      break
-                    }
-                    if (i === 0) {
-                      chat.message = undefined
-                    }
-                  }
-                }
-                return chats
-              }),
-            )
-          }
+          message.setter("isDeleted", true)
         }
       }
     }
@@ -708,26 +600,11 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     if (event === "message.read") {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
-        const messageInfo = getterSmart(MESSAGE_INFO_ATOM, data.response.dialog)
-        if (messageInfo.history.size !== 0) {
-          setter(
-            [MESSAGE_INFO_ATOM, data.response.dialog],
-            "last_read_message_id",
-            data.response.message_id,
-          )
-        }
-        const chatList = getterSmart(CHAT_LIST_ATOM)
-        if (!!chatList.history[dialog]) {
-          setter(
-            CHAT_LIST_ATOM,
-            produce((chats) => {
-              const chat = chats.history[dialog]
-              if (chat && chat.message?.id === data.response.message_id) {
-                if (chat.message) chat.message.readed = true
-              }
-              return chats
-            }),
-          )
+        const chat = Chats.getById(dialog)
+
+        const message = chat?.getMessageById(data.response.message_id)
+        if (message) {
+          message.setter("isRead", true)
         }
       }
     }
@@ -745,7 +622,8 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
     if (event === "message.typing") {
       const dialog = data.response?.dialog
       if (dialog) {
-        setTyping(dialog)
+        const chat = Chats.getById(dialog)
+        chat?.setter("isTyping", true)
       }
     }
   })

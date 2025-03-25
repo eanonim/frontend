@@ -1,51 +1,14 @@
-import { getter, setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
-import { CHAT_LIST_ATOM, MESSAGE_INFO_ATOM, USER_ATOM } from "engine/state"
-import { produce } from "solid-js/store"
-import { unlink } from "@minsize/utils"
-import isEmoji from "engine/utils/isEmoji"
+import { Chats } from "engine/class/useChat"
 
 const messageEdit = async (options: Socket["message.edit"]["request"]) => {
-  setter(
-    [MESSAGE_INFO_ATOM, options.dialog],
-    produce((messages) => {
-      let message = unlink(messages.history.get(options.message.id))
-      if (message) {
-        message.loading = true
-        message.message = options.message.message
-        message.is_emoji = isEmoji(message.message)
-        message.attach = options.message.attach
-        messages.history.delete(options.message.id)
-        messages.history.set(options.message.id, message)
-
-        let [dialogIndex, groupMessagesIndex, messageIndex] = message.indexes
-        messages.dialogs[dialogIndex][1][groupMessagesIndex][messageIndex] =
-          message
-      }
-
-      const chatList = getter(CHAT_LIST_ATOM)
-      if (!!chatList.history[options.dialog]) {
-        setter(
-          CHAT_LIST_ATOM,
-          produce((chats) => {
-            const chat = chats.history[options.dialog]
-            if (
-              chat &&
-              chat.message?.id &&
-              message &&
-              chat.message?.id === message.id
-            ) {
-              chat.message.message = message.message
-              chat.loading = true
-            }
-            return chats
-          }),
-        )
-      }
-
-      return messages
-    }),
-  )
+  const chat = Chats.getById(options.dialog)
+  const message = chat?.getMessageById(options.message.id)
+  message?.setter("isEdit", true)
+  message?.setter("isLoading", true)
+  message?.setter("attach", options.message.attach)
+  message?.setter("text", options.message.message)
+  chat?.setMessage("editId", undefined)
 
   const { response, error } = await socketSend("message.edit", options)
 
@@ -55,42 +18,7 @@ const messageEdit = async (options: Socket["message.edit"]["request"]) => {
   }
 
   if (response.result) {
-    setter(
-      [MESSAGE_INFO_ATOM, options.dialog],
-      produce((messages) => {
-        let message = unlink(messages.history.get(options.message.id))
-        if (message) {
-          message.loading = false
-          messages.history.delete(options.message.id)
-          messages.history.set(options.message.id, message)
-
-          let [dialogIndex, groupMessagesIndex, messageIndex] = message.indexes
-          messages.dialogs[dialogIndex][1][groupMessagesIndex][messageIndex] =
-            message
-        }
-
-        const chatList = getter(CHAT_LIST_ATOM)
-        if (!!chatList.history[options.dialog]) {
-          setter(
-            CHAT_LIST_ATOM,
-            produce((chats) => {
-              const chat = chats.history[options.dialog]
-              if (
-                chat &&
-                chat.message?.id &&
-                message &&
-                chat.message.id === message.id
-              ) {
-                chat.loading = false
-              }
-              return chats
-            }),
-          )
-        }
-
-        return messages
-      }),
-    )
+    message?.setter("isLoading", false)
   }
 
   // setter(CHAT_LIST_ATOM, response)

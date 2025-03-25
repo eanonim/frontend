@@ -14,7 +14,7 @@ import {
   messageRead,
 } from "engine/api"
 import { Socket } from "engine/api/module"
-import { Chat } from "engine/class"
+import { Chats } from "engine/class/useChat"
 import loc from "engine/languages"
 import { useAtom, useAtomSystem } from "engine/modules/smart-data"
 import { SETTINGS_ATOM, type Message as TMessage } from "engine/state"
@@ -47,7 +47,7 @@ const Content: Component<Content> = (props) => {
     key: () => params().dialog,
   })
 
-  const chat = new Chat({ dialog: params().dialog })
+  const chat = Chats.getById(params().dialog)
 
   const [store, setStore] = createStore({
     isBottom: true,
@@ -71,14 +71,15 @@ const Content: Component<Content> = (props) => {
 
   createEffect(
     on(
-      () => chat.get().lastMessageId,
+      () => chat.lastMessageId,
       (next, prev) => {
+        console.log({ next })
         if (next === prev && next !== undefined) return
         let isScroll = store.isBottom
         let isSmooth = (next || 0) - 1 === prev || (next || 0) + 1 === prev
 
         if (prev) {
-          const message = messageInfo.history.get(next || 0)
+          const message = chat.getMessageById(next)
           if (message) {
             if (message.target === "my") {
               isSmooth = store.isSmooth
@@ -197,19 +198,19 @@ const Content: Component<Content> = (props) => {
               isSmooth,
             })
           }}
-          dialogs={messageInfo.dialogs}
-          onNext={onNext}
-          hasMore={!messageInfoSystem.fullLoad}
+          dialogs={chat.getHistory()}
+          onNext={chat.uploadChatHistory}
+          hasMore={!chat.isFullLoad}
         >
           {(message, index) => (
-            <Show keyed when={message && !message.deleted}>
+            <Show keyed when={message && !message.isDeleted}>
               <Switch
                 fallback={
                   <Message
                     data-index={index()}
                     data-message_id={message.id}
                     onTouchStart={() =>
-                      !message.loading &&
+                      !message.isLoading &&
                       handlerContextMenu("start", message.id)
                     }
                     onTouchEnd={(e) => {
@@ -221,7 +222,7 @@ const Content: Component<Content> = (props) => {
                     onTouchMove={() => handlerContextMenu("end", message.id)}
                     onMouseMove={() => handlerContextMenu("end", message.id)}
                     onMouseDown={() =>
-                      !message.loading &&
+                      !message.isLoading &&
                       handlerContextMenu("start", message.id)
                     }
                     onMouseUp={() => handlerContextMenu("end", message.id)}
@@ -229,23 +230,20 @@ const Content: Component<Content> = (props) => {
                     forward={message.reply}
                     attach={message.attach}
                     type={message.target === "my" ? "out" : "in"}
-                    text={message.message}
+                    text={message.text}
                     time={message.time}
                     isEmoji={false}
                     isRead={chat.checkRead(message.id)}
                     isNotRead={!chat.checkRead(message.id)}
-                    isLoading={message.loading}
-                    isEdit={message.edit}
+                    isLoading={message.isLoading}
+                    isEdit={message.isEdit}
                     onRead={() => {
-                      onRead(message)
+                      // onRead(message)
                     }}
                   />
                 }
               >
-                <Match
-                  keyed
-                  when={message.target === "system" && chat.getUser()}
-                >
+                <Match keyed when={message.target === "system" && chat.user}>
                   {(user) => (
                     <Message.System>
                       <Plug size={"small"}>

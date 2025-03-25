@@ -34,6 +34,7 @@ import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { produce } from "solid-js/store"
 import { messageMaxSize } from "root/configs"
 import loc from "engine/languages"
+import { Chats } from "engine/class/useChat"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -41,11 +42,9 @@ const isTouchSupport = window && "ontouchstart" in window
 
 const Footer: Component<Footer> = (props) => {
   const [lang] = loc()
-
   const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
-  const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
-    dialog: params().dialog,
-  }))
+
+  const chat = Chats.getById(params().dialog)
 
   let ref: HTMLTextAreaElement
 
@@ -53,11 +52,11 @@ const Footer: Component<Footer> = (props) => {
 
   createEffect(
     on(
-      () => messageInfo.message.edit_id,
+      () => chat?.message?.editId,
       (edit_id) => {
-        const message = edit_id && messageInfo.history.get(edit_id)
-        if (message && message.message) {
-          setMessage(message.message)
+        const message = chat?.getMessageById(edit_id)
+        if (message && message.text) {
+          setMessage(message.text)
           ref!?.focus()
         }
       },
@@ -70,11 +69,11 @@ const Footer: Component<Footer> = (props) => {
       ref!?.focus()
       const messageText = message().trim()
 
-      if (messageInfo.message.edit_id) {
+      if (chat?.message?.editId) {
         messageEdit({
           dialog: dialog,
           message: {
-            id: messageInfo.message.edit_id,
+            id: chat?.message?.editId,
             message: messageText.slice(0, messageMaxSize),
           },
         })
@@ -96,7 +95,7 @@ const Footer: Component<Footer> = (props) => {
               dialog: params().dialog,
               message: {
                 message: messageChunk.trim(),
-                reply_id: messageInfo.message.reply_id,
+                reply_id: chat?.message?.replyId,
               },
             })
           } else {
@@ -173,7 +172,7 @@ const Footer: Component<Footer> = (props) => {
       background={"section_bg_color"}
       isMargin={false}
     >
-      <Show when={messageInfo.message.is_add_attach}>
+      <Show when={chat?.message?.isAddAttach}>
         <Separator />
         <Button.Group>
           <Button.Group.Container justifyContent={"start"}>
@@ -194,13 +193,7 @@ const Footer: Component<Footer> = (props) => {
           </Button.Group.Container>
         </Button.Group>
       </Show>
-      <Show
-        keyed
-        when={
-          !!messageInfo.message.reply_id &&
-          messageInfo.history.get(messageInfo.message.reply_id)
-        }
-      >
+      <Show keyed when={chat?.getMessageById(chat.message?.replyId)}>
         {(message) => (
           <Cell>
             <Cell.Container>
@@ -215,7 +208,7 @@ const Footer: Component<Footer> = (props) => {
               />
               <Cell.Content>
                 <SubTitle color={"accent"}>В ответ</SubTitle>
-                <Title>{message.message}</Title>
+                <Title>{message.text}</Title>
               </Cell.Content>
               <Cell.After onClick={handlerRemoveReply}>
                 <IconX color={"var(--accent_color)"} />
@@ -224,13 +217,7 @@ const Footer: Component<Footer> = (props) => {
           </Cell>
         )}
       </Show>
-      <Show
-        keyed
-        when={
-          !!messageInfo.message.edit_id &&
-          messageInfo.history.get(messageInfo.message.edit_id)
-        }
-      >
+      <Show keyed when={chat?.getMessageById(chat.message?.editId)}>
         {(message) => (
           <Cell>
             <Cell.Container>
@@ -245,7 +232,7 @@ const Footer: Component<Footer> = (props) => {
               />
               <Cell.Content>
                 <SubTitle color={"accent"}>Редактирование</SubTitle>
-                <Title>{message.message}</Title>
+                <Title>{message.text}</Title>
               </Cell.Content>
               <Cell.After onClick={handlerRemoveEdit}>
                 <IconX color={"var(--accent_color)"} />

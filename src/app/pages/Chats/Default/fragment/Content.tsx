@@ -11,13 +11,21 @@ import {
   Flex,
 } from "components"
 
-import { type JSX, type Component, For, Show, createMemo } from "solid-js"
+import {
+  type JSX,
+  type Component,
+  For,
+  Show,
+  createMemo,
+  onMount,
+  createEffect,
+  Index,
+} from "solid-js"
 import { pages, pushPage } from "router"
-import { useAtom } from "engine/modules/smart-data"
-import { CHAT_LIST_ATOM } from "engine/state"
 import loc from "engine/languages"
 import { timeAgo } from "engine"
-
+import { Chat, Chats } from "engine/class/useChat"
+import { createStore } from "solid-js/store"
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const textProps: TextProps = {
@@ -49,13 +57,16 @@ const getStyle = (type: "first" | "last", typing: boolean) => {
 
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
-  const [chatList] = useAtom(CHAT_LIST_ATOM)
 
   const handlerChat = (dialog: string) => {
     pushPage({ pageId: pages.CHAT, params: { dialog: dialog } })
   }
 
-  const getHistory = createMemo(() => Object.values(chatList.history))
+  onMount(() => {
+    Chats.loadChats()
+  })
+
+  const getHistory = createMemo(() => Object.values(Chats.get()))
 
   return (
     <Cell.List style={{ "overflow-y": "scroll" }}>
@@ -63,7 +74,7 @@ const Content: Component<Content> = (props) => {
         {(chat, index) => (
           <Swipe
             data-index={index()}
-            onClick={() => handlerChat(chat.uuid)}
+            onClick={() => handlerChat(chat.id)}
             after={
               <span
                 style={{
@@ -91,7 +102,10 @@ const Content: Component<Content> = (props) => {
                       />
                     </Title>
 
-                    <Show keyed when={chat.message?.time}>
+                    <Show
+                      keyed
+                      when={chat.getMessageById(chat.lastMessageId)?.time}
+                    >
                       {(time) => (
                         <SubTitle {...textProps} nowrap>
                           {timeAgo(time.getTime())}
@@ -100,49 +114,54 @@ const Content: Component<Content> = (props) => {
                     </Show>
                   </Gap>
 
-                  <Gap justifyContent={"space-between"} count={"6px"}>
-                    <Flex
-                      width={"100%"}
-                      direction={"column"}
-                      alignItems={"start"}
-                      style={{
-                        overflow: "hidden",
-                        "min-height": "var(--font_height--small)",
-                      }}
-                    >
-                      <SubTitle
-                        style={getStyle("first", !!chat.typing)}
-                        nowrap
-                        overflow
-                      >
-                        {chat.message?.message || chat.message?.attack_type}
-                      </SubTitle>
+                  <Show keyed when={chat.getMessageById(chat.lastMessageId)}>
+                    {(lastMessage) => (
+                      <Gap justifyContent={"space-between"} count={"6px"}>
+                        <Flex
+                          width={"100%"}
+                          direction={"column"}
+                          alignItems={"start"}
+                          style={{
+                            overflow: "hidden",
+                            "min-height": "var(--font_height--small)",
+                          }}
+                        >
+                          <SubTitle
+                            style={getStyle("first", !!chat.isTyping)}
+                            nowrap
+                            overflow
+                          >
+                            {lastMessage?.text || lastMessage?.attach?.type}
+                          </SubTitle>
 
-                      <SubTitle
-                        style={{
-                          position: "absolute",
-                          ...getStyle("last", !!chat.typing),
-                        }}
-                      >
-                        <Message.Typing text={lang("prints") || "prints"} />
-                      </SubTitle>
-                    </Flex>
+                          <SubTitle
+                            style={{
+                              position: "absolute",
+                              ...getStyle("last", !!chat.isTyping),
+                            }}
+                          >
+                            <Message.Typing text={lang("prints") || "prints"} />
+                          </SubTitle>
+                        </Flex>
 
-                    <Show
-                      when={chat.message?.message || chat.message?.attack_type}
-                    >
-                      <Message.Badge
-                        // isNew={chat.message_target !== "you" && !chat.readed}
-                        isRead={
-                          chat.message?.target === "my" && chat.message.readed
-                        }
-                        isNotRead={
-                          chat.message?.target === "my" && !chat.message.readed
-                        }
-                        isLoading={chat.loading}
-                      />
-                    </Show>
-                  </Gap>
+                        <Show
+                          when={lastMessage?.text || lastMessage?.attach?.type}
+                        >
+                          <Message.Badge
+                            // isNew={chat.message_target !== "you" && !chat.readed}
+                            isRead={
+                              lastMessage?.target === "my" && lastMessage.isRead
+                            }
+                            isNotRead={
+                              lastMessage?.target === "my" &&
+                              !lastMessage.isRead
+                            }
+                            isLoading={chat.isLoading}
+                          />
+                        </Show>
+                      </Gap>
+                    )}
+                  </Show>
                 </Cell.Content>
               </Cell.Container>
             </Cell>

@@ -74,23 +74,24 @@ export type Dialog<
 
   messages: {
     dialogs: [string, Message[][]][]
-    history: Map<number, Message>
+    history: Record<number, Message>
     lastReadMessageId?: number
     lastOffset: number
-    message?: {
-      text?: string
-      /* ID сообщения на которое пользователь хочет ответить */
-      replyId?: number
-      /* ID редактируемого сообщения */
-      editId?: number
-
-      /* Указывает что пользователь печатает */
-      isTyping?: boolean
-      /* Указывает что пользователь прикрепляет, что -то к сообщению  */
-      isAddAttach?: boolean
-    }
     /* Указывает загружается ли история */
     isLoading?: boolean
+  }
+
+  message?: {
+    text?: string
+    /* ID сообщения на которое пользователь хочет ответить */
+    replyId?: number
+    /* ID редактируемого сообщения */
+    editId?: number
+
+    /* Указывает что пользователь печатает */
+    isTyping?: boolean
+    /* Указывает что пользователь прикрепляет, что -то к сообщению  */
+    isAddAttach?: boolean
   }
 
   /* CUSTOM */

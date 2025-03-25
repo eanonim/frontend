@@ -1,4 +1,4 @@
-import { createStore } from "solid-js/store"
+import { createStore, produce, SetStoreFunction } from "solid-js/store"
 import { Chat } from "../Chat/Chat"
 import {
   DefaultKeyboard,
@@ -14,15 +14,7 @@ export var REQUESTS: Partial<
 > = {}
 
 export const [dialogs, setDialogs] = createStore<
-  Record<
-    string,
-    Dialog<
-      DefaultTarget,
-      DefaultUser,
-      DefaultKeyboard,
-      ObjectMessage<DefaultTarget, DefaultUser, DefaultKeyboard>
-    >
-  >
+  Record<string, Chat<DefaultTarget, DefaultUser, DefaultKeyboard>>
 >({})
 
 export function setREQUESTS(
@@ -47,23 +39,78 @@ export class createChats<
     Message
   >,
 > {
+  private requests: Partial<
+    Requests<Target, User, Keyboard, Message, _Dialog>
+  > = {}
+  private _dialogs = dialogs as unknown as Record<
+    string,
+    Chat<Target, User, Keyboard>
+  >
+  private _setDialogs = setDialogs as SetStoreFunction<
+    Record<string, Chat<Target, User, Keyboard>>
+  >
+
   constructor({
     requests,
   }: {
     requests: Requests<Target, User, Keyboard, Message, _Dialog>
   }) {
     REQUESTS = requests
+    this.requests = requests
+  }
+
+  private setDIALOG(item: Omit<_Dialog, "messages">) {
+    const chat = this._dialogs[item.id]
+    if (chat) {
+      chat.setter("isFullLoad", item.isFullLoad)
+      chat.setter("isLoading", item.isLoading)
+      chat.setter("isTyping", item.isTyping)
+      chat.setter("user", item.user)
+      if (item.lastMessage) {
+        const message = chat.newMessage(item.lastMessage)
+        chat.setter("lastMessageId", message.id)
+      }
+    } else {
+      const chat = new Chat<Target, User, Keyboard, Message, _Dialog>(item)
+      if (item.lastMessage) {
+        const message = chat.newMessage(item.lastMessage)
+        chat.setter("lastMessageId", message.id)
+      }
+      this._setDialogs(
+        produce((store) => {
+          store[item.id] = chat
+          return store
+        }),
+      )
+    }
   }
 
   /* Загрузка чатов */
   public async loadChats() {
-    const chat = new Chat({ dialog: "" })
-    chat.uploadChats()
+    const request = this.requests["chat.getList"]
+    if (!request) {
+      console.error('Нет функции для вызова "chat.getList"')
+      return false
+    }
+    const { response, error } = await request({ offset: 0, count: 0 })
+
+    if (response) {
+      for (const item of response) {
+        this.setDIALOG(item)
+      }
+      return true
+    }
+    return false
   }
 
   /* Получение историю диалогов */
   public get() {
     return dialogs
+  }
+
+  /* Получение диалога по ID */
+  public getById(id: string): Chat<Target, User, Keyboard> | undefined {
+    return this._dialogs[id]
   }
 
   public getClass() {

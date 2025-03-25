@@ -2,8 +2,10 @@ import {
   chatInfo,
   chatList,
   messageDelete,
+  messageEdit,
   messageList,
   messageRead,
+  messageSend,
 } from "engine/api"
 import { Socket } from "engine/api/module"
 import { ClassMessageProps, Dialog, ObjectMessage } from "./Chat/types"
@@ -16,7 +18,7 @@ type Keyboard = NonNullable<
 >[0][0]
 type Message = ObjectMessage<Target, User, Keyboard>
 
-export const useChats = new createChats<Target, User, Keyboard, Message>({
+export const Chats = new createChats<Target, User, Keyboard, Message>({
   requests: {
     "message.delete": async ({ chatId, messageId }) => {
       const { response, error } = await messageDelete({
@@ -43,7 +45,20 @@ export const useChats = new createChats<Target, User, Keyboard, Message>({
       if (error) return { response: undefined, error: true }
 
       return {
-        response: { ...response, ...{ id: response.uuid } },
+        response: {
+          id: response.uuid,
+          user: response.user,
+          lastMessage: response.message
+            ? {
+                id: response.message.id,
+                text: response.message.message,
+                target: response.message.target,
+                attachType: response.message.attack_type,
+                time: response.message.time,
+                isRead: response.message.readed,
+              }
+            : undefined,
+        },
         error: undefined,
       }
     },
@@ -100,4 +115,4 @@ export const useChats = new createChats<Target, User, Keyboard, Message>({
   },
 })
 
-export const Chat = useChats.getClass()
+export const Chat = Chats.getClass()

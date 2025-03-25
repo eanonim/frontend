@@ -1,6 +1,7 @@
 import { copyText } from "@minsize/utils"
 import { Cell, Title } from "components"
 import { messageDelete } from "engine/api"
+import { Chats } from "engine/class/useChat"
 import loc from "engine/languages"
 import { setter, useAtom } from "engine/modules/smart-data"
 import { USER_ATOM } from "engine/state"
@@ -16,24 +17,22 @@ import { IconAlert, IconCopy, IconEdit, IconShare3, IconTrash } from "source"
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Content: Component<Content> = (props) => {
+  const [lang] = loc()
   const params = useParams<routerParams[modals.MESSAGE_CONTROL]>({
     modalId: modals.MESSAGE_CONTROL,
   })
 
-  const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
-    dialog: params().dialog,
-  }))
+  const chat = Chats.getById(params().dialog)
+  const message = chat?.getMessageById(params().message_id)
 
-  const [lang] = loc()
-  const [user] = useAtom(USER_ATOM)
+  console.log({ message }, chat)
 
   const handlerCopy: JSX.EventHandler<DynamicProps<"article">, MouseEvent> = (
     event,
   ) => {
     event.preventDefault()
-    const message = messageInfo.history.get(params().message_id)
     if (message) {
-      copyText(message.message)
+      copyText(message.text)
       backPage()
     }
   }
@@ -42,7 +41,8 @@ const Content: Component<Content> = (props) => {
     event,
   ) => {
     event.preventDefault()
-    messageDelete({ dialog: params().dialog, message_id: params().message_id })
+    message?.setter("isDeleted", true)
+    // messageDelete({ dialog: params().dialog, message_id: params().message_id })
     backPage()
   }
 
@@ -50,32 +50,18 @@ const Content: Component<Content> = (props) => {
     event,
   ) => {
     event.preventDefault()
-    setter(
-      [MESSAGE_INFO_ATOM, params().dialog],
-      "message",
-      produce((message) => {
-        message.reply_id = params().message_id
-        message.edit_id = undefined
 
-        return message
-      }),
-    )
+    chat?.setMessage("replyId", params().message_id)
+    chat?.setMessage("editId", undefined)
     backPage()
   }
   const handlerEdit: JSX.EventHandler<DynamicProps<"article">, MouseEvent> = (
     event,
   ) => {
     event.preventDefault()
-    setter(
-      [MESSAGE_INFO_ATOM, params().dialog],
-      "message",
-      produce((message) => {
-        message.reply_id = undefined
-        message.edit_id = params().message_id
 
-        return message
-      }),
-    )
+    chat?.setMessage("replyId", undefined)
+    chat?.setMessage("editId", params().message_id)
     backPage()
   }
   const handlerComplain: JSX.EventHandler<
@@ -109,7 +95,7 @@ const Content: Component<Content> = (props) => {
           </Cell.Content>
         </Cell.Container>
       </Cell>
-      <Show when={!!messageInfo.history.get(params().message_id)}>
+      <Show when={!!message}>
         <Cell onClick={handlerCopy} separator={"auto"}>
           <Cell.Before>
             <IconCopy width={24} height={24} />
@@ -121,9 +107,7 @@ const Content: Component<Content> = (props) => {
           </Cell.Container>
         </Cell>
       </Show>
-      <Show
-        when={messageInfo.history.get(params().message_id)?.target === "my"}
-      >
+      <Show when={message?.target === "my"}>
         <Cell onClick={handlerEdit} separator={"auto"}>
           <Cell.Before>
             <IconEdit width={24} height={24} />
@@ -145,9 +129,7 @@ const Content: Component<Content> = (props) => {
           </Cell.Container>
         </Cell>
       </Show>
-      <Show
-        when={messageInfo.history.get(params().message_id)?.target !== "my"}
-      >
+      <Show when={message?.target !== "my"}>
         <Cell onClick={handlerComplain} separator={"auto"}>
           <Cell.Before>
             <IconAlert width={24} height={24} />

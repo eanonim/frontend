@@ -11,6 +11,7 @@ import {
 } from "components"
 import { chatInviteMake } from "engine/api"
 import { Chat } from "engine/class"
+import { Chats } from "engine/class/useChat"
 import loc from "engine/languages"
 import { pages, useParams } from "router"
 
@@ -24,9 +25,7 @@ const Header: Component<Header> = (props) => {
 
   const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
 
-  const chat = new Chat({ dialog: params().dialog })
-
-  const chatInfo = chat.get()
+  const chat = Chats.getById(params().dialog)
 
   const handlerInviteMake = () => {
     chatInviteMake({ dialog: params().dialog })
@@ -53,17 +52,15 @@ const Header: Component<Header> = (props) => {
         <Cell.Container>
           <Cell.Content
             style={{
-              transform: !chatInfo.isTyping
-                ? "translateY(25%)"
-                : "translateY(0%)",
-              "-webkit-transform": !chatInfo.isTyping
+              transform: !chat.isTyping ? "translateY(25%)" : "translateY(0%)",
+              "-webkit-transform": !chat.isTyping
                 ? "translateY(25%)"
                 : "translateY(0%)",
               transition: "0.3s",
             }}
           >
             <Title nowrap overflow>
-              <Show keyed when={chatInfo}>
+              <Show keyed when={chat}>
                 {(chat) => (
                   <UserName
                     justifyContent={"center"}
@@ -77,10 +74,10 @@ const Header: Component<Header> = (props) => {
             </Title>
             <SubTitle
               style={{
-                transform: !chatInfo.isTyping
+                transform: !chat.isTyping
                   ? "translateY(100%)"
                   : "translateY(0%)",
-                "-webkit-transform": !chatInfo.isTyping
+                "-webkit-transform": !chat.isTyping
                   ? "translateY(100%)"
                   : "translateY(0%)",
                 transition: "0.3s",

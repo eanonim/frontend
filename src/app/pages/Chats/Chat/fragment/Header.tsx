@@ -52,8 +52,8 @@ const Header: Component<Header> = (props) => {
         <Cell.Container>
           <Cell.Content
             style={{
-              transform: !chat.isTyping ? "translateY(25%)" : "translateY(0%)",
-              "-webkit-transform": !chat.isTyping
+              transform: !chat?.isTyping ? "translateY(25%)" : "translateY(0%)",
+              "-webkit-transform": !chat?.isTyping
                 ? "translateY(25%)"
                 : "translateY(0%)",
               transition: "0.3s",
@@ -74,10 +74,10 @@ const Header: Component<Header> = (props) => {
             </Title>
             <SubTitle
               style={{
-                transform: !chat.isTyping
+                transform: !chat?.isTyping
                   ? "translateY(100%)"
                   : "translateY(0%)",
-                "-webkit-transform": !chat.isTyping
+                "-webkit-transform": !chat?.isTyping
                   ? "translateY(100%)"
                   : "translateY(0%)",
                 transition: "0.3s",

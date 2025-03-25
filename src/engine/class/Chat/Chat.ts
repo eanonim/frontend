@@ -269,6 +269,18 @@ export class Chat<
           ])
           console.log("ADD New Message")
           store.messages.history[message.id] = message
+        } else {
+          message.setter("attach", _message.attach)
+          message.setter("isDeleted", _message.isDeleted)
+          message.setter("isEdit", _message.isEdit)
+          message.setter("isLoading", _message.isLoading)
+          message.setter("isOnlyEmoji", _message.isOnlyEmoji)
+          message.setter("isRead", _message.isRead)
+          message.setter("keyboard", _message.keyboard)
+          message.setter("reply", _message.reply)
+          message.setter("target", _message.target)
+          message.setter("text", _message.text)
+          message.setter("time", _message.time)
         }
         if (
           message.isRead &&

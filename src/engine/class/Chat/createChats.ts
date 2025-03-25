@@ -57,6 +57,8 @@ export class createChats<
   }) {
     REQUESTS = requests
     this.requests = requests
+
+    this.loadChatById = this.loadChatById.bind(this)
   }
 
   private setDIALOG(item: Omit<_Dialog, "messages">) {
@@ -71,7 +73,10 @@ export class createChats<
         chat.setter("lastMessageId", message.id)
       }
     } else {
-      const chat = new Chat<Target, User, Keyboard, Message, _Dialog>(item)
+      const chat = new Chat<Target, User, Keyboard, Message, _Dialog>({
+        ...item,
+        loadChatById: this.loadChatById,
+      })
       if (item.lastMessage) {
         const message = chat.newMessage(item.lastMessage)
         chat.setter("lastMessageId", message.id)
@@ -83,6 +88,22 @@ export class createChats<
         }),
       )
     }
+  }
+
+  /* Загрузка чата */
+  public async loadChatById(id: string) {
+    const request = this.requests["chat.getById"]
+    if (!request) {
+      console.error('Нет функции для вызова "chat.getList"')
+      return false
+    }
+    const { response, error } = await request({ id })
+
+    if (response) {
+      this.setDIALOG(response)
+      return true
+    }
+    return false
   }
 
   /* Загрузка чатов */

@@ -1,4 +1,4 @@
-import { REQUESTS } from "./createChats"
+import { dialogs, REQUESTS } from "./createChats"
 import { Message as ClassMessage } from "./Message/Message"
 
 import {
@@ -28,6 +28,10 @@ export class Chat<
     Message
   >,
 > {
+  private _dialogs = dialogs as unknown as Record<
+    string,
+    Chat<Target, User, Keyboard>
+  >
   private initStore: [
     get: Store<
       Dialog<Target, User, Keyboard, ObjectMessage<Target, User, Keyboard>>
@@ -39,6 +43,8 @@ export class Chat<
   private store: (typeof this.initStore)[0]
   public setStore: (typeof this.initStore)[1]
 
+  private loadChatById: (id: string) => Promise<boolean>
+
   private timerTyping: NodeJS.Timeout | undefined
   private chatId: string = ""
 
@@ -46,7 +52,12 @@ export class Chat<
     Requests<Target, User, Keyboard, Message, _Dialog>
   > = {}
 
-  constructor(params: { id: string; user: User }) {
+  constructor(params: {
+    id: string
+    user: User
+    loadChatById: (id: string) => Promise<boolean>
+  }) {
+    this.loadChatById = params.loadChatById
     this.initStore = createStore<
       Dialog<Target, User, Keyboard, ObjectMessage<Target, User, Keyboard>>
     >({
@@ -326,6 +337,10 @@ export class Chat<
 
   /* Загрузка истории чата */
   public async uploadChatHistory() {
+    if (!this._dialogs[this.chatId]) {
+      await this.loadChatById(this.id)
+    }
+
     if (this.isLoading) {
       console.error("this.isLoading")
       return false

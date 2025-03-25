@@ -1,8 +1,5 @@
 import { Cell, IconChevron, Title } from "components"
 import loc from "engine/languages"
-import { useAtom } from "engine/modules/smart-data"
-import { USER_ATOM } from "engine/state"
-import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { backPage, modals, useParams } from "router"
 import { routerParams } from "router/routerStruct"
 
@@ -15,12 +12,7 @@ const Content: Component<Content> = (props) => {
     modalId: modals.MESSAGE_COMPLAINT,
   })
 
-  const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
-    dialog: params().dialog,
-  }))
-
   const [lang] = loc()
-  const [user] = useAtom(USER_ATOM)
 
   return (
     <Cell.List>

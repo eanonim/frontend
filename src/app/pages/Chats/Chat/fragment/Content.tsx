@@ -7,19 +7,13 @@ import {
   SubTitle,
   Title,
 } from "components"
-import {
-  chatInviteAccept,
-  chatInviteReject,
-  messageList,
-  messageRead,
-} from "engine/api"
+import { chatInviteAccept, chatInviteReject } from "engine/api"
 import { Socket } from "engine/api/module"
 import { Chats } from "engine/class/useChat"
 import loc from "engine/languages"
-import { useAtom, useAtomSystem } from "engine/modules/smart-data"
-import { SETTINGS_ATOM, type Message as TMessage } from "engine/state"
-import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
-import { messageListCount } from "root/configs"
+import { useAtom } from "engine/modules/smart-data"
+import { SETTINGS_ATOM } from "engine/state"
+import { type Message as TMessage } from "engine/class/useChat"
 import { modals, pages, pushModal, useParams } from "router"
 
 import {
@@ -40,12 +34,6 @@ const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
   const [settings] = useAtom(SETTINGS_ATOM)
-  const [messageInfo] = useAtom(MESSAGE_INFO_ATOM, () => ({
-    dialog: params().dialog,
-  }))
-  const [messageInfoSystem] = useAtomSystem(MESSAGE_INFO_ATOM, {
-    key: () => params().dialog,
-  })
 
   const chat = Chats.getById(params().dialog)
 
@@ -71,7 +59,7 @@ const Content: Component<Content> = (props) => {
 
   createEffect(
     on(
-      () => chat.lastMessageId,
+      () => chat?.lastMessageId,
       (next, prev) => {
         console.log({ next })
         if (next === prev && next !== undefined) return
@@ -79,7 +67,7 @@ const Content: Component<Content> = (props) => {
         let isSmooth = (next || 0) - 1 === prev || (next || 0) + 1 === prev
 
         if (prev) {
-          const message = chat.getMessageById(next)
+          const message = chat?.getMessageById(next)
           if (message) {
             if (message.target === "my") {
               isSmooth = store.isSmooth
@@ -99,27 +87,6 @@ const Content: Component<Content> = (props) => {
       },
     ),
   )
-
-  const onNext = async () => {
-    await messageList({
-      dialog: params().dialog,
-      offset: messageInfo.last_offset,
-      count: messageListCount,
-    })
-    return true
-  }
-
-  const onRead = (message: TMessage) => {
-    if (
-      message.target !== "my" &&
-      message.id >= (messageInfo.last_read_message_id || 0)
-    ) {
-      messageRead({
-        dialog: params().dialog,
-        message_id: message.id,
-      })
-    }
-  }
 
   const handlerContextMenu = (
     type: "start" | "end" | "any",
@@ -164,126 +131,138 @@ const Content: Component<Content> = (props) => {
   }
 
   return (
-    <>
-      <Background
-        fixed
-        type={settings.backgroundId}
-        quality={2}
-        color={settings.backgroundColor}
-      />
-      <Flex
-        style={{
-          overflow: "hidden",
-          "margin-top": "auto",
-        }}
-        // height={"100%"}
-      >
-        <Message.Group
-          ref={ref!}
-          onScroll={(e) => {
-            const isBottom = Math.abs(e.target.scrollTop) <= 40
+    <Show keyed when={chat}>
+      {(chat) => (
+        <>
+          <Background
+            fixed
+            type={settings.backgroundId}
+            quality={2}
+            color={settings.backgroundColor}
+          />
+          <Flex
+            style={{
+              overflow: "hidden",
+              "margin-top": "auto",
+            }}
+            // height={"100%"}
+          >
+            <Message.Group
+              ref={ref!}
+              onScroll={(e) => {
+                const isBottom = Math.abs(e.target.scrollTop) <= 40
 
-            const isSmooth = Math.abs(e.target.scrollTop) <= 600
+                const isSmooth = Math.abs(e.target.scrollTop) <= 600
 
-            // const isBottom =
-            //   e.target.scrollTop >=
-            //   e.target.scrollHeight - e.target.clientHeight - 40
+                // const isBottom =
+                //   e.target.scrollTop >=
+                //   e.target.scrollHeight - e.target.clientHeight - 40
 
-            // const isSmooth =
-            //   e.target.scrollTop >=
-            //   e.target.scrollHeight - e.target.clientHeight - 600
+                // const isSmooth =
+                //   e.target.scrollTop >=
+                //   e.target.scrollHeight - e.target.clientHeight - 600
 
-            setStore({
-              isBottom,
-              isSmooth,
-            })
-          }}
-          dialogs={chat.getHistory()}
-          onNext={chat.uploadChatHistory}
-          hasMore={!chat.isFullLoad}
-        >
-          {(message, index) => (
-            <Show keyed when={message && !message.isDeleted}>
-              <Switch
-                fallback={
-                  <Message
-                    data-index={index()}
-                    data-message_id={message.id}
-                    onTouchStart={() =>
-                      !message.isLoading &&
-                      handlerContextMenu("start", message.id)
+                setStore({
+                  isBottom,
+                  isSmooth,
+                })
+              }}
+              dialogs={chat.getHistory()}
+              onNext={chat.uploadChatHistory}
+              hasMore={!chat.isFullLoad}
+            >
+              {(message, index) => (
+                <Show keyed when={message && !message.isDeleted}>
+                  <Switch
+                    fallback={
+                      <Message
+                        data-index={index()}
+                        data-message_id={message.id}
+                        onTouchStart={() =>
+                          !message.isLoading &&
+                          handlerContextMenu("start", message.id)
+                        }
+                        onTouchEnd={(e) => {
+                          if (isOpenModal) {
+                            e.preventDefault()
+                          }
+                          handlerContextMenu("end", message.id)
+                        }}
+                        onTouchMove={() =>
+                          handlerContextMenu("end", message.id)
+                        }
+                        onMouseMove={() =>
+                          handlerContextMenu("end", message.id)
+                        }
+                        onMouseDown={() =>
+                          !message.isLoading &&
+                          handlerContextMenu("start", message.id)
+                        }
+                        onMouseUp={() => handlerContextMenu("end", message.id)}
+                        onContextMenu={() =>
+                          handlerContextMenu("any", message.id)
+                        }
+                        forward={message.reply}
+                        attach={message.attach}
+                        type={message.target === "my" ? "out" : "in"}
+                        text={message.text}
+                        time={message.time}
+                        isEmoji={false}
+                        isRead={chat.checkRead(message.id)}
+                        isNotRead={!chat.checkRead(message.id)}
+                        isLoading={message.isLoading}
+                        isEdit={message.isEdit}
+                        onRead={() => message.setter("isRead", true)}
+                      />
                     }
-                    onTouchEnd={(e) => {
-                      if (isOpenModal) {
-                        e.preventDefault()
-                      }
-                      handlerContextMenu("end", message.id)
-                    }}
-                    onTouchMove={() => handlerContextMenu("end", message.id)}
-                    onMouseMove={() => handlerContextMenu("end", message.id)}
-                    onMouseDown={() =>
-                      !message.isLoading &&
-                      handlerContextMenu("start", message.id)
-                    }
-                    onMouseUp={() => handlerContextMenu("end", message.id)}
-                    onContextMenu={() => handlerContextMenu("any", message.id)}
-                    forward={message.reply}
-                    attach={message.attach}
-                    type={message.target === "my" ? "out" : "in"}
-                    text={message.text}
-                    time={message.time}
-                    isEmoji={false}
-                    isRead={chat.checkRead(message.id)}
-                    isNotRead={!chat.checkRead(message.id)}
-                    isLoading={message.isLoading}
-                    isEdit={message.isEdit}
-                    onRead={() => {
-                      // onRead(message)
-                    }}
-                  />
-                }
-              >
-                <Match keyed when={message.target === "system" && chat.user}>
-                  {(user) => (
-                    <Message.System>
-                      <Plug size={"small"}>
-                        <Plug.Container>
-                          <Title>
-                            {user.first_name} хочет сохранить переписку с Вами
-                          </Title>
-                          <SubTitle>
-                            Если вы согласитесь, вам будет проще найти и
-                            продолжить общение в будущем.
-                          </SubTitle>
-                        </Plug.Container>
-                        <Plug.Action stretched>
-                          <Message.Keyboard each={message.keyboard}>
-                            {(button) => (
-                              <Button
-                                stretched
-                                onClick={() =>
-                                  keyboardEvents[button.event]?.(message)
-                                }
-                              >
-                                <Button.Container>
-                                  <Title>
-                                    {lang(button.text) || button.text}
-                                  </Title>
-                                </Button.Container>
-                              </Button>
-                            )}
-                          </Message.Keyboard>
-                        </Plug.Action>
-                      </Plug>
-                    </Message.System>
-                  )}
-                </Match>
-              </Switch>
-            </Show>
-          )}
-        </Message.Group>
-      </Flex>
-    </>
+                  >
+                    <Match
+                      keyed
+                      when={message.target === "system" && chat.user}
+                    >
+                      {(user) => (
+                        <Message.System>
+                          <Plug size={"small"}>
+                            <Plug.Container>
+                              <Title>
+                                {user.first_name} хочет сохранить переписку с
+                                Вами
+                              </Title>
+                              <SubTitle>
+                                Если вы согласитесь, вам будет проще найти и
+                                продолжить общение в будущем.
+                              </SubTitle>
+                            </Plug.Container>
+                            <Plug.Action stretched>
+                              <Message.Keyboard each={message.keyboard}>
+                                {(button) => (
+                                  <Button
+                                    stretched
+                                    onClick={() =>
+                                      keyboardEvents[button.event]?.(message)
+                                    }
+                                  >
+                                    <Button.Container>
+                                      <Title>
+                                        {lang(button.text) || button.text}
+                                      </Title>
+                                    </Button.Container>
+                                  </Button>
+                                )}
+                              </Message.Keyboard>
+                            </Plug.Action>
+                          </Plug>
+                        </Message.System>
+                      )}
+                    </Match>
+                  </Switch>
+                </Show>
+              )}
+            </Message.Group>
+          </Flex>
+        </>
+      )}
+    </Show>
   )
 }
 

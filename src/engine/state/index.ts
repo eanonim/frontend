@@ -16,5 +16,4 @@ export {
 } from "./options"
 export { SEARCH_OPTIONS_ATOM } from "./search_options"
 export { CHAT_LIST_ATOM } from "./chat_list"
-export { MESSAGE_INFO_ATOM, addMessage, type Message } from "./message_info"
 export { PRODUCT_ATOM } from "./product"

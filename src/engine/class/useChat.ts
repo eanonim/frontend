@@ -16,7 +16,7 @@ type User = NonNullable<Socket["chat.list"]["response"]>[0]["user"]
 type Keyboard = NonNullable<
   NonNullable<Socket["message.list"]["response"]>[0]["keyboard"]
 >[0][0]
-type Message = ObjectMessage<Target, User, Keyboard>
+export type Message = ObjectMessage<Target, User, Keyboard>
 
 export const Chats = new createChats<Target, User, Keyboard, Message>({
   requests: {

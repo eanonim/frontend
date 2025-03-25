@@ -1,16 +1,11 @@
 import { copyText } from "@minsize/utils"
 import { Cell, Title } from "components"
-import { messageDelete } from "engine/api"
 import { Chats } from "engine/class/useChat"
 import loc from "engine/languages"
-import { setter, useAtom } from "engine/modules/smart-data"
-import { USER_ATOM } from "engine/state"
-import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
 import { backPage, modals, pushModal, useParams } from "router"
 import { routerParams } from "router/routerStruct"
 
 import { type JSX, type Component, Show } from "solid-js"
-import { produce } from "solid-js/store"
 import { DynamicProps } from "solid-js/web"
 import { IconAlert, IconCopy, IconEdit, IconShare3, IconTrash } from "source"
 

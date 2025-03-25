@@ -7,15 +7,8 @@ import {
   Title,
   WriteBar,
   Image,
-  Flex,
 } from "components"
-import {
-  IconCameraPlus,
-  IconPaperclip,
-  IconPlus,
-  IconSend,
-  IconX,
-} from "source"
+import { IconPaperclip, IconPlus, IconSend, IconX } from "source"
 
 import {
   type JSX,
@@ -29,9 +22,6 @@ import {
 import { pages, useParams } from "router"
 import { messageEdit, messageSend, messageTyping } from "engine/api"
 import { leading, throttle } from "@solid-primitives/scheduled"
-import { setter, useAtom } from "engine/modules/smart-data"
-import { MESSAGE_INFO_ATOM } from "engine/state/message_info"
-import { produce } from "solid-js/store"
 import { messageMaxSize } from "root/configs"
 import loc from "engine/languages"
 import { Chats } from "engine/class/useChat"
@@ -124,41 +114,15 @@ const Footer: Component<Footer> = (props) => {
   }
 
   const handlerAddAttach = () => {
-    setter(
-      [MESSAGE_INFO_ATOM, params().dialog],
-      "message",
-      produce((message) => {
-        message.is_add_attach = !message.is_add_attach
-
-        return message
-      }),
-    )
+    chat?.setMessage("isAddAttach", undefined)
   }
 
   const handlerRemoveReply = () => {
-    setter(
-      [MESSAGE_INFO_ATOM, params().dialog],
-      "message",
-      produce((message) => {
-        message.reply_id = undefined
-        message.edit_id = undefined
-
-        return message
-      }),
-    )
+    chat?.setMessage("replyId", undefined)
   }
 
   const handlerRemoveEdit = () => {
-    setter(
-      [MESSAGE_INFO_ATOM, params().dialog],
-      "message",
-      produce((message) => {
-        message.reply_id = undefined
-        message.edit_id = undefined
-
-        return message
-      }),
-    )
+    chat?.setMessage("editId", undefined)
     setMessage("")
   }
 

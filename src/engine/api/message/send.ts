@@ -1,13 +1,4 @@
-import { getter, setter } from "engine/modules/smart-data"
 import { Socket, socketSend } from "../module"
-import {
-  addMessage,
-  CHAT_LIST_ATOM,
-  Message,
-  MESSAGE_INFO_ATOM,
-} from "engine/state"
-import { produce } from "solid-js/store"
-import { unlink } from "@minsize/utils"
 import { Chats } from "engine/class/useChat"
 
 const messageSend = async (options: Socket["message.send"]["request"]) => {

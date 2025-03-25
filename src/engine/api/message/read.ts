@@ -1,9 +1,7 @@
-import { setter } from "engine/modules/smart-data"
 import { Socket, SocketError, socketSend } from "../module"
-import { MESSAGE_INFO_ATOM } from "engine/state"
-import { produce } from "solid-js/store"
 import { debounce } from "@solid-primitives/scheduled"
 import { Chat } from "engine/class"
+import { Chats } from "engine/class/useChat"
 
 const debounceMessageRead = debounce(
   async (
@@ -21,11 +19,9 @@ const debounceMessageRead = debounce(
     }
 
     if (response.result) {
-      const chat = new Chat({ dialog: options.dialog })
-      const msg = chat.getMessageById(options.message_id)
-      if (msg) {
-        msg.setRead(true)
-      }
+      const chat = Chats.getById(options.dialog)
+      const msg = chat?.getMessageById(options.message_id)
+      msg?.setter("isRead", true)
     }
 
     resolve({ response, error })

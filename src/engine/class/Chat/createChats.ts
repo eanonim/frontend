@@ -131,6 +131,9 @@ export class createChats<
 
   /* Получение диалога по ID */
   public getById(id: string): Chat<Target, User, Keyboard> | undefined {
+    if (!this._dialogs[id]) {
+      this.loadChatById(id)
+    }
     return this._dialogs[id]
   }
 

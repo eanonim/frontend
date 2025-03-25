@@ -13,6 +13,7 @@ import solidPlugin from "vite-plugin-solid"
 import injectEntryChunk from "./plugins/injectEntryChunk"
 
 import { execSync } from "child_process" // Import execSync
+import eruda from "./plugins/eruda"
 
 const gitCommitHash = execSync("git rev-parse --short HEAD").toString().trim()
 
@@ -72,7 +73,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    // eruda(),
+    eruda(),
     tsconfigPaths(),
     solidPlugin(),
     injectEntryChunk(),

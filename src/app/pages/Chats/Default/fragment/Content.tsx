@@ -62,11 +62,13 @@ const Content: Component<Content> = (props) => {
     pushPage({ pageId: pages.CHAT, params: { dialog: dialog } })
   }
 
-  onMount(() => {
-    Chats.loadChats()
-  })
-
   const getHistory = createMemo(() => Object.values(Chats.get()))
+
+  onMount(() => {
+    if (getHistory.length === 0) {
+      Chats.loadChats()
+    }
+  })
 
   return (
     <Cell.List style={{ "overflow-y": "scroll" }}>

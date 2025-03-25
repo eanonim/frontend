@@ -91,37 +91,38 @@ export class Message<
           if (chat) {
             const message = chat.messages.history[this.id]
             if (message) {
-              if ((chat.lastMessageId || 0) < newId) {
-                chat.setter("lastMessageId", newId)
-              }
-
               this.initStore[1]("id", newId)
 
-              chat.setter("messages", chat.messages)
               chat.setStore(
-                "messages",
-                "history",
-                produce((history) => {
-                  history[newId] = message
-                  return history
+                produce((store) => {
+                  store.messages.history[newId] = message
+
+                  if ((store.lastMessageId || 0) <= newId) {
+                    store.lastMessageId = newId
+                  }
+
+                  return store
                 }),
               )
             }
           }
         }
 
+        if (key === "isRead" && !store[key] && this.target !== "my") {
+          this.requestRead()
+        }
+
         if (key === "isRead") {
           const chat = dialogs[this.chatId]
           if (chat) {
-            if (value && (chat.messages.lastReadMessageId || 0) < this.id) {
-              setDialogs(
-                chat.id,
+            if (value && (chat.messages.lastReadMessageId || 0) <= this.id) {
+              chat.setStore(
+                "messages",
                 produce((store) => {
-                  store.messages.lastReadMessageId = this.id
+                  store.lastReadMessageId = this.id
                   return store
                 }),
               )
-              this.requestRead()
             }
           }
         }

@@ -69,8 +69,7 @@ export class createChats<
       chat.setter("isTyping", item.isTyping)
       chat.setter("user", item.user)
       if (item.lastMessage) {
-        const message = chat.newMessage(item.lastMessage)
-        chat.setter("lastMessageId", message.id)
+        chat.newMessage(item.lastMessage)
       }
     } else {
       const chat = new Chat<Target, User, Keyboard, Message, _Dialog>({
@@ -78,8 +77,7 @@ export class createChats<
         loadChatById: this.loadChatById,
       })
       if (item.lastMessage) {
-        const message = chat.newMessage(item.lastMessage)
-        chat.setter("lastMessageId", message.id)
+        chat.newMessage(item.lastMessage)
       }
       this._setDialogs(
         produce((store) => {
@@ -131,9 +129,9 @@ export class createChats<
 
   /* Получение диалога по ID */
   public getById(id: string): Chat<Target, User, Keyboard> | undefined {
-    if (!this._dialogs[id]) {
-      this.loadChatById(id)
-    }
+    // if (!this._dialogs[id]) {
+    //   this.loadChatById(id)
+    // }
     return this._dialogs[id]
   }
 

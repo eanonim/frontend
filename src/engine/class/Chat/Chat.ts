@@ -309,7 +309,7 @@ export class Chat<
 
   /* Получение статуса прочитанного сообщения */
   public checkRead(messageId: number) {
-    return messageId < (this.messages.lastReadMessageId || 0)
+    return messageId <= (this.messages.lastReadMessageId || 0)
   }
 
   /* Добавляет новое сообщение */
@@ -378,7 +378,7 @@ export class Chat<
 
       if (response) {
         this.setStore("messages", "lastOffset", offset + 200)
-        for (const message of response) {
+        for (const message of response.reverse()) {
           this.initMessage(message, "push")
         }
         return true

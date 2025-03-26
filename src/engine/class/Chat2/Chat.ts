@@ -210,7 +210,9 @@ export class Chat<
   }
 
   /* Добавляет новое сообщение */
-  public newMessage(message: ClassMessageProps<User, Content, Metadata>) {
+  public newMessage(
+    message: ClassMessageProps<ChatContent, User, Content, Metadata>,
+  ) {
     return this.initMessage(message, "unshift")
   }
 
@@ -223,7 +225,7 @@ export class Chat<
 
   /* Инициализация сообщения */
   public initMessage(
-    _message: ClassMessageProps<User, Content, Metadata>,
+    _message: ClassMessageProps<ChatContent, User, Content, Metadata>,
     typePush: "push" | "unshift" = "unshift",
     onlyHistory = false,
   ) {
@@ -326,10 +328,10 @@ export class Chat<
         }
 
         this.addParticipant(_message.sender)
-        this.addParticipant(_message.recipient)
+        // this.addParticipant(_message.recipient)
 
-        const recipientUser = this.getUserById(_message.recipient.user_id)
-        message.setRecipient(recipientUser)
+        // const recipientUser = this.getUserById(_message.recipient.user_id)
+        // message.setRecipient(recipientUser)
         const senderUser = this.getUserById(_message.sender.user_id)
         message.setSender(senderUser)
 
@@ -386,12 +388,13 @@ export class Chat<
     try {
       const offset = this.initStore[0].last_offset || 0
       const { response, error } = await request({
-        id: this.chat_id,
+        chat_id: this.chat_id,
         offset: offset,
         count: 200,
+        chat: this.chats[this.chat_id],
       })
 
-      if (!error && (response.length === 0 || !response)) {
+      if (!error && ((response || []).length === 0 || !response)) {
         this.initStore[1](
           produce((store) => {
             store.full_load = true

@@ -56,7 +56,7 @@ export class createChats<
   }: {
     requests: Requests<ChatContent, User, Content, Metadata>
   }) {
-    ;(REQUESTS as Requests<ChatContent, User, Content, Metadata>) = requests
+    ;(REQUESTS as any) = requests
     this.requests = requests
 
     this.setDIALOG = this.setDIALOG.bind(this)
@@ -73,8 +73,7 @@ export class createChats<
       User,
       Content,
       Metadata,
-      ClassChatProps<ChatContent, User, Content, Metadata>,
-      ClassMessageProps<User, Content, Metadata>
+      ClassChatProps<ChatContent, User, Content, Metadata>
     >,
   ) {
     const chat = this.chats[item.chat_id]

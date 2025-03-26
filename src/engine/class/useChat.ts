@@ -142,3 +142,217 @@ export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({
 })
 
 export const Chat = Chats.getClass()
+
+// import {
+//   chatInfo,
+//   chatList,
+//   messageDelete,
+//   messageList,
+//   messageRead,
+// } from "engine/api"
+// import { Socket } from "engine/api/module"
+// import { DefaultMetadata, RequestChat, RequestMessageList } from "./Chat2/types"
+// import { createChats } from "./Chat2/createChats"
+
+// type Attach = {
+//   id: string
+//   type: "photo" | "audio"
+// }[]
+
+// type User = NonNullable<Socket["chat.list"]["response"]>[0]["user"] & {
+//   user_id: "my" | "you" | "system"
+// }
+// type ChatContent = {
+//   user_id: "my" | "you" | "system"
+// }
+// type MessageContent = {
+//   type: "default" | "invite"
+
+//   text?: string
+//   timestamp: Date
+
+//   attach?: Attach
+//   keyboard?: {
+//     key: "chat_invite_accept" | "chat_invite_reject"
+//     text: "accept" | "reject"
+//     event: "chat.inviteAccept" | "chat.inviteReject"
+//   }[][]
+// }
+
+// export const Chats = new createChats<
+//   ChatContent,
+//   User,
+//   MessageContent,
+//   DefaultMetadata<User>
+// >({
+//   requests: {
+//     "message.delete": async ({ chat_id, message_id }) => {
+//       const { response, error } = await messageDelete({
+//         dialog: chat_id,
+//         message_id: message_id,
+//       })
+
+//       return { response: !!response?.result, error: !!error }
+//     },
+//     "message.read": async ({ chat_id, message_id }) => {
+//       const { response, error } = await messageRead({
+//         dialog: chat_id,
+//         message_id: message_id,
+//       })
+
+//       return { response: !!response?.result, error: !!error }
+//     },
+//     "chat.getById": async ({ chat_id }) => {
+//       const { response, error } = await chatInfo({ dialog: chat_id })
+//       return {
+//         response: response
+//           ? {
+//               chat_id: response.uuid,
+//               content: {
+//                 user_id: "you",
+//               },
+//               lastMessage: response.message
+//                 ? {
+//                     message_id: response.message.id,
+//                     user_id: response.message.target,
+//                     content: {
+//                       attach: response.message.attach_type
+//                         ? [
+//                             {
+//                               type: response.message.attach_type,
+//                               id: "",
+//                             },
+//                           ]
+//                         : undefined,
+//                       type: "default",
+//                       timestamp: response.message.time,
+//                       text: response.message.message,
+//                     },
+//                     metadata: {
+//                       read: [],
+//                       delete: false,
+//                       edit: false,
+//                     },
+//                   }
+//                 : undefined,
+//             }
+//           : undefined,
+//         error: !!error,
+//       }
+//     },
+//     "chat.getList": async ({ count, offset }) => {
+//       const { response, error } = await chatList({})
+//       const data: RequestChat<
+//         ChatContent,
+//         User,
+//         MessageContent,
+//         DefaultMetadata<User>
+//       >[] = []
+
+//       for (const chat of response || []) {
+//         data.push({
+//           chat_id: chat.uuid,
+//           content: {
+//             user_id: "you",
+//           },
+//           lastMessage: chat.message
+//             ? {
+//                 message_id: chat.message.id,
+//                 user_id: chat.message.target,
+//                 content: {
+//                   attach: chat.message.attach_type
+//                     ? [
+//                         {
+//                           type: chat.message.attach_type,
+//                           id: "",
+//                         },
+//                       ]
+//                     : undefined,
+//                   type: "default",
+//                   timestamp: chat.message.time,
+//                   text: chat.message.message,
+//                 },
+//                 metadata: {
+//                   read: [],
+//                   delete: false,
+//                   edit: false,
+//                 },
+//               }
+//             : undefined,
+//         })
+//       }
+//       return { response: data, error: !!error }
+//     },
+//     "message.getHistory": async ({ chat_id, count, offset, chat }) => {
+//       const { response, error } = await messageList({
+//         dialog: chat_id,
+//         count,
+//         offset,
+//       })
+
+//       const data: RequestMessageList<
+//         ChatContent,
+//         User,
+//         MessageContent,
+//         DefaultMetadata<User>
+//       > = []
+
+//       for (const message of response || []) {
+//         const attach: NonNullable<(typeof data)[0]["content"]["attach"]> = []
+
+//         if (message.attach) {
+//           for (const item of message.attach?.items || []) {
+//             attach.push({
+//               type: message.attach?.type,
+//               id: item.id,
+//             })
+//           }
+//         }
+
+//         data.push({
+//           message_id: message.id,
+//           user_id: message.target,
+//           content: {
+//             attach: attach,
+//             text: message.message,
+//             type: message.type,
+//             timestamp: message.time,
+//             keyboard: message.keyboard,
+//           },
+//           metadata: {
+//             read: message.readed ? [message.target] : [],
+//             delete: false,
+//             edit: false,
+//           },
+//           reply: message.reply
+//             ? {
+//                 user_id: "you",
+//                 message_id: message.reply.id,
+//                 content: {
+//                   type: "default",
+//                   timestamp: new Date(),
+//                   text: message.reply.message,
+//                   attach: message.reply.attach_type
+//                     ? [
+//                         {
+//                           type: message.reply.attach_type,
+//                           id: "",
+//                         },
+//                       ]
+//                     : undefined,
+//                 },
+//                 metadata: {
+//                   read: [],
+//                   delete: false,
+//                   edit: false,
+//                 },
+//               }
+//             : undefined,
+//         })
+//       }
+//       return { response: data, error: !!error }
+//     },
+//   },
+// })
+
+// export const Chat = Chats.getClass()

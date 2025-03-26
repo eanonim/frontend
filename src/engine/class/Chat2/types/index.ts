@@ -35,15 +35,18 @@ export type DefaultUser = {
 }
 
 export type ClassMessageProps<
+  ChatContent extends DefaultChatContent,
   User extends DefaultUser,
   Content extends DefaultContent,
   Metadata extends DefaultMetadata<User>,
 > = {
   message_id: number
   sender: User
-  recipient: User
+  // recipient: User
   content: Content
   metadata: Metadata
+
+  reply?: ObjectMessage<ChatContent, User, Content, Metadata>
 }
 
 export type ObjectMessage<
@@ -106,26 +109,51 @@ export type RequestChat<
     Content,
     Metadata
   > = ClassChatProps<ChatContent, User, Content, Metadata>,
-  Message extends ClassMessageProps<
-    User,
-    Content,
-    Metadata
-  > = ClassMessageProps<User, Content, Metadata>,
 > = {
   chat_id: Chat["chat_id"]
   content: Chat["content"]
-  lastMessage: Message
+  lastMessage?: Omit<
+    ClassMessageProps<ChatContent, User, Content, Metadata>,
+    "sender"
+  > & {
+    user_id: User["user_id"]
+  }
 }
 
-type Result<T> =
-  | {
-      response: T
-      error: undefined
+export type RequestMessageList<
+  ChatContent extends DefaultChatContent,
+  User extends DefaultUser,
+  Content extends DefaultContent,
+  Metadata extends DefaultMetadata<User>,
+> = (Omit<
+  Omit<
+    Omit<ClassMessageProps<ChatContent, User, Content, Metadata>, "reply">,
+    "sender"
+  >,
+  "metadata"
+> & {
+  user_id: User["user_id"]
+  metadata: Omit<Metadata, "read"> & {
+    read: User["user_id"][]
+  }
+  reply?: Omit<
+    Omit<
+      Omit<ClassMessageProps<ChatContent, User, Content, Metadata>, "chat_id">,
+      "sender"
+    >,
+    "metadata"
+  > & {
+    user_id: User["user_id"]
+    metadata: Omit<Metadata, "read"> & {
+      read: User["user_id"][]
     }
-  | {
-      response: undefined
-      error: true
-    }
+  }
+})[]
+
+type Result<T> = {
+  response: T | undefined
+  error: boolean
+}
 
 export type Requests<
   ChatContent extends DefaultChatContent,
@@ -134,16 +162,32 @@ export type Requests<
   Metadata extends DefaultMetadata<User>,
 > = {
   "chat.getById": ({
-    id,
+    chat_id,
+    chat,
   }: {
-    id: string
+    chat_id: string
+    chat: Chat<
+      ChatContent,
+      User,
+      Content,
+      Metadata,
+      ObjectMessage<ChatContent, User, Content, Metadata>
+    >
   }) => Promise<Result<RequestChat<ChatContent, User, Content, Metadata>>>
   "chat.getList": ({
     count,
     offset,
+    chat,
   }: {
     count: number
     offset: number
+    chat: Chat<
+      ChatContent,
+      User,
+      Content,
+      Metadata,
+      ObjectMessage<ChatContent, User, Content, Metadata>
+    >
   }) => Promise<Result<RequestChat<ChatContent, User, Content, Metadata>[]>>
   "message.delete": ({
     chat_id,
@@ -162,12 +206,22 @@ export type Requests<
     user_id: User["user_id"]
   }) => Promise<Result<boolean>>
   "message.getHistory": ({
-    id,
+    chat_id,
     count,
     offset,
+    chat,
   }: {
-    id: string
+    chat_id: string
     count: number
     offset: number
-  }) => Promise<Result<ClassMessageProps<User, Content, Metadata>[]>>
+    chat: Chat<
+      ChatContent,
+      User,
+      Content,
+      Metadata,
+      ObjectMessage<ChatContent, User, Content, Metadata>
+    >
+  }) => Promise<
+    Result<RequestMessageList<ChatContent, User, Content, Metadata>>
+  >
 }

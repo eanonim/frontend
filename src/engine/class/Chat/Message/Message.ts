@@ -172,8 +172,8 @@ export class Message<
   get keyboard() {
     return this.initStore[0].keyboard
   }
-  get reply() {
-    return this.initStore[0].reply
+  get replyId() {
+    return this.initStore[0].replyId
   }
   get target() {
     return this.initStore[0].target

@@ -54,9 +54,15 @@ export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({
                 id: response.message.id,
                 text: response.message.message,
                 target: response.message.target,
-                attachType: response.message.attach_type,
+                attach: response.message.attach_type
+                  ? {
+                      type: response.message.attach_type,
+                      items: [],
+                    }
+                  : undefined,
                 time: response.message.time,
                 isRead: response.message.readed,
+                type: "default",
               }
             : undefined,
         },
@@ -76,7 +82,6 @@ export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({
           lastMessage: chat.message
             ? {
                 id: chat.message.id,
-
                 text: chat.message.message,
                 target: chat.message.target,
                 attach: chat.message.attach_type
@@ -87,6 +92,7 @@ export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({
                   : undefined,
                 time: chat.message.time,
                 isRead: chat.message.readed,
+                type: "default",
               }
             : undefined,
         })
@@ -109,7 +115,19 @@ export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({
           text: message.message,
           target: message.target,
           attach: message.attach,
-          reply: message.reply,
+          reply: message.reply
+            ? {
+                id: message.reply.id,
+                attach: message.reply.attach_type
+                  ? {
+                      type: message.reply.attach_type,
+                      items: [],
+                    }
+                  : undefined,
+                time: new Date(),
+                type: "default",
+              }
+            : undefined,
           time: message.time,
           isRead: message.readed,
           isDeleted: message.deleted,

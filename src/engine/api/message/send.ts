@@ -5,18 +5,15 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
   const messageId = Math.random()
   const chat = Chats.getById(options.dialog)
 
-  const messageReply = chat?.getMessageById(options.message.reply_id)
-
   const message = chat?.newMessage({
     id: messageId,
     isLoading: true,
     target: "my",
     text: options.message.message,
-    reply: messageReply
-      ? { id: messageReply.id, message: messageReply.text || "UNDEFINED" }
-      : undefined,
+    replyId: options.message.reply_id,
     time: new Date(),
     attach: options.message.attach,
+    type: "default",
   })
 
   const { response, error } = await socketSend("message.send", options)

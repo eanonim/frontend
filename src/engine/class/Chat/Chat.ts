@@ -187,9 +187,10 @@ export class Chat<
   }
 
   /* Добавление сообщения */
-  private initMessage(
+  public initMessage(
     _message: Omit<ClassMessageProps<Target, Keyboard, Attach>, "indexes">,
     typePush: "push" | "unshift" = "unshift",
+    onlyHistory = false,
   ) {
     const groupMessagesCount = 20
 
@@ -204,93 +205,94 @@ export class Chat<
 
     this.setStore(
       produce((store) => {
-        if (!isMessage) {
-          const fullTime = getFullDate(message.time)
+        if (!isMessage || !message.indexes) {
+          if (!onlyHistory || !message.indexes) {
+            const fullTime = getFullDate(message.time)
 
-          let dialogIndex = 0
-          let groupMessagesIndex = 0
-          let messageIndex = 0
+            let dialogIndex = 0
+            let groupMessagesIndex = 0
+            let messageIndex = 0
 
-          const countEmpty = 20 // Количество пустых ячеек
+            const countEmpty = 20 // Количество пустых ячеек
 
-          // добавляем группу сообщения за сегодняшний день
-          const fullTimeToday = getFullDate(new Date())
-          dialogIndex = store.messages.dialogs.findIndex(
-            (x) => x[0] === fullTimeToday,
-          )
-          if (dialogIndex === -1) {
-            dialogIndex = store.messages.dialogs.length
-            store.messages.dialogs.push([
-              fullTimeToday,
-              Array.from({ length: countEmpty }, () => []),
+            // добавляем группу сообщения за сегодняшний день
+            const fullTimeToday = getFullDate(new Date())
+            dialogIndex = store.messages.dialogs.findIndex(
+              (x) => x[0] === fullTimeToday,
+            )
+            if (dialogIndex === -1) {
+              dialogIndex = store.messages.dialogs.length
+              store.messages.dialogs.push([
+                fullTimeToday,
+                Array.from({ length: countEmpty }, () => []),
+              ])
+            }
+
+            // Забиваем Array, для следующих сообщений, что бы Index`ы работали нормально
+            dialogIndex = store.messages.dialogs.findIndex(
+              (x) => x[0] === fullTime,
+            )
+            if (dialogIndex === -1) {
+              dialogIndex = store.messages.dialogs.length
+              store.messages.dialogs.push([
+                fullTime,
+                Array.from({ length: countEmpty }, () => []),
+              ])
+            }
+
+            let groupMessages = store.messages.dialogs[dialogIndex][1]
+
+            if (groupMessages.length === 0) {
+              for (let i = 0; i < countEmpty; i++) {
+                store.messages.dialogs[dialogIndex][1][i] = []
+              }
+            }
+
+            if (dialogIndex !== -1) {
+              if (typePush === "push") {
+                groupMessagesIndex = groupMessages.findLastIndex(
+                  (group, index) =>
+                    index >= countEmpty &&
+                    group.filter(Boolean).length < groupMessagesCount,
+                )
+
+                if (groupMessagesIndex === -1) {
+                  groupMessagesIndex = groupMessages.length
+                  groupMessages[groupMessagesIndex] = []
+                }
+
+                messageIndex =
+                  groupMessagesCount -
+                  groupMessages[groupMessagesIndex].filter(Boolean).length -
+                  1
+                groupMessages[groupMessagesIndex][messageIndex] = message
+              } else {
+                groupMessagesIndex = groupMessages.findLastIndex(
+                  (x, index) =>
+                    index < countEmpty &&
+                    x.filter(Boolean).length < groupMessagesCount,
+                )
+
+                if (groupMessagesIndex === -1) {
+                  groupMessagesIndex = 0
+                }
+
+                messageIndex =
+                  groupMessages[groupMessagesIndex].filter(Boolean).length
+
+                if (!!groupMessages[groupMessagesIndex][messageIndex]) {
+                  messageIndex += 1
+                }
+
+                groupMessages[groupMessagesIndex][messageIndex] = message
+              }
+            }
+            message.setter("indexes", [
+              dialogIndex,
+              groupMessagesIndex,
+              messageIndex,
             ])
           }
-
-          // Забиваем Array, для следующих сообщений, что бы Index`ы работали нормально
-          dialogIndex = store.messages.dialogs.findIndex(
-            (x) => x[0] === fullTime,
-          )
-          if (dialogIndex === -1) {
-            dialogIndex = store.messages.dialogs.length
-            store.messages.dialogs.push([
-              fullTime,
-              Array.from({ length: countEmpty }, () => []),
-            ])
-          }
-
-          let groupMessages = store.messages.dialogs[dialogIndex][1]
-
-          if (groupMessages.length === 0) {
-            for (let i = 0; i < countEmpty; i++) {
-              store.messages.dialogs[dialogIndex][1][i] = []
-            }
-          }
-
-          if (dialogIndex !== -1) {
-            if (typePush === "push") {
-              groupMessagesIndex = groupMessages.findLastIndex(
-                (group, index) =>
-                  index >= countEmpty &&
-                  group.filter(Boolean).length < groupMessagesCount,
-              )
-
-              if (groupMessagesIndex === -1) {
-                groupMessagesIndex = groupMessages.length
-                groupMessages[groupMessagesIndex] = []
-              }
-
-              messageIndex =
-                groupMessagesCount -
-                groupMessages[groupMessagesIndex].filter(Boolean).length -
-                1
-              groupMessages[groupMessagesIndex][messageIndex] = message
-            } else {
-              groupMessagesIndex = groupMessages.findLastIndex(
-                (x, index) =>
-                  index < countEmpty &&
-                  x.filter(Boolean).length < groupMessagesCount,
-              )
-
-              if (groupMessagesIndex === -1) {
-                groupMessagesIndex = 0
-              }
-
-              messageIndex =
-                groupMessages[groupMessagesIndex].filter(Boolean).length
-
-              if (!!groupMessages[groupMessagesIndex][messageIndex]) {
-                messageIndex += 1
-              }
-
-              groupMessages[groupMessagesIndex][messageIndex] = message
-            }
-          }
-
-          message.setter("indexes", [
-            dialogIndex,
-            groupMessagesIndex,
-            messageIndex,
-          ])
           console.log("ADD New Message")
           store.messages.history[message.id] = message
         } else {
@@ -301,7 +303,7 @@ export class Chat<
           message.setter("isOnlyEmoji", _message.isOnlyEmoji)
           message.setter("isRead", _message.isRead)
           message.setter("keyboard", _message.keyboard)
-          message.setter("reply", _message.reply)
+          message.setter("replyId", _message.replyId)
           message.setter("target", _message.target)
           message.setter("text", _message.text)
           message.setter("time", _message.time)
@@ -328,6 +330,11 @@ export class Chat<
     //   }),
     // )
 
+    if (_message.reply) {
+      this.initMessage(_message.reply, undefined, true)
+      message.setter("replyId", _message.reply.id)
+    }
+
     return message
   }
 
@@ -344,6 +351,10 @@ export class Chat<
   }
 
   public getHistory() {
+    if (!this.messages.dialogs.length) {
+      this.uploadChatHistory()
+    }
+
     return this.messages.dialogs
   }
 
@@ -387,7 +398,7 @@ export class Chat<
       console.error('Нет функции для вызова "message.getHistory"')
       return false
     }
-    this.setStore("messages", "isLoading", true)
+    this.setStore("isLoading", true)
     try {
       const offset = this.messages.lastOffset || 0
       const { response, error } = await request({
@@ -408,7 +419,7 @@ export class Chat<
         return true
       }
     } finally {
-      this.setStore("messages", "isLoading", false)
+      this.setStore("isLoading", false)
     }
     return false
   }

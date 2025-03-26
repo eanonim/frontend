@@ -78,7 +78,7 @@ export class createChats<
       chat.setter("isTyping", item.isTyping)
       chat.setter("user", item.user)
       if (item.lastMessage) {
-        chat.newMessage(item.lastMessage)
+        chat.initMessage(item.lastMessage, undefined, true)
       }
     } else {
       const chat = new Chat<Target, User, Keyboard, Attach, Message, _Dialog>({
@@ -86,7 +86,7 @@ export class createChats<
         loadChatById: this.loadChatById,
       })
       if (item.lastMessage) {
-        chat.newMessage(item.lastMessage)
+        chat.initMessage(item.lastMessage, undefined, true)
       }
 
       this._setDialogs(

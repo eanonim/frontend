@@ -202,7 +202,7 @@ const Content: Component<Content> = (props) => {
                         onContextMenu={() =>
                           handlerContextMenu("any", message.id)
                         }
-                        forward={message.reply}
+                        reply={chat.getMessageById(message.replyId)}
                         attach={message.attach}
                         type={message.target === "my" ? "out" : "in"}
                         text={message.text}

@@ -1,5 +1,33 @@
 import { Message as ClassMessage } from "../Message/Message"
 
+// export type DefaultMetadata = {
+//   read?: boolean
+//   delete?: boolean
+//   edit?: boolean
+// }
+
+// export type DefaultContent = {
+//   type: string
+//   text?: string
+//   timestamp: Date
+// }
+
+// export type DefaultUser2 = {
+//   id: string
+// }
+
+// export type ClassMessageProps2<
+//   User extends DefaultUser,
+//   Content extends DefaultContent,
+//   Metadata extends DefaultMetadata,
+// > = {
+//   message_id: string
+//   sender: User
+//   recipient: User
+//   content: Content
+//   metadata: Metadata
+// }
+
 export type ClassMessageProps<
   Target extends DefaultTarget,
   Keyboard extends DefaultKeyboard,
@@ -7,14 +35,14 @@ export type ClassMessageProps<
 > = {
   id: number
   text?: string
-  target: Target
+  target?: Target
   attach?: Attach
   type: "default" | "invite"
-  reply?: {
-    id: number
-    message: string
-    attachType?: unknown
-  }
+
+  reply?: ClassMessageProps<Target, Keyboard, Attach>
+
+  replyId?: number
+
   time: Date
 
   keyboard?: Keyboard[][]
@@ -26,7 +54,7 @@ export type ClassMessageProps<
   isRead?: boolean
   isDeleted?: boolean
 
-  indexes: [number, number, number]
+  indexes?: [number, number, number]
 }
 
 export type DefaultTarget = "my" | "system" | "you"
@@ -61,14 +89,7 @@ export type Dialog<
 
   lastMessageId?: number
 
-  lastMessage?: {
-    id: number
-    text?: string
-    target: Target
-    attach?: Attach
-    time: Date
-    isRead: boolean
-  }
+  lastMessage?: ClassMessageProps<Target, Keyboard, Attach>
 
   user: User
 

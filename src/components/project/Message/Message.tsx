@@ -29,9 +29,13 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
 
   type: "in" | "out"
 
-  forward?: {
+  reply?: {
     message?: string
     time?: Date
+    attach?: {
+      type: "photo" | "audio"
+      items: { id: string }[]
+    }
   }
   attach?: {
     type: "photo" | "audio"
@@ -70,7 +74,7 @@ const Message: ComponentMessage = (props) => {
     "text",
     "time",
     "type",
-    "forward",
+    "reply",
     "attach",
     "isRead",
     "isNotRead",
@@ -106,7 +110,7 @@ const Message: ComponentMessage = (props) => {
       class={style.Message}
       classList={{
         [style[`Message--${local.type}`]]: !!local.type,
-        [style[`Message__type--forward`]]: !!local.forward,
+        [style[`Message__type--forward`]]: !!local.reply,
         [style[`Message--only_attach`]]: !!!local.text && !!local.attach,
         [style[`Message--attach`]]: !!local.attach,
         [style[`Message--is_emoji`]]: !!local.isEmoji,
@@ -141,8 +145,8 @@ const Message: ComponentMessage = (props) => {
           )}
         </Show>
         <div class={style.Message__text}>
-          <Show keyed when={local.forward}>
-            {(forward) => (
+          <Show keyed when={local.reply}>
+            {(reply) => (
               <Flex
                 class={style.Message__forward}
                 height={"100%"}
@@ -151,7 +155,7 @@ const Message: ComponentMessage = (props) => {
                 {/* <span class={style.Message__forward_separator} /> */}
                 <span class={style.Message__forward_content}>
                   <span class={style.Message__forward_text}>
-                    {forward.message}
+                    {reply.message || reply.attach?.type}
                   </span>
                 </span>
               </Flex>

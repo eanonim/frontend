@@ -217,6 +217,7 @@ export type Socket = {
         reply?: {
           id: number
           message: string
+          attach_type?: "photo" | "audio"
         }
         readed: boolean
         time: Date
@@ -559,7 +560,19 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
           text: message.message,
           target: message.target,
           attach: message.attach,
-          reply: message.reply,
+          reply: message.reply
+            ? {
+                id: message.reply.id,
+                attach: message.reply.attach_type
+                  ? {
+                      type: message.reply.attach_type,
+                      items: [],
+                    }
+                  : undefined,
+                time: new Date(),
+                type: "default",
+              }
+            : undefined,
           time: message.time,
           type: message.type,
 

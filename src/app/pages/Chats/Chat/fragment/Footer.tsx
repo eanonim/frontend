@@ -121,6 +121,7 @@ const Footer: Component<Footer> = (props) => {
     } finally {
       chat?.setMessage("attach", undefined)
       chat?.setMessage("isAddAttach", undefined)
+      handlerRemoveReply()
       setMessage("")
     }
   }

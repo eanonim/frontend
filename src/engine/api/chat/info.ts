@@ -4,6 +4,7 @@ import { CHAT_LIST_ATOM } from "engine/state"
 import { produce } from "solid-js/store"
 
 const chatInfo = async (options: Socket["chat.info"]["request"]) => {
+  console.log({ options })
   const { response, error } = await socketSend("chat.info", options)
   if (error) {
     console.log({ error })

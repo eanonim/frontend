@@ -16,6 +16,7 @@ type Fetch<G> = {
   method: "POST" | "GET"
   body?: G
   headers?: HeadersInit
+  host?: string
 }
 
 export const defaultError = (fetch_status?: number) => ({
@@ -33,9 +34,10 @@ export const _fetch = async <T, G>({
   method,
   body,
   headers,
+  host = HOST,
 }: Fetch<G>): Promise<Request<T>> => {
   try {
-    const url = new URL(`https://${HOST}` + name) // rt.elum.app
+    const url = new URL(`https://${host}` + name) // rt.elum.app
 
     if (method === "GET" && body) {
       for (const [key, value] of Object.entries(body)) {
@@ -45,7 +47,12 @@ export const _fetch = async <T, G>({
 
     const response = await fetch(url, {
       method,
-      body: method === "POST" ? JSON.stringify(body || {}) : undefined,
+      body:
+        method === "POST"
+          ? body instanceof FormData
+            ? body
+            : JSON.stringify(body || {})
+          : undefined,
       headers,
     })
 

@@ -65,7 +65,7 @@ const Content: Component<Content> = (props) => {
   const getHistory = createMemo(() => Object.values(Chats.get()))
 
   onMount(() => {
-    if (getHistory.length === 0) {
+    if (getHistory().length === 0) {
       Chats.loadChats()
     }
   })

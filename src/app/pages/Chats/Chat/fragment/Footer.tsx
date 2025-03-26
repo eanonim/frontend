@@ -20,11 +20,21 @@ import {
   For,
 } from "solid-js"
 import { pages, useParams } from "router"
-import { messageEdit, messageSend, messageTyping } from "engine/api"
+import {
+  imageUpload,
+  imageUploadResponse,
+  messageEdit,
+  messageSend,
+  messageTyping,
+} from "engine/api"
 import { leading, throttle } from "@solid-primitives/scheduled"
-import { messageMaxSize } from "root/configs"
+import { HOST_CDN, messageMaxSize } from "root/configs"
 import loc from "engine/languages"
-import { Chats } from "engine/class/useChat"
+import { Attach, Chats } from "engine/class/useChat"
+import { createImage } from "engine"
+import { AUTH_TOKEN_ATOM } from "engine/state"
+import { getter } from "elum-state/solid"
+import { unlink } from "@minsize/utils"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -46,6 +56,10 @@ const Footer: Component<Footer> = (props) => {
       (edit_id) => {
         const message = chat?.getMessageById(edit_id)
         if (message && message.text) {
+          if (message.attach) {
+            chat?.setMessage("attach", message.attach)
+            chat?.setMessage("isAddAttach", true)
+          }
           setMessage(message.text)
           ref!?.focus()
         }
@@ -63,8 +77,9 @@ const Footer: Component<Footer> = (props) => {
         messageEdit({
           dialog: dialog,
           message: {
-            id: chat?.message?.editId,
+            id: chat.message.editId,
             message: messageText.slice(0, messageMaxSize),
+            attach: chat.message.attach,
           },
         })
         handlerRemoveEdit()
@@ -86,14 +101,26 @@ const Footer: Component<Footer> = (props) => {
               message: {
                 message: messageChunk.trim(),
                 reply_id: chat?.message?.replyId,
+                attach: unlink(chat?.message?.attach),
               },
             })
+            chat?.setMessage("attach", undefined)
           } else {
             last_index = messageText.length
           }
         }
+      } else {
+        messageSend({
+          dialog: params().dialog,
+          message: {
+            reply_id: chat?.message?.replyId,
+            attach: unlink(chat?.message?.attach),
+          },
+        })
       }
     } finally {
+      chat?.setMessage("attach", undefined)
+      chat?.setMessage("isAddAttach", undefined)
       setMessage("")
     }
   }
@@ -114,7 +141,7 @@ const Footer: Component<Footer> = (props) => {
   }
 
   const handlerAddAttach = () => {
-    chat?.setMessage("isAddAttach", undefined)
+    chat?.setMessage("isAddAttach", !chat.message?.isAddAttach)
   }
 
   const handlerRemoveReply = () => {
@@ -123,8 +150,63 @@ const Footer: Component<Footer> = (props) => {
 
   const handlerRemoveEdit = () => {
     chat?.setMessage("editId", undefined)
+    chat?.setMessage("isAddAttach", undefined)
     setMessage("")
   }
+
+  const addImage = async () => {
+    const items: Attach = unlink(
+      chat?.message?.attach || {
+        type: "photo",
+        items: [],
+      },
+    )
+    const element = document.createElement("input")
+    element.type = "file"
+    element.multiple = true
+    element.accept = "image/*"
+
+    element.click()
+    element.onchange = async (e) => {
+      const data = e.target as HTMLInputElement
+
+      for (const file of data.files || []) {
+        if (items.items.length >= 3) return
+        const image = await createImage(file)
+        if (image) {
+          const form = new FormData()
+          form.append("data", image)
+          const { response, error } = await imageUpload(form)
+          if (response) {
+            items.type = "photo"
+            items.items.push({
+              id: response.id,
+            })
+          }
+        }
+      }
+
+      chat?.setMessage("attach", items)
+    }
+  }
+
+  const deleteImage = (id: string) => {
+    const items: Attach = unlink(
+      chat?.message?.attach || {
+        type: "photo",
+        items: [],
+      },
+    )
+
+    const index = items.items.findIndex((x) => x.id === id)
+    if (index !== -1) {
+      items.items.splice(index, 1)
+    }
+    console.log({ items })
+    chat?.setMessage("attach", items)
+  }
+
+  const isSendMessage = () => !!message().length || !!chat?.message?.attach
 
   return (
     <FixedLayout
@@ -136,74 +218,84 @@ const Footer: Component<Footer> = (props) => {
       background={"section_bg_color"}
       isMargin={false}
     >
-      <Show when={chat?.message?.isAddAttach}>
-        <Separator />
-        <Button.Group>
-          <Button.Group.Container justifyContent={"start"}>
-            <For each={[1, 2]}>
-              {(image, index) => (
-                <Image.Preview data-index={index()}>
-                  <Image
-                    src={
-                      "https://c1.35photo.pro/photos_temp/sizes/339/1697287_500n.jpg"
-                    }
-                  />
-                </Image.Preview>
-              )}
-            </For>
-            <Image.Preview>
-              <IconPlus color={"var(--accent_color)"} />
-            </Image.Preview>
-          </Button.Group.Container>
-        </Button.Group>
-      </Show>
       <Show keyed when={chat?.getMessageById(chat.message?.replyId)}>
         {(message) => (
-          <Cell>
-            <Cell.Container>
-              <span
-                style={{
-                  height: "100%",
-                  width: "3px",
-                  background: "var(--accent_color)",
-                  "border-radius": "3px",
-                  "margin-right": "8px",
-                }}
-              />
-              <Cell.Content>
-                <SubTitle color={"accent"}>В ответ</SubTitle>
-                <Title>{message.text}</Title>
-              </Cell.Content>
-              <Cell.After onClick={handlerRemoveReply}>
-                <IconX color={"var(--accent_color)"} />
-              </Cell.After>
-            </Cell.Container>
-          </Cell>
+          <>
+            <Separator />
+            <Cell>
+              <Cell.Container>
+                <span
+                  style={{
+                    height: "100%",
+                    width: "3px",
+                    background: "var(--accent_color)",
+                    "border-radius": "3px",
+                    "margin-right": "8px",
+                  }}
+                />
+                <Cell.Content>
+                  <SubTitle color={"accent"}>В ответ</SubTitle>
+                  <Title>{message.text}</Title>
+                </Cell.Content>
+                <Cell.After onClick={handlerRemoveReply}>
+                  <IconX color={"var(--accent_color)"} />
+                </Cell.After>
+              </Cell.Container>
+            </Cell>
+          </>
         )}
       </Show>
       <Show keyed when={chat?.getMessageById(chat.message?.editId)}>
         {(message) => (
-          <Cell>
-            <Cell.Container>
-              <span
-                style={{
-                  height: "100%",
-                  width: "3px",
-                  background: "var(--accent_color)",
-                  "border-radius": "3px",
-                  "margin-right": "8px",
-                }}
-              />
-              <Cell.Content>
-                <SubTitle color={"accent"}>Редактирование</SubTitle>
-                <Title>{message.text}</Title>
-              </Cell.Content>
-              <Cell.After onClick={handlerRemoveEdit}>
-                <IconX color={"var(--accent_color)"} />
-              </Cell.After>
-            </Cell.Container>
-          </Cell>
+          <>
+            <Separator />
+            <Cell>
+              <Cell.Container>
+                <span
+                  style={{
+                    height: "100%",
+                    width: "3px",
+                    background: "var(--accent_color)",
+                    "border-radius": "3px",
+                    "margin-right": "8px",
+                  }}
+                />
+                <Cell.Content>
+                  <SubTitle color={"accent"}>Редактирование</SubTitle>
+                  <Title>{message.text}</Title>
+                </Cell.Content>
+                <Cell.After onClick={handlerRemoveEdit}>
+                  <IconX color={"var(--accent_color)"} />
+                </Cell.After>
+              </Cell.Container>
+            </Cell>
+          </>
         )}
+      </Show>
+
+      <Show when={chat?.message?.isAddAttach}>
+        <Separator />
+        <Button.Group>
+          <Button.Group.Container justifyContent={"start"}>
+            <For each={chat?.message?.attach?.items}>
+              {(image, index) => (
+                <Image.Preview
+                  data-index={index()}
+                  onClick={() => deleteImage(image.id)}
+                >
+                  <Image
+                    src={`https://${HOST_CDN}/v1/image/x100/${
+                      image.id
+                    }?${getter(AUTH_TOKEN_ATOM)}`}
+                  />
+                </Image.Preview>
+              )}
+            </For>
+            <Image.Preview onClick={addImage}>
+              <IconPlus color={"var(--accent_color)"} />
+            </Image.Preview>
+          </Button.Group.Container>
+        </Button.Group>
       </Show>
       <WriteBar>
         <WriteBar.Icon onClick={handlerAddAttach}>
@@ -227,19 +319,19 @@ const Footer: Component<Footer> = (props) => {
         <WriteBar.Icon
           onClick={handlerSend}
           style={{
-            transform: message().length ? "scale(1.5)" : "scale(1)",
-            "-webkit-transform": message().length ? "scale(1.5)" : "scale(1)",
+            transform: isSendMessage() ? "scale(1.5)" : "scale(1)",
+            "-webkit-transform": isSendMessage() ? "scale(1.5)" : "scale(1)",
             transition: "0.3s",
           }}
         >
           <IconSend
             style={{
-              transform: message().length ? "scale(0.8)" : "scale(1)",
-              "-webkit-transform": message().length ? "scale(0.8)" : "scale(1)",
+              transform: isSendMessage() ? "scale(0.8)" : "scale(1)",
+              "-webkit-transform": isSendMessage() ? "scale(0.8)" : "scale(1)",
               transition: "0.3s",
             }}
             color={
-              message().length ? "var(--accent_color)" : "var(--text_secondary)"
+              isSendMessage() ? "var(--accent_color)" : "var(--text_secondary)"
             }
             width={36}
             height={36}

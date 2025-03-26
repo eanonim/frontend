@@ -3,21 +3,17 @@ import { Message as ClassMessage } from "../Message/Message"
 export type ClassMessageProps<
   Target extends DefaultTarget,
   Keyboard extends DefaultKeyboard,
+  Attach extends DefaultAttach,
 > = {
   id: number
   text?: string
   target: Target
-  attach?: {
-    type: "photo" | "audio"
-    items: Array<{
-      name: string
-      data: string
-    }>
-  }
+  attach?: Attach
+  type: "default" | "invite"
   reply?: {
     id: number
     message: string
-    attachType?: "photo" | "audio"
+    attachType?: unknown
   }
   time: Date
 
@@ -35,6 +31,7 @@ export type ClassMessageProps<
 
 export type DefaultTarget = "my" | "system" | "you"
 export type DefaultKeyboard = unknown
+export type DefaultAttach = unknown
 
 export type DefaultUser = {
   first_name: string
@@ -45,16 +42,19 @@ export type ObjectMessage<
   Target extends DefaultTarget,
   User extends DefaultUser,
   Keyboard extends DefaultKeyboard,
-> = ClassMessage<Target, User, Keyboard>
+  Attach extends DefaultAttach,
+> = ClassMessage<Target, User, Keyboard, Attach>
 
 export type Dialog<
   Target extends DefaultTarget,
   User extends DefaultUser,
   Keyboard extends DefaultKeyboard,
-  Message extends ObjectMessage<Target, User, Keyboard> = ObjectMessage<
+  Attach extends DefaultAttach,
+  Message extends ObjectMessage<Target, User, Keyboard, Attach> = ObjectMessage<
     Target,
     User,
-    Keyboard
+    Keyboard,
+    Attach
   >,
 > = {
   id: string
@@ -65,7 +65,7 @@ export type Dialog<
     id: number
     text?: string
     target: Target
-    attachType?: "photo" | "audio"
+    attach?: Attach
     time: Date
     isRead: boolean
   }
@@ -88,13 +88,12 @@ export type Dialog<
     /* ID редактируемого сообщения */
     editId?: number
 
-    /* Указывает что пользователь печатает */
-    isTyping?: boolean
     /* Указывает что пользователь прикрепляет, что -то к сообщению  */
     isAddAttach?: boolean
+    attach?: Attach
   }
 
-  /* CUSTOM */
+  /* Указывает что пользователь печатает */
   isTyping?: boolean
   isLoading?: boolean
   isFullLoad?: boolean
@@ -114,15 +113,18 @@ export type Requests<
   Target extends DefaultTarget,
   User extends DefaultUser,
   Keyboard extends DefaultKeyboard,
-  Message extends ObjectMessage<Target, User, Keyboard> = ObjectMessage<
-    Target,
-    User,
-    Keyboard
-  >,
-  _Dialog extends Dialog<Target, User, Keyboard, Message> = Dialog<
+  Attach extends DefaultAttach,
+  Message extends ObjectMessage<Target, User, Keyboard, Attach> = ObjectMessage<
     Target,
     User,
     Keyboard,
+    Attach
+  >,
+  _Dialog extends Dialog<Target, User, Keyboard, Attach, Message> = Dialog<
+    Target,
+    User,
+    Keyboard,
+    Attach,
     Message
   >,
 > = {
@@ -160,5 +162,7 @@ export type Requests<
     id: string
     count: number
     offset: number
-  }) => Promise<Result<Omit<ClassMessageProps<Target, Keyboard>, "indexes">[]>>
+  }) => Promise<
+    Result<Omit<ClassMessageProps<Target, Keyboard, Attach>, "indexes">[]>
+  >
 }

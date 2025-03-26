@@ -6,49 +6,55 @@ import {
   ObjectMessage,
   Requests,
   ClassMessageProps,
+  DefaultAttach,
 } from "../types"
 import { createStore, produce, SetStoreFunction, Store } from "solid-js/store"
-import { dialogs, setDialogs, REQUESTS } from "../createChats"
+import { dialogs, REQUESTS } from "../createChats"
 
 export class Message<
   Target extends DefaultTarget,
   User extends DefaultUser,
   Keyboard extends DefaultKeyboard,
-  Message extends ObjectMessage<Target, User, Keyboard> = ObjectMessage<
-    Target,
-    User,
-    Keyboard
-  >,
-  _Dialog extends Dialog<Target, User, Keyboard, Message> = Dialog<
+  Attach extends DefaultAttach,
+  Message extends ObjectMessage<Target, User, Keyboard, Attach> = ObjectMessage<
     Target,
     User,
     Keyboard,
+    Attach
+  >,
+  _Dialog extends Dialog<Target, User, Keyboard, Attach, Message> = Dialog<
+    Target,
+    User,
+    Keyboard,
+    Attach,
     Message
   >,
 > {
   private chatId: string
 
   private initStore: [
-    get: Store<ClassMessageProps<Target, Keyboard>>,
-    set: SetStoreFunction<ClassMessageProps<Target, Keyboard>>,
+    get: Store<ClassMessageProps<Target, Keyboard, Attach>>,
+    set: SetStoreFunction<ClassMessageProps<Target, Keyboard, Attach>>,
   ]
 
   private requests: Partial<
-    Requests<Target, User, Keyboard, Message, _Dialog>
+    Requests<Target, User, Keyboard, Attach, Message, _Dialog>
   > = {}
 
   constructor(
-    params: ClassMessageProps<Target, Keyboard> & { chatId: string },
+    params: ClassMessageProps<Target, Keyboard, Attach> & { chatId: string },
   ) {
     this.chatId = params.chatId
     this.requests = REQUESTS as Requests<
       Target,
       User,
       Keyboard,
+      Attach,
       Message,
       _Dialog
     >
-    this.initStore = createStore<ClassMessageProps<Target, Keyboard>>(params)
+    this.initStore =
+      createStore<ClassMessageProps<Target, Keyboard, Attach>>(params)
 
     this.requestDelete = this.requestDelete.bind(this)
     this.requestRead = this.requestRead.bind(this)
@@ -135,6 +141,9 @@ export class Message<
 
   get id() {
     return this.initStore[0].id
+  }
+  get type() {
+    return this.initStore[0].type
   }
   get text() {
     return this.initStore[0].text

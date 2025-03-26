@@ -1,5 +1,5 @@
 export { backgrounds } from "./backgrounds"
-export { HOST } from "./server"
+export { HOST, HOST_CDN } from "./server"
 export {
   maxInterest,
   groupMessagesCount,

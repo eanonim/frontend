@@ -9,6 +9,7 @@ import {
   DefaultUser,
   Requests,
   ClassMessageProps,
+  DefaultAttach,
 } from "./types"
 import { getFullDate } from "./utils"
 import { createStore, produce, SetStoreFunction, Store } from "solid-js/store"
@@ -16,28 +17,43 @@ export class Chat<
   Target extends DefaultTarget,
   User extends DefaultUser,
   Keyboard extends DefaultKeyboard,
-  Message extends ObjectMessage<Target, User, Keyboard> = ObjectMessage<
-    Target,
-    User,
-    Keyboard
-  >,
-  _Dialog extends Dialog<Target, User, Keyboard, Message> = Dialog<
+  Attach extends DefaultAttach,
+  Message extends ObjectMessage<Target, User, Keyboard, Attach> = ObjectMessage<
     Target,
     User,
     Keyboard,
+    Attach
+  >,
+  _Dialog extends Dialog<Target, User, Keyboard, Attach, Message> = Dialog<
+    Target,
+    User,
+    Keyboard,
+    Attach,
     Message
   >,
 > {
   private _dialogs = dialogs as unknown as Record<
     string,
-    Chat<Target, User, Keyboard>
+    Chat<Target, User, Keyboard, Attach>
   >
   private initStore: [
     get: Store<
-      Dialog<Target, User, Keyboard, ObjectMessage<Target, User, Keyboard>>
+      Dialog<
+        Target,
+        User,
+        Keyboard,
+        Attach,
+        ObjectMessage<Target, User, Keyboard, Attach>
+      >
     >,
     set: SetStoreFunction<
-      Dialog<Target, User, Keyboard, ObjectMessage<Target, User, Keyboard>>
+      Dialog<
+        Target,
+        User,
+        Keyboard,
+        Attach,
+        ObjectMessage<Target, User, Keyboard, Attach>
+      >
     >,
   ]
   private store: (typeof this.initStore)[0]
@@ -49,7 +65,7 @@ export class Chat<
   private chatId: string = ""
 
   private requests: Partial<
-    Requests<Target, User, Keyboard, Message, _Dialog>
+    Requests<Target, User, Keyboard, Attach, Message, _Dialog>
   > = {}
 
   constructor(params: {
@@ -59,7 +75,13 @@ export class Chat<
   }) {
     this.loadChatById = params.loadChatById
     this.initStore = createStore<
-      Dialog<Target, User, Keyboard, ObjectMessage<Target, User, Keyboard>>
+      Dialog<
+        Target,
+        User,
+        Keyboard,
+        Attach,
+        ObjectMessage<Target, User, Keyboard, Attach>
+      >
     >({
       id: params.id,
       user: params.user,
@@ -76,7 +98,7 @@ export class Chat<
 
     this.chatId = params.id
     this.requests = REQUESTS as Partial<
-      Requests<Target, User, Keyboard, Message, _Dialog>
+      Requests<Target, User, Keyboard, Attach, Message, _Dialog>
     >
 
     this.getHistory = this.getHistory.bind(this)
@@ -140,7 +162,8 @@ export class Chat<
         Target,
         User,
         Keyboard,
-        ObjectMessage<Target, User, Keyboard>
+        Attach,
+        ObjectMessage<Target, User, Keyboard, Attach>
       >["message"]
     >,
     VALUE extends NonNullable<
@@ -148,7 +171,8 @@ export class Chat<
         Target,
         User,
         Keyboard,
-        ObjectMessage<Target, User, Keyboard>
+        Attach,
+        ObjectMessage<Target, User, Keyboard, Attach>
       >["message"]
     >[KEY],
   >(key: KEY, value: VALUE) {
@@ -164,7 +188,7 @@ export class Chat<
 
   /* Добавление сообщения */
   private initMessage(
-    _message: Omit<ClassMessageProps<Target, Keyboard>, "indexes">,
+    _message: Omit<ClassMessageProps<Target, Keyboard, Attach>, "indexes">,
     typePush: "push" | "unshift" = "unshift",
   ) {
     const groupMessagesCount = 20
@@ -173,7 +197,7 @@ export class Chat<
 
     const message = isMessage
       ? isMessage
-      : new ClassMessage<Target, User, Keyboard>({
+      : new ClassMessage<Target, User, Keyboard, Attach>({
           ..._message,
           ...{ chatId: this.chatId, indexes: [0, 0, 0] },
         })
@@ -314,7 +338,7 @@ export class Chat<
 
   /* Добавляет новое сообщение */
   public newMessage(
-    message: Omit<ClassMessageProps<Target, Keyboard>, "indexes">,
+    message: Omit<ClassMessageProps<Target, Keyboard, Attach>, "indexes">,
   ) {
     return this.initMessage(message, "unshift")
   }

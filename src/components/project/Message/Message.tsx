@@ -19,6 +19,9 @@ import {
 import { DynamicProps } from "solid-js/web"
 import { createVisibilityObserver } from "@solid-primitives/intersection-observer"
 import { textParserUrl } from "@minsize/utils"
+import { HOST_CDN } from "root/configs"
+import { getter } from "elum-state/solid"
+import { AUTH_TOKEN_ATOM } from "engine/state"
 
 interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   text?: string
@@ -32,7 +35,7 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   }
   attach?: {
     type: "photo" | "audio"
-    items: { name: string; data: string }[]
+    items: { id: string }[]
   }
 
   /** Отображает бейдж как прочитанный */
@@ -126,7 +129,12 @@ const Message: ComponentMessage = (props) => {
             >
               <For each={attach.items}>
                 {(item) => (
-                  <Image class={style.Message__image} src={item.data} />
+                  <Image
+                    class={style.Message__image}
+                    src={`https://${HOST_CDN}/v1/image/x1000/${
+                      item.id
+                    }?${getter(AUTH_TOKEN_ATOM)}`}
+                  />
                 )}
               </For>
             </span>

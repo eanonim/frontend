@@ -124,7 +124,7 @@ const NewMessage: Component<NewMessage> = (props) => {
                         }}
                       >
                         <SubTitle nowrap overflow>
-                          {chat.message?.message || chat.message?.attack_type}
+                          {chat.message?.message || chat.message?.attach_type}
                         </SubTitle>
                       </Flex>
                     </Gap>

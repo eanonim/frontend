@@ -16,6 +16,7 @@ const messageSend = async (options: Socket["message.send"]["request"]) => {
       ? { id: messageReply.id, message: messageReply.text || "UNDEFINED" }
       : undefined,
     time: new Date(),
+    attach: options.message.attach,
   })
 
   const { response, error } = await socketSend("message.send", options)

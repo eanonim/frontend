@@ -61,7 +61,7 @@ const Content: Component<Content> = (props) => {
     on(
       () => chat?.lastMessageId,
       (next, prev) => {
-        console.log({ next })
+        console.log({ next }, chat, Chats.get())
         if (next === prev && next !== undefined) return
         let isScroll = store.isBottom
         let isSmooth = (next || 0) - 1 === prev || (next || 0) + 1 === prev
@@ -216,10 +216,7 @@ const Content: Component<Content> = (props) => {
                       />
                     }
                   >
-                    <Match
-                      keyed
-                      when={message.target === "system" && chat.user}
-                    >
+                    <Match keyed when={message.type === "invite" && chat.user}>
                       {(user) => (
                         <Message.System>
                           <Plug size={"small"}>

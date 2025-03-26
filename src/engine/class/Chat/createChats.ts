@@ -1,6 +1,7 @@
 import { createStore, produce, SetStoreFunction } from "solid-js/store"
 import { Chat } from "../Chat/Chat"
 import {
+  DefaultAttach,
   DefaultKeyboard,
   DefaultTarget,
   DefaultUser,
@@ -10,15 +11,20 @@ import {
 } from "./types"
 
 export var REQUESTS: Partial<
-  Requests<DefaultTarget, DefaultUser, DefaultKeyboard>
+  Requests<DefaultTarget, DefaultUser, DefaultKeyboard, DefaultAttach>
 > = {}
 
 export const [dialogs, setDialogs] = createStore<
-  Record<string, Chat<DefaultTarget, DefaultUser, DefaultKeyboard>>
+  Record<
+    string,
+    Chat<DefaultTarget, DefaultUser, DefaultKeyboard, DefaultAttach>
+  >
 >({})
 
 export function setREQUESTS(
-  params: Partial<Requests<DefaultTarget, DefaultUser, DefaultKeyboard>>,
+  params: Partial<
+    Requests<DefaultTarget, DefaultUser, DefaultKeyboard, DefaultAttach>
+  >,
 ) {
   REQUESTS = params
 }
@@ -27,33 +33,36 @@ export class createChats<
   Target extends DefaultTarget,
   User extends DefaultUser,
   Keyboard extends DefaultKeyboard,
-  Message extends ObjectMessage<Target, User, Keyboard> = ObjectMessage<
-    Target,
-    User,
-    Keyboard
-  >,
-  _Dialog extends Dialog<Target, User, Keyboard, Message> = Dialog<
+  Attach extends DefaultAttach,
+  Message extends ObjectMessage<Target, User, Keyboard, Attach> = ObjectMessage<
     Target,
     User,
     Keyboard,
+    Attach
+  >,
+  _Dialog extends Dialog<Target, User, Keyboard, Attach, Message> = Dialog<
+    Target,
+    User,
+    Keyboard,
+    Attach,
     Message
   >,
 > {
   private requests: Partial<
-    Requests<Target, User, Keyboard, Message, _Dialog>
+    Requests<Target, User, Keyboard, Attach, Message, _Dialog>
   > = {}
   private _dialogs = dialogs as unknown as Record<
     string,
-    Chat<Target, User, Keyboard>
+    Chat<Target, User, Keyboard, Attach>
   >
   private _setDialogs = setDialogs as SetStoreFunction<
-    Record<string, Chat<Target, User, Keyboard>>
+    Record<string, Chat<Target, User, Keyboard, Attach>>
   >
 
   constructor({
     requests,
   }: {
-    requests: Requests<Target, User, Keyboard, Message, _Dialog>
+    requests: Requests<Target, User, Keyboard, Attach, Message, _Dialog>
   }) {
     REQUESTS = requests
     this.requests = requests
@@ -72,13 +81,14 @@ export class createChats<
         chat.newMessage(item.lastMessage)
       }
     } else {
-      const chat = new Chat<Target, User, Keyboard, Message, _Dialog>({
+      const chat = new Chat<Target, User, Keyboard, Attach, Message, _Dialog>({
         ...item,
         loadChatById: this.loadChatById,
       })
       if (item.lastMessage) {
         chat.newMessage(item.lastMessage)
       }
+
       this._setDialogs(
         produce((store) => {
           store[item.id] = chat
@@ -90,13 +100,18 @@ export class createChats<
 
   /* Загрузка чата */
   public async loadChatById(id: string) {
+    if (Object.values(this._dialogs[id]).length === 0) {
+      return this.loadChats()
+    }
+
     const request = this.requests["chat.getById"]
     if (!request) {
-      console.error('Нет функции для вызова "chat.getList"')
+      console.error('Нет функции для вызова "chat.getById"')
       return false
     }
     const { response, error } = await request({ id })
 
+    console.log({ id })
     if (response) {
       this.setDIALOG(response)
       return true
@@ -124,18 +139,19 @@ export class createChats<
 
   /* Получение историю диалогов */
   public get() {
-    return dialogs
+    return this._dialogs
   }
 
   /* Получение диалога по ID */
-  public getById(id: string): Chat<Target, User, Keyboard> | undefined {
-    // if (!this._dialogs[id]) {
-    //   this.loadChatById(id)
-    // }
+  public getById(id: string): Chat<Target, User, Keyboard, Attach> | undefined {
+    if (!this._dialogs[id]) {
+      this.setDIALOG({ id, user: {} as any } as Omit<_Dialog, "messages">)
+      this.loadChatById(id)
+    }
     return this._dialogs[id]
   }
 
   public getClass() {
-    return Chat<Target, User, Keyboard, Message, _Dialog>
+    return Chat<Target, User, Keyboard, Attach, Message, _Dialog>
   }
 }

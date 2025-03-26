@@ -124,10 +124,10 @@ export type Socket = {
       attach?: {
         type: "photo" | "audio"
         items: Array<{
-          name: string
-          data: string
+          id: string
         }>
       }
+      type: "default" | "invite"
       keyboard?: {
         key: "chat_invite_accept" | "chat_invite_reject"
         text: "accept" | "reject"
@@ -156,8 +156,7 @@ export type Socket = {
         attach?: {
           type: "photo" | "audio"
           items: Array<{
-            name: string
-            data: string
+            id: string
           }>
         }
       }
@@ -173,8 +172,7 @@ export type Socket = {
         attach?: {
           type: "photo" | "audio"
           items: Array<{
-            name: string
-            data: string
+            id: string
           }>
         }
       }
@@ -188,8 +186,7 @@ export type Socket = {
         attach?: {
           type: "photo" | "audio"
           items: Array<{
-            name: string
-            data: string
+            id: string
           }>
         }
         reply_id?: number
@@ -210,11 +207,11 @@ export type Socket = {
           text: "accept" | "reject"
           event: "chat.inviteAccept" | "chat.inviteReject"
         }[][]
+        type: "default" | "invite"
         attach?: {
           type: "photo" | "audio"
           items: Array<{
-            name: string
-            data: string
+            id: string
           }>
         }
         reply?: {
@@ -269,7 +266,7 @@ export type Socket = {
         id: number
         message?: string
         target: Target
-        attack_type?: "photo" | "audio"
+        attach_type?: "photo" | "audio"
         time: Date
         readed: boolean
       }
@@ -324,7 +321,7 @@ export type Socket = {
         id: number
         message?: string
         target: Target
-        attack_type?: "photo" | "audio"
+        attach_type?: "photo" | "audio"
         time: Date
         readed: boolean
       }
@@ -564,6 +561,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
           attach: message.attach,
           reply: message.reply,
           time: message.time,
+          type: message.type,
 
           keyboard: message.keyboard,
           isRead: message.readed,

@@ -67,7 +67,8 @@
 }
 
 .Message--only_attach .Message__text {
-  padding: 0px;
+  padding    : 0px;
+  line-height: 0px;
 }
 
 .Message--only_attach .Message__time {
@@ -213,9 +214,15 @@
   object-fit: cover;
 }
 
+
+
 .Message__images--1 .Message__image {
   border-radius: 12px 12px 0px 0px;
   aspect-ratio : 1 / 1;
+}
+
+.Message--only_attach .Message__images--1 .Message__image {
+  border-radius: 12px;
 }
 
 .Message__images--2 {

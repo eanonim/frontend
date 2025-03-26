@@ -1,4 +1,8 @@
 export { default as authTwa } from "./auth/twa"
+export {
+  default as imageUpload,
+  type Response as imageUploadResponse,
+} from "./image/upload"
 
 export { default as userGet } from "./user/get"
 export { default as userEmojiSet } from "./user/emojiSet"

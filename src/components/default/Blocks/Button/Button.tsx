@@ -51,6 +51,11 @@ export interface TypeButton extends HTMLAttributes<DynamicProps<"button">> {
   loading?: boolean
 
   type?: "default" | "icon"
+
+  /**
+   * Нужна ли анимации transition
+   */
+  anim?: boolean
 }
 
 type ComponentButton = Component<TypeButton> & {
@@ -67,6 +72,7 @@ const Button: ComponentButton = (props) => {
       mode: "fill",
       size: "medium",
       type: "default",
+      anim: true,
     },
     props,
   )
@@ -81,6 +87,7 @@ const Button: ComponentButton = (props) => {
     "platform",
     "loading",
     "type",
+    "anim",
   ])
 
   return (
@@ -96,6 +103,7 @@ const Button: ComponentButton = (props) => {
         [style[`Button__mode--${local.mode}`]]: !!local.mode,
         [style[`Button--stretched`]]: local.stretched,
         [style[`Button--loading`]]: local.loading,
+        [style[`Button--anim`]]: local.anim,
       }}
       {...others}
     >

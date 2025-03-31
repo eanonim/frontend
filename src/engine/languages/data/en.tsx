@@ -1,4 +1,5 @@
 export default {
+  premium: "Premium",
   search_for_an_interlocutor: "Search for an interlocutor",
   change_interests: "Change interests",
   chats: "Chats",

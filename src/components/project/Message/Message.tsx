@@ -26,6 +26,7 @@ import { AUTH_TOKEN_ATOM } from "engine/state"
 interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   text?: string
   time?: Date
+  chat_id?: string
 
   type: "in" | "out"
 
@@ -84,6 +85,7 @@ const Message: ComponentMessage = (props) => {
     "textEdit",
     "isEmoji",
     "onRead",
+    "chat_id",
   ])
 
   let ref: HTMLDivElement
@@ -132,12 +134,10 @@ const Message: ComponentMessage = (props) => {
               }}
             >
               <For each={attach.items}>
-                {(item) => (
+                {(image) => (
                   <Image
                     class={style.Message__image}
-                    src={`https://${HOST_CDN}/v1/image/x1000/${
-                      item.id
-                    }?${getter(AUTH_TOKEN_ATOM)}`}
+                    src={`https://${HOST_CDN}/v1/image/${local.chat_id}/${image.id}?size=100`}
                   />
                 )}
               </For>

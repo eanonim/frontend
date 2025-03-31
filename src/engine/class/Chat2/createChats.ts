@@ -3,7 +3,6 @@ import { Chat } from "./Chat"
 import {
   Chats,
   ClassChatProps,
-  ClassMessageProps,
   DefaultChatContent,
   DefaultContent,
   DefaultMetadata,
@@ -67,6 +66,31 @@ export class createChats<
     this.getClass = this.getClass.bind(this)
   }
 
+  private initChat(chat_id: string) {
+    const chat = this.chats[chat_id]
+    if (chat) {
+      return chat
+    } else {
+      const chat = new Chat<ChatContent, User, Content, Metadata>({
+        chat_id: chat_id,
+        content: {} as any,
+        // dialogs: [],
+        history: new ReactiveMap(),
+        typing: [],
+        participants: new ReactiveMap(),
+        loadChatById: this.loadChatById,
+      })
+
+      this.setChats(
+        produce((store) => {
+          store[chat_id] = chat
+          return store
+        }),
+      )
+      return chat
+    }
+  }
+
   private setDIALOG(
     item: RequestChat<
       ChatContent,
@@ -76,37 +100,21 @@ export class createChats<
       ClassChatProps<ChatContent, User, Content, Metadata>
     >,
   ) {
-    const chat = this.chats[item.chat_id]
-    if (chat) {
-      chat.setContent(item.content)
-      if (item.lastMessage) {
-        chat.initMessage(item.lastMessage, undefined, true)
-      }
-    } else {
-      const chat = new Chat<ChatContent, User, Content, Metadata>({
-        chat_id: item.chat_id,
-        content: item.content,
-        dialogs: [],
-        history: new ReactiveMap(),
-        typing: [],
-        participants: [],
-        loadChatById: this.loadChatById,
-      })
-      if (item.lastMessage) {
-        chat.initMessage(item.lastMessage, undefined, true)
-      }
+    const chat = this.initChat(item.chat_id)
 
-      this.setChats(
-        produce((store) => {
-          store[item.chat_id] = chat
-          return store
-        }),
-      )
+    chat.setContent(item.content)
+
+    if (item.lastMessage) {
+      const sender = chat.getUserById(item.lastMessage.user_id)
+      console.log({ last: item.lastMessage }, sender)
+      console.log({ sender })
+      const newMessage = { ...item.lastMessage, ...{ sender } }
+      chat.addMessage(newMessage)
     }
   }
 
   /* Загрузка чата */
-  public async loadChatById(id: string) {
+  public async loadChatById(chat_id: string) {
     if (Object.values(this.chats).length === 0) {
       return this.loadChats()
     }
@@ -116,7 +124,7 @@ export class createChats<
       console.error('Нет функции для вызова "chat.getById"')
       return false
     }
-    const { response, error } = await request({ id })
+    const { response, error } = await request({ chat_id })
 
     if (response) {
       this.setDIALOG(response)
@@ -150,17 +158,13 @@ export class createChats<
 
   /* Получение диалога по ID */
   public getById(
-    id: string,
+    chat_id: string,
   ): Chat<ChatContent, User, Content, Metadata> | undefined {
-    if (!this.chats[id]) {
-      this.setDIALOG({
-        chat_id: id,
-        content: {} as any,
-        lastMessage: {} as any,
-      })
-      this.loadChatById(id)
+    if (!this.chats[chat_id]) {
+      this.initChat(chat_id)
+      // this.loadChatById(chat_id)
     }
-    return this.chats[id]
+    return this.chats[chat_id]
   }
 
   public getClass() {

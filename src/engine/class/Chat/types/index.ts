@@ -54,6 +54,8 @@ export type ClassMessageProps<
   isRead?: boolean
   isDeleted?: boolean
 
+  isShow?: boolean
+
   indexes?: [number, number, number]
 }
 

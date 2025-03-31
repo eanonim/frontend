@@ -1,3 +1,4 @@
+import { batch } from "solid-js"
 import { dialogs, REQUESTS } from "./createChats"
 import { Message as ClassMessage } from "./Message/Message"
 
@@ -200,14 +201,14 @@ export class Chat<
       ? isMessage
       : new ClassMessage<Target, User, Keyboard, Attach>({
           ..._message,
-          ...{ chatId: this.chatId, indexes: [0, 0, 0] },
+          ...{ chatId: this.chatId },
         })
 
     this.setStore(
       produce((store) => {
-        if (!isMessage || !message.indexes) {
-          if (!onlyHistory || !message.indexes) {
-            const fullTime = getFullDate(message.time)
+        if (!isMessage || message.isShow) {
+          if (!onlyHistory) {
+            const fullTime = getFullDate(_message.time)
 
             let dialogIndex = 0
             let groupMessagesIndex = 0
@@ -265,7 +266,10 @@ export class Chat<
                   groupMessagesCount -
                   groupMessages[groupMessagesIndex].filter(Boolean).length -
                   1
-                groupMessages[groupMessagesIndex][messageIndex] = message
+
+                if (!onlyHistory) {
+                  groupMessages[groupMessagesIndex][messageIndex] = message
+                }
               } else {
                 groupMessagesIndex = groupMessages.findLastIndex(
                   (x, index) =>
@@ -284,7 +288,9 @@ export class Chat<
                   messageIndex += 1
                 }
 
-                groupMessages[groupMessagesIndex][messageIndex] = message
+                if (!onlyHistory) {
+                  groupMessages[groupMessagesIndex][messageIndex] = message
+                }
               }
             }
             message.setter("indexes", [
@@ -293,21 +299,24 @@ export class Chat<
               messageIndex,
             ])
           }
-          console.log("ADD New Message")
-          store.messages.history[message.id] = message
-        } else {
-          message.setter("attach", _message.attach)
-          message.setter("isDeleted", _message.isDeleted)
-          message.setter("isEdit", _message.isEdit)
-          message.setter("isLoading", _message.isLoading)
-          message.setter("isOnlyEmoji", _message.isOnlyEmoji)
-          message.setter("isRead", _message.isRead)
-          message.setter("keyboard", _message.keyboard)
-          message.setter("replyId", _message.replyId)
-          message.setter("target", _message.target)
-          message.setter("text", _message.text)
-          message.setter("time", _message.time)
         }
+
+        message.setter("attach", _message.attach)
+        message.setter("isDeleted", _message.isDeleted)
+        message.setter("isEdit", _message.isEdit)
+        message.setter("isLoading", _message.isLoading)
+        message.setter("isOnlyEmoji", _message.isOnlyEmoji)
+        message.setter("isRead", _message.isRead)
+        message.setter("keyboard", _message.keyboard)
+        message.setter("replyId", _message.replyId)
+        message.setter("target", _message.target)
+        message.setter("text", _message.text)
+        message.setter("time", _message.time)
+        message.setter("type", _message.type)
+
+        message.setter("isShow", onlyHistory)
+        store.messages.history[message.id] = message
+
         if (
           message.isRead &&
           message.id > (store.messages.lastReadMessageId || 0)
@@ -354,6 +363,26 @@ export class Chat<
     if (!this.messages.dialogs.length) {
       this.uploadChatHistory()
     }
+
+    // console.time("start")
+    // const chat: Record<
+    //   string,
+    //   ObjectMessage<Target, User, Keyboard, Attach>[]
+    // > = {}
+
+    // const history = Object.values(this.messages.history).sort(
+    //   (a, b) => b.id - a.id,
+    // )
+
+    // for (const message of history) {
+    //   const fullTime = getFullDate(message.time)
+
+    //   if (!chat[fullTime]) chat[fullTime] = []
+
+    //   chat[fullTime].push(message)
+    // }
+    // console.timeEnd("start")
+    // console.log({ chat: Object.values(chat) })
 
     return this.messages.dialogs
   }
@@ -413,9 +442,12 @@ export class Chat<
 
       if (response) {
         this.setStore("messages", "lastOffset", offset + 200)
-        for (const message of response.reverse()) {
-          this.initMessage(message, "push")
-        }
+
+        batch(() => {
+          for (const message of response.reverse()) {
+            this.initMessage(message, "push")
+          }
+        })
         return true
       }
     } finally {

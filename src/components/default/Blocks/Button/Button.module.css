@@ -99,15 +99,18 @@
   transition: 0.3;
 }
 
-.Button__title {
+.Button--anim .Button__title,
+.Button--anim .Button__subtitle {
   transition: 0.3s ease-in-out;
-  color     : var(--button_title);
+}
+
+.Button__title {
+  color: var(--button_title);
 }
 
 .Button__subtitle {
-  transition: 0.3s ease-in-out;
-  color     : var(--button_title);
-  opacity   : 0.8;
+  color  : var(--button_title);
+  opacity: 0.8;
 }
 
 

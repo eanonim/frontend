@@ -19,10 +19,9 @@ import {
   on,
   For,
 } from "solid-js"
-import { pages, useParams } from "router"
+import { modals, pages, pushModal, useParams } from "router"
 import {
   imageUpload,
-  imageUploadResponse,
   messageEdit,
   messageSend,
   messageTyping,
@@ -31,10 +30,11 @@ import { leading, throttle } from "@solid-primitives/scheduled"
 import { HOST_CDN, messageMaxSize } from "root/configs"
 import loc from "engine/languages"
 import { Attach, Chats } from "engine/class/useChat"
-import { createImage } from "engine"
-import { AUTH_TOKEN_ATOM } from "engine/state"
+import { createImage, isPremium } from "engine"
+import { AUTH_TOKEN_ATOM, USER_ATOM } from "engine/state"
 import { getter } from "elum-state/solid"
 import { unlink } from "@minsize/utils"
+import { useAtom } from "engine/modules/smart-data"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -44,6 +44,7 @@ const Footer: Component<Footer> = (props) => {
   const [lang] = loc()
   const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
 
+  const [user] = useAtom(USER_ATOM)
   const chat = Chats.getById(params().dialog)
 
   let ref: HTMLTextAreaElement
@@ -109,7 +110,7 @@ const Footer: Component<Footer> = (props) => {
             last_index = messageText.length
           }
         }
-      } else {
+      } else if (chat?.message?.attach) {
         messageSend({
           dialog: params().dialog,
           message: {
@@ -156,6 +157,11 @@ const Footer: Component<Footer> = (props) => {
   }
 
   const addImage = async () => {
+    if (!isPremium(user.premium)) {
+      pushModal({ modalId: modals.MODAL_PREMIUM })
+      return
+    }
+
     const items: Attach = unlink(
       chat?.message?.attach || {
         type: "photo",
@@ -177,6 +183,7 @@ const Footer: Component<Footer> = (props) => {
         if (image) {
           const form = new FormData()
           form.append("data", image)
+          form.append("group", chat?.id || "")
           const { response, error } = await imageUpload(form)
           if (response) {
             items.type = "photo"
@@ -203,7 +210,7 @@ const Footer: Component<Footer> = (props) => {
     if (index !== -1) {
       items.items.splice(index, 1)
     }
-    console.log({ items })
+
     chat?.setMessage("attach", items)
   }
 
@@ -285,9 +292,7 @@ const Footer: Component<Footer> = (props) => {
                   onClick={() => deleteImage(image.id)}
                 >
                   <Image
-                    src={`https://${HOST_CDN}/v1/image/x100/${
-                      image.id
-                    }?${getter(AUTH_TOKEN_ATOM)}`}
+                    src={`https://${HOST_CDN}/v1/image/${chat?.id}/${image.id}?size=100`}
                   />
                 </Image.Preview>
               )}

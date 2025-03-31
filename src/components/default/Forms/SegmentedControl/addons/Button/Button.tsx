@@ -42,6 +42,7 @@ const Button: ComponentButton = (props) => {
     <ElButton
       data-key={local.key}
       class={style.Button}
+      anim={!!context?.getAnimation()}
       classList={{
         [style[`Button--selected`]]: context?.getSelected(local.key),
 

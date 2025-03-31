@@ -87,6 +87,7 @@ const SegmentedControl: ComponentSegmentedControl = (props) => {
       value={{
         getSelected: getSelected,
         setSelected: setSelected,
+        getAnimation: () => !!store.anim,
       }}
     >
       <span class={style.SegmentedControl}>

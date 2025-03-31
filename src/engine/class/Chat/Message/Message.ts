@@ -145,6 +145,9 @@ export class Message<
   get type() {
     return this.initStore[0].type
   }
+  get isShow() {
+    return this.initStore[0].isShow
+  }
   get text() {
     return this.initStore[0].text
   }

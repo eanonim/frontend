@@ -176,6 +176,7 @@ const Content: Component<Content> = (props) => {
                   <Switch
                     fallback={
                       <Message
+                        chat_id={chat.id}
                         data-index={index()}
                         data-message_id={message.id}
                         onTouchStart={() =>

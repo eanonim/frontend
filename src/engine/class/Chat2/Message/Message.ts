@@ -12,16 +12,17 @@ import {
   Requests,
 } from "../types"
 import { createStore, produce, SetStoreFunction, Store } from "solid-js/store"
+import { ReactiveMap } from "@solid-primitives/map"
 
 export class Message<
   ChatContent extends DefaultChatContent,
   User extends DefaultUser,
   Content extends DefaultContent,
   Metadata extends DefaultMetadata<User>,
-  PARAMS extends ClassMessageProps<User, Content, Metadata> & {
+  PARAMS extends ClassMessageProps<ChatContent, User, Content, Metadata> & {
     chat_id: string
     indexes: [number, number, number]
-  } = ClassMessageProps<User, Content, Metadata> & {
+  } = ClassMessageProps<ChatContent, User, Content, Metadata> & {
     chat_id: string
     indexes: [number, number, number]
   },
@@ -116,17 +117,17 @@ export class Message<
     )
   }
 
-  get recipient() {
-    return this.initStore[0].recipient
-  }
-  public setRecipient(recipient: PARAMS["recipient"]) {
-    this.initStore[1](
-      produce((store) => {
-        Object.assign(store.recipient, recipient)
-        return store
-      }),
-    )
-  }
+  // get recipient() {
+  //   return this.initStore[0].recipient
+  // }
+  // public setRecipient(recipient: PARAMS["recipient"]) {
+  //   this.initStore[1](
+  //     produce((store) => {
+  //       Object.assign(store.recipient, recipient)
+  //       return store
+  //     }),
+  //   )
+  // }
 
   get sender() {
     return this.initStore[0].sender
@@ -152,23 +153,28 @@ export class Message<
     )
   }
 
-  /* Проверка прочитал ли сообщение данные пользователь */
+  /* Проверка прочитал ли сообщение данный пользователь */
   public getReadByUserId(user_id: User["user_id"]) {
-    return !!this.initStore[0].metadata.read.find((x) => x.user_id === user_id)
+    return !!this.initStore[0].metadata.read.get(user_id)
   }
 
   /* Добавление пользователя в прочитанные сообщения */
   public setRead(user_id: User["user_id"]) {
+    if (this.sender.user_id === user_id) {
+      // Владелец сообщения не может прочитать сам своё сообщение
+      return false
+    }
+
     this.initStore[1](
       produce((store) => {
         // Если read не существует, создаём
-        if (!store.metadata.read) store.metadata.read = []
+        if (!store.metadata.read) store.metadata.read = new ReactiveMap()
 
-        if (!store.metadata.read.find((x) => x.user_id === user_id)) {
+        if (!store.metadata.read.has(user_id)) {
           // Проверяем на существование пользователя
           const findUser = this.users[user_id]
           if (findUser) {
-            store.metadata.read.push(findUser)
+            store.metadata.read.set(findUser.user_id, findUser)
 
             for (var i = this.message_id - 1; i > 0; i++) {
               const message = this.chats[this.chat_id].history.get(i)
@@ -186,6 +192,7 @@ export class Message<
         return store
       }),
     )
+    return true
   }
 
   private async requestDelete() {

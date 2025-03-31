@@ -118,12 +118,12 @@ export class Chat<
   get chat_id() {
     return this.initStore[0].chat_id
   }
-  get dialogs() {
-    if (!this.initStore[0].dialogs.length) {
-      this.uploadChatHistory()
-    }
-    return this.initStore[0].dialogs
-  }
+  // get dialogs() {
+  //   if (!this.initStore[0].dialogs.length) {
+  //     this.uploadChatHistory()
+  //   }
+  //   return this.initStore[0].dialogs
+  // }
   get history() {
     return this.initStore[0].history
   }
@@ -155,19 +155,32 @@ export class Chat<
     )
   }
 
+  /* Получение последнего сообщения */
+  public getLastMessage() {
+    return this.history.get(this.last_message_id || 0)
+  }
+
   /* Добавление пользователя в диалог */
   public addParticipant(user: User) {
     this.initStore[1](
       produce((store) => {
         // Проверяем на существование пользователя, если его нет добавляем
-        if (!store.participants.find((x) => x.user_id === user.user_id)) {
+        if (!store.participants.has(user.user_id)) {
           // Проверяем на существование пользователя в обжей базе, если его нет добавляем
           const findUser = this.users[user.user_id]
           if (!findUser) {
-            this.users[user.user_id] = user
+            this.setUsers(
+              produce((users) => {
+                users[user.user_id] = user
+                return users
+              }),
+            )
           }
 
-          store.participants.push(this.users[user.user_id])
+          store.participants.set(
+            this.users[user.user_id].user_id,
+            this.users[user.user_id],
+          )
         }
         return store
       }),
@@ -176,7 +189,7 @@ export class Chat<
 
   /* Установка статуса печати */
   public setTyping(user_id: User["user_id"]) {
-    const user = this.participants.find((x) => x.user_id === user_id)
+    const user = this.participants.get(user_id)
     if (!user) return false
 
     clearTimeout(this.timerTyping[user_id])
@@ -210,134 +223,34 @@ export class Chat<
   }
 
   /* Добавляет новое сообщение */
-  public newMessage(
+  public addMessage(
     message: ClassMessageProps<ChatContent, User, Content, Metadata>,
   ) {
-    return this.initMessage(message, "unshift")
-  }
+    const isMessage = this.getMessageById(message.message_id)
 
-  /* Поиск сообщения по ID */
-  public getMessageById(message_id?: Message["message_id"]) {
-    if (!message_id) return undefined
-
-    return this.history.get(message_id)
-  }
-
-  /* Инициализация сообщения */
-  public initMessage(
-    _message: ClassMessageProps<ChatContent, User, Content, Metadata>,
-    typePush: "push" | "unshift" = "unshift",
-    onlyHistory = false,
-  ) {
-    const groupMessagesCount = 20
-
-    const isMessage = this.getMessageById(_message.message_id)
-
-    const message = isMessage
+    const msg = isMessage
       ? isMessage
       : new ClassMessage<ChatContent, User, Content, Metadata>({
-          ..._message,
+          ...message,
           ...{ chat_id: this.chat_id, indexes: [0, 0, 0] },
         })
 
     this.initStore[1](
       produce((store) => {
-        if (!isMessage || !message.indexes) {
-          if (!onlyHistory || !message.indexes) {
-            const fullTime = getFullDate(message.content.timestamp)
+        console.log({ f: message })
+        store.history.set(msg.message_id, msg)
 
-            let dialogIndex = 0
-            let groupMessagesIndex = 0
-            let messageIndex = 0
-
-            const countEmpty = 20 // Количество пустых ячеек
-
-            // добавляем группу сообщения за сегодняшний день
-            const fullTimeToday = getFullDate(new Date())
-            dialogIndex = store.dialogs.findIndex((x) => x[0] === fullTimeToday)
-            if (dialogIndex === -1) {
-              dialogIndex = store.dialogs.length
-              store.dialogs.push([
-                fullTimeToday,
-                Array.from({ length: countEmpty }, () => []),
-              ])
-            }
-
-            // Забиваем Array, для следующих сообщений, что бы Index`ы работали нормально
-            dialogIndex = store.dialogs.findIndex((x) => x[0] === fullTime)
-            if (dialogIndex === -1) {
-              dialogIndex = store.dialogs.length
-              store.dialogs.push([
-                fullTime,
-                Array.from({ length: countEmpty }, () => []),
-              ])
-            }
-
-            let groupMessages = store.dialogs[dialogIndex][1]
-
-            if (groupMessages.length === 0) {
-              for (let i = 0; i < countEmpty; i++) {
-                store.dialogs[dialogIndex][1][i] = []
-              }
-            }
-
-            if (dialogIndex !== -1) {
-              if (typePush === "push") {
-                groupMessagesIndex = groupMessages.findLastIndex(
-                  (group, index) =>
-                    index >= countEmpty &&
-                    group.filter(Boolean).length < groupMessagesCount,
-                )
-
-                if (groupMessagesIndex === -1) {
-                  groupMessagesIndex = groupMessages.length
-                  groupMessages[groupMessagesIndex] = []
-                }
-
-                messageIndex =
-                  groupMessagesCount -
-                  groupMessages[groupMessagesIndex].filter(Boolean).length -
-                  1
-
-                groupMessages[groupMessagesIndex][messageIndex] = message
-              } else {
-                groupMessagesIndex = groupMessages.findLastIndex(
-                  (x, index) =>
-                    index < countEmpty &&
-                    x.filter(Boolean).length < groupMessagesCount,
-                )
-
-                if (groupMessagesIndex === -1) {
-                  groupMessagesIndex = 0
-                }
-
-                messageIndex =
-                  groupMessages[groupMessagesIndex].filter(Boolean).length
-
-                if (!!groupMessages[groupMessagesIndex][messageIndex]) {
-                  messageIndex += 1
-                }
-
-                groupMessages[groupMessagesIndex][messageIndex] = message
-              }
-            }
-            message.setIndexes([dialogIndex, groupMessagesIndex, messageIndex])
-          }
-
-          store.history.set(message.message_id, message)
-        }
-
-        this.addParticipant(_message.sender)
+        this.addParticipant(message.sender)
         // this.addParticipant(_message.recipient)
 
         // const recipientUser = this.getUserById(_message.recipient.user_id)
         // message.setRecipient(recipientUser)
-        const senderUser = this.getUserById(_message.sender.user_id)
-        message.setSender(senderUser)
+        const senderUser = this.getUserById(message.sender.user_id)
+        msg.setSender(senderUser)
 
-        message.setContent(_message.content)
-        message.setMessageId(_message.message_id)
-        message.setMetadata(_message.metadata)
+        msg.setContent(message.content)
+        msg.setMessageId(message.message_id)
+        msg.setMetadata(message.metadata)
 
         if ((store.last_message_id || 0) < message.message_id) {
           store.last_message_id = message.message_id
@@ -347,20 +260,14 @@ export class Chat<
       }),
     )
 
-    // setDialogs(
-    //   this.store.id,
-    //   produce((chat) => {
-    //     Object.assign(chat, this.store)
-    //     return chat
-    //   }),
-    // )
-
-    // if (_message.reply) {
-    //   this.initMessage(_message.reply, undefined, true)
-    //   message.setter("replyId", _message.reply.id)
-    // }
-
     return message
+  }
+
+  /* Поиск сообщения по ID */
+  public getMessageById(message_id?: Message["message_id"]) {
+    if (!message_id) return undefined
+
+    return this.history.get(message_id)
   }
 
   /* Загрузка истории чата */
@@ -391,7 +298,6 @@ export class Chat<
         chat_id: this.chat_id,
         offset: offset,
         count: 200,
-        chat: this.chats[this.chat_id],
       })
 
       if (!error && ((response || []).length === 0 || !response)) {
@@ -410,8 +316,11 @@ export class Chat<
             return store
           }),
         )
-        for (const message of response.reverse()) {
-          this.initMessage(message, "push")
+        for (const message of response) {
+          const sender = this.getUserById(message.user_id)
+          console.log({ sender })
+          const newMessage = { ...message, ...{ sender } }
+          this.newMessage(newMessage)
         }
         return true
       }

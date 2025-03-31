@@ -2,6 +2,8 @@ import { ReactiveMap } from "@solid-primitives/map"
 import { Chat } from "../Chat"
 import { Message as ClassMessage } from "../Message/Message"
 
+type Omits<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
 export type Users<T extends DefaultUser = DefaultUser> = Record<string, T>
 export type Chats<
   ChatContent extends DefaultChatContent,
@@ -19,7 +21,7 @@ export type Chats<
 export type DefaultChatContent = Record<string, unknown>
 
 export type DefaultMetadata<User extends DefaultUser> = {
-  read: User[]
+  read: ReactiveMap<User["user_id"], User>
   delete: boolean
   edit: boolean
 }
@@ -70,17 +72,16 @@ export type ClassChatProps<
 > = {
   chat_id: string
 
-  participants: User[]
+  /* Пользователи чата */
+  participants: ReactiveMap<User["user_id"], User>
 
   /* Данные */
   content: ChatContent
 
-  /* dialogs нужен для отображения  */
-  dialogs: [string, ObjectMessage<ChatContent, User, Content, Metadata>[][]][]
-  /* dialogs нужен для поиска сообщения по ID  */
+  /* История сообщений  */
   history: ReactiveMap<Message["message_id"], Message>
 
-  new_message?: Message
+  new_message?: ClassMessageProps<ChatContent, User, Content, Metadata>
 
   /* Ссылки на пользователей которые печатают */
   typing: User[]
@@ -112,36 +113,44 @@ export type RequestChat<
 > = {
   chat_id: Chat["chat_id"]
   content: Chat["content"]
-  lastMessage?: Omit<
-    ClassMessageProps<ChatContent, User, Content, Metadata>,
-    "sender"
-  > & {
-    user_id: User["user_id"]
-  }
+  lastMessage?: RequestMessageList<ChatContent, User, Content, Metadata>[0]
 }
+
+/*
+
+reply?: Omit<
+    Omit<
+      Omit<ClassMessageProps<ChatContent, User, Content, Metadata>, "chat_id">,
+      "sender"
+    >,
+    "metadata"
+  >
+
+  Omit<
+  Omit<
+    Omit<ClassMessageProps<ChatContent, User, Content, Metadata>, "reply">,
+    "sender"
+  >,
+  "metadata"
+>
+*/
 
 export type RequestMessageList<
   ChatContent extends DefaultChatContent,
   User extends DefaultUser,
   Content extends DefaultContent,
   Metadata extends DefaultMetadata<User>,
-> = (Omit<
-  Omit<
-    Omit<ClassMessageProps<ChatContent, User, Content, Metadata>, "reply">,
-    "sender"
-  >,
-  "metadata"
+> = (Omits<
+  ClassMessageProps<ChatContent, User, Content, Metadata>,
+  "reply" | "sender" | "metadata"
 > & {
   user_id: User["user_id"]
   metadata: Omit<Metadata, "read"> & {
     read: User["user_id"][]
   }
-  reply?: Omit<
-    Omit<
-      Omit<ClassMessageProps<ChatContent, User, Content, Metadata>, "chat_id">,
-      "sender"
-    >,
-    "metadata"
+  reply?: Omits<
+    ClassMessageProps<ChatContent, User, Content, Metadata>,
+    "sender" | "metadata"
   > & {
     user_id: User["user_id"]
     metadata: Omit<Metadata, "read"> & {
@@ -163,31 +172,15 @@ export type Requests<
 > = {
   "chat.getById": ({
     chat_id,
-    chat,
   }: {
     chat_id: string
-    chat: Chat<
-      ChatContent,
-      User,
-      Content,
-      Metadata,
-      ObjectMessage<ChatContent, User, Content, Metadata>
-    >
   }) => Promise<Result<RequestChat<ChatContent, User, Content, Metadata>>>
   "chat.getList": ({
     count,
     offset,
-    chat,
   }: {
     count: number
     offset: number
-    chat: Chat<
-      ChatContent,
-      User,
-      Content,
-      Metadata,
-      ObjectMessage<ChatContent, User, Content, Metadata>
-    >
   }) => Promise<Result<RequestChat<ChatContent, User, Content, Metadata>[]>>
   "message.delete": ({
     chat_id,
@@ -209,18 +202,10 @@ export type Requests<
     chat_id,
     count,
     offset,
-    chat,
   }: {
     chat_id: string
     count: number
     offset: number
-    chat: Chat<
-      ChatContent,
-      User,
-      Content,
-      Metadata,
-      ObjectMessage<ChatContent, User, Content, Metadata>
-    >
   }) => Promise<
     Result<RequestMessageList<ChatContent, User, Content, Metadata>>
   >

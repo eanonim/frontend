@@ -1,7 +1,7 @@
 import { getLocale, ISOLanguage } from "engine/languages"
 
 const timeAgo = (timestamp: number): string => {
-  if (!timestamp) return "только что"
+  if (!timestamp) return "just now"
 
   const lang = getLocale()
   const date = new Date(timestamp)

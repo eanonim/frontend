@@ -101,7 +101,9 @@ const Gallery: Component<Gallery> = (props) => {
       </For>
 
       <Show when={store.isOpen}>
-        <Portal mount={document.getElementById(panels.CHAT)}>
+        <Portal
+          mount={document.getElementById(panels.CHAT) as Node | undefined}
+        >
           <span
             class={style.Gallery__open}
             classList={{

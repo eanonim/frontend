@@ -7,6 +7,7 @@ export {
 export { default as userGet } from "./user/get"
 export { default as userEmojiSet } from "./user/emojiSet"
 export { default as userNameSet } from "./user/nameSet"
+export { default as userAvatarSet } from "./user/avatarSet"
 
 /* store */
 export { default as storeSet } from "./store/set"

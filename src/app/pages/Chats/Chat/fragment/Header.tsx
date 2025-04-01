@@ -13,6 +13,7 @@ import { chatInviteMake } from "engine/api"
 import { Chat } from "engine/class"
 import { Chats } from "engine/class/useChat"
 import loc from "engine/languages"
+import { HOST_CDN } from "root/configs"
 import { pages, useParams } from "router"
 
 import { type JSX, type Component, Show } from "solid-js"
@@ -88,7 +89,10 @@ const Header: Component<Header> = (props) => {
           </Cell.Content>
         </Cell.Container>
         <Cell.Before>
-          <Avatar src={"chat.photo"} size={"36px"} />
+          <Avatar
+            src={`https://${HOST_CDN}/v1/image/user/${chat?.user.image}?size=100`}
+            size={"36px"}
+          />
         </Cell.Before>
       </Cell>
       <Separator />

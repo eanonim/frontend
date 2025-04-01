@@ -2,6 +2,7 @@ import { AvatarProfile } from "components"
 import { useAtom } from "engine/modules/smart-data"
 
 import { USER_ATOM } from "engine/state"
+import { HOST_CDN } from "root/configs"
 
 import { type JSX, type Component } from "solid-js"
 
@@ -12,7 +13,7 @@ const Content: Component<Content> = (props) => {
 
   return (
     <AvatarProfile
-      src={user.image}
+      src={`https://${HOST_CDN}/v1/image/user/${user.image}?size=1000`}
       id={user.id}
       emoji={user.emoji}
       first_name={user.first_name}

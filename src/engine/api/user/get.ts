@@ -10,8 +10,6 @@ const userGet = async (options: Socket["user.get"]["request"]) => {
     return { response, error }
   }
 
-  response.image = "https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg"
-
   setter(USER_ATOM, response)
   setter([USER_ATOM, "edit"], response)
   return { response, error }

@@ -34,3 +34,4 @@ export { default as IconCoins } from "./Coins.svg"
 export { default as IconBrush } from "./Brush.svg"
 
 export { default as IconTelegramStar } from "./TelegramStar.svg"
+export { default as IconTON } from "./TON.svg"

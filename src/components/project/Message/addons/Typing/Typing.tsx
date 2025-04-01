@@ -7,7 +7,7 @@ interface Typing extends JSX.HTMLAttributes<HTMLElement> {
 
 const Typing: Component<Typing> = (props) => {
   const merged = mergeProps(
-    { color: "var(--accent_color)", size: 16, text: "печатает" },
+    { color: "var(--accent_color)", size: 16, text: "prints" },
     props,
   )
   const [local, others] = splitProps(merged, ["color", "size", "text"])

@@ -1,4 +1,11 @@
-import { Cell, Group, HTMLAttributes, IconCheck, Title } from "components"
+import {
+  BadgePremium,
+  Cell,
+  Group,
+  HTMLAttributes,
+  IconCheck,
+  Title,
+} from "components"
 
 import {
   type JSX,
@@ -7,6 +14,7 @@ import {
   Switch,
   Match,
   splitProps,
+  Show,
 } from "solid-js"
 import { SETTINGS_ATOM, STORE_THEME_COLOR_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
@@ -72,6 +80,7 @@ const Content: Component<Content> = (props) => {
                   onClick={() => handlerSetColor(theme)}
                   when={settings.themeColor === theme}
                   locale={lang(`themeColor.${theme}` as any)}
+                  isPremium={themeColor[theme]?.is_premium}
                 />
               )}
             </For>
@@ -85,9 +94,11 @@ const Content: Component<Content> = (props) => {
 interface Element extends HTMLAttributes<DynamicProps<"article">> {
   when: boolean
   locale?: string
+  isPremium?: boolean
 }
 const Element: Component<Element> = (props) => {
-  const [local, others] = splitProps(props, ["when", "locale"])
+  const [lang] = loc()
+  const [local, others] = splitProps(props, ["when", "locale", "isPremium"])
   return (
     <Cell separator {...props}>
       <Cell.Before>
@@ -111,6 +122,11 @@ const Element: Component<Element> = (props) => {
         <Cell.Content>
           <Title>{local.locale}</Title>
         </Cell.Content>
+        <Show when={local.isPremium}>
+          <Cell.After>
+            <BadgePremium text={lang("premium")} />
+          </Cell.After>
+        </Show>
       </Cell.Container>
     </Cell>
   )

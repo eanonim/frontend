@@ -4,7 +4,7 @@ import { getLoc, getLocale, ISOLanguage } from "engine/languages"
 const timeAgoOnlyDate = (timestamp: number) => {
   const lang = getLocale()
 
-  if (!timestamp) return "только что"
+  if (!timestamp) return "just now"
   const date = new Date(timestamp)
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
 

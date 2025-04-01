@@ -26,6 +26,7 @@ import loc from "engine/languages"
 import { timeAgo } from "engine"
 import { Chat, Chats } from "engine/class/useChat"
 import { createStore } from "solid-js/store"
+import { HOST_CDN } from "root/configs"
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const textProps: TextProps = {
@@ -90,7 +91,10 @@ const Content: Component<Content> = (props) => {
           >
             <Cell separator={getHistory().length > index() + 1}>
               <Cell.Before>
-                <Avatar src={"chat.photo"} size={"48px"} />
+                <Avatar
+                  src={`https://${HOST_CDN}/v1/image/user/${chat?.user.image}?size=100`}
+                  size={"48px"}
+                />
               </Cell.Before>
               <Cell.Container>
                 <Cell.Content>

@@ -65,6 +65,14 @@ export type Socket = {
       result: boolean
     }
   }
+  "user.avatarSet": {
+    request: {
+      id: string
+    }
+    response: {
+      result: boolean
+    }
+  }
   "user.emojiSet": {
     request: {
       emoji: number

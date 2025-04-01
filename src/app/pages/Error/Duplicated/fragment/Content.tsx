@@ -5,6 +5,7 @@ import { version } from "root/package.json"
 
 import { type JSX, type Component } from "solid-js"
 import { pages, replacePage } from "router"
+import loc from "engine/languages"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -21,6 +22,7 @@ const textProps: TextProps = {
 }
 
 const Content: Component<Content> = (props) => {
+  const [lang] = loc()
   const handlerReconnect = () => {
     replacePage({ pageId: pages.STARTUP })
   }
@@ -37,7 +39,7 @@ const Content: Component<Content> = (props) => {
           <Button.Group.Container>
             <Button onClick={handlerReconnect} stretched size={"large"}>
               <Button.Container>
-                <Title>Переподключиться</Title>
+                <Title>{lang("reconnect")}</Title>
               </Button.Container>
             </Button>
           </Button.Group.Container>

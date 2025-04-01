@@ -1,5 +1,10 @@
+import Link from "@component/default/Blocks/Link/Link"
+import { modals, pushModal } from "router"
+
 export default {
   premium: "Premium",
+  premium_subtitle:
+    "More freedom and dozens of exclusive features with a subscription.",
   search_for_an_interlocutor: "Search for an interlocutor",
   change_interests: "Change interests",
   chats: "Chats",
@@ -69,6 +74,32 @@ export default {
     anime: "Anime",
     lgbt: "LGBT",
   },
+  system: {
+    invite: {
+      title: (first_name: string) =>
+        `${first_name} wants to keep correspondence with you`,
+      subtitle:
+        "If you agree, it will be easier for you to find and continue communication in the future.",
+    },
+  },
+  in_response: "In response",
+  editing: "Editing",
+  reconnect: "Reconnect",
+  XTR: "Telegram Stars",
+  TON: "TON",
+  set_color: "Set color",
+  pay: "Pay",
+  active_until: (time: string) => `Active until: ${time}`,
+  per_year: "per year",
+  month: "month",
+  by_subscription_only: () => (
+    <>
+      Только по{" "}
+      <Link onClick={() => pushModal({ modalId: modals.MODAL_PREMIUM })}>
+        подписке
+      </Link>
+    </>
+  ),
   prints: "prints",
   answer: "Answer",
   copy: "Copy",

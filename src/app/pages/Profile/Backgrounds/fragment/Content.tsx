@@ -24,6 +24,7 @@ import { pages, pushPage } from "router"
 import { SETTINGS_ATOM, STORE_BACKGROUND_ATOM, USER_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
 import { isPremium } from "engine"
+import loc from "engine/languages"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -44,6 +45,7 @@ const textProps: TextProps = {
 }
 
 const Content: Component<Content> = (props) => {
+  const [lang] = loc()
   const [storeBackground] = useAtom(STORE_BACKGROUND_ATOM)
   const [settings] = useAtom(SETTINGS_ATOM)
   const [user] = useAtom(USER_ATOM)
@@ -64,7 +66,7 @@ const Content: Component<Content> = (props) => {
             <Cell onClick={() => handlerOpen(0)}>
               <Cell.Container>
                 <Cell.Content>
-                  <Title color={"accent"}>Задать цвет</Title>
+                  <Title color={"accent"}>{lang("set_color")}</Title>
                 </Cell.Content>
               </Cell.Container>
             </Cell>
@@ -121,7 +123,7 @@ const Content: Component<Content> = (props) => {
                           <Background.Overlay>
                             <Flex height={"100%"}>
                               <SubTitle align={"center"}>
-                                Только по <Link>подписке</Link>
+                                {lang("by_subscription_only")}
                               </SubTitle>
                             </Flex>
                           </Background.Overlay>

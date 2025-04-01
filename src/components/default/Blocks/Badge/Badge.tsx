@@ -16,7 +16,7 @@ interface Badge extends HTMLAttributes<DynamicProps<"span">> {
   /**
    * Определяет внешний вид значка.
    */
-  appearance?: "accent" | "green" | "red" | "accentReverse"
+  appearance?: "accent" | "green" | "red" | "accentReverse" | "secondary"
   /**
    * Определяет стиль отображения значка.
    *

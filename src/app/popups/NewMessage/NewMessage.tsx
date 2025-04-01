@@ -21,6 +21,8 @@ import { useAtom } from "engine/modules/smart-data"
 import { CHAT_LIST_ATOM } from "engine/state"
 import { timeAgo } from "engine"
 import { clamp } from "@minsize/utils"
+import { HOST_CDN } from "root/configs"
+import { Chats } from "engine/class/useChat"
 
 interface NewMessage extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -46,8 +48,7 @@ const NewMessage: Component<NewMessage> = (props) => {
     popoutId: props.nav,
   })
 
-  const [chatList] = useAtom(CHAT_LIST_ATOM)
-  const getDialog = () => chatList.history[params().dialog || ""]
+  const chat = Chats.getById(params().dialog)
 
   const handleClose = () => {
     backPage(1)
@@ -83,12 +84,15 @@ const NewMessage: Component<NewMessage> = (props) => {
   return (
     <Show keyed when={params().message}>
       {(message) => (
-        <Show keyed when={getDialog()}>
+        <Show keyed when={chat}>
           {(chat) => (
             <Snackbar onClose={handlerOpen}>
               <Cell>
                 <Cell.Before>
-                  <Avatar src={"chat.photo"} size={"48px"} />
+                  <Avatar
+                    src={`https://${HOST_CDN}/v1/image/user/${chat?.user.image}?size=100`}
+                    size={"48px"}
+                  />
                 </Cell.Before>
                 <Cell.Container>
                   <Cell.Content>
@@ -104,7 +108,10 @@ const NewMessage: Component<NewMessage> = (props) => {
                         />
                       </Title>
 
-                      <Show keyed when={chat.message?.time}>
+                      <Show
+                        keyed
+                        when={chat.getMessageById(chat.lastMessageId)?.time}
+                      >
                         {(time) => (
                           <SubTitle {...textProps} nowrap>
                             {timeAgo(time.getTime())}
@@ -113,21 +120,25 @@ const NewMessage: Component<NewMessage> = (props) => {
                       </Show>
                     </Gap>
 
-                    <Gap justifyContent={"space-between"} count={"6px"}>
-                      <Flex
-                        width={"100%"}
-                        direction={"column"}
-                        alignItems={"start"}
-                        style={{
-                          overflow: "hidden",
-                          "min-height": "var(--font_height--small)",
-                        }}
-                      >
-                        <SubTitle nowrap overflow>
-                          {chat.message?.message || chat.message?.attach_type}
-                        </SubTitle>
-                      </Flex>
-                    </Gap>
+                    <Show keyed when={chat.getMessageById(chat.lastMessageId)}>
+                      {(message) => (
+                        <Gap justifyContent={"space-between"} count={"6px"}>
+                          <Flex
+                            width={"100%"}
+                            direction={"column"}
+                            alignItems={"start"}
+                            style={{
+                              overflow: "hidden",
+                              "min-height": "var(--font_height--small)",
+                            }}
+                          >
+                            <SubTitle nowrap overflow>
+                              {message.text || message.attach?.type}
+                            </SubTitle>
+                          </Flex>
+                        </Gap>
+                      )}
+                    </Show>
                   </Cell.Content>
                 </Cell.Container>
               </Cell>

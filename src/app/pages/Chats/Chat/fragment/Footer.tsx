@@ -242,7 +242,7 @@ const Footer: Component<Footer> = (props) => {
                   }}
                 />
                 <Cell.Content>
-                  <SubTitle color={"accent"}>В ответ</SubTitle>
+                  <SubTitle color={"accent"}>{lang("in_response")}</SubTitle>
                   <Title>{message.text}</Title>
                 </Cell.Content>
                 <Cell.After onClick={handlerRemoveReply}>
@@ -269,7 +269,7 @@ const Footer: Component<Footer> = (props) => {
                   }}
                 />
                 <Cell.Content>
-                  <SubTitle color={"accent"}>Редактирование</SubTitle>
+                  <SubTitle color={"accent"}>{lang("editing")}</SubTitle>
                   <Title>{message.text}</Title>
                 </Cell.Content>
                 <Cell.After onClick={handlerRemoveEdit}>

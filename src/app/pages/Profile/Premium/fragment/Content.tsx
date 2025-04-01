@@ -4,6 +4,7 @@ import {
   Group,
   IconBackground,
   IconCheck,
+  SegmentedControl,
   SubTitle,
   Title,
 } from "components"
@@ -26,6 +27,7 @@ import {
   IconMessage2Search,
   IconPhotoFilled,
   IconTelegramStar,
+  IconTON,
 } from "source"
 import { useAtom } from "engine/modules/smart-data"
 import { PRODUCT_ATOM } from "engine/state"
@@ -50,14 +52,15 @@ const icons: Record<string, Component<JSX.SvgSVGAttributes<SVGSVGElement>>> = {
 }
 
 const Content: Component<Content> = (props) => {
+  const [selectedPrice, setSelectedPrice] = createSignal<"XTR" | "TON">("XTR")
   const [selected, setSelected] = createSignal("")
   const [lang] = loc()
 
-  const [product] = useAtom(PRODUCT_ATOM, {
+  const [product] = useAtom(PRODUCT_ATOM, () => ({
     lang: getLocale(),
-    group: "premium",
-    currency: "XTR",
-  })
+    group: "premium" as "premium",
+    currency: selectedPrice(),
+  }))
 
   createEffect(() => {
     if (!selected()) {
@@ -109,16 +112,35 @@ const Content: Component<Content> = (props) => {
                         <Gap justifyContent={"start"} count={"2px"}>
                           <Show when={product.discount}>
                             <span style={{ "text-decoration": "line-through" }}>
-                              {product.price + product.discount}
+                              {(selectedPrice() === "TON"
+                                ? (product.price + product.discount) /
+                                  1_000_000_000
+                                : product.price + product.discount
+                              ).toLocaleString("ru-RU", {
+                                minimumFractionDigits: 2, // Минимум 2 знака после запятой
+                                maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)
+                              })}
                             </span>{" "}
                           </Show>
                           <span>
-                            {(product.price * [1, 2, 4, 12][index()]).toFixed(
-                              0,
-                            )}
+                            {(selectedPrice() === "TON"
+                              ? (product.price * [1, 2, 4, 12][index()]) /
+                                1_000_000_000
+                              : product.price * [1, 2, 4, 12][index()]
+                            ).toLocaleString("ru-RU", {
+                              minimumFractionDigits: 2, // Минимум 2 знака после запятой
+                              maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)
+                            })}
                           </span>{" "}
-                          <IconTelegramStar width={12} height={12} />
-                          <span>в год</span>
+                          <Switch>
+                            <Match when={selectedPrice() === "TON"}>
+                              <IconTON width={12} height={12} />
+                            </Match>
+                            <Match when={selectedPrice() === "XTR"}>
+                              <IconTelegramStar width={12} height={12} />
+                            </Match>
+                          </Switch>
+                          <span>{lang("per_year")}</span>
                         </Gap>
                       </SubTitle>
                     </Cell.Content>
@@ -126,12 +148,25 @@ const Content: Component<Content> = (props) => {
                       <SubTitle nowrap overflow>
                         <Gap justifyContent={"start"} count={"2px"}>
                           <span>
-                            {(product.price / [12, 6, 3, 1][index()]).toFixed(
-                              2,
-                            )}
+                            {(selectedPrice() === "TON"
+                              ? product.price /
+                                [12, 6, 3, 1][index()] /
+                                1_000_000_000
+                              : product.price / [12, 6, 3, 1][index()]
+                            ).toLocaleString("ru-RU", {
+                              minimumFractionDigits: 0, // Минимум 2 знака после запятой
+                              maximumFractionDigits: 3, // Максимум 9 знаков после запятой (стандарт TON)
+                            })}
                           </span>{" "}
-                          <IconTelegramStar width={12} height={12} />
-                          <span>/месяц</span>
+                          <Switch>
+                            <Match when={selectedPrice() === "TON"}>
+                              <IconTON width={12} height={12} />
+                            </Match>
+                            <Match when={selectedPrice() === "XTR"}>
+                              <IconTelegramStar width={12} height={12} />
+                            </Match>
+                          </Switch>
+                          <span>/{lang("month")}</span>
                         </Gap>
                       </SubTitle>
                     </Cell.After>
@@ -140,6 +175,26 @@ const Content: Component<Content> = (props) => {
               )}
             </For>
           </Cell.List>
+        </Group.Container>
+        <Group.Container>
+          <SegmentedControl
+            selected={selectedPrice()}
+            onSelected={(key) => setSelectedPrice(key as "XTR" | "TON")}
+          >
+            <For each={["XTR", "TON"]}>
+              {(type, index) => (
+                <SegmentedControl.Button
+                  data-index={index()}
+                  stretched
+                  key={type}
+                >
+                  <SegmentedControl.Button.Container>
+                    <Title>{lang(type as "XTR" | "TON")}</Title>
+                  </SegmentedControl.Button.Container>
+                </SegmentedControl.Button>
+              )}
+            </For>
+          </SegmentedControl>
         </Group.Container>
       </Group>
       <Group>

@@ -13,6 +13,7 @@ import ChatsDefault from "app/pages/Chats/Default/Default"
 import { IconArchiveFilled, IconMessageCircleFilled } from "source"
 import { USER_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
+import { HOST_CDN } from "root/configs"
 
 interface Action extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -77,7 +78,7 @@ const Action: Component<Action> = (props) => {
             <Gap direction={"column"}>
               <Avatar
                 size={"28px"}
-                src={user.image}
+                src={`https://${HOST_CDN}/v1/image/user/${user.image}?size=1000`}
                 style={{
                   border:
                     activeView() === views.PROFILE

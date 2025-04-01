@@ -93,7 +93,7 @@ const Content: Component<Content> = (props) => {
             <Background.Overlay>
               <Flex height={"100%"}>
                 <SubTitle align={"center"}>
-                  Только по <Link>подписке</Link>
+                  {lang("by_subscription_only")}
                 </SubTitle>
               </Flex>
             </Background.Overlay>

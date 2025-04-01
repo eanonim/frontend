@@ -223,12 +223,10 @@ const Content: Component<Content> = (props) => {
                           <Plug size={"small"}>
                             <Plug.Container>
                               <Title>
-                                {user.first_name} хочет сохранить переписку с
-                                Вами
+                                {lang("system.invite.title", user.first_name)}
                               </Title>
                               <SubTitle>
-                                Если вы согласитесь, вам будет проще найти и
-                                продолжить общение в будущем.
+                                {lang("system.invite.subtitle")}
                               </SubTitle>
                             </Plug.Container>
                             <Plug.Action stretched>

@@ -82,6 +82,11 @@
   --badge_text      : var(--accent_color);
 }
 
+.Badge__appearance--secondary {
+  --badge_background: var(--secondary_color);
+  --badge_text      : var(--secondary_color--text);
+}
+
 /* Mode */
 .Badge__mode--filled {}
 

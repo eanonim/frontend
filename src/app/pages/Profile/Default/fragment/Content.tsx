@@ -25,9 +25,10 @@ import {
 
 import { type JSX, type Component, For, Switch, Match, Show } from "solid-js"
 import { modals, pages, pushModal, pushPage } from "router"
-import { timeAgo, timeAgoOnlyDate } from "engine"
+import { createImage, timeAgo, timeAgoOnlyDate } from "engine"
 import { useAtom } from "engine/modules/smart-data"
 import { USER_ATOM } from "engine/state"
+import { imageUpload, userAvatarSet } from "engine/api"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -50,6 +51,31 @@ const textProps: TextProps = {
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const [user] = useAtom(USER_ATOM)
+
+  const setAvatar = async () => {
+    const element = document.createElement("input")
+    element.type = "file"
+    element.multiple = false
+    element.accept = "image/*"
+
+    element.click()
+    element.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+
+      if (!file) return
+
+      const image = await createImage(file)
+      if (image) {
+        const form = new FormData()
+        form.append("data", image)
+        form.append("group", "user")
+        const { response, error } = await imageUpload(form)
+        if (response) {
+          userAvatarSet({ id: response.id })
+        }
+      }
+    }
+  }
 
   const elements: {
     icon: Component<JSX.SvgSVGAttributes<SVGSVGElement>>
@@ -84,6 +110,7 @@ const Content: Component<Content> = (props) => {
         icon: IconCameraPlus,
         title: "change_photo",
         isAccent: true,
+        handler: () => setAvatar(),
       },
     ],
     [
@@ -153,7 +180,7 @@ const Content: Component<Content> = (props) => {
                 >
                   {(premium) => (
                     <SubTitle>
-                      Активен до: {timeAgo(premium.getTime())}
+                      {lang("active_until", timeAgo(premium.getTime()))}
                     </SubTitle>
                   )}
                 </Show>

@@ -96,11 +96,7 @@ const Content: Component<Content> = (props) => {
                   background: "var(--red_color)",
                 }}
               >
-                <Button
-                  onClick={() => handlerDelete(chat.id)}
-                  mode={"transparent"}
-                  appearance={"primary"}
-                >
+                <Button mode={"transparent"} appearance={"primary"}>
                   <Button.Container>
                     <IconTrash />
                   </Button.Container>

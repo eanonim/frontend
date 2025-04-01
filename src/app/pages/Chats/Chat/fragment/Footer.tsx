@@ -30,7 +30,7 @@ import { leading, throttle } from "@solid-primitives/scheduled"
 import { HOST_CDN, messageMaxSize } from "root/configs"
 import loc from "engine/languages"
 import { Attach, Chats } from "engine/class/useChat"
-import { createImage, isPremium } from "engine"
+import { createBlob, createImage, isPremium } from "engine"
 import { AUTH_TOKEN_ATOM, USER_ATOM } from "engine/state"
 import { getter } from "elum-state/solid"
 import { unlink } from "@minsize/utils"
@@ -58,7 +58,7 @@ const Footer: Component<Footer> = (props) => {
         const message = chat?.getMessageById(edit_id)
         if (message && message.text) {
           if (message.attach) {
-            chat?.setMessage("attach", message.attach)
+            // chat?.setMessage("attach", message.attach)
             chat?.setMessage("isAddAttach", true)
           }
           setMessage(message.text)
@@ -80,7 +80,7 @@ const Footer: Component<Footer> = (props) => {
           message: {
             id: chat.message.editId,
             message: messageText.slice(0, messageMaxSize),
-            attach: chat.message.attach,
+            // attach: chat.message.attach,
           },
         })
         handlerRemoveEdit()
@@ -102,8 +102,8 @@ const Footer: Component<Footer> = (props) => {
               message: {
                 message: messageChunk.trim(),
                 reply_id: chat?.message?.replyId,
-                attach: unlink(chat?.message?.attach),
               },
+              attachBlob: unlink(chat?.message?.attach),
             })
             chat?.setMessage("attach", undefined)
           } else {
@@ -115,8 +115,8 @@ const Footer: Component<Footer> = (props) => {
           dialog: params().dialog,
           message: {
             reply_id: chat?.message?.replyId,
-            attach: unlink(chat?.message?.attach),
           },
+          attachBlob: unlink(chat?.message?.attach),
         })
       }
     } finally {
@@ -162,11 +162,8 @@ const Footer: Component<Footer> = (props) => {
       return
     }
 
-    const items: Attach = unlink(
-      chat?.message?.attach || {
-        type: "photo",
-        items: [],
-      },
+    const items: { id: number; blob: Blob }[] = unlink(
+      chat?.message?.attach || [],
     )
     const element = document.createElement("input")
     element.type = "file"
@@ -178,19 +175,20 @@ const Footer: Component<Footer> = (props) => {
       const data = e.target as HTMLInputElement
 
       for (const file of data.files || []) {
-        if (items.items.length >= 3) return
+        if (items.length >= 3) return
         const image = await createImage(file)
         if (image) {
-          const form = new FormData()
-          form.append("data", image)
-          form.append("group", chat?.id || "")
-          const { response, error } = await imageUpload(form)
-          if (response) {
-            items.type = "photo"
-            items.items.push({
-              id: response.id,
-            })
-          }
+          items.push({ id: items.length, blob: image })
+          // const form = new FormData()
+          // form.append("data", image)
+          // form.append("group", chat?.id || "")
+          // const { response, error } = await imageUpload(form)
+          // if (response) {
+          //   items.type = "photo"
+          //   items.items.push({
+          //     id: response.id,
+          //   })
+          // }
         }
       }
 
@@ -198,17 +196,14 @@ const Footer: Component<Footer> = (props) => {
     }
   }
 
-  const deleteImage = (id: string) => {
-    const items: Attach = unlink(
-      chat?.message?.attach || {
-        type: "photo",
-        items: [],
-      },
+  const deleteImage = (id: number) => {
+    const items: { id: number; blob: Blob }[] = unlink(
+      chat?.message?.attach || [],
     )
 
-    const index = items.items.findIndex((x) => x.id === id)
+    const index = items.findIndex((x) => x.id === id)
     if (index !== -1) {
-      items.items.splice(index, 1)
+      items.splice(index, 1)
     }
 
     chat?.setMessage("attach", items)
@@ -286,14 +281,15 @@ const Footer: Component<Footer> = (props) => {
           <Separator />
           <Button.Group>
             <Button.Group.Container justifyContent={"start"}>
-              <For each={chat?.message?.attach?.items}>
+              <For each={chat?.message?.attach}>
                 {(image, index) => (
                   <Image.Preview
                     data-index={index()}
                     onClick={() => deleteImage(image.id)}
                   >
                     <Image
-                      src={`https://${HOST_CDN}/v1/image/${chat?.id}/${image.id}?size=100`}
+                      src={createBlob(image.blob)}
+                      //src={`https://${HOST_CDN}/v1/image/${chat?.id}/${image.id}?size=100`}
                     />
                   </Image.Preview>
                 )}

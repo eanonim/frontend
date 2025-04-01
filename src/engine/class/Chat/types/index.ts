@@ -113,7 +113,8 @@ export type Dialog<
 
     /* Указывает что пользователь прикрепляет, что -то к сообщению  */
     isAddAttach?: boolean
-    attach?: Attach
+    // attach?: Attach
+    attach?: { id: number; blob: Blob }[]
   }
 
   /* Указывает что пользователь печатает */

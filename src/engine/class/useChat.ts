@@ -14,9 +14,17 @@ type User = NonNullable<Socket["chat.list"]["response"]>[0]["user"]
 type Keyboard = NonNullable<
   NonNullable<Socket["message.list"]["response"]>[0]["keyboard"]
 >[0][0]
-export type Attach = NonNullable<
-  NonNullable<Socket["message.list"]["response"]>[0]["attach"]
->
+export type Attach = Omit<
+  NonNullable<NonNullable<Socket["message.list"]["response"]>[0]["attach"]>,
+  "items"
+> & {
+  items: (NonNullable<
+    NonNullable<Socket["message.list"]["response"]>[0]["attach"]
+  >["items"][0] & {
+    srcBlob?: string
+    isLoading?: boolean
+  })[]
+}
 export type Message = ObjectMessage<Target, User, Keyboard, Attach>
 
 export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({

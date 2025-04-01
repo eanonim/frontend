@@ -1,7 +1,15 @@
 import style from "./Image.module.css"
 import { ImageBadge, ImageOverlay, Preview } from "./addons"
 
-import { type JSX, type Component, splitProps, mergeProps } from "solid-js"
+import {
+  type JSX,
+  type Component,
+  splitProps,
+  mergeProps,
+  ErrorBoundary,
+  Suspense,
+  SuspenseList,
+} from "solid-js"
 import { createStore } from "solid-js/store"
 
 interface Image extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -80,6 +88,7 @@ const Image: ComponentImage = (props) => {
       {...others}
     >
       <img
+        loading={"lazy"}
         onError={onError}
         onLoad={onLoad}
         onLoadedMetadata={onLoadedMetadata}

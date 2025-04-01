@@ -24,6 +24,7 @@ import { textParserUrl } from "@minsize/utils"
 import { HOST_CDN } from "root/configs"
 import { getter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
+import { Attach } from "engine/class/useChat"
 
 interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   text?: string
@@ -40,10 +41,7 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
       items: { id: string }[]
     }
   }
-  attach?: {
-    type: "photo" | "invite"
-    items: { id: string }[]
-  }
+  attach?: Attach
 
   /** Отображает бейдж как прочитанный */
   isRead?: boolean
@@ -130,10 +128,14 @@ const Message: ComponentMessage = (props) => {
         <Show keyed when={local.attach}>
           {(attach) => (
             <Gallery
+              only={!!!local.text && !!local.attach}
               images={attach.items.map((x, index) => ({
                 index,
                 id: x.id,
-                src: `https://${HOST_CDN}/v1/image/${local.chat_id}/${x.id}?size=1000`,
+                isLoading: x.isLoading || false,
+                src:
+                  x.srcBlob ||
+                  `https://${HOST_CDN}/v1/image/${local.chat_id}/${x.id}?size=1000`,
               }))}
             />
             // <span

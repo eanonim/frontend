@@ -61,18 +61,15 @@ const List = <Message extends unknown>(props: List<Message>) => {
   })
 
   createEffect(
-    on(
-      () => local.messages,
-      (messages) => {
-        setStore(
-          "messages",
-          messages.slice(
-            messages.length - store.messages.length,
-            messages.length,
-          ),
-        )
-      },
-    ),
+    on([() => local.messages, () => local.messages.length], ([messages]) => {
+      setStore(
+        "messages",
+        messages.slice(
+          messages.length - store.messages.length,
+          messages.length,
+        ),
+      )
+    }),
   )
 
   const onNext = async () => {

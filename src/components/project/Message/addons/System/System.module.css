@@ -57,10 +57,10 @@
 
 .System__in::after {
   background-color: var(--section_bg_color);
-  opacity         : 0.7;
+  opacity         : 0.89;
 }
 
 .System__in::before {
-  opacity         : 0.3;
+  opacity         : 0.6;
   background-color: var(--bg_color);
 }

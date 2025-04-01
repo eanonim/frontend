@@ -22,11 +22,13 @@ import Touch from "@component/default/Templates/Touch/Touch"
 import Cell from "@component/default/Blocks/Cell/Cell"
 import { IconClose } from "source"
 import { panels } from "router"
+import Spinner from "@component/default/Blocks/Spinner/Spinner"
 
-interface Gallery<Image = { index: number; src: string }>
+interface Gallery<Image = { index: number; src: string; isLoading?: boolean }>
   extends JSX.HTMLAttributes<HTMLSpanElement> {
   images: Image[]
   "border-radius"?: Property.BorderRadius
+  only?: boolean
 }
 
 type Store = {
@@ -46,6 +48,7 @@ const Gallery: Component<Gallery> = (props) => {
     "images",
     "style",
     "border-radius",
+    "only",
   ])
 
   const [store, setStore] = createStore<Store>({
@@ -81,6 +84,7 @@ const Gallery: Component<Gallery> = (props) => {
       class={style.Gallery}
       classList={{
         [style[`Gallery__count--${local.images.length}`]]: true,
+        [style[`Gallery--only`]]: local.only,
       }}
       style={combineStyle(
         {
@@ -96,7 +100,13 @@ const Gallery: Component<Gallery> = (props) => {
             onClick={() => handlerOpen(image.index)}
             class={style.Gallery__image}
             src={image.src}
-          />
+          >
+            <Show when={image.isLoading}>
+              <Image.Overlay visibility={"always"}>
+                <Spinner />
+              </Image.Overlay>
+            </Show>
+          </Image>
         )}
       </For>
 

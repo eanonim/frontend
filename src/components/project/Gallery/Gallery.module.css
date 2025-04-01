@@ -27,7 +27,7 @@
   aspect-ratio : 1 / 1;
 }
 
-.Message--only_attach .Gallery__count--1 .Gallery__image {
+.Gallery--only.Gallery__count--1 .Gallery__image {
   border-radius: var(--border_radius);
 }
 
@@ -94,16 +94,16 @@
 }
 
 .Gallery__footer {
-  position        : absolute;
-  bottom          : 0px;
-  left            : 0px;
-  right           : 0px;
-  box-sizing      : border-box;
-  overflow        : hidden;
-  width           : 100%;
-  backdrop-filter : blur(10px);
-  padding-bottom  : var(--safe-area-inset-bottom);
-  background-color: rgba(0, 0, 0, 0.4);
+  position           : absolute;
+  bottom             : 0px;
+  left               : 0px;
+  right              : 0px;
+  box-sizing         : border-box;
+  overflow           : hidden;
+  width              : 100%;
+  /* backdrop-filter : blur(10px); */
+  padding-bottom     : var(--safe-area-inset-bottom);
+  background-color   : rgba(0, 0, 0, 0.95);
 }
 
 .Gallery__preview {

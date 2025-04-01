@@ -32,7 +32,7 @@ const coordY = (e: any): number =>
   e?.clientY || e?.changedTouches?.[0]?.clientY || 0
 
 interface Touch extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "onClick"> {
-  onClick?(event: GestureEvent): void
+  onClick?(event: JSX.EventHandlerUnion<HTMLDivElement, MouseEvent>): void
 
   onStart?(event: GestureEvent): void
   onStartX?(event: GestureEvent): void

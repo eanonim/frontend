@@ -217,133 +217,142 @@ const Footer: Component<Footer> = (props) => {
   const isSendMessage = () => !!message().length || !!chat?.message?.attach
 
   return (
-    <FixedLayout
-      position={"bottom"}
-      style={{
-        "z-index": 3,
-      }}
-      width={"100%"}
-      background={"section_bg_color"}
-      isMargin={false}
-    >
-      <Show keyed when={chat?.getMessageById(chat.message?.replyId)}>
-        {(message) => (
-          <>
-            <Separator />
-            <Cell>
-              <Cell.Container>
-                <span
-                  style={{
-                    height: "100%",
-                    width: "3px",
-                    background: "var(--accent_color)",
-                    "border-radius": "3px",
-                    "margin-right": "8px",
-                  }}
-                />
-                <Cell.Content>
-                  <SubTitle color={"accent"}>{lang("in_response")}</SubTitle>
-                  <Title>{message.text}</Title>
-                </Cell.Content>
-                <Cell.After onClick={handlerRemoveReply}>
-                  <IconX color={"var(--accent_color)"} />
-                </Cell.After>
-              </Cell.Container>
-            </Cell>
-          </>
-        )}
-      </Show>
-      <Show keyed when={chat?.getMessageById(chat.message?.editId)}>
-        {(message) => (
-          <>
-            <Separator />
-            <Cell>
-              <Cell.Container>
-                <span
-                  style={{
-                    height: "100%",
-                    width: "3px",
-                    background: "var(--accent_color)",
-                    "border-radius": "3px",
-                    "margin-right": "8px",
-                  }}
-                />
-                <Cell.Content>
-                  <SubTitle color={"accent"}>{lang("editing")}</SubTitle>
-                  <Title>{message.text}</Title>
-                </Cell.Content>
-                <Cell.After onClick={handlerRemoveEdit}>
-                  <IconX color={"var(--accent_color)"} />
-                </Cell.After>
-              </Cell.Container>
-            </Cell>
-          </>
-        )}
-      </Show>
-
-      <Show when={chat?.message?.isAddAttach}>
-        <Separator />
-        <Button.Group>
-          <Button.Group.Container justifyContent={"start"}>
-            <For each={chat?.message?.attach?.items}>
-              {(image, index) => (
-                <Image.Preview
-                  data-index={index()}
-                  onClick={() => deleteImage(image.id)}
-                >
-                  <Image
-                    src={`https://${HOST_CDN}/v1/image/${chat?.id}/${image.id}?size=100`}
+    <Show when={!chat?.isDeleted}>
+      <FixedLayout
+        position={"bottom"}
+        style={{
+          "z-index": 3,
+        }}
+        width={"100%"}
+        background={"section_bg_color"}
+        isMargin={false}
+      >
+        <Show keyed when={chat?.getMessageById(chat.message?.replyId)}>
+          {(message) => (
+            <>
+              <Separator />
+              <Cell>
+                <Cell.Container>
+                  <span
+                    style={{
+                      height: "100%",
+                      width: "3px",
+                      background: "var(--accent_color)",
+                      "border-radius": "3px",
+                      "margin-right": "8px",
+                    }}
                   />
-                </Image.Preview>
-              )}
-            </For>
-            <Image.Preview onClick={addImage}>
-              <IconPlus color={"var(--accent_color)"} />
-            </Image.Preview>
-          </Button.Group.Container>
-        </Button.Group>
-      </Show>
-      <WriteBar>
-        <WriteBar.Icon onClick={handlerAddAttach}>
-          <IconPaperclip color={"var(--separator_primary)"} />
-        </WriteBar.Icon>
-        <WriteBar.Field>
-          <WriteBar.Field.Textarea
-            placeholder={lang("message")}
-            maxHeight={window.innerHeight / 3 + "px"}
-            ref={ref!}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.shiftKey && !isTouchSupport) {
-                event.preventDefault()
-                handlerSend()
-              }
-            }}
-            value={message()}
-            onInput={onInput}
-          />
-        </WriteBar.Field>
-        <WriteBar.Icon
-          onClick={handlerSend}
-          style={{
-            transform: isSendMessage() ? "scale(1.5)" : "scale(1)",
-            "-webkit-transform": isSendMessage() ? "scale(1.5)" : "scale(1)",
-            transition: "0.3s",
-          }}
-        >
-          <IconSend
+                  <Cell.Content>
+                    <SubTitle color={"accent"}>{lang("in_response")}</SubTitle>
+                    <Title>{message.text}</Title>
+                  </Cell.Content>
+                  <Cell.After onClick={handlerRemoveReply}>
+                    <IconX color={"var(--accent_color)"} />
+                  </Cell.After>
+                </Cell.Container>
+              </Cell>
+            </>
+          )}
+        </Show>
+        <Show keyed when={chat?.getMessageById(chat.message?.editId)}>
+          {(message) => (
+            <>
+              <Separator />
+              <Cell>
+                <Cell.Container>
+                  <span
+                    style={{
+                      height: "100%",
+                      width: "3px",
+                      background: "var(--accent_color)",
+                      "border-radius": "3px",
+                      "margin-right": "8px",
+                    }}
+                  />
+                  <Cell.Content>
+                    <SubTitle color={"accent"}>{lang("editing")}</SubTitle>
+                    <Title>{message.text}</Title>
+                  </Cell.Content>
+                  <Cell.After onClick={handlerRemoveEdit}>
+                    <IconX color={"var(--accent_color)"} />
+                  </Cell.After>
+                </Cell.Container>
+              </Cell>
+            </>
+          )}
+        </Show>
+
+        <Show when={chat?.message?.isAddAttach}>
+          <Separator />
+          <Button.Group>
+            <Button.Group.Container justifyContent={"start"}>
+              <For each={chat?.message?.attach?.items}>
+                {(image, index) => (
+                  <Image.Preview
+                    data-index={index()}
+                    onClick={() => deleteImage(image.id)}
+                  >
+                    <Image
+                      src={`https://${HOST_CDN}/v1/image/${chat?.id}/${image.id}?size=100`}
+                    />
+                  </Image.Preview>
+                )}
+              </For>
+              <Image.Preview onClick={addImage}>
+                <IconPlus color={"var(--accent_color)"} />
+              </Image.Preview>
+            </Button.Group.Container>
+          </Button.Group>
+        </Show>
+        <WriteBar>
+          <WriteBar.Icon onClick={handlerAddAttach}>
+            <IconPaperclip color={"var(--separator_primary)"} />
+          </WriteBar.Icon>
+          <WriteBar.Field>
+            <WriteBar.Field.Textarea
+              placeholder={lang("message")}
+              maxHeight={window.innerHeight / 3 + "px"}
+              ref={ref!}
+              onKeyDown={(event) => {
+                if (
+                  event.key === "Enter" &&
+                  !event.shiftKey &&
+                  !isTouchSupport
+                ) {
+                  event.preventDefault()
+                  handlerSend()
+                }
+              }}
+              value={message()}
+              onInput={onInput}
+            />
+          </WriteBar.Field>
+          <WriteBar.Icon
+            onClick={handlerSend}
             style={{
-              transform: isSendMessage() ? "scale(0.8)" : "scale(1)",
-              "-webkit-transform": isSendMessage() ? "scale(0.8)" : "scale(1)",
+              transform: isSendMessage() ? "scale(1.5)" : "scale(1)",
+              "-webkit-transform": isSendMessage() ? "scale(1.5)" : "scale(1)",
               transition: "0.3s",
             }}
-            color={
-              isSendMessage() ? "var(--accent_color)" : "var(--text_secondary)"
-            }
-            width={36}
-            height={36}
-          />
-        </WriteBar.Icon>
-        {/* <WriteBar.Icon onClick={handlerSend}>
+          >
+            <IconSend
+              style={{
+                transform: isSendMessage() ? "scale(0.8)" : "scale(1)",
+                "-webkit-transform": isSendMessage()
+                  ? "scale(0.8)"
+                  : "scale(1)",
+                transition: "0.3s",
+              }}
+              color={
+                isSendMessage()
+                  ? "var(--accent_color)"
+                  : "var(--text_secondary)"
+              }
+              width={36}
+              height={36}
+            />
+          </WriteBar.Icon>
+          {/* <WriteBar.Icon onClick={handlerSend}>
           <IconSend
             style={{
               "z-index": 1,
@@ -367,8 +376,9 @@ const Footer: Component<Footer> = (props) => {
             <IconGiftFilled color={"var(--separator_primary)"} />
           </span>
         </WriteBar.Icon> */}
-      </WriteBar>
-    </FixedLayout>
+        </WriteBar>
+      </FixedLayout>
+    </Show>
   )
 }
 

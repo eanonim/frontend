@@ -121,6 +121,7 @@ export type Dialog<
   isLoading?: boolean
   isFullLoad?: boolean
   isFavorites?: boolean
+  isDeleted?: boolean
 }
 
 type Result<T> =

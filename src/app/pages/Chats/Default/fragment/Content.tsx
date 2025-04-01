@@ -9,6 +9,7 @@ import {
   Title,
   UserName,
   Flex,
+  Button,
 } from "components"
 
 import {
@@ -27,6 +28,8 @@ import { timeAgo } from "engine"
 import { Chat, Chats } from "engine/class/useChat"
 import { createStore } from "solid-js/store"
 import { HOST_CDN } from "root/configs"
+import { IconTrash } from "source"
+import { chatClose } from "engine/api"
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const textProps: TextProps = {
@@ -73,6 +76,11 @@ const Content: Component<Content> = (props) => {
     }
   })
 
+  const handlerDelete = (dialog: string) => {
+    console.log("handlerDelete")
+    chatClose({ dialog })
+  }
+
   return (
     <Cell.List style={{ "overflow-y": "scroll" }}>
       <For each={getHistory()}>
@@ -81,14 +89,23 @@ const Content: Component<Content> = (props) => {
             data-index={index()}
             onClick={() => handlerChat(chat.id)}
             after={
-              <span
+              <Flex
+                onClick={() => handlerDelete(chat.id)}
+                height={"100%"}
                 style={{
-                  display: "block",
-                  height: "100%",
-                  width: "100px",
                   background: "var(--red_color)",
                 }}
-              />
+              >
+                <Button
+                  onClick={() => handlerDelete(chat.id)}
+                  mode={"transparent"}
+                  appearance={"primary"}
+                >
+                  <Button.Container>
+                    <IconTrash />
+                  </Button.Container>
+                </Button>
+              </Flex>
             }
           >
             <Cell separator={getHistory().length > index() + 1}>

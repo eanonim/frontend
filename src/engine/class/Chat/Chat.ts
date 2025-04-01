@@ -73,6 +73,7 @@ export class Chat<
     id: string
     user: User
     isFavorites?: boolean
+    isDeleted?: boolean
     loadChatById: (id: string) => Promise<boolean>
   }) {
     this.loadChatById = params.loadChatById
@@ -93,6 +94,7 @@ export class Chat<
         lastOffset: 0,
       },
       isFavorites: params.isFavorites,
+      isDeleted: params.isDeleted,
       isFullLoad: false,
     })
 
@@ -159,6 +161,9 @@ export class Chat<
   }
   get isFavorites() {
     return this.store.isFavorites
+  }
+  get isDeleted() {
+    return this.store.isDeleted
   }
 
   /* Установка сообщения которое хочет отправить пользователь */

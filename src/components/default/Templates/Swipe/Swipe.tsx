@@ -55,6 +55,7 @@ const Swipe: Component<Swipe> = (props) => {
     "activated",
     "fixed",
     "closed",
+    "onClick",
   ])
 
   let ref: HTMLDivElement | undefined
@@ -140,6 +141,15 @@ const Swipe: Component<Swipe> = (props) => {
 
   useClickOutside(() => ref, handlerClose)
 
+  const Click: JSX.EventHandlerUnion<HTMLDivElement, MouseEvent> = (event) => {
+    console.log("CLICK")
+    if (store.fixedX !== 0) {
+      handlerClose()
+      return
+    }
+    local.onClick && (local.onClick as any)(event as any)
+  }
+
   return (
     <Touch
       ref={ref!}
@@ -149,7 +159,7 @@ const Swipe: Component<Swipe> = (props) => {
       }}
       onMoveX={onMoveX}
       onEndX={onEndX}
-      onClick={others.onClick as any}
+      onClick={Click as any}
       {...others}
     >
       <Align
@@ -166,7 +176,15 @@ const Swipe: Component<Swipe> = (props) => {
           {local.children}
         </Align.Children>
 
-        <Align.After ref={refAfter! as any} class={style.Swipe__after}>
+        <Align.After
+          onClick={(event) => {
+            console.log("ASG")
+            event.stopPropagation()
+            event.preventDefault()
+          }}
+          ref={refAfter! as any}
+          class={style.Swipe__after}
+        >
           {local.after}
         </Align.After>
       </Align>

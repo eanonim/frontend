@@ -327,6 +327,17 @@ export type Socket = {
       status: "accepted" | "rejected"
     }
   }
+  "chat.close": {
+    request: {
+      dialog: string
+    }
+    response: {
+      result: boolean
+    }
+    event: {
+      dialog: string
+    }
+  }
   "chat.info": {
     request: {
       dialog: string
@@ -659,6 +670,15 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
           pageId: pages.CHAT,
           params: { dialog: data.response?.dialog },
         })
+      }
+    }
+
+    if (event === "chat.close") {
+      const dialog = data.response?.dialog
+      if (dialog && data.response) {
+        const chat = Chats.getById(dialog)
+        chat?.setter("isFavorites", false)
+        chat?.setter("isDeleted", true)
       }
     }
 

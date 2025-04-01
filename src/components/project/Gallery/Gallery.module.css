@@ -82,6 +82,7 @@
   bottom          : 0;
   z-index         : 10;
   background-color: var(--bg_color);
+  overflow        : hidden;
 }
 
 .Gallery__open .Gallery__image img {

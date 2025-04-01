@@ -33,7 +33,8 @@ type Store = {
   isOpen?: boolean
   selectedIndex?: number
   slide?: "left" | "right"
-  transformX?: number
+  transformX: number
+  transformY: number
   isAnim: boolean
 }
 
@@ -51,6 +52,7 @@ const Gallery: Component<Gallery> = (props) => {
     isOpen: false,
     isAnim: false,
     transformX: 0,
+    transformY: 0,
   })
 
   const handlerOpen = (image_index: number) => {
@@ -107,6 +109,18 @@ const Gallery: Component<Gallery> = (props) => {
             }}
           >
             <Touch
+              onMoveY={(event) => {
+                setStore("isAnim", false)
+                const shiftX = event.shiftY || 0
+                setStore("transformY", shiftX)
+              }}
+              onEndY={() => {
+                if (store.transformY >= 60) {
+                  setStore("isOpen", false)
+                }
+                setStore("isAnim", true)
+                setStore("transformY", 0)
+              }}
               onStartX={() => {
                 setStore("isAnim", false)
               }}
@@ -157,9 +171,9 @@ const Gallery: Component<Gallery> = (props) => {
                 class={style.Gallery__open_in}
                 alignItems={"center"}
                 style={{
-                  transform: `translateX(calc(-${
+                  transform: `translate(calc(-${
                     100 * (store.selectedIndex || 0)
-                  }% + ${store.transformX || 0}px))`,
+                  }% + ${store.transformX || 0}px), ${store.transformY}px)`,
                 }}
               >
                 <For each={local.images}>

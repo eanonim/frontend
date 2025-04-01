@@ -21,6 +21,7 @@ import Flex from "@component/default/Blocks/Flex/Flex"
 import Touch from "@component/default/Templates/Touch/Touch"
 import Cell from "@component/default/Blocks/Cell/Cell"
 import { IconClose } from "source"
+import { panels } from "router"
 
 interface Gallery<Image = { index: number; src: string }>
   extends JSX.HTMLAttributes<HTMLSpanElement> {
@@ -98,7 +99,7 @@ const Gallery: Component<Gallery> = (props) => {
       </For>
 
       <Show when={store.isOpen}>
-        <Portal mount={document.body}>
+        <Portal mount={document.getElementById(panels.CHAT)}>
           <span
             class={style.Gallery__open}
             classList={{

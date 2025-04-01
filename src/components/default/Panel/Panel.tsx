@@ -92,6 +92,7 @@ const Panel: Component<Panel> = (props) => {
 
   return (
     <div
+      id={props.nav}
       data-nav={props.nav}
       class={style.Panel}
       classList={{

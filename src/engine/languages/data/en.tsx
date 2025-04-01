@@ -74,10 +74,16 @@ export default {
     anime: "Anime",
     lgbt: "LGBT",
   },
+  attach_type: {
+    invite: "Request to save the correspondence",
+    photo: "Photo",
+    unknown: "Unknown",
+  },
   system: {
     invite: {
+      sender: "You have sent a request to save the correspondence",
       title: (first_name: string) =>
-        `${first_name} wants to keep correspondence with you`,
+        `${first_name} wants to save correspondence with you`,
       subtitle:
         "If you agree, it will be easier for you to find and continue communication in the future.",
     },
@@ -94,10 +100,11 @@ export default {
   month: "month",
   by_subscription_only: () => (
     <>
-      Только по{" "}
+      By{" "}
       <Link onClick={() => pushModal({ modalId: modals.MODAL_PREMIUM })}>
-        подписке
-      </Link>
+        subscription
+      </Link>{" "}
+      only
     </>
   ),
   prints: "prints",

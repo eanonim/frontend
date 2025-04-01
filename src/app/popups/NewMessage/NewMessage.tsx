@@ -23,6 +23,7 @@ import { timeAgo } from "engine"
 import { clamp } from "@minsize/utils"
 import { HOST_CDN } from "root/configs"
 import { Chats } from "engine/class/useChat"
+import loc from "engine/languages"
 
 interface NewMessage extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -41,6 +42,7 @@ const textProps: TextProps = {
 }
 
 const NewMessage: Component<NewMessage> = (props) => {
+  const [lang] = loc()
   const params = useParams<{
     dialog: Socket["message.send"]["event"]["dialog"]
     message: Socket["message.send"]["event"]["message"]
@@ -133,7 +135,13 @@ const NewMessage: Component<NewMessage> = (props) => {
                             }}
                           >
                             <SubTitle nowrap overflow>
-                              {message.text || message.attach?.type}
+                              {message?.text ||
+                                lang(
+                                  `attach_type.${
+                                    message?.attach?.type || "unknown"
+                                  }`,
+                                ) ||
+                                lang(`attach_type.unknown`)}
                             </SubTitle>
                           </Flex>
                         </Gap>

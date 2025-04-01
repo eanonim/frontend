@@ -17,7 +17,7 @@ import { HOST_CDN } from "root/configs"
 import { pages, useParams } from "router"
 
 import { type JSX, type Component, Show } from "solid-js"
-import { IconBugFilled } from "source"
+import { IconBookmarkPlus, IconBugFilled } from "source"
 
 interface Header extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -29,6 +29,7 @@ const Header: Component<Header> = (props) => {
   const chat = Chats.getById(params().dialog)
 
   const handlerInviteMake = () => {
+    if (chat?.isFavorites) return
     chatInviteMake({ dialog: params().dialog })
   }
 
@@ -43,9 +44,17 @@ const Header: Component<Header> = (props) => {
     >
       <Cell>
         <Cell.Before>
-          <Button onClick={handlerInviteMake} size={"small"} type={"icon"}>
+          <Button
+            onClick={handlerInviteMake}
+            size={"small"}
+            type={"icon"}
+            mode={"transparent"}
+            style={{
+              opacity: chat?.isFavorites ? 0 : 1,
+            }}
+          >
             <Button.Container>
-              <IconBugFilled />
+              <IconBookmarkPlus />
             </Button.Container>
           </Button>
           {/* <span onClick={handlerInviteMake} style={{ width: "36px" }} /> */}

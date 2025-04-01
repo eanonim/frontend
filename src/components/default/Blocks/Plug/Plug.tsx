@@ -16,7 +16,7 @@ interface Plug extends Omit<HTMLAttributes<DynamicProps<"div">>, "title"> {
    */
   full?: boolean
 
-  size?: "small" | "medium"
+  size?: "x-small" | "small" | "medium"
 }
 
 type ComponentPlug = Component<Plug> & {

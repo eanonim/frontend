@@ -72,6 +72,7 @@ export class Chat<
   constructor(params: {
     id: string
     user: User
+    isFavorites?: boolean
     loadChatById: (id: string) => Promise<boolean>
   }) {
     this.loadChatById = params.loadChatById
@@ -91,6 +92,7 @@ export class Chat<
         history: {},
         lastOffset: 0,
       },
+      isFavorites: params.isFavorites,
       isFullLoad: false,
     })
 
@@ -154,6 +156,9 @@ export class Chat<
   }
   get user() {
     return this.store.user
+  }
+  get isFavorites() {
+    return this.store.isFavorites
   }
 
   /* Установка сообщения которое хочет отправить пользователь */
@@ -360,7 +365,7 @@ export class Chat<
   }
 
   public getHistory() {
-    if (!this.messages.dialogs.length) {
+    if (!this.messages.dialogs.length && !this.isFullLoad) {
       this.uploadChatHistory()
     }
 
@@ -443,11 +448,9 @@ export class Chat<
       if (response) {
         this.setStore("messages", "lastOffset", offset + 200)
 
-        batch(() => {
-          for (const message of response.reverse()) {
-            this.initMessage(message, "push")
-          }
-        })
+        for (const message of response.reverse()) {
+          this.initMessage(message, "push")
+        }
         return true
       }
     } finally {

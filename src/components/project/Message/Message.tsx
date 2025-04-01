@@ -36,12 +36,12 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
     message?: string
     time?: Date
     attach?: {
-      type: "photo" | "audio"
+      type: "photo" | "invite"
       items: { id: string }[]
     }
   }
   attach?: {
-    type: "photo" | "audio"
+    type: "photo" | "invite"
     items: { id: string }[]
   }
 

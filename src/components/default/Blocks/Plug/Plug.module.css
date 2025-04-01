@@ -21,6 +21,10 @@
 }
 
 /* size */
+.Plug__size-x-small {
+  padding: 6px;
+}
+
 .Plug__size-small {
   padding: 12px;
 }

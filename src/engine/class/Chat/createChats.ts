@@ -76,6 +76,7 @@ export class createChats<
       chat.setter("isFullLoad", item.isFullLoad)
       chat.setter("isLoading", item.isLoading)
       chat.setter("isTyping", item.isTyping)
+      chat.setter("isFavorites", item.isFavorites)
       chat.setter("user", item.user)
       if (item.lastMessage) {
         chat.initMessage(item.lastMessage, undefined, true)
@@ -100,8 +101,9 @@ export class createChats<
 
   /* Загрузка чата */
   public async loadChatById(id: string) {
-    if (Object.values(this._dialogs[id]).length === 0) {
-      return this.loadChats()
+    console.log({ COUNT: Object.values(this._dialogs).length })
+    if (Object.values(this._dialogs).length === 0) {
+      this.loadChats()
     }
 
     const request = this.requests["chat.getById"]
@@ -145,8 +147,8 @@ export class createChats<
   /* Получение диалога по ID */
   public getById(id: string): Chat<Target, User, Keyboard, Attach> | undefined {
     if (!this._dialogs[id]) {
-      this.setDIALOG({ id, user: {} as any } as Omit<_Dialog, "messages">)
       this.loadChatById(id)
+      this.setDIALOG({ id, user: {} as any } as Omit<_Dialog, "messages">)
     }
     return this._dialogs[id]
   }

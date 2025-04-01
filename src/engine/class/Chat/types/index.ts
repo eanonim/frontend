@@ -120,6 +120,7 @@ export type Dialog<
   isTyping?: boolean
   isLoading?: boolean
   isFullLoad?: boolean
+  isFavorites?: boolean
 }
 
 type Result<T> =

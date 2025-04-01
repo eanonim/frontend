@@ -49,6 +49,7 @@ export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({
         response: {
           id: response.uuid,
           user: response.user,
+          isFavorites: response.favorites,
           lastMessage: response.message?.id
             ? {
                 id: response.message.id,
@@ -79,6 +80,7 @@ export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({
         data.push({
           id: chat.uuid,
           user: chat.user,
+          isFavorites: chat.favorites,
           lastMessage: chat.message
             ? {
                 id: chat.message.id,
@@ -156,7 +158,7 @@ export const Chat = Chats.getClass()
 
 // type Attach = {
 //   id: string
-//   type: "photo" | "audio"
+//   type: "photo" | "invite"
 // }[]
 
 // type User = NonNullable<Socket["chat.list"]["response"]>[0]["user"] & {

@@ -63,7 +63,9 @@ const Content: Component<Content> = (props) => {
     pushPage({ pageId: pages.CHAT, params: { dialog: dialog } })
   }
 
-  const getHistory = createMemo(() => Object.values(Chats.get()))
+  const getHistory = createMemo(() =>
+    Object.values(Chats.get()).filter((x) => !!x.isFavorites),
+  )
 
   onMount(() => {
     if (getHistory().length === 0) {
@@ -137,7 +139,13 @@ const Content: Component<Content> = (props) => {
                             nowrap
                             overflow
                           >
-                            {lastMessage?.text || lastMessage?.attach?.type}
+                            {lastMessage?.text ||
+                              lang(
+                                `attach_type.${
+                                  lastMessage?.attach?.type || "unknown"
+                                }`,
+                              ) ||
+                              lang(`attach_type.unknown`)}
                           </SubTitle>
 
                           <SubTitle

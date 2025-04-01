@@ -130,7 +130,7 @@ export type Socket = {
       message?: string
       target: Target
       attach?: {
-        type: "photo" | "audio"
+        type: "photo" | "invite"
         items: Array<{
           id: string
         }>
@@ -144,7 +144,7 @@ export type Socket = {
       reply?: {
         id: number
         message: string
-        attach_type?: "photo" | "audio"
+        attach_type?: "photo" | "invite"
       }
       readed: boolean
       time: Date
@@ -162,7 +162,7 @@ export type Socket = {
         id: number
         message?: string
         attach?: {
-          type: "photo" | "audio"
+          type: "photo" | "invite"
           items: Array<{
             id: string
           }>
@@ -178,7 +178,7 @@ export type Socket = {
         id: number
         message?: string
         attach?: {
-          type: "photo" | "audio"
+          type: "photo" | "invite"
           items: Array<{
             id: string
           }>
@@ -192,7 +192,7 @@ export type Socket = {
       message: {
         message?: string
         attach?: {
-          type: "photo" | "audio"
+          type: "photo" | "invite"
           items: Array<{
             id: string
           }>
@@ -217,7 +217,7 @@ export type Socket = {
         }[][]
         type: "default" | "invite"
         attach?: {
-          type: "photo" | "audio"
+          type: "photo" | "invite"
           items: Array<{
             id: string
           }>
@@ -225,7 +225,7 @@ export type Socket = {
         reply?: {
           id: number
           message: string
-          attach_type?: "photo" | "audio"
+          attach_type?: "photo" | "invite"
         }
         readed: boolean
         time: Date
@@ -275,7 +275,7 @@ export type Socket = {
         id: number
         message?: string
         target: Target
-        attach_type?: "photo" | "audio"
+        attach_type?: "photo" | "invite"
         time: Date
         readed: boolean
       }
@@ -286,6 +286,8 @@ export type Socket = {
         image: string
         emoji?: number
       }
+
+      favorites?: boolean
 
       /* CUSTOM */
       typing?: boolean
@@ -319,6 +321,12 @@ export type Socket = {
     }
     event: undefined
   }
+  "chat.inviteStatus": {
+    event: {
+      dialog: string
+      status: "accepted" | "rejected"
+    }
+  }
   "chat.info": {
     request: {
       dialog: string
@@ -330,7 +338,7 @@ export type Socket = {
         id: number
         message?: string
         target: Target
-        attach_type?: "photo" | "audio"
+        attach_type?: "photo" | "invite"
         time: Date
         readed: boolean
       }
@@ -342,6 +350,7 @@ export type Socket = {
         emoji?: number
       }
 
+      favorites?: boolean
       /* CUSTOM */
       typing?: boolean
       loading?: boolean
@@ -588,6 +597,21 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
           isRead: message.readed,
           isDeleted: message.deleted,
         })
+      }
+    }
+
+    if (event === "chat.inviteStatus") {
+      const dialog = data.response?.dialog
+      if (dialog && data.response) {
+        const chat = Chats.getById(dialog)
+
+        chat?.setter("isFavorites", data.response.status === "accepted")
+
+        for (const msg of Object.values(chat?.messages.history || {})) {
+          if (msg.type === "invite" && !msg.isDeleted) {
+            msg.setter("isDeleted", true)
+          }
+        }
       }
     }
 

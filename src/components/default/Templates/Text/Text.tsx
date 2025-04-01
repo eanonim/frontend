@@ -17,6 +17,7 @@ export interface Text extends HTMLAttributes<HTMLSpanElement> {
   overflow?: boolean
   align?: TextObject["align"]
   color?: TextObject["color"]
+  size?: TextObject["size"]
 }
 
 const Text: Component<Text> = (props) => {
@@ -38,6 +39,7 @@ const Text: Component<Text> = (props) => {
     "overflow",
     "align",
     "color",
+    "size",
   ])
 
   const getStyles = () => {
@@ -50,7 +52,7 @@ const Text: Component<Text> = (props) => {
 
     return {
       [style[`Text__color--${local.color || color}`]]: !!local.color || !!color,
-      [style[`Text__size--${size}`]]: !!size,
+      [style[`Text__size--${local.size || size}`]]: !!local.size || !!size,
       [style[`Text__weight--${weight}`]]: !!weight,
       [style[`Text__align--${local.align || align}`]]: !!local.align || !!align,
     }

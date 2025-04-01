@@ -119,11 +119,17 @@ const Content: Component<Content> = (props) => {
     (message: TMessage) => void
   > = {
     "chat.inviteAccept": async (message) => {
+      const msg = chat?.getMessageById(message.id)
+      msg?.setter("isDeleted", true)
+      chat?.setter("isFavorites", true)
       const { response, error } = await chatInviteAccept({
         dialog: params().dialog,
       })
     },
     "chat.inviteReject": async (message) => {
+      const msg = chat?.getMessageById(message.id)
+      msg?.setter("isDeleted", true)
+      chat?.setter("isFavorites", false)
       const { response, error } = await chatInviteReject({
         dialog: params().dialog,
       })
@@ -220,34 +226,52 @@ const Content: Component<Content> = (props) => {
                     <Match keyed when={message.type === "invite" && chat.user}>
                       {(user) => (
                         <Message.System>
-                          <Plug size={"small"}>
-                            <Plug.Container>
-                              <Title>
-                                {lang("system.invite.title", user.first_name)}
-                              </Title>
-                              <SubTitle>
-                                {lang("system.invite.subtitle")}
-                              </SubTitle>
-                            </Plug.Container>
-                            <Plug.Action stretched>
-                              <Message.Keyboard each={message.keyboard}>
-                                {(button) => (
-                                  <Button
-                                    stretched
-                                    onClick={() =>
-                                      keyboardEvents[button.event]?.(message)
-                                    }
-                                  >
-                                    <Button.Container>
-                                      <Title>
-                                        {lang(button.text) || button.text}
-                                      </Title>
-                                    </Button.Container>
-                                  </Button>
-                                )}
-                              </Message.Keyboard>
-                            </Plug.Action>
-                          </Plug>
+                          <Switch>
+                            <Match when={message.target === "my"}>
+                              <Plug size={"x-small"}>
+                                <Plug.Container>
+                                  <SubTitle size={"small"}>
+                                    {lang("system.invite.sender")}
+                                  </SubTitle>
+                                </Plug.Container>
+                              </Plug>
+                            </Match>
+                            <Match when={message.target === "you"}>
+                              <Plug size={"small"}>
+                                <Plug.Container>
+                                  <Title>
+                                    {lang(
+                                      "system.invite.title",
+                                      user.first_name,
+                                    )}
+                                  </Title>
+                                  <SubTitle>
+                                    {lang("system.invite.subtitle")}
+                                  </SubTitle>
+                                </Plug.Container>
+                                <Plug.Action stretched>
+                                  <Message.Keyboard each={message.keyboard}>
+                                    {(button) => (
+                                      <Button
+                                        stretched
+                                        onClick={() =>
+                                          keyboardEvents[button.event]?.(
+                                            message,
+                                          )
+                                        }
+                                      >
+                                        <Button.Container>
+                                          <Title>
+                                            {lang(button.text) || button.text}
+                                          </Title>
+                                        </Button.Container>
+                                      </Button>
+                                    )}
+                                  </Message.Keyboard>
+                                </Plug.Action>
+                              </Plug>
+                            </Match>
+                          </Switch>
                         </Message.System>
                       )}
                     </Match>

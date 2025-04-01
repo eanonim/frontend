@@ -185,10 +185,7 @@ const Gallery: Component<Gallery> = (props) => {
                   <IconClose />
                 </Cell.Before>
                 <Cell.Content>
-                  <Flex
-                    class={style.Gallery__preview}
-                    justifyContent={"center"}
-                  >
+                  <Flex class={style.Gallery__preview}>
                     <For each={local.images}>
                       {(image) => (
                         <Image

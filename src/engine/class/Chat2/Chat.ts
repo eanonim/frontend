@@ -209,7 +209,7 @@ export class Chat<
           produce((store) => {
             const index = store.typing.findIndex((x) => x.user_id === user_id)
             if (index !== -1) {
-              store.typing.splice(index, 0)
+              store.typing.splice(index, 1)
             }
 
             return store
@@ -237,7 +237,6 @@ export class Chat<
 
     this.initStore[1](
       produce((store) => {
-        console.log({ f: message })
         store.history.set(msg.message_id, msg)
 
         this.addParticipant(message.sender)
@@ -318,7 +317,6 @@ export class Chat<
         )
         for (const message of response) {
           const sender = this.getUserById(message.user_id)
-          console.log({ sender })
           const newMessage = { ...message, ...{ sender } }
           this.newMessage(newMessage)
         }

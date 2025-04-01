@@ -18,6 +18,7 @@ const Content: Component<Content> = (props) => {
       emoji={user.emoji}
       first_name={user.first_name}
       last_name={user.last_name}
+      coin={user.coin}
     />
   )
 }

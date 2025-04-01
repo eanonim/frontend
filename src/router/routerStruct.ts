@@ -26,6 +26,7 @@ export enum panels {
   PREMIUM = "panel_premium",
 
   SEARCH = "panel_search",
+  SEARCH_START = "panel_search_start",
 
   CHATS = "panel_chats",
   CHAT = "panel_chat",
@@ -44,6 +45,7 @@ export enum pages {
   PREMIUM = "/settings/premium",
 
   SEARCH = "/search",
+  SEARCH_START = "/search/start",
 
   CHATS = "/chats",
   CHAT = "/chat",
@@ -129,6 +131,7 @@ export const routerStruct: RouterStruct = [
     default: pages.SEARCH,
     panels: {
       [pages.SEARCH]: panels.SEARCH,
+      [pages.SEARCH_START]: panels.SEARCH_START,
     },
   },
   {

@@ -9,6 +9,7 @@ import Title from "@component/default/Typography/Title/Title"
 
 import { type JSX, type Component, mergeProps, splitProps } from "solid-js"
 import { emojis } from "root/configs"
+import { formatNumberWithDotsRegex } from "engine"
 
 interface AvatarProfile extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "id"> {
   src?: string
@@ -16,6 +17,7 @@ interface AvatarProfile extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "id"> {
   last_name: string
   emoji?: number
   id: number
+  coin: number
 }
 
 const AvatarProfile: Component<AvatarProfile> = (props) => {
@@ -29,6 +31,7 @@ const AvatarProfile: Component<AvatarProfile> = (props) => {
     "last_name",
     "emoji",
     "id",
+    "coin",
   ])
 
   return (
@@ -63,7 +66,7 @@ const AvatarProfile: Component<AvatarProfile> = (props) => {
 
           <Badge>
             <Badge.Container>
-              <Title>12.055.125</Title>
+              <Title>{formatNumberWithDotsRegex(local.coin || 0)}</Title>
             </Badge.Container>
           </Badge>
         </span>

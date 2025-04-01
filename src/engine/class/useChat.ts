@@ -76,7 +76,7 @@ export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({
       const data: Omit<Dialog<Target, User, Keyboard, Attach>, "messages">[] =
         []
 
-      for (const chat of response) {
+      for (const chat of response || []) {
         data.push({
           id: chat.uuid,
           user: chat.user,

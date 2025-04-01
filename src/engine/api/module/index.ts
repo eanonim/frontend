@@ -367,6 +367,12 @@ export type Socket = {
       loading?: boolean
     }
   }
+  "chat.searchEnd": {
+    request: {}
+    response: {
+      result: boolean
+    }
+  }
   "chat.search": {
     request: {
       language: string
@@ -510,6 +516,7 @@ export type Socket = {
       first_name: string
       last_name: string
       premium: Date
+      coin: number
     }
   }
 }
@@ -665,8 +672,8 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
 
     if (event === "chat.search") {
       if (data.response?.dialog) {
-        await chatInfo({ dialog: data.response.dialog })
-        pushPage({
+        replacePage({
+          is_back: true,
           pageId: pages.CHAT,
           params: { dialog: data.response?.dialog },
         })

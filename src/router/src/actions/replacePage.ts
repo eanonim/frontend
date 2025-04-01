@@ -8,7 +8,8 @@ import {
   VIEW_ATOM,
 } from "../atom"
 import { HISTORY } from "../atom/history"
-import { setHistory } from "../utils"
+import { setHistory, setParams } from "../utils"
+import { produce } from "solid-js/store"
 
 type Props<P extends Params> = {
   pageId: string
@@ -32,30 +33,74 @@ const replacePage = <P extends unknown>({
     panelId: page.panels[pageId],
   }
 
-  setter(HISTORY_ATOM, (value) => {
-    if (value.history.length >= 1) {
-      value.history = value.history.slice(0, -1)
-    }
-    const newHistory: HISTORY["history"][0] = {
-      viewId,
-      panelId,
-      params,
-      is_back,
-    }
-
-    value.history.push(newHistory)
-
-    if (value.view[viewId]) {
-      value.view[viewId].array.push(newHistory)
-    } else {
-      value.view[page.viewId] = {
-        index: Object.values(value.view).length || 0,
-        array: [newHistory],
+  setParams({ pageId, params })
+  setter(
+    HISTORY_ATOM,
+    produce((value) => {
+      if (value.history.length >= 1) {
+        value.history = value.history.slice(0, -1)
       }
-    }
+      const [lastViewId, lastView] = Object.entries(value.view).sort(
+        ([, a], [, b]) => b.index - a.index,
+      )?.[0]
 
-    return { ...value }
-  })
+      if (lastView && lastViewId) {
+        const index = value.view[lastViewId].array.indexOf(
+          value.view[lastViewId].array[value.view[lastViewId].array.length - 1],
+        )
+        if (index !== -1) {
+          value.view[lastViewId].array.splice(index, 1)
+          const preLastView =
+            value.view[lastViewId].array[
+              value.view[lastViewId].array.length - 1
+            ]
+          if (preLastView) {
+            setter(
+              LAST_HISTORY_ATOM,
+              produce((value) => {
+                value[preLastView.viewId] = preLastView.panelId
+                return Object.assign({ ...value })
+              }),
+            )
+          }
+        }
+      }
+      const newHistoryDefault: HISTORY["history"][0] = {
+        viewId,
+        panelId: page.panels[page.default],
+        params: undefined,
+        is_back: false,
+      }
+
+      if (!value.view[viewId]) {
+        value.view[page.viewId] = {
+          index: Object.values(value.view).length || 0,
+          array: [newHistoryDefault],
+        }
+      }
+
+      const newHistory: HISTORY["history"][0] = {
+        viewId,
+        panelId,
+        params,
+        is_back,
+      }
+
+      value.history.push(newHistory)
+
+      if (value.view[viewId]) {
+        value.view[viewId].array.push(newHistory)
+      } else {
+        value.view[page.viewId] = {
+          index: Object.values(value.view).length || 0,
+          array: [newHistory],
+        }
+      }
+
+      console.log("replacePage", { value })
+      return { ...value }
+    }),
+  )
 
   setter(LAST_HISTORY_ATOM, (value) => {
     value[page.viewId] = panelId

@@ -1,10 +1,5 @@
 import { Button, FixedLayout, Separator, Title } from "components"
-import { getMaleOfNumber } from "engine"
-import { chatInfo, chatSearch } from "engine/api"
-import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
-import { useAtom } from "engine/modules/smart-data"
-import { SEARCH_OPTIONS_ATOM } from "engine/state"
 import { pages, pushPage } from "router"
 
 import { type JSX, type Component } from "solid-js"
@@ -13,31 +8,8 @@ interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Footer: Component<Footer> = (props) => {
   const [lang] = loc()
-  const [searchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
-
   const handlerSearch = async () => {
-    var interests: SearchInteresting[] = []
-
-    for (const [key, value] of Object.entries(searchOptions.interests)) {
-      if (value.isSelected) {
-        interests.push(key as SearchInteresting)
-      }
-    }
-
-    const { response, error } = await chatSearch({
-      language: "en",
-      your_start: searchOptions.companion.age.from,
-      your_end: searchOptions.companion.age.to,
-      your_sex: getMaleOfNumber(searchOptions.companion.male),
-      my_age: searchOptions.you.age.from,
-      my_sex: getMaleOfNumber(searchOptions.you.male),
-      interests,
-    })
-
-    if (response?.dialog) {
-      await chatInfo({ dialog: response?.dialog })
-      pushPage({ pageId: pages.CHAT, params: { dialog: response.dialog } })
-    }
+    pushPage({ pageId: pages.SEARCH_START })
   }
 
   return (

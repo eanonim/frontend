@@ -50,7 +50,6 @@
   /* Firefox */
   -ms-user-select    : none;
   /* IE10+ */
-
 }
 
 .Message__time_text {
@@ -83,6 +82,7 @@
   transform    : translateY(0px);
   padding      : 2px 6px;
   border-radius: 13px;
+  color        : var(--text_primary);
 }
 
 .Message--only_attach .Message__time::after {

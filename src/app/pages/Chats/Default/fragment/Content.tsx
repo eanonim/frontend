@@ -77,7 +77,6 @@ const Content: Component<Content> = (props) => {
   })
 
   const handlerDelete = (dialog: string) => {
-    console.log("handlerDelete")
     chatClose({ dialog })
   }
 

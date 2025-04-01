@@ -61,7 +61,6 @@ const Content: Component<Content> = (props) => {
     on(
       () => chat?.lastMessageId,
       (next, prev) => {
-        console.log({ next }, chat, Chats.get())
         if (next === prev && next !== undefined) return
         let isScroll = store.isBottom
         let isSmooth = (next || 0) - 1 === prev || (next || 0) + 1 === prev

@@ -16,13 +16,15 @@ export const USER_ATOM = atom<
     last_name: "Иванов",
     image: "https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg", //https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg
     emoji: 0,
-    premium: new Date(Date.now() + 1_000),
+    premium: new Date(Date.now() - 1_000),
+    coin: 0,
   },
   updateIntervalMs: 15_000,
-  onUpdate: ({ prev, next }, key) => {
+  onUpdate: async ({ prev, next }, key) => {
     if (key === "default") {
       if (next.emoji !== prev.emoji) {
-        userEmojiSet({ emoji: next.emoji })
+        const { error } = await userEmojiSet({ emoji: next.emoji })
+        return !!!error
       }
       if (
         next.first_name !== prev.first_name ||
@@ -31,6 +33,7 @@ export const USER_ATOM = atom<
         userNameSet({ first_name: next.first_name, last_name: next.last_name })
       }
     }
+    return true
   },
   onRequested: async (options, key) => {
     userGet({})

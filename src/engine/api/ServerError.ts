@@ -46,6 +46,11 @@ const ServerError = {
       Error1002(isPremium(user?.premium), option?.is_premium),
     ])
   },
+  isEmoji: (): false | SocketError => {
+    const user = getter(USER_ATOM)
+
+    return checkErrors([Error1002(isPremium(user?.premium), true)])
+  },
 }
 
 export default ServerError

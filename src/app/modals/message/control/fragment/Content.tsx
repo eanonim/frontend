@@ -20,8 +20,6 @@ const Content: Component<Content> = (props) => {
   const chat = Chats.getById(params().dialog)
   const message = chat?.getMessageById(params().message_id)
 
-  console.log({ message }, chat)
-
   const handlerCopy: JSX.EventHandler<DynamicProps<"article">, MouseEvent> = (
     event,
   ) => {

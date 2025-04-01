@@ -106,8 +106,6 @@ export class createChats<
 
     if (item.lastMessage) {
       const sender = chat.getUserById(item.lastMessage.user_id)
-      console.log({ last: item.lastMessage }, sender)
-      console.log({ sender })
       const newMessage = { ...item.lastMessage, ...{ sender } }
       chat.addMessage(newMessage)
     }

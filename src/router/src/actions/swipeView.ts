@@ -93,7 +93,6 @@ const swipeView = ({
         array: [newHistory],
       }
     }
-
     return { ...value }
   })
 

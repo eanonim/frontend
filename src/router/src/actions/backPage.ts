@@ -105,6 +105,7 @@ const backPage = leading(
             backIndex * -1,
           )
         }
+        console.log("backPage", value)
         return { ...value }
       })
 
@@ -130,10 +131,6 @@ const backPage = leading(
       setter(MODAL_ATOM, lastView.modalId)
       setter(POPOUT_ATOM, lastView.popoutId)
 
-      console.log({
-        test: unlink(history.view[activeView]),
-        lastView: unlink(lastView),
-      })
       setHistory({
         pageId: pageId,
         modalId: lastView.modalId,

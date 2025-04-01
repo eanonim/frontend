@@ -54,7 +54,7 @@ const App: Component = () => {
   onMount(() => {
     const data = getAppData()
 
-    bridgeSetupFullScreen({ is_full: false })
+    bridgeSetupFullScreen({ is_full: true })
 
     bridgeSetupSwipeBehavior({
       allow_vertical_swipe: false,

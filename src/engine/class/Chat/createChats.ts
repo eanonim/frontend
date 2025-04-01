@@ -101,7 +101,6 @@ export class createChats<
 
   /* Загрузка чата */
   public async loadChatById(id: string) {
-    console.log({ COUNT: Object.values(this._dialogs).length })
     if (Object.values(this._dialogs).length === 0) {
       this.loadChats()
     }
@@ -113,7 +112,6 @@ export class createChats<
     }
     const { response, error } = await request({ id })
 
-    console.log({ id })
     if (response) {
       this.setDIALOG(response)
       return true

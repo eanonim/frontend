@@ -62,11 +62,9 @@ export const SEARCH_OPTIONS_ATOM = atom<
           if (
             prev.interests[key]?.isSelected !== next.interests[key]?.isSelected
           ) {
-            console.log("SET", key)
             storeSet({ key: "interest", value: key })
           }
         } else {
-          console.log("DELETE", key)
           storeDelete({ key: "interest", value: key })
         }
       }
@@ -78,7 +76,6 @@ export const SEARCH_OPTIONS_ATOM = atom<
           !!prev.interests[key] &&
           prev.interests[key]?.isSelected
         ) {
-          console.log("DELETE 2", key)
           storeDelete({ key: "interest", value: key })
         }
       }

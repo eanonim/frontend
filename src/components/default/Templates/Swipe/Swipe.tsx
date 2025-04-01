@@ -142,7 +142,6 @@ const Swipe: Component<Swipe> = (props) => {
   useClickOutside(() => ref, handlerClose)
 
   const Click: JSX.EventHandlerUnion<HTMLDivElement, MouseEvent> = (event) => {
-    console.log("CLICK")
     if (store.fixedX !== 0) {
       handlerClose()
       return
@@ -178,7 +177,6 @@ const Swipe: Component<Swipe> = (props) => {
 
         <Align.After
           onClick={(event) => {
-            console.log("ASG")
             event.stopPropagation()
             event.preventDefault()
           }}

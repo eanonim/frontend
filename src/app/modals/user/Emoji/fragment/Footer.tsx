@@ -1,14 +1,9 @@
-import { Badge, Button, FixedLayout, Title } from "components"
-import { SearchInteresting } from "engine/api/module"
+import { Button, FixedLayout, Title } from "components"
 import loc from "engine/languages"
 import { setter, useAtom } from "engine/modules/smart-data"
-import { SEARCH_OPTIONS_ATOM, USER_ATOM } from "engine/state"
-import { maxInterest } from "root/configs"
-import { backPage } from "router"
+import { USER_ATOM } from "engine/state"
 
-import { type JSX, type Component, createMemo } from "solid-js"
-import { produce } from "solid-js/store"
-
+import { type JSX, type Component } from "solid-js"
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 const Footer: Component<Footer> = (props) => {
@@ -19,12 +14,10 @@ const Footer: Component<Footer> = (props) => {
   const handlerDelete = () => {
     setter(USER_ATOM, "emoji", 0)
     setter([USER_ATOM, "edit"], "emoji", 0)
-    backPage()
   }
 
   const handlerSave = () => {
     setter(USER_ATOM, "emoji", user.emoji)
-    backPage()
   }
 
   return (

@@ -9,6 +9,7 @@ export default {
   change_interests: "Change interests",
   chats: "Chats",
   search: "Search",
+  cancel_search: "Cancel search",
   settings: "Settings",
   change_name: "Change name",
   change_emoji_status: "Change emoji-status",

@@ -17,6 +17,7 @@ export { default as storeDelete } from "./store/delete"
 
 /* chat */
 export { default as chatSearch } from "./chat/search"
+export { default as chatSearchEnd } from "./chat/searchEnd"
 export { default as chatList } from "./chat/list"
 export { default as chatInfo } from "./chat/info"
 export { default as chatInviteMake } from "./chat/inviteMake"

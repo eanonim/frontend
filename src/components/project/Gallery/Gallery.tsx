@@ -219,7 +219,7 @@ const Gallery: Component<Gallery> = (props) => {
                   </Flex>
                 </Cell.Content>
                 <Cell.After onClick={handlerClose}>
-                  <IconClose />
+                  <IconClose color={"white"} />
                 </Cell.After>
               </Cell.Container>
             </Cell>

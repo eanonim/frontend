@@ -103,7 +103,7 @@ const Gallery: Component<Gallery> = (props) => {
           >
             <Show when={image.isLoading}>
               <Image.Overlay visibility={"always"}>
-                <Spinner />
+                <Spinner color={"secondary"} />
               </Image.Overlay>
             </Show>
           </Image>

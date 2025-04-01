@@ -1,11 +1,13 @@
 import style from "./Message.module.css"
 import { Badge, Group, SystemDate, Typing, System, Keyboard } from "./addons"
 
-import { Link, type TypeFlex } from "@ui/index"
+import { type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
 import formatTime from "engine/utils/formatTime"
 import Gap from "@ui/default/Templates/Gap/Gap"
 import Image from "@ui/default/Blocks/Image/Image"
+import Gallery from "@ui/project/Gallery/Gallery"
+import Link from "@ui/default/Blocks/Link/Link"
 
 import {
   type Component,
@@ -127,21 +129,28 @@ const Message: ComponentMessage = (props) => {
       <span class={style.Message__in}>
         <Show keyed when={local.attach}>
           {(attach) => (
-            <span
-              class={style.Message__images}
-              classList={{
-                [style[`Message__images--${attach.items.length}`]]: true,
-              }}
-            >
-              <For each={attach.items}>
-                {(image) => (
-                  <Image
-                    class={style.Message__image}
-                    src={`https://${HOST_CDN}/v1/image/${local.chat_id}/${image.id}?size=100`}
-                  />
-                )}
-              </For>
-            </span>
+            <Gallery
+              images={attach.items.map((x, index) => ({
+                index,
+                id: x.id,
+                src: `https://${HOST_CDN}/v1/image/${local.chat_id}/${x.id}?size=1000`,
+              }))}
+            />
+            // <span
+            //   class={style.Message__images}
+            //   classList={{
+            //     [style[`Message__images--${attach.items.length}`]]: true,
+            //   }}
+            // >
+            //   <For each={attach.items}>
+            //     {(image) => (
+            //       <Image
+            //         class={style.Message__image}
+            //         src={`https://${HOST_CDN}/v1/image/${local.chat_id}/${image.id}?size=100`}
+            //       />
+            //     )}
+            //   </For>
+            // </span>
           )}
         </Show>
         <div class={style.Message__text}>

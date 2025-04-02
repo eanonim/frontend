@@ -48,13 +48,13 @@ const Content: Component<Content> = (props) => {
       <For each={rating.data}>
         {(item, index) => (
           <Cell data-index={index()} separator>
+            <Cell.Before>
+              <Avatar
+                src={`https://${HOST_CDN}/v1/image/user/${item.image}?size=100`}
+                size={"48px"}
+              />
+            </Cell.Before>
             <Cell.Container>
-              <Cell.Before>
-                <Avatar
-                  src={`https://${HOST_CDN}/v1/image/user/${item.image}?size=100`}
-                  size={"36px"}
-                />
-              </Cell.Before>
               <Cell.Content>
                 <Title>
                   <UserName

@@ -224,18 +224,20 @@ const Content: Component<Content> = (props) => {
                     }
                   >
                     <Match when={message.isDeleted}>
-                      <Message
-                        chat_id={chat.id}
-                        data-index={index()}
-                        data-message_id={message.id}
-                        type={message.target === "my" ? "out" : "in"}
-                        text={lang("deleted")}
-                        isDeleted={true}
-                        time={message.time}
-                        isEmoji={false}
-                        isNew={false}
-                        onRead={() => message.setter("isRead", true)}
-                      />
+                      <Show when={message.type === "default"}>
+                        <Message
+                          chat_id={chat.id}
+                          data-index={index()}
+                          data-message_id={message.id}
+                          type={message.target === "my" ? "out" : "in"}
+                          text={lang("deleted")}
+                          isDeleted={true}
+                          time={message.time}
+                          isEmoji={false}
+                          isNew={false}
+                          onRead={() => message.setter("isRead", true)}
+                        />
+                      </Show>
                     </Match>
                     <Match keyed when={message.type === "invite" && chat.user}>
                       {(user) => (

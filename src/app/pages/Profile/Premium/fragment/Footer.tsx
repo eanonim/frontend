@@ -111,7 +111,7 @@ const Footer: Component<Footer> = (props) => {
         </Match>
         <Match when={params().currency === "TON"}>
           <TonConnectInit
-            language={"en"}
+            language={getLocale()}
             fallback={
               <Button.Group>
                 <Button.Group.Container>

@@ -2,6 +2,11 @@ import Link from "@component/default/Blocks/Link/Link"
 import { modals, pushModal } from "router"
 
 export default {
+  dialogs_stub: {
+    title: "Chat history",
+    subtitle:
+      "To make them appear, save the conversations you are interested in.",
+  },
   premium: "Premium",
   premium_subtitle:
     "More freedom and dozens of exclusive features with a subscription.",

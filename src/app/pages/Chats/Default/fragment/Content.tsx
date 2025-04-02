@@ -10,6 +10,7 @@ import {
   UserName,
   Flex,
   Button,
+  Plug,
 } from "components"
 
 import {
@@ -22,7 +23,7 @@ import {
   createEffect,
   Index,
 } from "solid-js"
-import { pages, pushPage } from "router"
+import { pages, pushPage, swipeView, views } from "router"
 import loc from "engine/languages"
 import { timeAgo } from "engine"
 import { Chat, Chats } from "engine/class/useChat"
@@ -81,8 +82,28 @@ const Content: Component<Content> = (props) => {
   }
 
   return (
-    <Cell.List style={{ "overflow-y": "scroll" }}>
-      <For each={getHistory()}>
+    <Cell.List style={{ "overflow-y": "scroll", height: "100%" }}>
+      <For
+        each={getHistory()}
+        fallback={
+          <Plug full>
+            <Plug.Container>
+              <Title>{lang("dialogs_stub.title")}</Title>
+              <SubTitle>{lang("dialogs_stub.subtitle")}</SubTitle>
+            </Plug.Container>
+            <Plug.Action stretched>
+              <Button
+                size={"large"}
+                onClick={() => swipeView({ viewId: views.SEARCH })}
+              >
+                <Button.Container>
+                  <Title>{lang("search_for_an_interlocutor")}</Title>
+                </Button.Container>
+              </Button>
+            </Plug.Action>
+          </Plug>
+        }
+      >
         {(chat, index) => (
           <Swipe
             data-index={index()}

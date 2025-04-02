@@ -9,8 +9,13 @@ import { createStore } from "solid-js/store"
 import SearchDefault from "app/pages/Search/Default/Default"
 import ProfileDefault from "app/pages/Profile/Default/Default"
 import ChatsDefault from "app/pages/Chats/Default/Default"
+import RatingDefault from "app/pages/Rating/Default/Default"
 
-import { IconArchiveFilled, IconMessageCircleFilled } from "source"
+import {
+  IconArchiveFilled,
+  IconDiamondFilled,
+  IconMessageCircleFilled,
+} from "source"
 import { USER_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
 import { HOST_CDN } from "root/configs"
@@ -24,6 +29,7 @@ const getView = (nav: string) =>
     [panels.CHATS]: views.CHATS,
     [panels.SEARCH]: views.SEARCH,
     [panels.PROFILE]: views.PROFILE,
+    [panels.RATING]: views.RATING,
   }[nav] || "")
 
 const Action: Component<Action> = (props) => {
@@ -36,7 +42,12 @@ const Action: Component<Action> = (props) => {
 
   createEffect(() => {
     if (
-      [`${panels.CHATS}`, panels.SEARCH, panels.PROFILE].includes(activePanel())
+      [
+        `${panels.CHATS}`,
+        panels.SEARCH,
+        panels.PROFILE,
+        panels.RATING,
+      ].includes(activePanel())
     ) {
       setStore("panel", activePanel())
     }
@@ -46,6 +57,7 @@ const Action: Component<Action> = (props) => {
   const handlerChats = () => swipeView({ viewId: views.CHATS })
   const handlerSearch = () => swipeView({ viewId: views.SEARCH })
   const handlerProfile = () => swipeView({ viewId: views.PROFILE })
+  const handlerRating = () => swipeView({ viewId: views.RATING })
 
   return (
     <EAction
@@ -53,6 +65,15 @@ const Action: Component<Action> = (props) => {
       activePanel={store.panel}
       bar={
         <Tabbar>
+          <Tabbar.Button
+            onClick={handlerRating}
+            selected={activeView() === views.RATING}
+          >
+            <Gap direction={"column"}>
+              <IconDiamondFilled width={28} height={28} />
+              <Title>{lang("rating")}</Title>
+            </Gap>
+          </Tabbar.Button>
           <Tabbar.Button
             onClick={handlerChats}
             selected={activeView() === views.CHATS}
@@ -97,6 +118,7 @@ const Action: Component<Action> = (props) => {
         </Tabbar>
       }
     >
+      <Path nav={panels.RATING} component={RatingDefault} />
       <Path nav={panels.SEARCH} component={SearchDefault} />
       <Path nav={panels.PROFILE} component={ProfileDefault} />
       <Path nav={panels.CHATS} component={ChatsDefault} />

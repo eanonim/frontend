@@ -135,9 +135,9 @@ const Content: Component<Content> = (props) => {
                           </Show>
                           <span>
                             {(selectedPrice() === "TON"
-                              ? (product.price * [1, 2, 4, 12][index()]) /
+                              ? (product.price * [2, 4, 12][index()]) /
                                 1_000_000_000
-                              : product.price * [1, 2, 4, 12][index()]
+                              : product.price * [2, 4, 12][index()]
                             ).toLocaleString("ru-RU", {
                               minimumFractionDigits: 2, // Минимум 2 знака после запятой
                               maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)
@@ -161,9 +161,9 @@ const Content: Component<Content> = (props) => {
                           <span>
                             {(selectedPrice() === "TON"
                               ? product.price /
-                                [12, 6, 3, 1][index()] /
+                                [6, 3, 1][index()] /
                                 1_000_000_000
-                              : product.price / [12, 6, 3, 1][index()]
+                              : product.price / [6, 3, 1][index()]
                             ).toLocaleString("ru-RU", {
                               minimumFractionDigits: 0, // Минимум 2 знака после запятой
                               maximumFractionDigits: 3, // Максимум 9 знаков после запятой (стандарт TON)

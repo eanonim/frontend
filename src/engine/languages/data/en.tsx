@@ -3,6 +3,7 @@ import { modals, pushModal } from "router"
 
 export default {
   language: "Language",
+  rating: "Rating",
   languages: {
     ru: "Russian",
     en: "English",

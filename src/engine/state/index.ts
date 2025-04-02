@@ -17,3 +17,4 @@ export {
 export { SEARCH_OPTIONS_ATOM } from "./search_options"
 export { CHAT_LIST_ATOM } from "./chat_list"
 export { PRODUCT_ATOM } from "./product"
+export { RATING_ATOM } from "./rating"

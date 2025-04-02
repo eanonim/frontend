@@ -9,6 +9,7 @@ import Error from "./pages/Error/Error"
 import Search from "./pages/Search/Search"
 import Profile from "./pages/Profile/Profile"
 import Chats from "./pages/Chats/Chats"
+import Rating from "./pages/Rating/Rating"
 
 import Popup from "./popups"
 import Modals from "./modals"
@@ -227,6 +228,11 @@ const App: Component = () => {
         />
       }
     >
+      <Path
+        tabbar={[`${pages.RATING}`].includes(getLastPage(views.RATING) || "")}
+        nav={views.RATING}
+        component={Rating}
+      />
       <Path
         tabbar={[`${pages.CHATS}`].includes(getLastPage(views.CHATS) || "")}
         nav={views.CHATS}

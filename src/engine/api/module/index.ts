@@ -20,7 +20,7 @@ import {
 } from "router"
 import { createEffect, createSignal, on } from "solid-js"
 import { createStore } from "solid-js/store"
-import { chatInfo } from ".."
+import { chatInfo, userGet } from ".."
 import { Chats } from "engine/class/useChat"
 import { bridgeOpenPopup } from "@apiteam/twa-bridge/solid"
 
@@ -334,10 +334,17 @@ export type Socket = {
     event: undefined
   }
   "chat.inviteStatus": {
+    request: undefined
+    response: undefined
     event: {
       dialog: string
       status: "accepted" | "rejected"
     }
+  }
+  "payment.success": {
+    request: undefined
+    response: undefined
+    event: undefined
   }
   "chat.close": {
     request: {
@@ -531,6 +538,17 @@ export type Socket = {
       coin: number
     }
   }
+  "rating.get": {
+    request: {}
+    response: {
+      // id: number
+      coin: number
+      emoji: number
+      first_name: string
+      last_name: string
+      image: string
+    }[]
+  }
 }
 
 const [store, setStore] = createStore({
@@ -569,6 +587,10 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
       replacePage({ pageId: pages.DUPLICATED, is_back: false })
     }
 
+    if (event === "payment.success") {
+      userGet({})
+    }
+
     if (event === "message.send") {
       const dialog = data.response?.dialog
       if (dialog && data.response) {
@@ -579,7 +601,9 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
         if (view() === views.CHATS) {
           const panel = useRouterPanel(view)
           if (panel() === panels.CHAT) {
-            const params = useParams<{ dialog: string }>({ pageId: pages.CHAT })
+            const params = useParams<{ dialog: string }>({
+              pageId: pages.CHAT,
+            })
             if (params().dialog !== dialog) {
               notification = true
             }

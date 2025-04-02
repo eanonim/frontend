@@ -3,6 +3,7 @@ import { Socket, socketSend } from "../module"
 import { SEARCH_OPTIONS_ATOM, SETTINGS_ATOM } from "engine/state"
 import { setFontSize, setTheme, setThemeColor } from "engine/state/settings"
 import { maxInterest } from "root/configs"
+import { swap } from "engine/languages"
 
 const storeList = async (options: Socket["store.list"]["request"]) => {
   const { response, error } = await socketSend("store.list", options)
@@ -24,6 +25,7 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
     "filterYourAgeEnd",
     "filterYourAgeStart",
     "filterYourSex",
+    "language",
   ]
 
   for (const key in response) {
@@ -85,6 +87,9 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
 
   setTheme(response.theme)
   setThemeColor(response.themeColor)
+  if (response.language) {
+    swap(response.language)
+  }
   document.documentElement.setAttribute("theme-color", response.themeColor)
 
   return { response, error }

@@ -10,6 +10,8 @@ import {
   createEffect,
 } from "solid-js"
 import loc, { locByCode, swap } from "engine/languages"
+import { setter } from "engine/modules/smart-data"
+import { SETTINGS_ATOM } from "engine/state"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -24,7 +26,14 @@ const Content: Component<Content> = (props) => {
           <Cell.List>
             <For each={Object.keys(lang("languages") as any) as "ru"[]}>
               {(locale, index) => (
-                <Cell separator onClick={() => swap(locale)}>
+                <Cell
+                  data-index={index()}
+                  separator
+                  onClick={() => {
+                    setter(SETTINGS_ATOM, "language", locale)
+                    swap(locale)
+                  }}
+                >
                   <Cell.Before>
                     <Switch
                       fallback={

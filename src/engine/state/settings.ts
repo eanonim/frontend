@@ -22,6 +22,7 @@ export const SETTINGS_ATOM = atom<
     theme: "dark",
     themeColor: "standard",
     interest: [],
+    language: "en",
   },
   onRequested: (options, key) => {
     storeList(options)
@@ -34,6 +35,7 @@ export const SETTINGS_ATOM = atom<
       "fontSize",
       "theme",
       "themeColor",
+      "language",
     ]
 
     ;(async () => {

@@ -23,6 +23,7 @@ import { createStore } from "solid-js/store"
 import { chatInfo, userGet } from ".."
 import { Chats } from "engine/class/useChat"
 import { bridgeOpenPopup } from "@apiteam/twa-bridge/solid"
+import { Locale } from "engine/languages"
 
 export type SocketError = {
   code: number
@@ -500,6 +501,10 @@ export type Socket = {
           key: "filterYourSex"
           value: "man" | "woman" | "any"
         }
+      | {
+          key: "language"
+          value: Locale
+        }
     response: {
       result: boolean
     }
@@ -524,6 +529,7 @@ export type Socket = {
       filterYourAgeStart?: number
       filterYourAgeEnd?: number
       filterYourSex?: "man" | "woman" | "any"
+      language?: Locale
     }
   }
   "user.get": {

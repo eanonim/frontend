@@ -43,6 +43,15 @@ export default {
     standard: "Standard",
     pink: "Pink",
   },
+  leave: {
+    title: "Leave chat",
+    subtitle:
+      "Are you sure you want to leave the chat? All correspondence will be deleted without the possibility of recovery.",
+  },
+  yes: "Yes",
+  no: "No",
+  coin: "Coin",
+  your_coin_balance: "Your coin balance",
   man: "Man",
   woman: "Woman",
   any: "Any",

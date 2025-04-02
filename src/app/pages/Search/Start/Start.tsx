@@ -8,7 +8,8 @@ import { SearchInteresting } from "engine/api/module"
 import { useAtom } from "engine/modules/smart-data"
 import { SEARCH_OPTIONS_ATOM } from "engine/state"
 import { chatSearch } from "engine/api"
-import { pages, pushPage, replacePage } from "router"
+import { modals, pages, pushModal, pushPage, replacePage } from "router"
+import { Chats } from "engine/class/useChat"
 
 interface Start extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -43,6 +44,22 @@ const Start: Component<Start> = (props) => {
           is_back: true,
           pageId: pages.CHAT,
           params: { dialog: response.dialog },
+          handler: async () => {
+            const chat = Chats.getById(response.dialog)
+
+            if (chat?.isFavorites) {
+              return true
+            }
+
+            pushModal({
+              modalId: modals.MODAL_LEAVE,
+              params: {
+                dialog: response.dialog,
+              },
+            })
+
+            return false
+          },
         })
       }
     }

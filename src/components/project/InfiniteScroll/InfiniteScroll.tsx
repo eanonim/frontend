@@ -55,7 +55,7 @@ function InfiniteScroll<T extends unknown, U extends JSX.Element>(
   const [loading, setLoading] = createSignal(false)
 
   const useVisibilityObserver = createVisibilityObserver({
-    initialValue: false,
+    initialValue: true,
     root: contentRef!,
   })
   const visibleObserver = useVisibilityObserver(() => observerRef!)

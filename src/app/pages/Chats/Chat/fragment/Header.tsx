@@ -50,7 +50,7 @@ const Header: Component<Header> = (props) => {
             type={"icon"}
             mode={"transparent"}
             style={{
-              opacity: chat?.isFavorites ? 0 : 1,
+              opacity: chat?.isDeleted ? 0 : chat?.isFavorites ? 0 : 1,
             }}
           >
             <Button.Container>

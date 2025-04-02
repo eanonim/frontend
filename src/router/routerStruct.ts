@@ -59,6 +59,7 @@ export enum modals {
   USER_CHANGE_NAME = "modal_user_change_name",
   MESSAGE_COMPLAINT = "modal_complaint",
   MODAL_PREMIUM = "modal_premium",
+  MODAL_LEAVE = "modal_leave",
 }
 
 export enum popouts {
@@ -79,6 +80,9 @@ export type routerParams = {
     message_id: number
   }
   [modals.MODAL_PREMIUM]: undefined
+  [modals.MODAL_LEAVE]: {
+    dialog: string
+  }
 }
 
 // type GORouting = {

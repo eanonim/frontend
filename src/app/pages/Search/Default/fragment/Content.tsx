@@ -1,18 +1,25 @@
 import {
   Badge,
   Button,
+  Cell,
   Flex,
   Group,
   SegmentedControl,
   Separator,
+  SubTitle,
   Tag,
   Title,
   usePlatform,
 } from "components"
+import { formatNumberWithDotsRegex } from "engine"
 import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
-import { SEARCH_OPTIONS_ATOM, STORE_INTEREST_ATOM } from "engine/state"
+import {
+  SEARCH_OPTIONS_ATOM,
+  STORE_INTEREST_ATOM,
+  USER_ATOM,
+} from "engine/state"
 import { maxInterest } from "root/configs"
 import { modals, pushModal } from "router"
 
@@ -25,6 +32,7 @@ const Content: Component<Content> = (props) => {
 
   const platform = usePlatform()
 
+  const [user] = useAtom(USER_ATOM)
   const [searchOptions, setSearchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
   const [storeInterest] = useAtom(STORE_INTEREST_ATOM)
 
@@ -100,6 +108,18 @@ const Content: Component<Content> = (props) => {
       direction={"column"}
     >
       <Group.List>
+        <Group>
+          <Group.Container>
+            <Cell>
+              <Cell.Container>
+                <Cell.Content>
+                  <Title>{formatNumberWithDotsRegex(user.coin || 0)}</Title>
+                  <SubTitle>{lang("your_coin_balance")}</SubTitle>
+                </Cell.Content>
+              </Cell.Container>
+            </Cell>
+          </Group.Container>
+        </Group>
         <Group>
           <Group.Header mode={"primary"}>{lang("you")}</Group.Header>
           <For each={elements}>

@@ -5,9 +5,11 @@ import { getter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
 import { HOST } from "root/configs"
 import {
+  modals,
   pages,
   panels,
   popouts,
+  pushModal,
   pushPage,
   pushPopout,
   replacePage,
@@ -20,6 +22,7 @@ import { createEffect, createSignal, on } from "solid-js"
 import { createStore } from "solid-js/store"
 import { chatInfo } from ".."
 import { Chats } from "engine/class/useChat"
+import { bridgeOpenPopup } from "@apiteam/twa-bridge/solid"
 
 export type SocketError = {
   code: number
@@ -676,6 +679,22 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
           is_back: true,
           pageId: pages.CHAT,
           params: { dialog: data.response?.dialog },
+          handler: async () => {
+            const chat = Chats.getById(data.response.dialog)
+
+            if (chat?.isFavorites) {
+              return true
+            }
+
+            pushModal({
+              modalId: modals.MODAL_LEAVE,
+              params: {
+                dialog: data.response?.dialog,
+              },
+            })
+
+            return false
+          },
         })
       }
     }

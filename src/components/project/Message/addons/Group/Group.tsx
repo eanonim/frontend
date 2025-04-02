@@ -17,6 +17,7 @@ import {
 } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { timeAgoOnlyDate } from "engine"
+import { unlink } from "@minsize/utils"
 
 interface Group<Message extends unknown>
   extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "children"> {
@@ -108,7 +109,7 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
 
   createEffect(
     on([() => local.dialogs, () => local.dialogs.length], ([dialogs]) => {
-      // comment
+      console.log({ dialogs: unlink(dialogs) })
       setStore("dialogs", dialogs.slice(0, store.dialogs.length || 1))
     }),
   )

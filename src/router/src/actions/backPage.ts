@@ -16,12 +16,18 @@ import { unlink } from "@minsize/utils"
 
 const backPage = leading(
   debounce,
-  (backIndex: number = 1): boolean => {
+  async (backIndex: number = 1): Promise<boolean> => {
     // if (backIndex - 1) {
     //   window.history.go((backIndex - 1) * -1)
     // }
     const history = getter(HISTORY_ATOM)
     const activeView = getter(VIEW_ATOM)
+
+    const lastView = history.view[activeView].array.slice(-1)?.[0]
+    if (lastView && !!lastView.handler) {
+      const status = await lastView.handler()
+      if (!status) return false
+    }
 
     if (activeView) {
       let back_view
@@ -100,12 +106,13 @@ const backPage = leading(
       setter(HISTORY_ATOM, (value) => {
         if (backIndex && history.view[activeView].array.length >= 1) {
           value.history = value.history.slice(0, backIndex * -1)
+
           history.view[activeView].array = history.view[activeView].array.slice(
             0,
             backIndex * -1,
           )
         }
-        console.log("backPage", value)
+
         return { ...value }
       })
 

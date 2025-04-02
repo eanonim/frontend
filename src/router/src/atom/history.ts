@@ -14,6 +14,8 @@ type View = {
    */
   modalId?: string
   popoutId?: string
+
+  handler?: () => Promise<boolean>
 }
 
 export type HISTORY = {

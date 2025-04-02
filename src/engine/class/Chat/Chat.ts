@@ -14,7 +14,8 @@ import {
 } from "./types"
 import { getFullDate } from "./utils"
 import { createStore, produce, SetStoreFunction, Store } from "solid-js/store"
-import { unlink } from "@minsize/utils"
+import { chunks } from "@minsize/utils"
+
 export class Chat<
   Target extends DefaultTarget,
   User extends DefaultUser,
@@ -215,9 +216,9 @@ export class Chat<
           ...{ chatId: this.chatId },
         })
 
-    this.setStore(
-      produce((store) => {
-        batch(() => {
+    batch(() => {
+      this.setStore(
+        produce((store) => {
           if (!isMessage || message.isShow) {
             if (!onlyHistory) {
               const fullTime = getFullDate(_message.time)
@@ -339,24 +340,22 @@ export class Chat<
           if ((store.lastMessageId || 0) < message.id) {
             store.lastMessageId = message.id
           }
-        })
-        return store
-      }),
-    )
+          return store
+        }),
+      )
+      // setDialogs(
+      //   this.store.id,
+      //   produce((chat) => {
+      //     Object.assign(chat, this.store)
+      //     return chat
+      //   }),
+      // )
 
-    // setDialogs(
-    //   this.store.id,
-    //   produce((chat) => {
-    //     Object.assign(chat, this.store)
-    //     return chat
-    //   }),
-    // )
-
-    if (_message.reply) {
-      this.initMessage(_message.reply, undefined, true)
-      message.setter("replyId", _message.reply.id)
-    }
-
+      if (_message.reply) {
+        this.initMessage(_message.reply, undefined, true)
+        message.setter("replyId", _message.reply.id)
+      }
+    })
     return message
   }
 
@@ -378,10 +377,8 @@ export class Chat<
     }
 
     // console.time("start")
-    // const chat: Record<
-    //   string,
-    //   ObjectMessage<Target, User, Keyboard, Attach>[]
-    // > = {}
+    // var chat: Record<string, ObjectMessage<Target, User, Keyboard, Attach>[]> =
+    //   {}
 
     // const history = Object.values(this.messages.history).sort(
     //   (a, b) => b.id - a.id,
@@ -394,8 +391,14 @@ export class Chat<
 
     //   chat[fullTime].push(message)
     // }
+
+    // // for (const item in chat) {
+    // //   chat[item] = chunks(20, chat[item])
+    // // }
+
     // console.timeEnd("start")
-    // console.log({ chat: Object.values(chat) })
+    // console.log({ chat: Object.entries(chat) }, this.messages.dialogs)
+
     return this.messages.dialogs
   }
 
@@ -440,31 +443,31 @@ export class Chat<
       return false
     }
     this.setStore("isLoading", true)
-    try {
-      const offset = this.messages.lastOffset || 0
-      const { response, error } = await request({
-        id: this.chatId,
-        offset: offset,
-        count: 200,
-      })
+    return await batch(async () => {
+      try {
+        const offset = this.messages.lastOffset || 0
+        const { response, error } = await request({
+          id: this.chatId,
+          offset: offset,
+          count: 200,
+        })
 
-      if (!error && (response.length === 0 || !response)) {
-        this.setStore("isFullLoad", true)
-      }
+        if (!error && (response.length === 0 || !response)) {
+          this.setStore("isFullLoad", true)
+        }
 
-      if (response) {
-        this.setStore("messages", "lastOffset", offset + 200)
+        if (response) {
+          this.setStore("messages", "lastOffset", offset + 200)
 
-        batch(() => {
           for (const message of response.reverse()) {
             this.initMessage(message, "push")
           }
-        })
-        return true
+          return true
+        }
+      } finally {
+        this.setStore("isLoading", false)
       }
-    } finally {
-      this.setStore("isLoading", false)
-    }
-    return false
+      return false
+    })
   }
 }

@@ -236,6 +236,15 @@ export type Socket = {
       }
     }
   }
+  "payment.crypto": {
+    request: { product: string; currency: "TON"; wallet: string }
+    response: {
+      address: string
+      amount: string
+      stateInit?: string
+      payload: string
+    }
+  }
   "product.get": {
     request: { currency: "XTR" | "TON"; lang: string; group: "premium" }
     response: Record<

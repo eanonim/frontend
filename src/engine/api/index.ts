@@ -35,3 +35,4 @@ export { default as messageList } from "./message/list"
 
 /* product */
 export { default as productGet } from "./product/get"
+export { default as paymentCrypto } from "./product/paymentCrypto"

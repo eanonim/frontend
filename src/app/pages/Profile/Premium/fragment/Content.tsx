@@ -18,6 +18,7 @@ import {
   createSignal,
   Show,
   createEffect,
+  on,
 } from "solid-js"
 import loc, { getLocale } from "engine/languages"
 import {
@@ -31,6 +32,7 @@ import {
 } from "source"
 import { useAtom } from "engine/modules/smart-data"
 import { PRODUCT_ATOM } from "engine/state"
+import { replaceParams } from "router"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -61,6 +63,15 @@ const Content: Component<Content> = (props) => {
     group: "premium" as "premium",
     currency: selectedPrice(),
   }))
+
+  createEffect(
+    on([selected, selectedPrice], ([selected, selectedPrice]) => {
+      replaceParams({
+        product_id: selected,
+        currency: selectedPrice,
+      })
+    }),
+  )
 
   createEffect(() => {
     if (!selected()) {

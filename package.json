@@ -31,6 +31,7 @@
     "@solid-primitives/scheduled": "^1.5.0",
     "@solid-primitives/trigger": "^1.2.0",
     "@tanstack/solid-virtual": "^3.13.2",
+    "@tonconnect/ui": "^2.1.0",
     "elum-state": "^0.8.4",
     "solid-js": "^1.9.5"
   }

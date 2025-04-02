@@ -56,6 +56,9 @@ export interface TypeButton extends HTMLAttributes<DynamicProps<"button">> {
    * Нужна ли анимации transition
    */
   anim?: boolean
+
+  href?: string
+  target?: "_blank" | "_self" | "_parent" | "_top"
 }
 
 type ComponentButton = Component<TypeButton> & {

@@ -2,6 +2,11 @@ import Link from "@component/default/Blocks/Link/Link"
 import { modals, pushModal } from "router"
 
 export default {
+  language: "Language",
+  languages: {
+    ru: "Russian",
+    en: "English",
+  },
   dialogs_stub: {
     title: "Chat history",
     subtitle:

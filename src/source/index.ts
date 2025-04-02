@@ -33,6 +33,7 @@ export { default as IconMessage2Search } from "./Message2Search.svg"
 export { default as IconCoins } from "./Coins.svg"
 export { default as IconBrush } from "./Brush.svg"
 export { default as IconBookmarkPlus } from "./BookmarkPlus.svg"
+export { default as IconLanguage } from "./Language.svg"
 
 export { default as IconTelegramStar } from "./TelegramStar.svg"
 export { default as IconTON } from "./TON.svg"

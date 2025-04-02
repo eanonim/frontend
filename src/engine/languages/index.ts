@@ -82,8 +82,8 @@ export const swap = (locale: Locale) => {
    */
   if (!dictionaries[locale]) locale = "en"
 
-  locale = "en"
-
+  // locale = "en"
+  console.log({ locale2: locale })
   document.documentElement.setAttribute("lang", locale)
   document.documentElement.setAttribute(
     "dir",

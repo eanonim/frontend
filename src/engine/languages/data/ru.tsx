@@ -1,4 +1,9 @@
 export default {
+  language: "Language",
+  languages: {
+    ru: "Русский",
+    en: "Английский",
+  },
   search_for_an_interlocutor: "Поиск собеседника",
   change_interests: "Изменить интересы",
   chats: "Чаты",

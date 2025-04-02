@@ -17,6 +17,7 @@ import {
   IconCarambolaFilled,
   IconCircleHalf,
   IconDiamondFilled,
+  IconLanguage,
   IconLetterCase,
   IconMoodEdit,
   IconPhotoFilled,
@@ -89,6 +90,7 @@ const Content: Component<Content> = (props) => {
       | "cooperation"
       | "privacy_policy"
       | "help"
+      | "language"
     isAccent?: boolean
     color?: string
     handler?: () => void
@@ -131,6 +133,12 @@ const Content: Component<Content> = (props) => {
         title: "text_size",
         color: "#5CA19A",
         handler: () => pushPage({ pageId: pages.FONTSIZE }),
+      },
+      {
+        icon: IconLanguage,
+        title: "language",
+        color: "#903ec4",
+        handler: () => pushPage({ pageId: pages.LANGUAGE }),
       },
     ],
     [

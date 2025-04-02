@@ -10,6 +10,7 @@ import Backgrounds from "./Backgrounds/Backgrounds"
 import BackgroundEdit from "./BackgroundEdit/BackgroundEdit"
 import Theme from "./Theme/Theme"
 import Premium from "./Premium/Premium"
+import Language from "./Language/Language"
 
 interface Profile extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -27,6 +28,7 @@ const Profile: Component<Profile> = (props) => {
       <Path nav={panels.BACKGROUND_EDIT} component={BackgroundEdit} />
       <Path nav={panels.THEME} component={Theme} />
       <Path nav={panels.PREMIUM} component={Premium} />
+      <Path nav={panels.LANGUAGE} component={Language} />
     </View>
   )
 }

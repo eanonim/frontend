@@ -75,21 +75,21 @@ export class Message<
           this.requestDelete()
         }
 
-        if (key === "isDeleted") {
-          const chat = dialogs[this.chatId]
-          if (chat && chat.lastMessageId === this.id) {
-            for (let i = this.id - 1; i > 0; i--) {
-              const _message = chat.messages.history[i]
-              if (_message && !_message.isDeleted) {
-                chat.setter("lastMessageId", _message.id)
-                break
-              }
-              if (i === 0) {
-                chat.setter("lastMessageId", 0)
-              }
-            }
-          }
-        }
+        // if (key === "isDeleted") {
+        //   const chat = dialogs[this.chatId]
+        //   if (chat && chat.lastMessageId === this.id) {
+        //     for (let i = this.id - 1; i > 0; i--) {
+        //       const _message = chat.messages.history[i]
+        //       if (_message && !_message.isDeleted) {
+        //         chat.setter("lastMessageId", _message.id)
+        //         break
+        //       }
+        //       if (i === 0) {
+        //         chat.setter("lastMessageId", 0)
+        //       }
+        //     }
+        //   }
+        // }
 
         if (key === "id") {
           const newId = Number(value)

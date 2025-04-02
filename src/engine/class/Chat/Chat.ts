@@ -14,6 +14,7 @@ import {
 } from "./types"
 import { getFullDate } from "./utils"
 import { createStore, produce, SetStoreFunction, Store } from "solid-js/store"
+import { unlink } from "@minsize/utils"
 export class Chat<
   Target extends DefaultTarget,
   User extends DefaultUser,
@@ -216,127 +217,129 @@ export class Chat<
 
     this.setStore(
       produce((store) => {
-        if (!isMessage || message.isShow) {
-          if (!onlyHistory) {
-            const fullTime = getFullDate(_message.time)
+        batch(() => {
+          if (!isMessage || message.isShow) {
+            if (!onlyHistory) {
+              const fullTime = getFullDate(_message.time)
 
-            let dialogIndex = 0
-            let groupMessagesIndex = 0
-            let messageIndex = 0
+              let dialogIndex = 0
+              let groupMessagesIndex = 0
+              let messageIndex = 0
 
-            const countEmpty = 20 // Количество пустых ячеек
+              const countEmpty = 20 // Количество пустых ячеек
 
-            // добавляем группу сообщения за сегодняшний день
-            const fullTimeToday = getFullDate(new Date())
-            dialogIndex = store.messages.dialogs.findIndex(
-              (x) => x[0] === fullTimeToday,
-            )
-            if (dialogIndex === -1) {
-              dialogIndex = store.messages.dialogs.length
-              store.messages.dialogs.push([
-                fullTimeToday,
-                Array.from({ length: countEmpty }, () => []),
-              ])
-            }
-
-            // Забиваем Array, для следующих сообщений, что бы Index`ы работали нормально
-            dialogIndex = store.messages.dialogs.findIndex(
-              (x) => x[0] === fullTime,
-            )
-            if (dialogIndex === -1) {
-              dialogIndex = store.messages.dialogs.length
-              store.messages.dialogs.push([
-                fullTime,
-                Array.from({ length: countEmpty }, () => []),
-              ])
-            }
-
-            let groupMessages = store.messages.dialogs[dialogIndex][1]
-
-            if (groupMessages.length === 0) {
-              for (let i = 0; i < countEmpty; i++) {
-                store.messages.dialogs[dialogIndex][1][i] = []
+              // добавляем группу сообщения за сегодняшний день
+              const fullTimeToday = getFullDate(new Date())
+              dialogIndex = store.messages.dialogs.findIndex(
+                (x) => x[0] === fullTimeToday,
+              )
+              if (dialogIndex === -1) {
+                dialogIndex = store.messages.dialogs.length
+                store.messages.dialogs.push([
+                  fullTimeToday,
+                  Array.from({ length: countEmpty }, () => []),
+                ])
               }
-            }
 
-            if (dialogIndex !== -1) {
-              if (typePush === "push") {
-                groupMessagesIndex = groupMessages.findLastIndex(
-                  (group, index) =>
-                    index >= countEmpty &&
-                    group.filter(Boolean).length < groupMessagesCount,
-                )
+              // Забиваем Array, для следующих сообщений, что бы Index`ы работали нормально
+              dialogIndex = store.messages.dialogs.findIndex(
+                (x) => x[0] === fullTime,
+              )
+              if (dialogIndex === -1) {
+                dialogIndex = store.messages.dialogs.length
+                store.messages.dialogs.push([
+                  fullTime,
+                  Array.from({ length: countEmpty }, () => []),
+                ])
+              }
 
-                if (groupMessagesIndex === -1) {
-                  groupMessagesIndex = groupMessages.length
-                  groupMessages[groupMessagesIndex] = []
-                }
+              let groupMessages = store.messages.dialogs[dialogIndex][1]
 
-                messageIndex =
-                  groupMessagesCount -
-                  groupMessages[groupMessagesIndex].filter(Boolean).length -
-                  1
-
-                if (!onlyHistory) {
-                  groupMessages[groupMessagesIndex][messageIndex] = message
-                }
-              } else {
-                groupMessagesIndex = groupMessages.findLastIndex(
-                  (x, index) =>
-                    index < countEmpty &&
-                    x.filter(Boolean).length < groupMessagesCount,
-                )
-
-                if (groupMessagesIndex === -1) {
-                  groupMessagesIndex = 0
-                }
-
-                messageIndex =
-                  groupMessages[groupMessagesIndex].filter(Boolean).length
-
-                if (!!groupMessages[groupMessagesIndex][messageIndex]) {
-                  messageIndex += 1
-                }
-
-                if (!onlyHistory) {
-                  groupMessages[groupMessagesIndex][messageIndex] = message
+              if (groupMessages.length === 0) {
+                for (let i = 0; i < countEmpty; i++) {
+                  store.messages.dialogs[dialogIndex][1][i] = []
                 }
               }
+
+              if (dialogIndex !== -1) {
+                if (typePush === "push") {
+                  groupMessagesIndex = groupMessages.findLastIndex(
+                    (group, index) =>
+                      index >= countEmpty &&
+                      group.filter(Boolean).length < groupMessagesCount,
+                  )
+
+                  if (groupMessagesIndex === -1) {
+                    groupMessagesIndex = groupMessages.length
+                    groupMessages[groupMessagesIndex] = []
+                  }
+
+                  messageIndex =
+                    groupMessagesCount -
+                    groupMessages[groupMessagesIndex].filter(Boolean).length -
+                    1
+
+                  if (!onlyHistory) {
+                    groupMessages[groupMessagesIndex][messageIndex] = message
+                  }
+                } else {
+                  groupMessagesIndex = groupMessages.findLastIndex(
+                    (x, index) =>
+                      index < countEmpty &&
+                      x.filter(Boolean).length < groupMessagesCount,
+                  )
+
+                  if (groupMessagesIndex === -1) {
+                    groupMessagesIndex = 0
+                  }
+
+                  messageIndex =
+                    groupMessages[groupMessagesIndex].filter(Boolean).length
+
+                  if (!!groupMessages[groupMessagesIndex][messageIndex]) {
+                    messageIndex += 1
+                  }
+
+                  if (!onlyHistory) {
+                    groupMessages[groupMessagesIndex][messageIndex] = message
+                  }
+                }
+              }
+              message.setter("indexes", [
+                dialogIndex,
+                groupMessagesIndex,
+                messageIndex,
+              ])
             }
-            message.setter("indexes", [
-              dialogIndex,
-              groupMessagesIndex,
-              messageIndex,
-            ])
           }
-        }
 
-        message.setter("attach", _message.attach)
-        message.setter("isDeleted", _message.isDeleted)
-        message.setter("isEdit", _message.isEdit)
-        message.setter("isLoading", _message.isLoading)
-        message.setter("isOnlyEmoji", _message.isOnlyEmoji)
-        message.setter("isRead", _message.isRead)
-        message.setter("keyboard", _message.keyboard)
-        message.setter("replyId", _message.replyId)
-        message.setter("target", _message.target)
-        message.setter("text", _message.text)
-        message.setter("time", _message.time)
-        message.setter("type", _message.type)
+          message.setter("attach", _message.attach)
+          message.setter("isDeleted", _message.isDeleted)
+          message.setter("isEdit", _message.isEdit)
+          message.setter("isLoading", _message.isLoading)
+          message.setter("isOnlyEmoji", _message.isOnlyEmoji)
+          message.setter("isRead", _message.isRead)
+          message.setter("keyboard", _message.keyboard)
+          message.setter("replyId", _message.replyId)
+          message.setter("target", _message.target)
+          message.setter("text", _message.text)
+          message.setter("time", _message.time)
+          message.setter("type", _message.type)
 
-        message.setter("isShow", onlyHistory)
-        store.messages.history[message.id] = message
+          message.setter("isShow", onlyHistory)
+          store.messages.history[message.id] = message
 
-        if (
-          message.isRead &&
-          message.id > (store.messages.lastReadMessageId || 0)
-        ) {
-          store.messages.lastReadMessageId = message.id
-        }
+          if (
+            message.isRead &&
+            message.id > (store.messages.lastReadMessageId || 0)
+          ) {
+            store.messages.lastReadMessageId = message.id
+          }
 
-        if ((store.lastMessageId || 0) < message.id) {
-          store.lastMessageId = message.id
-        }
+          if ((store.lastMessageId || 0) < message.id) {
+            store.lastMessageId = message.id
+          }
+        })
         return store
       }),
     )
@@ -393,7 +396,6 @@ export class Chat<
     // }
     // console.timeEnd("start")
     // console.log({ chat: Object.values(chat) })
-
     return this.messages.dialogs
   }
 
@@ -453,9 +455,11 @@ export class Chat<
       if (response) {
         this.setStore("messages", "lastOffset", offset + 200)
 
-        for (const message of response.reverse()) {
-          this.initMessage(message, "push")
-        }
+        batch(() => {
+          for (const message of response.reverse()) {
+            this.initMessage(message, "push")
+          }
+        })
         return true
       }
     } finally {

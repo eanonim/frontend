@@ -170,6 +170,13 @@
   color           : var(--accent_color--text);
 }
 
+.Message--deleted.Message--in .Message__text {
+  opacity: 0.6;
+}
+
+.Message--deleted.Message--out .Message__text {
+  opacity: 0.6;
+}
 
 /* .Message__end {
   width   : 12px;

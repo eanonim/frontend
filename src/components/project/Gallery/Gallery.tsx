@@ -97,6 +97,7 @@ const Gallery: Component<Gallery> = (props) => {
       <For each={local.images}>
         {(image) => (
           <Image
+            loading={"lazy"}
             onClick={() => handlerOpen(image.index)}
             class={style.Gallery__image}
             src={image.src}

@@ -151,7 +151,9 @@ const Content: Component<Content> = (props) => {
                             nowrap
                             overflow
                           >
-                            {lastMessage?.text ||
+                            {(lastMessage.isDeleted
+                              ? lang("deleted")
+                              : lastMessage?.text) ||
                               lang(
                                 `attach_type.${
                                   lastMessage?.attach?.type || "unknown"

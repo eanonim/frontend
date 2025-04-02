@@ -135,7 +135,9 @@ const NewMessage: Component<NewMessage> = (props) => {
                             }}
                           >
                             <SubTitle nowrap overflow>
-                              {message?.text ||
+                              {(message.isDeleted
+                                ? lang("deleted")
+                                : message?.text) ||
                                 lang(
                                   `attach_type.${
                                     message?.attach?.type || "unknown"

@@ -55,6 +55,7 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   isEdit?: boolean
   textEdit?: string
   isEmoji?: boolean
+  isDeleted?: boolean
 
   onRead: () => void
 }
@@ -86,6 +87,7 @@ const Message: ComponentMessage = (props) => {
     "isEmoji",
     "onRead",
     "chat_id",
+    "isDeleted",
   ])
 
   let ref: HTMLDivElement
@@ -116,6 +118,7 @@ const Message: ComponentMessage = (props) => {
         [style[`Message--only_attach`]]: !!!local.text && !!local.attach,
         [style[`Message--attach`]]: !!local.attach,
         [style[`Message--is_emoji`]]: !!local.isEmoji,
+        [style[`Message--deleted`]]: !!local.isDeleted,
 
         [`${local.class}`]: !!local.class,
         ...local.classList,
@@ -217,7 +220,15 @@ const Message: ComponentMessage = (props) => {
                   <Show when={local.isEdit}>{local.textEdit} </Show>
                   {formatTime(new Date(time))}
                 </span>
-                <Show when={local.type === "out"}>
+                <Show
+                  when={
+                    local.type === "out" &&
+                    (local.isRead ||
+                      local.isNotRead ||
+                      local.isLoading ||
+                      local.isNew)
+                  }
+                >
                   <Badge
                     class={style.Message__time_badge}
                     isRead={local.isRead}

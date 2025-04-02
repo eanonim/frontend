@@ -14,6 +14,7 @@ import { createStore } from "solid-js/store"
 
 interface Image extends JSX.HTMLAttributes<HTMLDivElement> {
   src?: string
+  loading?: "lazy" | "eager"
 }
 
 type Store = {
@@ -38,6 +39,7 @@ const Image: ComponentImage = (props) => {
     "onError",
     "onLoad",
     "src",
+    "loading",
   ])
 
   const [store, setStore] = createStore<Store>(
@@ -88,7 +90,7 @@ const Image: ComponentImage = (props) => {
       {...others}
     >
       <img
-        loading={"lazy"}
+        loading={local.loading}
         onError={onError}
         onLoad={onLoad}
         onLoadedMetadata={onLoadedMetadata}

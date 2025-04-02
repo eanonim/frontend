@@ -75,6 +75,7 @@ export default {
     anime: "Anime",
     lgbt: "LGBT",
   },
+  deleted: "Deleted",
   attach_type: {
     invite: "Request to save the correspondence",
     photo: "Photo",

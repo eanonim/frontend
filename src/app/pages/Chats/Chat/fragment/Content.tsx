@@ -177,7 +177,7 @@ const Content: Component<Content> = (props) => {
               hasMore={!chat.isFullLoad}
             >
               {(message, index) => (
-                <Show keyed when={message && !message.isDeleted}>
+                <Show keyed when={message}>
                   <Switch
                     fallback={
                       <Message
@@ -212,6 +212,7 @@ const Content: Component<Content> = (props) => {
                         attach={message.attach}
                         type={message.target === "my" ? "out" : "in"}
                         text={message.text}
+                        //text={String(message.id)}
                         time={message.time}
                         isEmoji={false}
                         isRead={chat.checkRead(message.id)}
@@ -222,6 +223,20 @@ const Content: Component<Content> = (props) => {
                       />
                     }
                   >
+                    <Match when={message.isDeleted}>
+                      <Message
+                        chat_id={chat.id}
+                        data-index={index()}
+                        data-message_id={message.id}
+                        type={message.target === "my" ? "out" : "in"}
+                        text={lang("deleted")}
+                        isDeleted={true}
+                        time={message.time}
+                        isEmoji={false}
+                        isNew={false}
+                        onRead={() => message.setter("isRead", true)}
+                      />
+                    </Match>
                     <Match keyed when={message.type === "invite" && chat.user}>
                       {(user) => (
                         <Message.System>

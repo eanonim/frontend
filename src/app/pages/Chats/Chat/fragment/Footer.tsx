@@ -239,7 +239,13 @@ const Footer: Component<Footer> = (props) => {
                   />
                   <Cell.Content>
                     <SubTitle color={"accent"}>{lang("in_response")}</SubTitle>
-                    <Title>{message.text}</Title>
+                    <Title>
+                      {message.text ||
+                        lang(
+                          `attach_type.${message?.attach?.type || "unknown"}`,
+                        ) ||
+                        lang(`attach_type.unknown`)}
+                    </Title>
                   </Cell.Content>
                   <Cell.After onClick={handlerRemoveReply}>
                     <IconX color={"var(--accent_color)"} />

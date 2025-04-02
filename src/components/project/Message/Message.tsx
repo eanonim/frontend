@@ -24,7 +24,8 @@ import { textParserUrl } from "@minsize/utils"
 import { HOST_CDN } from "root/configs"
 import { getter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
-import { Attach } from "engine/class/useChat"
+import { Attach, Message as TMessage } from "engine/class/useChat"
+import loc from "engine/languages"
 
 interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   text?: string
@@ -33,14 +34,7 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
 
   type: "in" | "out"
 
-  reply?: {
-    message?: string
-    time?: Date
-    attach?: {
-      type: "photo" | "invite"
-      items: { id: string }[]
-    }
-  }
+  reply?: TMessage
   attach?: Attach
 
   /** Отображает бейдж как прочитанный */
@@ -70,6 +64,7 @@ type ComponentMessage = Component<Message> & {
 }
 
 const Message: ComponentMessage = (props) => {
+  const [lang] = loc()
   const [local, others] = splitProps(props, [
     "class",
     "classList",
@@ -169,7 +164,9 @@ const Message: ComponentMessage = (props) => {
                 {/* <span class={style.Message__forward_separator} /> */}
                 <span class={style.Message__forward_content}>
                   <span class={style.Message__forward_text}>
-                    {reply.message || reply.attach?.type}
+                    {reply.text ||
+                      lang(`attach_type.${reply.attach?.type || "unknown"}`) ||
+                      lang(`attach_type.unknown`)}
                   </span>
                 </span>
               </Flex>

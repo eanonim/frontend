@@ -99,6 +99,7 @@ html[theme="light"] {
 html[theme="light"][theme-color="pink"] {
   /* --text_primary       : #000000;
   --text_secondary     : #666666; */
+  --text_secondary     : #e580b3;
   --separator_primary  : #ff98d4;
   --separator_secondary: #ffcdea;
   --bg_selected        : #F8D8E8;
@@ -142,6 +143,7 @@ html[theme="light"][theme-color="pink"] {
 html[theme="dark"][theme-color="pink"] {
   /* --text_primary       : #000000;
   --text_secondary     : #666666; */
+  --text_secondary     : #a2587d;
   --separator_primary  : #ff98d4;
   --separator_secondary: #410024;
 
@@ -177,6 +179,141 @@ html[theme="dark"][theme-color="pink"] {
   --radio_color--selected: #d5107f;
   --radio_color-hover    : #bb0d6b;
   --radio_color-active   : #be0065; */
+}
+
+html[theme="light"][theme-color="mint"] {
+  --text_primary       : #333333;
+  --text_secondary     : #528B8B;
+  --separator_primary  : #A7E3D2;
+  --separator_secondary: #D4F1EA;
+  --bg_selected        : #EAF9F4;
+  --bg_color           : #F4FCFA;
+  --modal_bg_color     : #F4FCFA;
+
+  --section_bg_color        : #E0F2EF;
+  --section_bg_color--active: #D0E8E3;
+
+  --bg_input: #C8EEDF;
+
+  --link_color: #3CB371;
+  /* Sea Green */
+
+  --accent_color      : #3CB371;
+  --accent_color--text: #FFFFFF;
+
+  --secondary_color      : #BFE2D6;
+  --secondary_color--text: #ffffff;
+
+  --opacity_merges : 0.54;
+  --opacity_disable: 0.74;
+
+  --cell--hover : #D7F0E8;
+  --cell--active: #BFE2D6;
+  --cell--select: #A7D5C5;
+
+}
+
+html[theme="dark"][theme-color="mint"] {
+  --text_primary       : #EEEEEE;
+  --text_secondary     : #748e8e;
+  --separator_primary  : #528B8B;
+  /* Dark Cyan */
+  --separator_secondary: #36454F;
+  /* Charcoal */
+
+  --section_bg_color        : #2E4A46;
+  --section_bg_color--active: #3B5955;
+
+  --bg_input: #1E3330;
+
+  --link_color: #66CDAA;
+  /* Medium Aquamarine */
+
+  --accent_color      : #66CDAA;
+  --accent_color--text: #FFFFFF;
+  /* Black for better contrast */
+
+  --secondary_color      : #456965;
+  --secondary_color--text: #ffffff;
+
+  --opacity_merges : 0.54;
+  --opacity_disable: 0.74;
+
+  --cell--hover : #385551;
+  --cell--active: #4A706A;
+  --cell--select: #5C8680;
+}
+
+html[theme="light"][theme-color="earthen"] {
+  --text_primary       : #333333;
+  --text_secondary     : #997053;
+  --separator_primary  : #A0522D;
+  /* Sienna */
+  --separator_secondary: #DEB887;
+  /* BurlyWood */
+  --bg_selected        : #F5DEB3;
+  /* Wheat */
+  --bg_color           : #FAF0E6;
+  /* Linen */
+  --modal_bg_color     : #FAF0E6;
+
+  --section_bg_color        : #FAEBD7;
+  /* AntiqueWhite */
+  --section_bg_color--active: #E9DABB;
+
+  --bg_input: #D2B48C;
+  /* Tan */
+
+  --link_color: #8B4513;
+  /* SaddleBrown */
+
+  --accent_color      : #8B4513;
+  --accent_color--text: #FFFFFF;
+
+  --secondary_color      : #CD853F;
+  /* Peru */
+  --secondary_color--text: #ffffff;
+
+  --opacity_merges : 0.54;
+  --opacity_disable: 0.74;
+
+  --cell--hover : #E2C4A4;
+  --cell--active: #CD853F;
+  --cell--select: #B8860B;
+  /* DarkKhaki */
+}
+
+html[theme="dark"][theme-color="earthen"] {
+  --text_primary       : #EEEEEE;
+  --text_secondary     : #997053;
+  --separator_primary  : #8B4513;
+  /* SaddleBrown */
+  --separator_secondary: #654321;
+  /* DarkBrown */
+
+  --section_bg_color        : #4A341E;
+  /* DarkBrown */
+  --section_bg_color--active: #5C4033;
+
+  --bg_input: #3B2A17;
+
+  --link_color: #F0E68C;
+  /* Khaki */
+
+  --accent_color      : #F0E68C;
+  --accent_color--text: #FFFFFF;
+
+  --secondary_color      : #6B4513;
+  /* SaddleBrown */
+  --secondary_color--text: #ffffff;
+
+  --opacity_merges : 0.54;
+  --opacity_disable: 0.74;
+
+  --cell--hover : #42321C;
+  --cell--active: #543820;
+  --cell--select: #6B4513;
+  /* SaddleBrown */
 }
 
 html[platform="macOS"] {

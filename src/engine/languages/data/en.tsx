@@ -53,6 +53,8 @@ export default {
   themeColor: {
     standard: "Standard",
     pink: "Pink",
+    mint: "Mint",
+    earthen: "Earthen",
   },
   leave: {
     title: "Leave chat",

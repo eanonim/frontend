@@ -8,6 +8,7 @@ import {
   For,
   mergeProps,
   on,
+  onMount,
   Show,
   splitProps,
   type Component,
@@ -29,6 +30,7 @@ interface Gallery<Image = { index: number; src: string; isLoading?: boolean }>
   images: Image[]
   "border-radius"?: Property.BorderRadius
   only?: boolean
+  onStatus: (open: () => boolean, handlerClose: () => void) => void
 }
 
 type Store = {
@@ -49,6 +51,7 @@ const Gallery: Component<Gallery> = (props) => {
     "style",
     "border-radius",
     "only",
+    "onStatus",
   ])
 
   const [store, setStore] = createStore<Store>({
@@ -57,6 +60,18 @@ const Gallery: Component<Gallery> = (props) => {
     transformX: 0,
     transformY: 0,
   })
+
+  createEffect(
+    on(
+      () => store.isOpen,
+      (isOpen) => {
+        local.onStatus(
+          () => !!isOpen,
+          () => setStore("isOpen", false),
+        )
+      },
+    ),
+  )
 
   const handlerOpen = (image_index: number) => {
     const index = local.images.findIndex((x) => x.index === image_index)

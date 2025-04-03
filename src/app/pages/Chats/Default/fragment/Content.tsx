@@ -64,7 +64,19 @@ const Content: Component<Content> = (props) => {
   const [lang] = loc()
 
   const handlerChat = (dialog: string) => {
-    pushPage({ pageId: pages.CHAT, params: { dialog: dialog } })
+    pushPage({
+      pageId: pages.CHAT,
+      params: { dialog: dialog },
+      handler: async () => {
+        const chat = Chats.getById(dialog)
+
+        if (!!chat?.isOpenGallery) {
+          chat.isOpenGallery()
+          return false
+        }
+        return true
+      },
+    })
   }
 
   const getHistory = createMemo(() =>

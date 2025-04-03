@@ -721,6 +721,11 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
           handler: async () => {
             const chat = Chats.getById(data.response.dialog)
 
+            if (!!chat?.isOpenGallery) {
+              chat.isOpenGallery()
+              return false
+            }
+
             if (chat?.isFavorites) {
               return true
             }

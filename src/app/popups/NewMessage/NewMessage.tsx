@@ -63,6 +63,15 @@ const NewMessage: Component<NewMessage> = (props) => {
       params: {
         dialog: params().dialog,
       },
+      handler: async () => {
+        const chat = Chats.getById(params().dialog)
+
+        if (!!chat?.isOpenGallery) {
+          chat.isOpenGallery()
+          return false
+        }
+        return true
+      },
     })
   }
 

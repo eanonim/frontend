@@ -52,6 +52,8 @@ interface Message<T extends ValidComponent = "div"> extends TypeFlex<T> {
   isDeleted?: boolean
 
   onRead: () => void
+
+  onStatus: (open: () => boolean, handlerClose: () => void) => void
 }
 
 type ComponentMessage = Component<Message> & {
@@ -83,6 +85,7 @@ const Message: ComponentMessage = (props) => {
     "onRead",
     "chat_id",
     "isDeleted",
+    "onStatus",
   ])
 
   let ref: HTMLDivElement
@@ -126,6 +129,7 @@ const Message: ComponentMessage = (props) => {
         <Show keyed when={local.attach}>
           {(attach) => (
             <Gallery
+              onStatus={local.onStatus}
               only={!!!local.text && !!local.attach}
               images={attach.items.map((x, index) => ({
                 index,

@@ -135,6 +135,10 @@ const Content: Component<Content> = (props) => {
     },
   }
 
+  const onStatusGallery = (open: () => boolean, handlerClose: () => void) => {
+    chat?.setter("isOpenGallery", open() ? handlerClose : undefined)
+  }
+
   return (
     <Show keyed when={chat}>
       {(chat) => (
@@ -181,6 +185,7 @@ const Content: Component<Content> = (props) => {
                   <Switch
                     fallback={
                       <Message
+                        onStatus={onStatusGallery}
                         chat_id={chat.id}
                         data-index={index()}
                         data-message_id={message.id}
@@ -226,6 +231,7 @@ const Content: Component<Content> = (props) => {
                     <Match when={message.isDeleted}>
                       <Show when={message.type === "default"}>
                         <Message
+                          onStatus={onStatusGallery}
                           chat_id={chat.id}
                           data-index={index()}
                           data-message_id={message.id}

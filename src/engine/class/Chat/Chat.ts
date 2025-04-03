@@ -167,6 +167,9 @@ export class Chat<
   get isDeleted() {
     return this.store.isDeleted
   }
+  get isOpenGallery() {
+    return this.store.isOpenGallery
+  }
 
   /* Установка сообщения которое хочет отправить пользователь */
   public setMessage<

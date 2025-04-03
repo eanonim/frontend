@@ -123,6 +123,7 @@ export type Dialog<
   isFullLoad?: boolean
   isFavorites?: boolean
   isDeleted?: boolean
+  isOpenGallery?: () => void
 }
 
 type Result<T> =

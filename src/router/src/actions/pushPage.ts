@@ -16,12 +16,14 @@ type Props<P extends Params> = {
   pageId: string
   params?: P
   is_back?: boolean
+  handler?: () => Promise<boolean>
 }
 
 const pushPage = <P extends Params>({
   pageId,
   params,
   is_back = true,
+  handler,
 }: Props<P>): boolean => {
   const page = getter(STRUCT_ATOM).find((a) => a.panels[pageId])
   if (!page) {
@@ -43,6 +45,7 @@ const pushPage = <P extends Params>({
       panelId,
       params,
       is_back,
+      handler,
     }
 
     value.history.push(newHistory)

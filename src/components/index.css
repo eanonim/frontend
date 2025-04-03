@@ -284,6 +284,7 @@ html[theme="light"][theme-color="earthen"] {
 }
 
 html[theme="dark"][theme-color="earthen"] {
+  --bg_color           : #1f1711;
   --text_primary       : #EEEEEE;
   --text_secondary     : #997053;
   --separator_primary  : #8B4513;
@@ -297,10 +298,10 @@ html[theme="dark"][theme-color="earthen"] {
 
   --bg_input: #3B2A17;
 
-  --link_color: #F0E68C;
+  --link_color: #cabe55;
   /* Khaki */
 
-  --accent_color      : #F0E68C;
+  --accent_color      : #cabe55;
   --accent_color--text: #FFFFFF;
 
   --secondary_color      : #6B4513;

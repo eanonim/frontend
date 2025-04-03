@@ -10,6 +10,7 @@ import Search from "./pages/Search/Search"
 import Profile from "./pages/Profile/Profile"
 import Chats from "./pages/Chats/Chats"
 import Rating from "./pages/Rating/Rating"
+import Task from "./pages/Task/Task"
 
 import Popup from "./popups"
 import Modals from "./modals"
@@ -247,6 +248,12 @@ const App: Component = () => {
         tabbar={[`${pages.PROFILE}`].includes(getLastPage(views.PROFILE) || "")}
         nav={views.PROFILE}
         component={Profile}
+      />
+
+      <Path
+        tabbar={[`${pages.TASK}`].includes(getLastPage(views.TASK) || "")}
+        nav={views.TASK}
+        component={Task}
       />
 
       <Path nav={views.STARTUP} component={Startup} />

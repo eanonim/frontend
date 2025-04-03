@@ -13,7 +13,7 @@ const Default: Component<Default> = (props) => {
   useHeaderColor({ iOS: "bg_color", android: "section_bg_color" })
 
   return (
-    <Panel {...props}>
+    <Panel {...props} safeContentTop={false} safeTop={false}>
       <Header />
       <Content />
       <Footer />

@@ -20,6 +20,8 @@ import { createStore } from "solid-js/store"
 
 interface SystemDate<T extends ValidComponent = "span"> extends TypeFlex<T> {
   key: number
+  /** Указывает, что отображать должен всегда */
+  visible?: boolean
 }
 
 const SystemDate: Component<SystemDate> = (props) => {
@@ -77,7 +79,7 @@ const SystemDate: Component<SystemDate> = (props) => {
       <Flex
         class={style.SystemDate}
         classList={{
-          [style[`SystemDate--hidden`]]: store.isHidden,
+          [style[`SystemDate--hidden`]]: props.visible ? false : store.isHidden,
 
           [`${local.class}`]: !!local.class,
           ...local.classList,

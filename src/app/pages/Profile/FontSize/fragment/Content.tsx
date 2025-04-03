@@ -35,9 +35,9 @@ const Content: Component<Content> = (props) => {
             "box-sizing": "border-box",
           }}
         >
-          <Message.System key={0}>
+          <Message.SystemDate key={0} visible>
             {timeAgoOnlyDate(new Date().getTime())}
-          </Message.System>
+          </Message.SystemDate>
           <Message
             type={"out"}
             text={lang("font_size.templates.1")}
@@ -46,8 +46,8 @@ const Content: Component<Content> = (props) => {
             onRead={() => {}}
           />
           <Message
-            forward={{
-              message: lang("font_size.templates.1"),
+            reply={{
+              text: lang("font_size.templates.1"),
             }}
             type={"in"}
             text={lang("font_size.templates.2")}

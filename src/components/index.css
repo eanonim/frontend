@@ -143,6 +143,7 @@ html[theme="light"][theme-color="pink"] {
 html[theme="dark"][theme-color="pink"] {
   /* --text_primary       : #000000;
   --text_secondary     : #666666; */
+  --bg_color           : #100108;
   --text_secondary     : #a2587d;
   --separator_primary  : #ff98d4;
   --separator_secondary: #410024;

@@ -11,6 +11,7 @@ export enum views {
   SEARCH = "view_search",
   CHATS = "view_chats",
   RATING = "view_rating",
+  TASK = "view_task",
 }
 
 export enum panels {
@@ -34,6 +35,8 @@ export enum panels {
   CHAT = "panel_chat",
 
   RATING = "panel_rating",
+
+  TASK = "panel_task",
 }
 
 export enum pages {
@@ -56,6 +59,8 @@ export enum pages {
   CHAT = "/chat",
 
   RATING = "/rating",
+
+  TASK = "/task",
 }
 
 export enum modals {
@@ -115,6 +120,13 @@ export const routerStruct: RouterStruct = [
     default: pages.STARTUP,
     panels: {
       [pages.STARTUP]: panels.STARTUP,
+    },
+  },
+  {
+    viewId: views.TASK,
+    default: pages.TASK,
+    panels: {
+      [pages.TASK]: panels.TASK,
     },
   },
   {

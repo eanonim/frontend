@@ -555,6 +555,73 @@ export type Socket = {
       image: string
     }[]
   }
+  "task.list": {
+    request: {
+      lang: string
+      group: "main"
+    }
+    response: Record<
+      string,
+      {
+        _group: Socket["task.list"]["request"]["group"]
+        title: string
+        description: string
+        object_name: string
+        position: number
+        interval: string
+        tasks: {
+          _group: Socket["task.list"]["request"]["group"]
+          action:
+            | "referral"
+            | "promo"
+            | "link"
+            | "default"
+            | "transaction"
+            | "sub"
+            | "boost"
+            | "wallet"
+            | "app"
+            | "integration"
+            | "wallet_okx"
+            | "reward"
+            | "ads"
+          id: number
+          image?: string
+          title: string
+          description: string
+          required: number
+          status: "OPEN" | "READ" | "CLOSE"
+          current: number
+          lock?: string
+          order: number
+          type:
+            | "none"
+            | "wallet_connect"
+            | "rating_order_buy"
+            | "invited_friends"
+            | "rating_sub_x"
+            | "rating_sub_youtube"
+            | "ticket_getting"
+            | "transaction_ton_0.5"
+            | "transaction_ton_0.2"
+            | "game_king_buy"
+            | "game_spin_roulette"
+          item: {
+            key: "energy" | "ticket" | "toy"
+            type: "numeric" | "time"
+            count: number
+            grade?:
+              | "common"
+              | "special"
+              | "rare"
+              | "epic"
+              | "legendary"
+              | "hidden"
+          }[]
+        }[][]
+      }
+    >
+  }
 }
 
 const [store, setStore] = createStore({

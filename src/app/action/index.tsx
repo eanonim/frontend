@@ -10,6 +10,7 @@ import SearchDefault from "app/pages/Search/Default/Default"
 import ProfileDefault from "app/pages/Profile/Default/Default"
 import ChatsDefault from "app/pages/Chats/Default/Default"
 import RatingDefault from "app/pages/Rating/Default/Default"
+import TaskDefault from "app/pages/Task/Default/Default"
 
 import {
   IconArchiveFilled,
@@ -30,6 +31,7 @@ const getView = (nav: string) =>
     [panels.SEARCH]: views.SEARCH,
     [panels.PROFILE]: views.PROFILE,
     [panels.RATING]: views.RATING,
+    [panels.TASK]: views.TASK,
   }[nav] || "")
 
 const Action: Component<Action> = (props) => {
@@ -47,6 +49,7 @@ const Action: Component<Action> = (props) => {
         panels.SEARCH,
         panels.PROFILE,
         panels.RATING,
+        panels.TASK,
       ].includes(activePanel())
     ) {
       setStore("panel", activePanel())
@@ -58,6 +61,7 @@ const Action: Component<Action> = (props) => {
   const handlerSearch = () => swipeView({ viewId: views.SEARCH })
   const handlerProfile = () => swipeView({ viewId: views.PROFILE })
   const handlerRating = () => swipeView({ viewId: views.RATING })
+  const handlerTask = () => swipeView({ viewId: views.TASK })
 
   return (
     <EAction
@@ -93,6 +97,15 @@ const Action: Component<Action> = (props) => {
             </Gap>
           </Tabbar.Button>
           <Tabbar.Button
+            onClick={handlerTask}
+            selected={activeView() === views.TASK}
+          >
+            <Gap direction={"column"}>
+              <IconDiamondFilled width={28} height={28} />
+              <Title>{lang("task")}</Title>
+            </Gap>
+          </Tabbar.Button>
+          <Tabbar.Button
             onClick={handlerProfile}
             selected={activeView() === views.PROFILE}
           >
@@ -120,7 +133,8 @@ const Action: Component<Action> = (props) => {
     >
       <Path nav={panels.RATING} component={RatingDefault} />
       <Path nav={panels.SEARCH} component={SearchDefault} />
-      <Path nav={panels.PROFILE} component={ProfileDefault} />
+      <Path nav={panels.TASK} component={RatingDefault} />
+      <Path nav={panels.PROFILE} component={TaskDefault} />
       <Path nav={panels.CHATS} component={ChatsDefault} />
     </EAction>
   )

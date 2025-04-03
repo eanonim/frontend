@@ -39,3 +39,6 @@ export { default as paymentCrypto } from "./product/paymentCrypto"
 
 /* rating */
 export { default as ratingGet } from "./rating/get"
+
+/* task */
+export { default as taskList } from "./task/list"

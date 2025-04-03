@@ -5,18 +5,18 @@ import { type JSX, type Component } from "solid-js"
 
 import Action from "app/action"
 
-interface Rating extends JSX.HTMLAttributes<HTMLDivElement> {
+interface Task extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
 }
 
-const Rating: Component<Rating> = (props) => {
+const Task: Component<Task> = (props) => {
   const activePanel = useRouterPanel(props.nav)
 
   return (
     <View {...props} activePanel={activePanel()}>
-      <Path nav={panels.RATING} component={Action} />
+      <Path nav={panels.TASK} component={Action} />
     </View>
   )
 }
 
-export default Rating
+export default Task

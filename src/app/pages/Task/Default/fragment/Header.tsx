@@ -21,11 +21,8 @@ const Header: Component<Header> = (props) => {
             />
           </Plug.Icon>
           <Plug.Container>
-            <Title>Daily Dose of Coins!</Title>
-            <SubTitle>
-              Complete simple tasks from our partners every day and get coins!
-              New tasks appear every day, so come back often!
-            </SubTitle>
+            <Title>{lang("task.title")}</Title>
+            <SubTitle>{lang("task.subtitle")}</SubTitle>
           </Plug.Container>
         </Plug>
       </Group.Container>

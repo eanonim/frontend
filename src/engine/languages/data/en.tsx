@@ -5,6 +5,11 @@ export default {
   language: "Language",
   rating: "Rating",
   tasks: "Tasks",
+  task: {
+    title: "Daily Dose of Coins!",
+    subtitle:
+      "Complete simple tasks from our partners every day and get coins! New tasks appear every day, so come back often!",
+  },
   languages: {
     ru: "Russian",
     en: "English",

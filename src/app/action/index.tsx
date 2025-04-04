@@ -1,5 +1,5 @@
 import { Action as EAction, Tabbar, Path, Title, Gap, Avatar } from "components"
-import loc from "engine/languages"
+import loc, { getLocale } from "engine/languages"
 
 import { panels, swipeView, useRouter, useRouterPanel, views } from "router"
 
@@ -18,9 +18,11 @@ import {
   IconMessageCircleFilled,
   IconStack2Filled,
 } from "source"
-import { USER_ATOM } from "engine/state"
-import { useAtom } from "engine/modules/smart-data"
+import { RATING_ATOM, TASK_ATOM, USER_ATOM } from "engine/state"
+import { getter, useAtom } from "engine/modules/smart-data"
 import { HOST_CDN } from "root/configs"
+import { Chats } from "engine/class/useChat"
+import { ratingGet, taskList } from "engine/api"
 
 interface Action extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -62,7 +64,29 @@ const Action: Component<Action> = (props) => {
   const handlerSearch = () => swipeView({ viewId: views.SEARCH })
   const handlerProfile = () => swipeView({ viewId: views.PROFILE })
   const handlerRating = () => swipeView({ viewId: views.RATING })
-  const handlerTask = () => swipeView({ viewId: views.TASK })
+  const handlerTasks = () => swipeView({ viewId: views.TASK })
+
+  const onTouchStartTasks = () => {
+    const tasks = getter(TASK_ATOM, "main" + getLocale())
+    if (Object.keys(tasks).length === 0) {
+      taskList({ group: "main", lang: getLocale() })
+    }
+  }
+
+  const onTouchStartRating = () => {
+    const rating = getter(RATING_ATOM)
+    if ((rating.data || []).length === 0) {
+      ratingGet({})
+    }
+  }
+
+  const onTouchStartChats = () => {
+    if (
+      Object.values(Chats.get()).filter((x) => !!x.isFavorites).length === 0
+    ) {
+      Chats.loadChats()
+    }
+  }
 
   return (
     <EAction
@@ -71,6 +95,7 @@ const Action: Component<Action> = (props) => {
       bar={
         <Tabbar>
           <Tabbar.Button
+            onTouchStart={onTouchStartRating}
             onClick={handlerRating}
             selected={activeView() === views.RATING}
           >
@@ -80,6 +105,7 @@ const Action: Component<Action> = (props) => {
             </Gap>
           </Tabbar.Button>
           <Tabbar.Button
+            onTouchStart={onTouchStartChats}
             onClick={handlerChats}
             selected={activeView() === views.CHATS}
           >
@@ -98,7 +124,8 @@ const Action: Component<Action> = (props) => {
             </Gap>
           </Tabbar.Button>
           <Tabbar.Button
-            onClick={handlerTask}
+            onTouchStart={onTouchStartTasks}
+            onClick={handlerTasks}
             selected={activeView() === views.TASK}
           >
             <Gap direction={"column"}>

@@ -5,6 +5,9 @@ export default {
   language: "Language",
   rating: "Rating",
   tasks: "Tasks",
+  chat_deleted: {
+    subtitle: "You can no longer send messages to this chat.",
+  },
   task: {
     title: "Daily Dose of Coins!",
     subtitle:

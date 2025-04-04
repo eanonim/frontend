@@ -97,7 +97,7 @@ const NewMessage: Component<NewMessage> = (props) => {
       {(message) => (
         <Show keyed when={chat}>
           {(chat) => (
-            <Snackbar onClose={handlerOpen}>
+            <Snackbar class={style.NewMessage} onClose={handlerOpen}>
               <Cell>
                 <Cell.Before>
                   <Avatar

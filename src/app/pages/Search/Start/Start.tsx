@@ -52,7 +52,7 @@ const Start: Component<Start> = (props) => {
               return false
             }
 
-            if (chat?.isFavorites) {
+            if (chat?.isFavorites || chat?.isDeleted) {
               return true
             }
 

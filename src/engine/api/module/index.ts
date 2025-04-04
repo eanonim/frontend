@@ -96,6 +96,16 @@ export type Socket = {
       dialog: string
     }
   }
+  "message.complaint": {
+    request: {
+      dialog: string
+      message_id: number
+      type: number
+    }
+    response: {
+      result: boolean
+    }
+  }
   "message.delete": {
     request: {
       dialog: string
@@ -793,7 +803,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
               return false
             }
 
-            if (chat?.isFavorites) {
+            if (chat?.isFavorites || chat?.isDeleted) {
               return true
             }
 

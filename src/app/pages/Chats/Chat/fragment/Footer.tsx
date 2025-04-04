@@ -7,6 +7,7 @@ import {
   Title,
   WriteBar,
   Image,
+  Plug,
 } from "components"
 import { IconPaperclip, IconPlus, IconSend, IconX } from "source"
 
@@ -212,15 +213,25 @@ const Footer: Component<Footer> = (props) => {
   const isSendMessage = () => !!message().length || !!chat?.message?.attach
 
   return (
-    <Show when={!chat?.isDeleted}>
-      <FixedLayout
-        position={"bottom"}
-        style={{
-          "z-index": 3,
-        }}
-        width={"100%"}
-        background={"section_bg_color"}
-        isMargin={false}
+    <FixedLayout
+      position={"bottom"}
+      style={{
+        "z-index": 3,
+      }}
+      width={"100%"}
+      background={"section_bg_color"}
+      isMargin={false}
+      safe={!!chat?.isDeleted}
+    >
+      <Show
+        when={true}
+        fallback={
+          <Plug size={"small"}>
+            <Plug.Container>
+              <SubTitle>{lang("chat_deleted.subtitle")}</SubTitle>
+            </Plug.Container>
+          </Plug>
+        }
       >
         <Show keyed when={chat?.getMessageById(chat.message?.replyId)}>
           {(message) => (
@@ -379,8 +390,8 @@ const Footer: Component<Footer> = (props) => {
           </span>
         </WriteBar.Icon> */}
         </WriteBar>
-      </FixedLayout>
-    </Show>
+      </Show>
+    </FixedLayout>
   )
 }
 

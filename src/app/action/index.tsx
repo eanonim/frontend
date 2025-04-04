@@ -135,7 +135,7 @@ const Action: Component<Action> = (props) => {
       <Path nav={panels.RATING} component={RatingDefault} />
       <Path nav={panels.SEARCH} component={SearchDefault} />
       <Path nav={panels.TASK} component={TaskDefault} />
-      <Path nav={panels.PROFILE} component={TaskDefault} />
+      <Path nav={panels.PROFILE} component={ProfileDefault} />
       <Path nav={panels.CHATS} component={ChatsDefault} />
     </EAction>
   )

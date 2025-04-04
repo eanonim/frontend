@@ -34,6 +34,7 @@ export { default as IconCoins } from "./Coins.svg"
 export { default as IconBrush } from "./Brush.svg"
 export { default as IconBookmarkPlus } from "./BookmarkPlus.svg"
 export { default as IconLanguage } from "./Language.svg"
+export { default as IconStack2Filled } from "./Stack2Filled.svg"
 
 export { default as IconTelegramStar } from "./TelegramStar.svg"
 export { default as IconTON } from "./TON.svg"

@@ -16,6 +16,7 @@ import {
   IconArchiveFilled,
   IconDiamondFilled,
   IconMessageCircleFilled,
+  IconStack2Filled,
 } from "source"
 import { USER_ATOM } from "engine/state"
 import { useAtom } from "engine/modules/smart-data"
@@ -101,8 +102,8 @@ const Action: Component<Action> = (props) => {
             selected={activeView() === views.TASK}
           >
             <Gap direction={"column"}>
-              <IconDiamondFilled width={28} height={28} />
-              <Title>{lang("task")}</Title>
+              <IconStack2Filled width={28} height={28} />
+              <Title>{lang("tasks")}</Title>
             </Gap>
           </Tabbar.Button>
           <Tabbar.Button

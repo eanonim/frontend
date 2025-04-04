@@ -1,4 +1,4 @@
-import { Avatar, Cell, SubTitle, Title } from "components"
+import { Avatar, Cell, Group, SubTitle, Title } from "components"
 
 import { type JSX, type Component, For, Show } from "solid-js"
 import loc, { getLocale } from "engine/languages"
@@ -15,27 +15,31 @@ const Content: Component<Content> = (props) => {
   })
 
   return (
-    <Cell.List style={{ "overflow-y": "scroll", height: "100%" }}>
-      <For each={Object.values(task)}>
-        {(item, index) => (
-          <Show keyed when={item.tasks[0][0]}>
-            {(task) => (
-              <Cell data-index={index()} separator>
-                <Cell.Before>
-                  <Avatar src={task.image} size={"48px"} />
-                </Cell.Before>
-                <Cell.Container>
-                  <Cell.Content>
-                    <Title>{task.title || "Unknown"}</Title>
-                    <SubTitle>{task.description}</SubTitle>
-                  </Cell.Content>
-                </Cell.Container>
-              </Cell>
+    <Group>
+      <Group.Container>
+        <Cell.List style={{ "overflow-y": "scroll", height: "100%" }}>
+          <For each={Object.values(task)?.[0]?.tasks}>
+            {(item, index) => (
+              <Show keyed when={item?.[0]}>
+                {(task) => (
+                  <Cell data-index={index()} separator>
+                    <Cell.Before>
+                      <Avatar mode={"app"} src={task.image} size={"48px"} />
+                    </Cell.Before>
+                    <Cell.Container>
+                      <Cell.Content>
+                        <Title>{task.title || "Unknown"}</Title>
+                        <SubTitle>{task.description}</SubTitle>
+                      </Cell.Content>
+                    </Cell.Container>
+                  </Cell>
+                )}
+              </Show>
             )}
-          </Show>
-        )}
-      </For>
-    </Cell.List>
+          </For>
+        </Cell.List>
+      </Group.Container>
+    </Group>
   )
 }
 

@@ -4,7 +4,7 @@ import { modals, pushModal } from "router"
 export default {
   language: "Language",
   rating: "Rating",
-  task: "Task",
+  tasks: "Tasks",
   languages: {
     ru: "Russian",
     en: "English",

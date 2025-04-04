@@ -1,5 +1,12 @@
 .Avatar {
-  border-radius   : 1000px;
   overflow        : hidden;
   background-color: var(--secondary_color);
+}
+
+.Avatar__mode--default {
+  border-radius: 1000px;
+}
+
+.Avatar__mode--app {
+  border-radius: 12px;
 }

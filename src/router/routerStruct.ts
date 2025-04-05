@@ -1,3 +1,5 @@
+import { Socket } from "engine/api/module"
+
 type RouterStruct = {
   viewId: string
   default: string
@@ -72,6 +74,7 @@ export enum modals {
   MESSAGE_COMPLAINT = "modal_complaint",
   MODAL_PREMIUM = "modal_premium",
   MODAL_LEAVE = "modal_leave",
+  MODAL_TASK = "modal_task",
 }
 
 export enum popouts {
@@ -94,6 +97,10 @@ export type routerParams = {
   [modals.MODAL_PREMIUM]: undefined
   [modals.MODAL_LEAVE]: {
     dialog: string
+  }
+  [modals.MODAL_TASK]: {
+    task_id: number
+    group: Socket["task.list"]["request"]["group"]
   }
 }
 

@@ -3,8 +3,8 @@ import { Socket, socketSend } from "../module"
 import { TASK_ATOM } from "engine/state"
 
 const taskList = async (options: Socket["task.list"]["request"]) => {
-  const testResponse = {
-    daily: {
+  const testResponse: Socket["task.list"]["response"] = {
+    main: {
       title: "Daily",
       description:
         "Complete daily tasks and get $RATING and move up in the rankings",
@@ -31,7 +31,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -60,7 +60,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -89,7 +89,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -123,7 +123,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -157,7 +157,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -192,7 +192,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -227,7 +227,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -262,7 +262,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -290,7 +290,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -319,7 +319,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -348,7 +348,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
               },
               {
                 key: "toy",
-                type: "number",
+                type: "numeric",
                 count: 1,
                 grade: "common",
               },
@@ -360,7 +360,7 @@ const taskList = async (options: Socket["task.list"]["request"]) => {
     },
   }
 
-  setter([TASK_ATOM, options.group + options.lang], testResponse)
+  setter([TASK_ATOM, options.group + options.lang], testResponse[options.group])
   return { response: testResponse, error: undefined }
 
   const { response, error } = await socketSend("task.list", options)

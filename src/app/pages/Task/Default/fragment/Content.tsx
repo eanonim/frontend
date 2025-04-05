@@ -4,9 +4,11 @@ import { type JSX, type Component, For, Show } from "solid-js"
 import loc, { getLocale } from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { TASK_ATOM } from "engine/state"
+import { modals, pushModal } from "router"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
+/*TODO: Добавить надпись: Задание выполнено */
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
   const [task] = useAtom(TASK_ATOM, {
@@ -14,15 +16,37 @@ const Content: Component<Content> = (props) => {
     group: "main",
   })
 
+  const handlerOpen = (task_id: number) => {
+    pushModal({
+      modalId: modals.MODAL_TASK,
+      params: {
+        task_id: task_id,
+        group: "main",
+      },
+    })
+  }
+
   return (
     <Group>
       <Group.Container>
         <Cell.List style={{ "overflow-y": "scroll", height: "100%" }}>
-          <For each={Object.values(task)?.[0]?.tasks}>
+          <For
+            each={Object.values(
+              (task?.tasks || []).sort(
+                (a, b) =>
+                  (a?.[0].status === "CLOSE" ? 1 : 0) -
+                  (b?.[0].status === "CLOSE" ? 1 : 0),
+              ),
+            )}
+          >
             {(item, index) => (
               <Show keyed when={item?.[0]}>
                 {(task) => (
-                  <Cell data-index={index()} separator>
+                  <Cell
+                    data-index={index()}
+                    separator
+                    onClick={() => handlerOpen(task.id)}
+                  >
                     <Cell.Before>
                       <Avatar mode={"app"} src={task.image} size={"48px"} />
                     </Cell.Before>

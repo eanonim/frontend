@@ -43,3 +43,6 @@ export { default as ratingGet } from "./rating/get"
 
 /* task */
 export { default as taskList } from "./task/list"
+export { default as taskCheck } from "./task/check"
+export { default as taskIntegration } from "./task/integration"
+export { default as taskExecute } from "./task/execute"

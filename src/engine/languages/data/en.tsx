@@ -194,6 +194,60 @@ export default {
     3: "Три месяца",
     1: "Месяц",
   },
+  task_type: {
+    referral: {
+      complete: "Invite Friend",
+      check: "Check task",
+    },
+    promo: {
+      complete: "Activate Promo",
+      check: "Check task",
+    },
+    app: {
+      complete: "Open App",
+      check: "Check task",
+    },
+    integration: {
+      complete: "Open App",
+      check: "Check task",
+    },
+    link: {
+      complete: "Subscribe",
+      check: "Check subscription",
+    },
+    sub: {
+      complete: "Subscribe",
+      check: "Check subscription",
+    },
+    default: {
+      complete: "Complete the task",
+      check: "Check Task",
+    },
+    wallet: {
+      complete: "Connect wallet",
+      check: "Check Task",
+    },
+    wallet_okx: {
+      complete: "Connect OKX Wallet",
+      check: "Check Task",
+    },
+    boost: {
+      complete: "Boost Channel",
+      check: "Check Boost",
+    },
+    transaction: {
+      complete: "Complete the task",
+      check: "Check Task",
+    },
+    reward: {
+      complete: "Complete the task",
+      check: "Check Task",
+    },
+    ads: {
+      complete: "Complete the task",
+      check: "Check Task",
+    },
+  },
   errors: {
     1002: "This action requires premium access",
   },

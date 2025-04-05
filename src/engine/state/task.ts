@@ -4,7 +4,7 @@ import { taskList } from "engine/api"
 import { Socket } from "engine/api/module"
 
 export const TASK_ATOM = atom<
-  Socket["task.list"]["response"],
+  Partial<Socket["task.list"]["response"][""]>,
   Socket["task.list"]["request"]
 >({
   onKey: (options) => {

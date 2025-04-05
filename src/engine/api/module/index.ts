@@ -257,7 +257,11 @@ export type Socket = {
     }
   }
   "product.get": {
-    request: { currency: "XTR" | "TON"; lang: string; group: "premium" }
+    request: {
+      currency: "XTR" | "TON"
+      lang: string
+      group: "premium" | "ton" | "jetton"
+    }
     response: Record<
       string,
       {
@@ -573,14 +577,12 @@ export type Socket = {
     response: Record<
       string,
       {
-        _group: Socket["task.list"]["request"]["group"]
         title: string
         description: string
         object_name: string
         position: number
         interval: string
         tasks: {
-          _group: Socket["task.list"]["request"]["group"]
           action:
             | "referral"
             | "promo"
@@ -631,6 +633,79 @@ export type Socket = {
         }[][]
       }
     >
+  }
+  "task.ads": {
+    request: {
+      type: "free_toy_for_ads" | "free_rating_for_ads"
+    }
+    response: {
+      result: boolean
+    }
+  }
+  "task.app": {
+    request: {
+      task: number
+    }
+    response: {
+      result: boolean
+    }
+  }
+  "task.boost": {
+    request: {
+      task: number
+    }
+    response: {
+      result: boolean
+    }
+  }
+  "task.data": {
+    request: {
+      task: number
+    }
+    response: {
+      data: string
+      url: string
+    }
+  }
+  "task.execute": {
+    request: {
+      order: number
+    }
+    response: {
+      result: boolean
+    }
+  }
+  "task.integration": {
+    request: {
+      task: number
+    }
+    response: {
+      result: boolean
+    }
+  }
+  "task.link": {
+    request: {
+      task: number
+    }
+    response: {
+      result: boolean
+    }
+  }
+  "task.sub": {
+    request: {
+      task: number
+    }
+    response: {
+      result: boolean
+    }
+  }
+  "task.wallet": {
+    request: {
+      task: number
+    }
+    response: {
+      result: boolean
+    }
   }
 }
 

@@ -1,0 +1,73 @@
+.ModalRoot {
+  display         : flex;
+  position        : fixed;
+  top             : 0;
+  right           : 0;
+  bottom          : 0;
+  left            : 0;
+  flex-direction  : column;
+  z-index         : 200;
+  background-color: rgba(0, 0, 0, 0);
+  transition      : all .3s;
+}
+
+.ModalRoot__keyboard {
+  transform: translateY(calc(var(--keyboard-safe-area-inset-bottom, 0px) * -1));
+}
+
+/* .ModalRoot::before {
+  content: "";
+  display: flex;
+  height: calc(55px + var(--safe-area-inset-top));
+} */
+
+.ModalRoot__inner {
+  display       : flex;
+  flex          : 1 1;
+  flex-direction: column-reverse;
+  flex-wrap     : nowrap;
+}
+
+.ModalRoot__container {
+  display   : flex;
+  width     : 100%;
+  min-height: 100%;
+}
+
+.ModalRoot--to-up {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ModalRoot--to-down {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.ModalRoot--to-up .ModalRoot__container {
+  -webkit-animation: _modalUp .3s forwards;
+  animation        : _modalUp .3s forwards;
+}
+
+.ModalRoot--to-down .ModalRoot__container {
+  -webkit-animation: _modalDown .3s forwards;
+  animation        : _modalDown .3s forwards;
+}
+
+@keyframes _modalUp {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes _modalDown {
+  0% {
+    transform: translateY(0%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
+}

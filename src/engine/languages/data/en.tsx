@@ -194,6 +194,7 @@ export default {
     3: "Три месяца",
     1: "Месяц",
   },
+  task_completed: "Task completed",
   task_type: {
     referral: {
       complete: "Invite Friend",

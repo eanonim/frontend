@@ -247,8 +247,8 @@ const Footer: Component<Footer> = (props) => {
               </Button.Group.Container>
             </Button.Group>
           </Match>
-          {/* Если задание выполнено */}
 
+          {/* Если задание выполнено */}
           <Match when={task.status === "CLOSE"}>
             <Button.Group>
               <Button.Group.Container>
@@ -259,7 +259,7 @@ const Footer: Component<Footer> = (props) => {
                   appearance={"secondary"}
                 >
                   <Button.Container>
-                    <Title>TASK COMPLETED</Title>
+                    <Title>{lang("task_completed")}</Title>
                   </Button.Container>
                 </Button>
               </Button.Group.Container>

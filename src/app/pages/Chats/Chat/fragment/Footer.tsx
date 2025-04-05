@@ -58,10 +58,10 @@ const Footer: Component<Footer> = (props) => {
       (edit_id) => {
         const message = chat?.getMessageById(edit_id)
         if (message && message.text) {
-          if (message.attach) {
-            // chat?.setMessage("attach", message.attach)
-            chat?.setMessage("isAddAttach", true)
-          }
+          // if (message.attach) {
+          //   chat?.setMessage("attach", items)
+          //   chat?.setMessage("isAddAttach", true)
+          // }
           setMessage(message.text)
           ref!?.focus()
         }
@@ -75,13 +75,14 @@ const Footer: Component<Footer> = (props) => {
       ref!?.focus()
       const messageText = message().trim()
 
-      if (chat?.message?.editId) {
+      const msg = chat?.getMessageById(chat?.message?.editId)
+      if (chat?.message?.editId && msg) {
         messageEdit({
           dialog: dialog,
           message: {
             id: chat.message.editId,
             message: messageText.slice(0, messageMaxSize),
-            // attach: chat.message.attach,
+            attach: unlink(msg.attach),
           },
         })
         handlerRemoveEdit()
@@ -311,9 +312,11 @@ const Footer: Component<Footer> = (props) => {
                   </Image.Preview>
                 )}
               </For>
-              <Image.Preview onClick={addImage}>
-                <IconPlus color={"var(--accent_color)"} />
-              </Image.Preview>
+              <Show when={(chat?.message?.attach || []).length < 3}>
+                <Image.Preview onClick={addImage}>
+                  <IconPlus color={"var(--accent_color)"} />
+                </Image.Preview>
+              </Show>
             </Button.Group.Container>
           </Button.Group>
         </Show>

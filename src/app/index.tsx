@@ -36,7 +36,7 @@ import { getter, globalSignal, setter } from "elum-state/solid"
 import { getter as SmartGetter } from "engine/modules/smart-data"
 import { createStore } from "solid-js/store"
 import { setTheme } from "engine/state/settings"
-import { clamp } from "@minsize/utils"
+import { clamp, unlink } from "@minsize/utils"
 
 const App: Component = () => {
   const [keyboard] = globalSignal(KEYBOARD_ATOM)
@@ -97,7 +97,7 @@ const App: Component = () => {
       // document.body.style.setProperty("--safe-area-inset-top", `${data.top}px`)
       document.body.style.setProperty("--app-height", `${data.height}px`)
 
-      if (data.height < window.innerHeight) {
+      if (data.height + store.bottom < window.innerHeight) {
         /** Открытие клавиатуры */
         document.body.style.setProperty(
           "--safe-area-inset-bottom",
@@ -175,7 +175,7 @@ const App: Component = () => {
           "--safe-area-inset-bottom",
           `${store.bottom}px`,
         )
-      } else {
+      } else if (getter(KEYBOARD_ATOM).bottom !== 0) {
         setter(KEYBOARD_ATOM, (store) => {
           store.bottom = 0
           return { ...store }

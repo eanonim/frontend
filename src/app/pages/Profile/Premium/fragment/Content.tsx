@@ -123,58 +123,50 @@ const Content: Component<Content> = (props) => {
                   <Cell.Container>
                     <Cell.Content>
                       <Title>{product.title}</Title>
-                      <Show
-                        when={
-                          product.discount && index() + 1 !== products()?.length
-                        }
-                      >
-                        <SubTitle>
-                          <Gap justifyContent={"start"} count={"2px"}>
-                            <Show when={product.discount}>
-                              <span
-                                style={{ "text-decoration": "line-through" }}
-                              >
-                                {(selectedPrice() === "TON"
-                                  ? (product.price * [2, 4, 12][index()]) /
-                                    1_000_000_000
-                                  : product.price * [2, 4, 12][index()]
-                                ).toLocaleString("ru-RU", {
-                                  minimumFractionDigits: 2, // Минимум 2 знака после запятой
-                                  maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)
-                                })}
-                              </span>{" "}
-                            </Show>
-                            <span>
+                      <SubTitle>
+                        <Gap justifyContent={"start"} count={"2px"}>
+                          <Show when={product.discount}>
+                            <span style={{ "text-decoration": "line-through" }}>
                               {(selectedPrice() === "TON"
-                                ? ((product.price - product.discount) *
-                                    [2, 4, 12][index()]) /
+                                ? (product.price * [2, 4, 12][index()]) /
                                   1_000_000_000
-                                : (product.price - product.discount) *
-                                  [2, 4, 12][index()]
+                                : product.price * [2, 4, 12][index()]
                               ).toLocaleString("ru-RU", {
                                 minimumFractionDigits: 2, // Минимум 2 знака после запятой
                                 maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)
                               })}
                             </span>{" "}
-                            <Switch>
-                              <Match when={selectedPrice() === "TON"}>
-                                <IconTON width={12} height={12} />
-                              </Match>
-                              <Match when={selectedPrice() === "XTR"}>
-                                <IconTelegramStar width={12} height={12} />
-                              </Match>
-                              <Match when={selectedPrice() === "COIN"}>
-                                <IconCoins
-                                  width={12}
-                                  height={12}
-                                  color={"var(--accent_color)"}
-                                />
-                              </Match>
-                            </Switch>
-                            <span>{lang("per_year")}</span>
-                          </Gap>
-                        </SubTitle>
-                      </Show>
+                          </Show>
+                          <span>
+                            {(selectedPrice() === "TON"
+                              ? ((product.price - product.discount) *
+                                  [2, 4, 12][index()]) /
+                                1_000_000_000
+                              : (product.price - product.discount) *
+                                [2, 4, 12][index()]
+                            ).toLocaleString("ru-RU", {
+                              minimumFractionDigits: 2, // Минимум 2 знака после запятой
+                              maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)
+                            })}
+                          </span>{" "}
+                          <Switch>
+                            <Match when={selectedPrice() === "TON"}>
+                              <IconTON width={12} height={12} />
+                            </Match>
+                            <Match when={selectedPrice() === "XTR"}>
+                              <IconTelegramStar width={12} height={12} />
+                            </Match>
+                            <Match when={selectedPrice() === "COIN"}>
+                              <IconCoins
+                                width={12}
+                                height={12}
+                                color={"var(--accent_color)"}
+                              />
+                            </Match>
+                          </Switch>
+                          <span>{lang("per_year")}</span>
+                        </Gap>
+                      </SubTitle>
                     </Cell.Content>
                     <Cell.After>
                       <SubTitle nowrap overflow>

@@ -54,7 +54,9 @@ const icons: Record<string, Component<JSX.SvgSVGAttributes<SVGSVGElement>>> = {
 }
 
 const Content: Component<Content> = (props) => {
-  const [selectedPrice, setSelectedPrice] = createSignal<"XTR" | "TON">("XTR")
+  const [selectedPrice, setSelectedPrice] = createSignal<
+    "XTR" | "TON" | "COIN"
+  >("XTR")
   const [selected, setSelected] = createSignal("")
   const [lang] = loc()
 
@@ -150,6 +152,13 @@ const Content: Component<Content> = (props) => {
                             <Match when={selectedPrice() === "XTR"}>
                               <IconTelegramStar width={12} height={12} />
                             </Match>
+                            <Match when={selectedPrice() === "COIN"}>
+                              <IconCoins
+                                width={12}
+                                height={12}
+                                color={"var(--accent_color)"}
+                              />
+                            </Match>
                           </Switch>
                           <span>{lang("per_year")}</span>
                         </Gap>
@@ -176,6 +185,13 @@ const Content: Component<Content> = (props) => {
                             <Match when={selectedPrice() === "XTR"}>
                               <IconTelegramStar width={12} height={12} />
                             </Match>
+                            <Match when={selectedPrice() === "COIN"}>
+                              <IconCoins
+                                width={12}
+                                height={12}
+                                color={"var(--accent_color)"}
+                              />
+                            </Match>
                           </Switch>
                           <span>/{lang("month")}</span>
                         </Gap>
@@ -190,9 +206,11 @@ const Content: Component<Content> = (props) => {
         <Group.Container>
           <SegmentedControl
             selected={selectedPrice()}
-            onSelected={(key) => setSelectedPrice(key as "XTR" | "TON")}
+            onSelected={(key) =>
+              setSelectedPrice(key as "XTR" | "TON" | "COIN")
+            }
           >
-            <For each={["XTR", "TON"]}>
+            <For each={["XTR", "TON", "COIN"]}>
               {(type, index) => (
                 <SegmentedControl.Button
                   data-index={index()}
@@ -200,7 +218,7 @@ const Content: Component<Content> = (props) => {
                   key={type}
                 >
                   <SegmentedControl.Button.Container>
-                    <Title>{lang(type as "XTR" | "TON")}</Title>
+                    <Title>{lang(type as "XTR" | "TON" | "COIN")}</Title>
                   </SegmentedControl.Button.Container>
                 </SegmentedControl.Button>
               )}

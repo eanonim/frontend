@@ -37,6 +37,7 @@ export { default as messageComplaint } from "./message/complaint"
 /* product */
 export { default as productGet } from "./product/get"
 export { default as paymentCrypto } from "./product/paymentCrypto"
+export { default as paymentCoin } from "./product/paymentCoin"
 
 /* rating */
 export { default as ratingGet } from "./rating/get"

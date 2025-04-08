@@ -1,7 +1,7 @@
 import { CustomAccount } from "@component/project/TonConnectInit/elements/TonConnectUIElement/TonConnectUIElement"
 import { TonConnectUI } from "@tonconnect/ui"
 import { Button, FixedLayout, Title, TonConnectInit } from "components"
-import { paymentCrypto } from "engine/api"
+import { paymentCoin, paymentCrypto } from "engine/api"
 import handlerError from "engine/api/handlerError"
 import loc, { getLocale } from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
@@ -23,7 +23,7 @@ const Footer: Component<Footer> = (props) => {
   const [lang] = loc()
   const params = useParams<{
     product_id: string
-    currency: "TON" | "XTR"
+    currency: "TON" | "XTR" | "COIN"
   }>({ pageId: pages.PREMIUM })
 
   const [products] = useAtom(PRODUCT_ATOM, () => ({
@@ -95,9 +95,26 @@ const Footer: Component<Footer> = (props) => {
     }
   }
 
+  const handlerCoin = () => {
+    paymentCoin({
+      product: product()?.item_id || "",
+    })
+  }
+
   return (
     <FixedLayout safe background={"section_bg_color"} position={"bottom"}>
       <Switch>
+        <Match when={params().currency === "COIN"}>
+          <Button.Group>
+            <Button.Group.Container>
+              <Button onClick={handlerCoin} size={"large"} stretched>
+                <Button.Container>
+                  <Title>{lang("pay")}</Title>
+                </Button.Container>
+              </Button>
+            </Button.Group.Container>
+          </Button.Group>
+        </Match>
         <Match when={params().currency === "XTR"}>
           <Button.Group>
             <Button.Group.Container>

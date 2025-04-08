@@ -256,9 +256,15 @@ export type Socket = {
       payload: string
     }
   }
+  "payment.coin": {
+    request: { product: string; data?: string }
+    response: {
+      result: boolean
+    }
+  }
   "product.get": {
     request: {
-      currency: "XTR" | "TON"
+      currency: "XTR" | "TON" | "COIN"
       lang: string
       group: "premium" | "ton" | "jetton"
     }

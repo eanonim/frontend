@@ -126,6 +126,7 @@ export default {
   reconnect: "Reconnect",
   XTR: "Telegram Stars",
   TON: "TON",
+  COIN: "Coin",
   set_color: "Set color",
   pay: "Pay",
   active_until: (time: string) => `Active until: ${time}`,

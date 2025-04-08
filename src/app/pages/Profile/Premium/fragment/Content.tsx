@@ -126,9 +126,8 @@ const Content: Component<Content> = (props) => {
                           <Show when={product.discount}>
                             <span style={{ "text-decoration": "line-through" }}>
                               {(selectedPrice() === "TON"
-                                ? (product.price + product.discount) /
-                                  1_000_000_000
-                                : product.price + product.discount
+                                ? product.price / 1_000_000_000
+                                : product.price
                               ).toLocaleString("ru-RU", {
                                 minimumFractionDigits: 2, // Минимум 2 знака после запятой
                                 maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)
@@ -137,9 +136,11 @@ const Content: Component<Content> = (props) => {
                           </Show>
                           <span>
                             {(selectedPrice() === "TON"
-                              ? (product.price * [2, 4, 12][index()]) /
+                              ? ((product.price - product.discount) *
+                                  [2, 4, 12][index()]) /
                                 1_000_000_000
-                              : product.price * [2, 4, 12][index()]
+                              : (product.price - product.discount) *
+                                [2, 4, 12][index()]
                             ).toLocaleString("ru-RU", {
                               minimumFractionDigits: 2, // Минимум 2 знака после запятой
                               maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)
@@ -169,10 +170,11 @@ const Content: Component<Content> = (props) => {
                         <Gap justifyContent={"start"} count={"2px"}>
                           <span>
                             {(selectedPrice() === "TON"
-                              ? product.price /
+                              ? (product.price - product.discount) /
                                 [6, 3, 1][index()] /
                                 1_000_000_000
-                              : product.price / [6, 3, 1][index()]
+                              : (product.price - product.discount) /
+                                [6, 3, 1][index()]
                             ).toLocaleString("ru-RU", {
                               minimumFractionDigits: 0, // Минимум 2 знака после запятой
                               maximumFractionDigits: 3, // Максимум 9 знаков после запятой (стандарт TON)

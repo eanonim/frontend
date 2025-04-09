@@ -3,9 +3,14 @@ import { Background, Panel } from "components"
 import { Content } from "./fragment"
 
 import { type JSX, type Component, onMount } from "solid-js"
-import { routerStruct, swipeView, views } from "router"
+import { pages, pushPage, routerStruct, swipeView, views } from "router"
 import { authTwa, storeList } from "engine/api"
-import { bridgeSessionStorageGet } from "@apiteam/twa-bridge/solid"
+import {
+  bridgeGetInitData,
+  bridgeSessionStorageGet,
+  bridgeSetupFullScreen,
+  getPlatform,
+} from "@apiteam/twa-bridge/solid"
 import { setter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
 import { updateSocketToken } from "engine/api/module"
@@ -29,6 +34,9 @@ const Default: Component<Default> = (props) => {
         }
       }
     }
+
+    bridgeSetupFullScreen({ is_full: true })
+
     swipeView({ viewId })
   }
 
@@ -43,6 +51,13 @@ const Default: Component<Default> = (props) => {
   }
 
   const initAuth = async () => {
+    const platform = getPlatform()
+
+    if (platform !== "phone") {
+      pushPage({ pageId: pages.PLATFORM, is_back: false })
+      return
+    }
+
     const { response, error } = await authTwa({})
     if (error) {
       return

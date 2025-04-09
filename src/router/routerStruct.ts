@@ -20,6 +20,7 @@ export enum panels {
   STARTUP = "panel_startup",
   DUPLICATED = "panel_duplicated",
   BAD = "panel_bad",
+  PLATFORM = "panel_platform",
 
   PROFILE = "panel_profile",
   SETTINGS = "panel_settings",
@@ -44,6 +45,8 @@ export enum panels {
 export enum pages {
   STARTUP = "/",
   DUPLICATED = "/duplicated",
+  BAD = "/bad",
+  PLATFORM = "/platform",
 
   PROFILE = "/profile",
   SETTINGS = "/profile/settings",
@@ -148,6 +151,7 @@ export const routerStruct: RouterStruct = [
     default: pages.DUPLICATED,
     panels: {
       [pages.DUPLICATED]: panels.DUPLICATED,
+      [pages.PLATFORM]: panels.PLATFORM,
     },
   },
   {

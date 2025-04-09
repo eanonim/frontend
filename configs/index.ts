@@ -6,5 +6,6 @@ export {
   messageListCount,
   messageListCountStart,
   messageMaxSize,
+  URL_APP,
 } from "./options"
 export { emojis } from "./emoji"

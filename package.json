@@ -33,6 +33,7 @@
     "@tanstack/solid-virtual": "^3.13.2",
     "@tonconnect/ui": "^2.1.0",
     "elum-state": "^0.8.4",
-    "solid-js": "^1.9.5"
+    "solid-js": "^1.9.5",
+    "solid-qr-code": "^0.1.11"
   }
 }

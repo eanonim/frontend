@@ -76,14 +76,15 @@ const loc = () => {
   ]
 }
 
-export const swap = (locale: Locale) => {
+export const swap = (_locale: Locale) => {
+  var locale = _locale.split("-")?.[0] as Locale
+
   /**
    * Default language
    */
   if (!dictionaries[locale]) locale = "en"
 
   // locale = "en"
-  console.log({ locale2: locale })
   document.documentElement.setAttribute("lang", locale)
   document.documentElement.setAttribute(
     "dir",

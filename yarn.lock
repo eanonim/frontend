@@ -1119,6 +1119,11 @@ solid-js@^1.9.5:
     seroval "^1.1.0"
     seroval-plugins "^1.1.0"
 
+solid-qr-code@^0.1.11:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/solid-qr-code/-/solid-qr-code-0.1.11.tgz#98eeb137f005b502d00e18d0ac6b17baa580e824"
+  integrity sha512-8TpELeuK6OoPz5TfJaycsna63IivaSr6Y34qU79eYDF+SRTowO9os8gpElNvNe2FFROZuMZpf28jgmn9gV20Eg==
+
 solid-refresh@^0.6.3:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/solid-refresh/-/solid-refresh-0.6.3.tgz#d23ef80f04e177619c9234a809c573cb16360627"

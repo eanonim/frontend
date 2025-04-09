@@ -2,6 +2,10 @@ import Link from "@component/default/Blocks/Link/Link"
 import { modals, pushModal } from "router"
 
 export default {
+  not_supported: {
+    subtitle:
+      "Only available on mobile devices and through the official Telegram app.",
+  },
   language: "Language",
   rating: "Rating",
   tasks: "Tasks",
@@ -16,6 +20,11 @@ export default {
   languages: {
     ru: "Russian",
     en: "English",
+    fr: "French",
+    ar: "Arabic",
+    pt: "Portuguese",
+    de: "German",
+    es: "Spanish",
   },
   dialogs_stub: {
     title: "Chat history",
@@ -251,6 +260,14 @@ export default {
     },
   },
   errors: {
+    1000: "Unknown error",
+    1001: "Request rejected due to timeout",
     1002: "This action requires premium access",
+    1003: "Product is not found",
+    1004: "Not enough coins",
+    1005: "This cannot be done at this time. Try again later",
+    1006: "Order has been rejected",
+    1007: "Order is not defined",
+    1008: "Order is already closed",
   },
 }

@@ -582,13 +582,13 @@ export type Socket = {
   "user.get": {
     request: {}
     response: {
-      id: number
       image: string
       emoji: number
       first_name: string
       last_name: string
       premium: Date
       coin: number
+      referrer_code: string
     }
   }
   "rating.get": {

@@ -14,7 +14,6 @@ const Content: Component<Content> = (props) => {
   return (
     <AvatarProfile
       src={`https://${HOST_CDN}/v1/image/user/${user.image}?size=1000`}
-      id={user.id}
       emoji={user.emoji}
       first_name={user.first_name}
       last_name={user.last_name}

@@ -14,7 +14,7 @@ const Footer: Component<Footer> = (props) => {
   const [user] = useAtom(USER_ATOM)
 
   const handlerCopy = () => {
-    copyText(`${URL_APP}?startapp=ref_${user?.id}`)
+    copyText(`${URL_APP}?startapp=ref_${user?.referrer_code}`)
   }
 
   return (

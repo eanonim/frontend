@@ -16,7 +16,6 @@ interface AvatarProfile extends Omit<JSX.HTMLAttributes<HTMLDivElement>, "id"> {
   first_name: string
   last_name: string
   emoji?: number
-  id: number
   coin: number
 }
 
@@ -30,7 +29,6 @@ const AvatarProfile: Component<AvatarProfile> = (props) => {
     "first_name",
     "last_name",
     "emoji",
-    "id",
     "coin",
   ])
 
@@ -56,11 +54,6 @@ const AvatarProfile: Component<AvatarProfile> = (props) => {
               first_name={local.first_name}
               last_name={local.last_name}
               emoji={local.emoji}
-            />
-            <UserName
-              class={style.AvatarProfile__name_subtitle}
-              first_name={`id${local.id || 0}`}
-              last_name={""}
             />
           </Flex>
 

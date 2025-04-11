@@ -11,13 +11,13 @@ export const USER_ATOM = atom<
   //   return String(options)
   // },
   default: {
-    id: 1,
     first_name: "Иван",
     last_name: "Иванов",
     image: "https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg", //https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg
     emoji: 0,
     premium: new Date(Date.now() - 1_000),
     coin: 0,
+    referrer_code: "",
   },
   updateIntervalMs: 15_000,
   onUpdate: async ({ prev, next }, key) => {

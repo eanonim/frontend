@@ -30,6 +30,7 @@ export enum panels {
   THEME = "panel_theme",
   PREMIUM = "panel_premium",
   LANGUAGE = "panel_language",
+  REFERRAL = "panel_referral",
 
   SEARCH = "panel_search",
   SEARCH_START = "panel_search_start",
@@ -56,6 +57,7 @@ export enum pages {
   THEME = "/settings/theme",
   PREMIUM = "/settings/premium",
   LANGUAGE = "/settings/language",
+  REFERRAL = "/settings/referral",
 
   SEARCH = "/search",
   SEARCH_START = "/search/start",
@@ -166,6 +168,7 @@ export const routerStruct: RouterStruct = [
       [pages.THEME]: panels.THEME,
       [pages.PREMIUM]: panels.PREMIUM,
       [pages.LANGUAGE]: panels.LANGUAGE,
+      [pages.REFERRAL]: panels.REFERRAL,
     },
   },
   {

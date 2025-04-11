@@ -17,6 +17,7 @@ import {
   IconCarambolaFilled,
   IconCircleHalf,
   IconDiamondFilled,
+  IconInvite,
   IconLanguage,
   IconLetterCase,
   IconMoodEdit,
@@ -164,6 +165,10 @@ const Content: Component<Content> = (props) => {
     pushPage({ pageId: pages.PREMIUM })
   }
 
+  const goReferral = () => {
+    pushPage({ pageId: pages.REFERRAL })
+  }
+
   return (
     <Group.List>
       <Group>
@@ -178,7 +183,7 @@ const Content: Component<Content> = (props) => {
             </Cell.Before>
             <Cell.Container>
               <Cell.Content>
-                <Title>Premium</Title>
+                <Title>{lang("premium")}</Title>
                 <Show
                   keyed
                   when={
@@ -192,6 +197,28 @@ const Content: Component<Content> = (props) => {
                     </SubTitle>
                   )}
                 </Show>
+              </Cell.Content>
+              <Cell.After>
+                <IconChevron
+                  type={"right"}
+                  size={"20px"}
+                  color={"var(--separator_secondary)"}
+                />
+              </Cell.After>
+            </Cell.Container>
+          </Cell>
+        </Group.Container>
+      </Group>
+      <Group>
+        <Group.Container>
+          <Cell onClick={goReferral}>
+            <Cell.Before>
+              <IconInvite width={28} height={28} fill={"var(--accent_color)"} />
+            </Cell.Before>
+            <Cell.Container>
+              <Cell.Content>
+                <Title>{lang("referral.title")}</Title>
+                <SubTitle>{lang("referral.subtitle")}</SubTitle>
               </Cell.Content>
               <Cell.After>
                 <IconChevron

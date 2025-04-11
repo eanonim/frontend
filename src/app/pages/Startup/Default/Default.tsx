@@ -23,6 +23,7 @@ import { setter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
 import { updateSocketToken } from "engine/api/module"
 import { Chats } from "engine/class/useChat"
+import { parseStartApp } from "engine"
 
 interface Default extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -94,6 +95,7 @@ const Default: Component<Default> = (props) => {
   }
 
   const initAuth = async () => {
+    const start_app = parseStartApp()
     const platform = getPlatform()
 
     if (platform !== "phone") {
@@ -101,7 +103,7 @@ const Default: Component<Default> = (props) => {
       return
     }
 
-    const { response, error } = await authTwa({})
+    const { response, error } = await authTwa({ referrer: start_app.ref })
     if (error) {
       return
     }

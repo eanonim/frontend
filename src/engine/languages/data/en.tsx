@@ -259,6 +259,10 @@ export default {
       check: "Check Task",
     },
   },
+  referral: {
+    title: "Referral",
+    subtitle: "Share your magic link and turn your friends into bonuses!",
+  },
   errors: {
     1000: "Unknown error",
     1001: "Request rejected due to timeout",

@@ -3,8 +3,16 @@ import { Background, Panel } from "components"
 import { Content } from "./fragment"
 
 import { type JSX, type Component, onMount } from "solid-js"
-import { pages, pushPage, routerStruct, swipeView, views } from "router"
-import { authTwa, storeList } from "engine/api"
+import {
+  modals,
+  pages,
+  pushModal,
+  pushPage,
+  routerStruct,
+  swipeView,
+  views,
+} from "router"
+import { authTwa, chatLast, storeList } from "engine/api"
 import {
   bridgeGetInitData,
   bridgeSessionStorageGet,
@@ -14,6 +22,7 @@ import {
 import { setter } from "elum-state/solid"
 import { AUTH_TOKEN_ATOM } from "engine/state"
 import { updateSocketToken } from "engine/api/module"
+import { Chats } from "engine/class/useChat"
 
 interface Default extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -40,13 +49,47 @@ const Default: Component<Default> = (props) => {
     swipeView({ viewId })
   }
 
+  const initLastChat = async () => {
+    const { response, error } = await chatLast({})
+
+    openApp()
+    if (response) {
+      pushPage({
+        pageId: pages.CHAT,
+        params: { dialog: response.uuid },
+        handler: async () => {
+          const chat = Chats.getById(response.uuid)
+
+          if (!!chat?.isOpenGallery) {
+            chat.isOpenGallery()
+            return false
+          }
+
+          if (chat?.isFavorites || chat?.isDeleted) {
+            return true
+          }
+
+          pushModal({
+            modalId: modals.MODAL_LEAVE,
+            params: {
+              dialog: response.uuid,
+            },
+          })
+
+          return false
+        },
+      })
+      console.log({ CHAT_LAST: response }, error)
+    }
+  }
+
   const initStore = async () => {
     const { response, error } = await storeList({})
     if (!error) {
       if (response.backgroundId) {
         Background.preload(response.backgroundId)
       }
-      openApp()
+      initLastChat()
     }
   }
 

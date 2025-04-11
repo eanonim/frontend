@@ -378,6 +378,33 @@ export type Socket = {
       dialog: string
     }
   }
+  "chat.last": {
+    request: {}
+    response: {
+      uuid: string
+
+      message?: {
+        id: number
+        message?: string
+        target: Target
+        attach_type?: "photo" | "invite"
+        time: Date
+        readed: boolean
+      }
+
+      user: {
+        first_name: string
+        last_name: string
+        image: string
+        emoji?: number
+      }
+
+      favorites?: boolean
+      /* CUSTOM */
+      typing?: boolean
+      loading?: boolean
+    }
+  }
   "chat.info": {
     request: {
       dialog: string

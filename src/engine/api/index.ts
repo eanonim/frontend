@@ -24,6 +24,7 @@ export { default as chatInviteMake } from "./chat/inviteMake"
 export { default as chatInviteAccept } from "./chat/inviteAccept"
 export { default as chatInviteReject } from "./chat/inviteReject"
 export { default as chatClose } from "./chat/close"
+export { default as chatLast } from "./chat/last"
 
 /* message */
 export { default as messageDelete } from "./message/delete"

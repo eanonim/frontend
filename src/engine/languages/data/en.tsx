@@ -269,5 +269,6 @@ export default {
     1006: "Order has been rejected",
     1007: "Order is not defined",
     1008: "Order is already closed",
+    1009: "You or your contact have too many saved conversations",
   },
 }

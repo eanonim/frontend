@@ -17,17 +17,43 @@ import {
  */
 import ru from "./data/ru"
 import en from "./data/en"
+import fr from "./data/fr"
+import ar from "./data/ar"
+import pt from "./data/pt"
+import de from "./data/de"
+import es from "./data/es"
 
 export const ISOLanguage = {
   ru: "RU-ru",
   en: "EN-en",
+  fr: "FR-fr",
+  ar: "AR-ar",
+  pt: "PT-pt",
+  de: "DE-de",
+  es: "ES-es",
 }
 
-export type Locale = "ru" | "en"
-export type RawDictionary = typeof ru & typeof en
+export type Locale = "ru" | "en" | "fr" | "ar" | "pt" | "de" | "es"
+
+export type RawDictionary = typeof ru &
+  typeof en &
+  typeof fr &
+  typeof ar &
+  typeof pt &
+  typeof de &
+  typeof es
+
 export type Dictionary = Flatten<RawDictionary>
 
-export const dictionaries = { ru, en }
+export const dictionaries = {
+  ru,
+  en,
+  fr,
+  ar,
+  pt,
+  de,
+  es,
+}
 
 const rtl: Locale[] = []
 

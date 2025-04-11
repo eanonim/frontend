@@ -263,6 +263,8 @@ export default {
     title: "Referral",
     subtitle: "Share your magic link and turn your friends into bonuses!",
   },
+  invite_friend: "Invite a friend",
+  name: "Name",
   errors: {
     1000: "Unknown error",
     1001: "Request rejected due to timeout",

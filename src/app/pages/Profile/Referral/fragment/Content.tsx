@@ -74,7 +74,7 @@ const Content: Component<Content> = (props) => {
               </Cell.Before>
               <Cell.Container>
                 <Cell.Content>
-                  <Title>Invite a friend</Title>
+                  <Title>{lang("invite_friend")}</Title>
                   <SubTitle>
                     <Gap
                       count={"4px"}

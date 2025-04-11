@@ -31,7 +31,7 @@ const Header: Component<Header> = (props) => {
       <Cell>
         <Cell.Container>
           <Cell.Content>
-            <Title {...textProps}>Name</Title>
+            <Title {...textProps}>{lang("name")}</Title>
           </Cell.Content>
           <Cell.After>
             <Button

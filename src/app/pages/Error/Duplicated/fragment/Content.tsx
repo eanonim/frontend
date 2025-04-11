@@ -45,9 +45,9 @@ const Content: Component<Content> = (props) => {
           </Button.Group.Container>
         </Button.Group>
       </Plug.Action>
-      <Plug.Icon>
+      {/* <Plug.Icon>
         <LogoElumTeam />
-      </Plug.Icon>
+      </Plug.Icon> */}
       <SubTitle {...textProps}>
         {version} ({import.meta.env.APP_VERSION})
       </SubTitle>

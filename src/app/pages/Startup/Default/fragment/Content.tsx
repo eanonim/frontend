@@ -13,9 +13,9 @@ const Content: Component<Content> = (props) => {
           <Logo />
         </Plug.Icon>
       </Plug.Container>
-      <Plug.Icon>
+      {/* <Plug.Icon>
         <LogoElumTeam />
-      </Plug.Icon>
+      </Plug.Icon> */}
     </Plug>
   )
 }

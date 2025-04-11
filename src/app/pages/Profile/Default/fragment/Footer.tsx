@@ -23,9 +23,9 @@ const Footer: Component<Footer> = (props) => {
   return (
     <Plug>
       <Plug.Container>
-        <Plug.Icon>
+        {/* <Plug.Icon>
           <LogoElumTeam height={28} />
-        </Plug.Icon>
+        </Plug.Icon> */}
         <SubTitle {...textProps}>
           {version} ({import.meta.env.APP_VERSION})
         </SubTitle>

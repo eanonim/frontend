@@ -266,6 +266,7 @@ export default {
   invite_friend: "Invite a friend",
   name: "Name",
   errors: {
+    9901: "Task not completed.",
     1000: "Unknown error",
     1001: "Request rejected due to timeout",
     1002: "This action requires premium access",

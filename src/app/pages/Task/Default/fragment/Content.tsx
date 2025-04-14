@@ -1,69 +1,112 @@
-import { Avatar, Cell, Group, SubTitle, Title } from "components"
+import { Avatar, Cell, Gap, Group, SubTitle, Title } from "components"
 
 import { type JSX, type Component, For, Show } from "solid-js"
 import loc, { getLocale } from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { TASK_ATOM } from "engine/state"
 import { modals, pushModal } from "router"
+import { IconCoins } from "source"
+import { formatNumber } from "@minsize/utils"
+import { Socket } from "engine/api/module"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 /*TODO: Добавить надпись: Задание выполнено */
 const Content: Component<Content> = (props) => {
   const [lang] = loc()
-  const [task] = useAtom(TASK_ATOM, {
+  const [taskDaily] = useAtom(TASK_ATOM, {
     lang: getLocale(),
-    group: "main",
+    group: "daily",
   })
 
-  const handlerOpen = (task_id: number) => {
+  const [taskEducation] = useAtom(TASK_ATOM, {
+    lang: getLocale(),
+    group: "education",
+  })
+
+  const [taskPartners] = useAtom(TASK_ATOM, {
+    lang: getLocale(),
+    group: "partners",
+  })
+
+  const handlerOpen = (
+    task_id: number,
+    group: Socket["task.list"]["request"]["group"],
+  ) => {
     pushModal({
       modalId: modals.MODAL_TASK,
       params: {
         task_id: task_id,
-        group: "main",
+        group: group,
       },
     })
   }
 
   return (
-    <Group>
-      <Group.Container>
-        <Cell.List style={{ "overflow-y": "scroll", height: "100%" }}>
-          <For
-            each={Object.values(
-              (task?.tasks || []).sort(
-                (a, b) =>
-                  (a?.[0].status === "CLOSE" ? 1 : 0) -
-                  (b?.[0].status === "CLOSE" ? 1 : 0),
-              ),
-            )}
-          >
-            {(item, index) => (
-              <Show keyed when={item?.[0]}>
-                {(task) => (
-                  <Cell
-                    data-index={index()}
-                    separator
-                    onClick={() => handlerOpen(task.id)}
-                  >
-                    <Cell.Before>
-                      <Avatar mode={"app"} src={task.image} size={"48px"} />
-                    </Cell.Before>
-                    <Cell.Container>
-                      <Cell.Content>
-                        <Title>{task.title || "Unknown"}</Title>
-                        <SubTitle>{task.description}</SubTitle>
-                      </Cell.Content>
-                    </Cell.Container>
-                  </Cell>
-                )}
-              </Show>
-            )}
-          </For>
-        </Cell.List>
-      </Group.Container>
-    </Group>
+    <For each={[taskDaily, taskEducation, taskPartners]}>
+      {(group, index) => (
+        <Show when={group.tasks}>
+          <Group>
+            <Group.Header mode={"primary"}>{group.title}</Group.Header>
+            <Group.Container>
+              <Cell.List style={{ "overflow-y": "scroll", height: "100%" }}>
+                <For
+                  each={Object.values(
+                    (group?.tasks || []).sort(
+                      (a, b) =>
+                        (a?.[0].status === "CLOSE" ? 1 : 0) -
+                        (b?.[0].status === "CLOSE" ? 1 : 0),
+                    ),
+                  )}
+                >
+                  {(item, index) => (
+                    <Show keyed when={item?.[0]}>
+                      {(task) => (
+                        <Cell
+                          data-index={index()}
+                          separator
+                          onClick={() =>
+                            handlerOpen(task.id, group.object_name || "daily")
+                          }
+                        >
+                          <Cell.Before>
+                            <Avatar
+                              mode={"app"}
+                              src={task.image}
+                              size={"48px"}
+                            />
+                          </Cell.Before>
+                          <Cell.Container>
+                            <Cell.Content>
+                              <Title>{task.title || "Unknown"}</Title>
+                              <SubTitle>
+                                <Show
+                                  when={task.status !== "CLOSE"}
+                                  fallback={lang("task_completed")}
+                                >
+                                  <Gap
+                                    count={"4px"}
+                                    justifyContent={"start"}
+                                    alignItems={"center"}
+                                  >
+                                    {formatNumber(task.item?.[0].count)}{" "}
+                                    <IconCoins height={14} width={14} />
+                                  </Gap>
+                                </Show>
+                              </SubTitle>
+                            </Cell.Content>
+                          </Cell.Container>
+                        </Cell>
+                      )}
+                    </Show>
+                  )}
+                </For>
+              </Cell.List>
+            </Group.Container>
+          </Group>
+        </Show>
+      )}
+    </For>
   )
 }
 

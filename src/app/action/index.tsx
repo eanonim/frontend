@@ -67,9 +67,9 @@ const Action: Component<Action> = (props) => {
   const handlerTasks = () => swipeView({ viewId: views.TASK })
 
   const onTouchStartTasks = () => {
-    const tasks = getter(TASK_ATOM, "main" + getLocale())
+    const tasks = getter(TASK_ATOM, "daily" + getLocale())
     if (Object.keys(tasks).length === 0) {
-      taskList({ group: "main", lang: getLocale() })
+      taskList({ group: "daily", lang: getLocale() })
     }
   }
 

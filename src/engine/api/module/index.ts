@@ -605,14 +605,14 @@ export type Socket = {
   "task.list": {
     request: {
       lang: string
-      group: "main"
+      group: "education" | "daily" | "partners"
     }
     response: Record<
       string,
       {
         title: string
         description: string
-        object_name: string
+        object_name: Socket["task.list"]["request"]["group"]
         position: number
         interval: string
         tasks: {

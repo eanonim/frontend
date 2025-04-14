@@ -13,8 +13,8 @@ import handlerError from "engine/api/handlerError"
 import loc, { getLocale } from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { TASK_ATOM } from "engine/state"
-import { modals, useParams } from "router"
-import { routerParams } from "router/routerStruct"
+import { modals, pushPage, swipeView, useParams } from "router"
+import { pages, routerParams, views } from "router/routerStruct"
 import {
   type JSX,
   type Component,
@@ -25,6 +25,13 @@ import {
 } from "solid-js"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
+
+const actions: { [key: string]: () => void } = {
+  daily_start_chat: () => swipeView({ viewId: views.SEARCH }),
+  daily_invite_friend: () => pushPage({ pageId: pages.REFERRAL }),
+  daily_watch_ad: () => {},
+  education_change_wallpaper: () => pushPage({ pageId: pages.BACKGROUNDS }),
+}
 
 const Footer: Component<Footer> = (props) => {
   const [lang] = loc()
@@ -135,23 +142,8 @@ const Footer: Component<Footer> = (props) => {
         action: item.action,
       })
     } else {
-      // const actions: { [key: string]: () => void } = {
-      //   invited_friends: () => pushPage({ pageId: pages.INVITE }),
-      //   game_spin_roulette: () => pushPage({ pageId: pages.ROULETTE }),
-      //   game_king_buy: () => pushPage({ pageId: pages.RATING }),
-      //   rating_order_buy: () =>
-      //     pushModal({
-      //       modalId: modals.STORE_MONEY,
-      //       params: { group: "currency" },
-      //     }),
-      //   ticket_getting: () =>
-      //     pushModal({
-      //       modalId: modals.STORE_MONEY,
-      //       params: { group: "ticket" },
-      //     }),
-      // }
-      // const action = actions[item.type]
-      // if (!!action) action()
+      const action = actions[item.type]
+      if (!!action) action()
     }
 
     // if (item.action === "ads") {
@@ -180,6 +172,11 @@ const Footer: Component<Footer> = (props) => {
     //   lang: getLocale(),
     //   group: params().group,
     // })
+
+    if (!item.order) {
+      handlerError({ code: 9901, message: "Task not completed." })
+      return
+    }
 
     taskExecute({
       lang: getLocale(),
@@ -270,16 +267,25 @@ const Footer: Component<Footer> = (props) => {
           <Match when={true}>
             <Button.Group>
               <Button.Group.Container>
-                <Button stretched size={"large"} mode={"outline"}>
+                <Button
+                  onClick={handlerExecute}
+                  stretched
+                  size={"large"}
+                  mode={"outline"}
+                >
                   <Button.Container>
                     <Title>{lang(`task_type.${task.action}.check`)}</Title>
                   </Button.Container>
                 </Button>
-                <Button stretched size={"large"}>
-                  <Button.Container>
-                    <Title>{lang(`task_type.${task.action}.complete`)}</Title>
-                  </Button.Container>
-                </Button>
+                <Show
+                  when={task.action === "default" ? !!actions[task.type] : true}
+                >
+                  <Button onClick={handlerComplete} stretched size={"large"}>
+                    <Button.Container>
+                      <Title>{lang(`task_type.${task.action}.complete`)}</Title>
+                    </Button.Container>
+                  </Button>
+                </Show>
               </Button.Group.Container>
             </Button.Group>
           </Match>

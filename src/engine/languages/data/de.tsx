@@ -270,6 +270,7 @@ export default {
   invite_friend: "Einen Freund einladen",
   name: "Name",
   errors: {
+    9901: "Aufgabe nicht abgeschlossen.",
     1000: "Unbekannter Fehler",
     1001: "Anfrage wegen Zeitüberschreitung abgelehnt",
     1002: "Diese Aktion erfordert Premium-Zugang",

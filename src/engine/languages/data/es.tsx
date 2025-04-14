@@ -266,6 +266,7 @@ export default {
   invite_friend: "Invitar a un amigo",
   name: "Nombre",
   errors: {
+    9901: "Tarea no completada.",
     1000: "Error desconocido",
     1001: "Solicitud rechazada por tiempo de espera",
     1002: "Esta acción requiere acceso premium",

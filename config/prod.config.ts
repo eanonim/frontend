@@ -32,7 +32,7 @@ const output: OutputOptions | OutputOptions[] = {
 }
 
 export default defineConfig({
-  base: "/frontend",
+  base: "/",
   define: {
     "import.meta.env.APP_VERSION": JSON.stringify(gitCommitHash),
   },

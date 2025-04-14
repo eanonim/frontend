@@ -23,11 +23,7 @@ document.addEventListener("touchstart", (e) => {
 
 render(
   () => (
-    <Route
-      pathname={"/frontend"}
-      startView={views.STARTUP}
-      struct={routerStruct}
-    >
+    <Route pathname={"/"} startView={views.STARTUP} struct={routerStruct}>
       <App />
     </Route>
   ),

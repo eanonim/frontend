@@ -48,6 +48,10 @@ jobs:
       - name: Build React App
         run: yarn build
 
+      # Create a CNAME file
+      - name: Create CNAME file
+        run: echo "anfront.elum.su" > ./static/CNAME
+
       # Upload build artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

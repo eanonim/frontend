@@ -9,6 +9,7 @@
 
   padding: var(--button__padding-vertical) var(--button__padding-horizontal);
   color  : var(--button_title);
+
 }
 
 .Button--stretched {
@@ -96,7 +97,7 @@
   background-color: var(--button_background);
   border-radius   : inherit;
 
-  transition: 0.3;
+  transition: 0.3s;
 }
 
 .Button--anim .Button__title,

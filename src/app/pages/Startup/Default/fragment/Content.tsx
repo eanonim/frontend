@@ -1,4 +1,4 @@
-import { Plug } from "components"
+import { Background, Plug } from "components"
 import { Logo, LogoElumTeam } from "source"
 
 import { type JSX, type Component } from "solid-js"
@@ -10,7 +10,9 @@ const Content: Component<Content> = (props) => {
     <Plug full>
       <Plug.Container>
         <Plug.Icon>
-          <Logo />
+          <div style={{ "border-radius": "20px", overflow: "hidden" }}>
+            <Logo />
+          </div>
         </Plug.Icon>
       </Plug.Container>
       {/* <Plug.Icon>

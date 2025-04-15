@@ -96,11 +96,13 @@ const Default: Component<Default> = (props) => {
 
   const initAuth = async () => {
     const start_app = parseStartApp()
-    const platform = getPlatform()
+    if (import.meta.env.MODE !== "development") {
+      const platform = getPlatform()
 
-    if (platform !== "phone") {
-      pushPage({ pageId: pages.PLATFORM, is_back: false })
-      return
+      if (platform !== "phone") {
+        pushPage({ pageId: pages.PLATFORM, is_back: false })
+        return
+      }
     }
 
     const { response, error } = await authTwa({ referrer: start_app.ref })

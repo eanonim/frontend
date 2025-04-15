@@ -339,23 +339,23 @@ html[platform="macOS"] {
 }
 
 html[platform="iOS"] {
-  --font_size--x-small  : 10px;
-  --font_height--x-small: 14px;
+  --font_size--x-small  : 12px;
+  --font_height--x-small: 16px;
 
-  --font_size--small  : 13px;
-  --font_height--small: 17px;
+  --font_size--small  : 15px;
+  --font_height--small: 19px;
 
-  --font_size--medium  : 14px;
-  --font_height--medium: 18px;
+  --font_size--medium  : 16px;
+  --font_height--medium: 20px;
 
-  --font_size--large  : 16px;
-  --font_height--large: 20px;
+  --font_size--large  : 18px;
+  --font_height--large: 22px;
 
-  --font_size--x-large  : 18px;
-  --font_height--x-large: 22px;
+  --font_size--x-large  : 20px;
+  --font_height--x-large: 24px;
 
-  --font_size--xx-large  : 20px;
-  --font_height--xx-large: 24px;
+  --font_size--xx-large  : 22px;
+  --font_height--xx-large: 26px;
 }
 
 html[platform="android"] {

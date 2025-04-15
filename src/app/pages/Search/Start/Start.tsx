@@ -2,11 +2,11 @@ import { Panel } from "components"
 
 import { Content } from "./fragment"
 
-import { type JSX, type Component, onMount } from "solid-js"
+import { type JSX, type Component, onMount, untrack } from "solid-js"
 import { getMaleOfNumber, useHeaderColor } from "engine"
 import { SearchInteresting } from "engine/api/module"
-import { useAtom } from "engine/modules/smart-data"
-import { SEARCH_OPTIONS_ATOM } from "engine/state"
+import { setter, useAtom } from "engine/modules/smart-data"
+import { ADS_ATOM, SEARCH_OPTIONS_ATOM } from "engine/state"
 import { chatSearch } from "engine/api"
 import { modals, pages, pushModal, pushPage, replacePage } from "router"
 import { Chats } from "engine/class/useChat"
@@ -18,6 +18,7 @@ interface Start extends JSX.HTMLAttributes<HTMLDivElement> {
 const Start: Component<Start> = (props) => {
   useHeaderColor({ iOS: "bg_color", android: "section_bg_color" })
   const [searchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
+  const [ads] = useAtom(ADS_ATOM)
 
   onMount(() => {
     const start = async () => {
@@ -68,8 +69,37 @@ const Start: Component<Start> = (props) => {
         })
       }
     }
+
+    untrack(openAds)
+    console.log("ASG")
     start()
   })
+
+  const openAds = () => {
+    setter(ADS_ATOM, (store) => {
+      store.interstitial += 1
+
+      return store
+    })
+
+    if (ads.interstitial >= 3 - 1) {
+      show_9214229?.({
+        type: "inApp",
+        inAppSettings: {
+          frequency: 2,
+          capping: 0.1,
+          interval: 30,
+          timeout: 5,
+          everyPage: false,
+        },
+      })
+      setter(ADS_ATOM, (store) => {
+        store.interstitial = 0
+
+        return store
+      })
+    }
+  }
 
   return (
     <Panel {...props}>

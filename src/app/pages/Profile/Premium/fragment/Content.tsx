@@ -223,7 +223,9 @@ const Content: Component<Content> = (props) => {
                   key={type}
                 >
                   <SegmentedControl.Button.Container>
-                    <Title>{lang(type as "XTR" | "TON" | "COIN")}</Title>
+                    <Title overflow nowrap>
+                      {lang(type as "XTR" | "TON" | "COIN")}
+                    </Title>
                   </SegmentedControl.Button.Container>
                 </SegmentedControl.Button>
               )}

@@ -55,6 +55,7 @@ const App: Component = () => {
 
   onMount(() => {
     const data = getAppData()
+    console.log({ data })
 
     bridgeSetupSwipeBehavior({
       allow_vertical_swipe: false,

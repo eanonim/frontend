@@ -1,3 +1,14 @@
+declare function show_9214229(params?: {
+  type: "inApp"
+  inAppSettings: {
+    frequency: number
+    capping: number
+    interval: number
+    timeout: number
+    everyPage: boolean
+  }
+}): Promise<void>
+
 type CSSModuleClasses = { readonly [key: string]: string }
 
 type MouseClickEvent = MouseEvent & {

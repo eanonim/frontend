@@ -10,6 +10,7 @@ import {
   taskList,
 } from "engine/api"
 import handlerError from "engine/api/handlerError"
+import taskAds from "engine/api/task/ads"
 import loc, { getLocale } from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { TASK_ATOM } from "engine/state"
@@ -26,11 +27,31 @@ import {
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
-const actions: { [key: string]: () => void } = {
-  daily_start_chat: () => swipeView({ viewId: views.SEARCH }),
-  daily_invite_friend: () => pushPage({ pageId: pages.REFERRAL }),
-  daily_watch_ad: () => {},
-  education_change_wallpaper: () => pushPage({ pageId: pages.BACKGROUNDS }),
+const actions: { [key: string]: () => Promise<boolean> } = {
+  daily_start_chat: async () => {
+    swipeView({ viewId: views.SEARCH })
+    return true
+  },
+  daily_invite_friend: async () => {
+    pushPage({ pageId: pages.REFERRAL })
+    return true
+  },
+  daily_watch_ad: async () => {
+    return await new Promise<boolean>((resolve) => {
+      const timer = setTimeout(() => {
+        resolve(false)
+      }, 80_000)
+      show_9214229?.()?.then(() => {
+        resolve(true)
+        taskAds({ type: "daily_watch_ad" })
+        clearTimeout(timer)
+      })
+    })
+  },
+  education_change_wallpaper: async () => {
+    pushPage({ pageId: pages.BACKGROUNDS })
+    return true
+  },
 }
 
 const Footer: Component<Footer> = (props) => {
@@ -120,7 +141,7 @@ const Footer: Component<Footer> = (props) => {
     }
   }
 
-  const handlerComplete = () => {
+  const handlerComplete = async () => {
     const item = task()
     if (!item) return
 
@@ -143,7 +164,9 @@ const Footer: Component<Footer> = (props) => {
       })
     } else {
       const action = actions[item.type]
-      if (!!action) action()
+      if (!!action) {
+        await action()
+      }
     }
 
     // if (item.action === "ads") {

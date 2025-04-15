@@ -669,7 +669,7 @@ export type Socket = {
   }
   "task.ads": {
     request: {
-      type: "free_toy_for_ads" | "free_rating_for_ads"
+      type: "daily_watch_ad"
     }
     response: {
       result: boolean

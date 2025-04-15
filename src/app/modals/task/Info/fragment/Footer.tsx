@@ -191,10 +191,10 @@ const Footer: Component<Footer> = (props) => {
     }
 
     // // Обновляем список заданий
-    // await taskList({
-    //   lang: getLocale(),
-    //   group: params().group,
-    // })
+    await taskList({
+      lang: getLocale(),
+      group: params().group,
+    })
 
     if (!item.order) {
       handlerError({ code: 9901, message: "Task not completed." })

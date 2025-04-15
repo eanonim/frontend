@@ -44,7 +44,7 @@ const createBlob = (type: number, data: string) => {
 const preload = async (type: number, signal = new AbortController().signal) => {
   try {
     const response = await fetch(
-      `${import.meta.env.MODE === "development" ? "" : "/"}/backgrounds/${
+      `${import.meta.env.MODE === "development" ? "" : ""}/backgrounds/${
         backgrounds.find((x) => x.id === type)?.name
       }`,
       { signal },

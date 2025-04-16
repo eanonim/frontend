@@ -61,18 +61,18 @@ const App: Component = () => {
     document.head.appendChild(script)
 
     script.onload = () => {
-      Object.defineProperty(window.Telegram, "initData", {
-        get: function () {
-          return getAppData()
-        },
-        enumerable: true,
-      })
-      Object.defineProperty(window.Telegram, "initDataUnsafe", {
-        get: function () {
-          return bridgeGetInitData()
-        },
-        enumerable: true,
-      })
+      // Object.defineProperty(window.Telegram, "initData", {
+      //   get: function () {
+      //     return getAppData()
+      //   },
+      //   enumerable: true,
+      // })
+      // Object.defineProperty(window.Telegram, "initDataUnsafe", {
+      //   get: function () {
+      //     return bridgeGetInitData()
+      //   },
+      //   enumerable: true,
+      // })
 
       window.TelegramAdsController = new TelegramAdsController()
       window.TelegramAdsController.initialize({

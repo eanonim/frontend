@@ -15,28 +15,28 @@ const Content: Component<Content> = (props) => {
     backPage()
   }
 
-  // onMount(() => {
-  //   var div1 = document.getElementById("telegram-notification-content")
-  //   var container2 = document.getElementById("ad-banner")
+  onMount(() => {
+    var div1 = document.getElementById("telegram-notification-content")
+    var container2 = document.getElementById("ad-banner")
 
-  //   // Перемещаем div1 в container2
-  //   if (div1) {
-  //     container2?.appendChild(div1)
-  //     div1.style.bottom = "0px"
-  //     div1.style.left = "0px"
-  //     div1.style.right = "0px"
-  //     div1.style.display = "block"
-  //     div1.style.position = "relative"
-  //   }
+    // Перемещаем div1 в container2
+    if (div1) {
+      container2?.appendChild(div1)
+      div1.style.bottom = "0px"
+      div1.style.left = "0px"
+      div1.style.right = "0px"
+      div1.style.display = "flex"
+      div1.style.position = "relative"
+    }
 
-  //   onCleanup(() => {
-  //     if (div1) {
-  //       var container = document.body
-  //       container?.appendChild(div1)
-  //       div1.style.display = "none"
-  //     }
-  //   })
-  // })
+    onCleanup(() => {
+      if (div1) {
+        var container = document.body
+        container?.appendChild(div1)
+        div1.style.display = "none"
+      }
+    })
+  })
 
   return (
     <Plug full>

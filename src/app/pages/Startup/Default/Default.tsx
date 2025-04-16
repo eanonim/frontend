@@ -45,8 +45,6 @@ const Default: Component<Default> = (props) => {
       }
     }
 
-    bridgeSetupFullScreen({ is_full: true })
-
     swipeView({ viewId })
   }
 
@@ -103,6 +101,7 @@ const Default: Component<Default> = (props) => {
         pushPage({ pageId: pages.PLATFORM, is_back: false })
         return
       }
+      bridgeSetupFullScreen({ is_full: true })
     }
 
     const { response, error } = await authTwa({ referrer: start_app.ref })

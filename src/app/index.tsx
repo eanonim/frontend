@@ -55,42 +55,35 @@ const App: Component = () => {
   })
 
   onMount(() => {
-    const dataUnsafe = bridgeGetInitData()
-    const data = getAppData()
+    const script = document.createElement("script")
+    script.src = "https://richinfo.co/richpartners/telegram/js/tg-ob.js"
+    script.async = true // Важно для асинхронной загрузки
+    document.head.appendChild(script)
 
-    // const script = document.createElement("script")
-    // script.src = "https://richinfo.co/richpartners/telegram/js/tg-ob.js"
-    // script.async = true // Важно для асинхронной загрузки
-    // document.head.appendChild(script)
+    script.onload = () => {
+      Object.defineProperty(window.Telegram, "initData", {
+        get: function () {
+          return getAppData()
+        },
+        enumerable: true,
+      })
+      Object.defineProperty(window.Telegram, "initDataUnsafe", {
+        get: function () {
+          return bridgeGetInitData()
+        },
+        enumerable: true,
+      })
 
-    // script.onload = () => {
-    //   window.Telegram = {}
-    //   Object.defineProperty(window.Telegram, "initData", {
-    //     get: function () {
-    //       return getAppData()
-    //     },
-    //     enumerable: true,
-    //   })
-    //   Object.defineProperty(window.Telegram, "initDataUnsafe", {
-    //     get: function () {
-    //       return bridgeGetInitData()
-    //     },
-    //     enumerable: true,
-    //   })
-    //   console.log({ F: window.Telegram })
-    //   setTimeout(() => {
-    //     // Выполняем код после загрузки скрипта
-    //     window.TelegramAdsController = new TelegramAdsController() // Убеждаемся, что объект window доступен
-    //     window.TelegramAdsController.initialize({
-    //       pubId: "969174",
-    //       appId: "2097",
-    //     })
-    //   }, 1000)
-    // }
+      window.TelegramAdsController = new TelegramAdsController()
+      window.TelegramAdsController.initialize({
+        pubId: "969174",
+        appId: "2097",
+      })
+    }
 
-    // script.onerror = () => {
-    //   console.error("Failed to load TelegramAds script.")
-    // }
+    script.onerror = () => {
+      console.error("Failed to load TelegramAds script.")
+    }
 
     bridgeSetupSwipeBehavior({
       allow_vertical_swipe: false,

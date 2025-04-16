@@ -23,6 +23,9 @@ const Content: Component<Content> = (props) => {
         </Plug.Icon>
       </Plug.Container>
       <Plug.Action stretched>
+        <div style={{ padding: "10px" }} id={"ad-banner"} />
+      </Plug.Action>
+      <Plug.Action stretched>
         <Button
           onClick={handlerEnd}
           stretched

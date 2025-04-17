@@ -1,4 +1,5 @@
 .Tabbar {
+  width   : 100%;
   position: sticky;
 
   border-top      : solid 0.5px var(--separator_secondary);

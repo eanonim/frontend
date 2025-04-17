@@ -20,6 +20,13 @@ export interface IEvents<T extends ValidComponent>
   platform?: string
 }
 
+type CustomEvent = MouseEvent | TouchEvent
+
+const coordX = (e: any): number =>
+  e?.clientX || e?.changedTouches?.[0]?.clientX || 0
+const coordY = (e: any): number =>
+  e?.clientY || e?.changedTouches?.[0]?.clientY || 0
+
 const isTouchSupport = window && "ontouchstart" in window
 
 const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
@@ -38,6 +45,11 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
     "minHover",
   ])
   const [store, setStore] = createStore({ hover: false, active: false })
+  const gesture: {
+    startX?: number
+    startY?: number
+    isClick: boolean
+  } = { isClick: true }
 
   const getClickable = () => {
     const type = local.href ? "a" : local.component || "div"
@@ -63,17 +75,29 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
           local.minActive,
         )
 
-  const onStart = () =>
+  const onStart = (event: CustomEvent) => {
     !local.disabled && getClickable() && !store.active && setActive(true)
 
-  const onMouseMove = () =>
-    !local.disabled &&
-    getClickable() &&
-    !isTouchSupport &&
-    !store.hover &&
-    setHover(true)
+    gesture.startX = coordX(event)
+    gesture.startY = coordY(event)
+  }
 
-  const onEnd = () => {
+  const onMouseMove = (event: CustomEvent) => {
+    !local.disabled &&
+      getClickable() &&
+      !isTouchSupport &&
+      !store.hover &&
+      setHover(true)
+
+    const shiftX = coordX(event) - (gesture.startX || 0)
+    const shiftY = coordY(event) - (gesture.startY || 0)
+    const shiftXAbs = Math.abs(shiftX)
+    const shiftYAbs = Math.abs(shiftY)
+    console.log({ shiftXAbs, shiftYAbs })
+    gesture.isClick = !(shiftXAbs >= 10 || shiftYAbs >= 10)
+  }
+
+  const onEnd = (event: TouchEvent) => {
     setHover(
       !!(
         !local.disabled &&
@@ -84,6 +108,15 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
       ),
     )
     setActive(false)
+    if (gesture.isClick) {
+      if (typeof local.onClick === "function" && !local.disabled) {
+        event.stopPropagation()
+        local.onClick(event as any)
+      }
+    }
+    delete gesture.startX
+    delete gesture.startY
+    gesture.isClick = true
   }
 
   const onMouseLeave = () => {
@@ -93,27 +126,27 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
     }
   }
 
-  const handleClick: JSX.EventHandlerUnion<HTMLElement, MouseEvent> = (
-    event,
-  ) => {
-    if (typeof local.onClick === "function" && !local.disabled) {
-      event.stopPropagation()
-      local.onClick(event as any)
-    }
+  // const handleClick: JSX.EventHandlerUnion<HTMLElement, MouseEvent> = (
+  //   event,
+  // ) => {
+  //   if (typeof local.onClick === "function" && !local.disabled) {
+  //     event.stopPropagation()
+  //     local.onClick(event as any)
+  //   }
+  // }
+
+  const mouseEvent = {
+    onMouseDown: onStart,
+    onMouseMove: onMouseMove,
+    onMouseUp: onEnd,
+    onMouseLeave: onMouseLeave,
   }
 
-  // const mouseEvent = {
-  //   onMouseDown: onStart,
-  //   onMouseMove: onMouseMove,
-  //   onMouseUp: onEnd,
-  //   onMouseLeave: onMouseLeave,
-  // }
-
-  // const touchEvent = {
-  //   onTouchStart: onStart,
-  //   onTouchEnd: onEnd,
-  //   onTouchMove: onMouseMove,
-  // }
+  const touchEvent = {
+    onTouchStart: onStart,
+    onTouchEnd: onEnd,
+    onTouchMove: onMouseMove,
+  }
 
   return (
     <Dynamic
@@ -127,16 +160,16 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
         _active: store.active,
         ...local.classList,
       }}
-      // {...(isTouchSupport ? touchEvent : mouseEvent)}
+      {...(isTouchSupport ? touchEvent : mouseEvent)}
       // {...(!isTouchSupport ? touchEvent : mouseEvent)}
-      onTouchStart={onStart}
-      onTouchEnd={onEnd}
-      onTouchMove={onMouseMove}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      onMouseDown={onStart}
-      onMouseUp={onEnd}
-      onClick={handleClick}
+      // onTouchStart={onStart}
+      // onTouchEnd={onEnd}
+      // onTouchMove={onMouseMove}
+      // onMouseMove={onMouseMove}
+      // onMouseLeave={onMouseLeave}
+      // onMouseDown={onStart}
+      // onMouseUp={onEnd}
+      // onClick={handleClick}
       {...({ href: local.href } as any)}
       {...others}
     />

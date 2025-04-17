@@ -1,6 +1,6 @@
 import { styles, generateTypography } from "./styles"
 
-import { type Platform, type TypeFlex } from "@ui/index"
+import { Events, type Platform, type TypeFlex } from "@ui/index"
 import Flex from "@ui/default/Blocks/Flex/Flex"
 import GapContext from "@ui/default/Templates/Gap/context"
 import TextContext from "@ui/default/Templates/Text/context"
@@ -26,6 +26,7 @@ const Button: Component<Button> = (props) => {
     "classList",
     "children",
     "selected",
+    "onClick",
   ])
 
   return (
@@ -37,7 +38,8 @@ const Button: Component<Button> = (props) => {
           },
         })}
       >
-        <Flex
+        <Events
+          onClick={local.onClick}
           class={style.Button}
           classList={{
             [style[`Button--selected`]]: !!local.selected,
@@ -45,11 +47,11 @@ const Button: Component<Button> = (props) => {
             [`${local.class}`]: !!local.class,
             ...local.classList,
           }}
-          width={"100%"}
-          {...others}
         >
-          {local.children}
-        </Flex>
+          <Flex width={"100%"} {...others}>
+            {local.children}
+          </Flex>
+        </Events>
       </TextContext.Provider>
     </GapContext.Provider>
   )

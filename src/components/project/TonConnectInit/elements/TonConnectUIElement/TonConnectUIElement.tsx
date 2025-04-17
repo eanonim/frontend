@@ -7,6 +7,7 @@ import {
 } from "@tonconnect/ui"
 import { atom, globalSignal } from "elum-state/solid"
 import { Locale } from "engine/languages"
+import { HOST } from "root/configs"
 
 import {
   onMount,
@@ -121,8 +122,7 @@ const TonConnectUIElement: Component<TonConnectUIElement> = (props) => {
       const initializeTonConnect = async () => {
         if (!tonConnectUI().ton) {
           const tonConnect = new TonConnectUI({
-            manifestUrl:
-              "https://static.ratingtma.com/tonconnect-manifest.json",
+            manifestUrl: HOST + "/v1/manifest.get",
             language: _language,
             uiPreferences: {
               theme: "SYSTEM",

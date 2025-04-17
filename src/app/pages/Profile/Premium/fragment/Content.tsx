@@ -215,7 +215,7 @@ const Content: Component<Content> = (props) => {
               setSelectedPrice(key as "XTR" | "TON" | "COIN")
             }
           >
-            <For each={["XTR", "TON", "COIN"]}>
+            <For each={["XTR", "TON"]}>
               {(type, index) => (
                 <SegmentedControl.Button
                   data-index={index()}

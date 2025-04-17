@@ -11,6 +11,7 @@ const Content: Component<Content> = (props) => {
   const [lang] = loc()
 
   const handlerEnd = async () => {
+    chatSearchEnd({})
     backPage()
   }
 
@@ -35,10 +36,6 @@ const Content: Component<Content> = (props) => {
         div1.style.display = "none"
       }
     })
-  })
-
-  onCleanup(() => {
-    chatSearchEnd({})
   })
 
   return (

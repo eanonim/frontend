@@ -1,4 +1,5 @@
 import { Button, FixedLayout, Separator, Title } from "components"
+import { chatSearchEnd } from "engine/api"
 import loc from "engine/languages"
 import { pages, pushPage } from "router"
 
@@ -9,7 +10,13 @@ interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 const Footer: Component<Footer> = (props) => {
   const [lang] = loc()
   const handlerSearch = async () => {
-    pushPage({ pageId: pages.SEARCH_START })
+    pushPage({
+      pageId: pages.SEARCH_START,
+      handler: async () => {
+        chatSearchEnd({})
+        return true
+      },
+    })
   }
 
   return (

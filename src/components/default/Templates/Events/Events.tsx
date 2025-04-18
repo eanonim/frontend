@@ -89,12 +89,14 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
       !store.hover &&
       setHover(true)
 
-    const shiftX = coordX(event) - (gesture.startX || 0)
-    const shiftY = coordY(event) - (gesture.startY || 0)
-    const shiftXAbs = Math.abs(shiftX)
-    const shiftYAbs = Math.abs(shiftY)
-    console.log({ shiftXAbs, shiftYAbs })
-    gesture.isClick = !(shiftXAbs >= 10 || shiftYAbs >= 10)
+    if (gesture.startX !== undefined && gesture.startY !== undefined) {
+      const shiftX = coordX(event) - (gesture.startX || 0)
+      const shiftY = coordY(event) - (gesture.startY || 0)
+      const shiftXAbs = Math.abs(shiftX)
+      const shiftYAbs = Math.abs(shiftY)
+      console.log({ shiftXAbs, shiftYAbs })
+      gesture.isClick = !(shiftXAbs >= 10 || shiftYAbs >= 10)
+    }
   }
 
   const onEnd = (event: TouchEvent) => {

@@ -225,7 +225,7 @@ const Footer: Component<Footer> = (props) => {
       safe={!!chat?.isDeleted}
     >
       <Show
-        when={true}
+        when={!chat?.isDeleted}
         fallback={
           <Plug size={"small"}>
             <Plug.Container>

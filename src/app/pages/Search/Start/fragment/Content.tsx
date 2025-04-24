@@ -16,26 +16,8 @@ const Content: Component<Content> = (props) => {
   }
 
   onMount(() => {
-    var div1 = document.getElementById("telegram-notification-content")
-    var container2 = document.getElementById("ad-banner")
-
-    // Перемещаем div1 в container2
-    if (div1) {
-      container2?.appendChild(div1)
-      div1.style.bottom = "0px"
-      div1.style.left = "0px"
-      div1.style.right = "0px"
-      div1.style.display = "flex"
-      div1.style.position = "relative"
-    }
-
-    onCleanup(() => {
-      if (div1) {
-        var container = document.body
-        container?.appendChild(div1)
-        div1.style.display = "none"
-      }
-    })
+    const p = () => {}
+    ;(p_adextra as any)(p, p)
   })
 
   return (
@@ -47,15 +29,16 @@ const Content: Component<Content> = (props) => {
       </Plug.Container>
       <Plug.Action stretched>
         <div
+          id={"5fb020d610f5694a11e59430772c9eb2612cd7c9"}
           style={{
             display: "block",
             width: "100%",
             height: "100%",
             position: "relative",
-            "--telegram-notification-content": "block !important",
             "box-sizing": "border-box",
+            // "background-color": "var(--section_bg_color)",
+            // "border-radius": "13px",
           }}
-          id={"ad-banner"}
         />
       </Plug.Action>
       <Plug.Action stretched>

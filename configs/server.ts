@@ -1,4 +1,4 @@
-export let HOST = "anonim.elum.app" //"eanonim-backend-9a6d.twc1.net"
+export let HOST = "anback.elum.su" //"eanonim-backend-9a6d.twc1.net"
 export let HOST_CDN = "acdn.elum.app"
 // export let HOST = "dev.elum.app"
 

@@ -183,18 +183,18 @@ const Footer: Component<Footer> = (props) => {
   }
 
   const handlerExecute = async () => {
+    // // Обновляем список заданий
+    await taskList({
+      lang: getLocale(),
+      group: params().group,
+    })
+
     const item = task()
     if (!item) return
 
     if (item.action === "integration" && !item.order) {
       await taskIntegration({ task: item.id })
     }
-
-    // // Обновляем список заданий
-    await taskList({
-      lang: getLocale(),
-      group: params().group,
-    })
 
     if (!item.order) {
       handlerError({ code: 9901, message: "Task not completed." })
@@ -227,9 +227,16 @@ const Footer: Component<Footer> = (props) => {
           >
             <Button.Group>
               <Button.Group.Container>
-                <Button stretched size={"large"} mode={"outline"}>
+                <Button
+                  onClick={handlerExecute}
+                  stretched
+                  size={"large"}
+                  mode={"outline"}
+                >
                   <Button.Container>
-                    <Title>{lang(`task_type.${task.action}.check`)}</Title>
+                    <Title nowrap>
+                      {lang(`task_type.${task.action}.check`)}
+                    </Title>
                   </Button.Container>
                 </Button>
                 <TonConnectInit
@@ -237,7 +244,7 @@ const Footer: Component<Footer> = (props) => {
                   fallback={
                     <Button stretched size={"large"} loading>
                       <Button.Container>
-                        <Title>
+                        <Title nowrap>
                           {lang(`task_type.${task.action}.complete`)}
                         </Title>
                       </Button.Container>
@@ -257,7 +264,7 @@ const Footer: Component<Footer> = (props) => {
                       }}
                     >
                       <Button.Container>
-                        <Title>
+                        <Title nowrap>
                           {lang(`task_type.${task.action}.complete`)}
                         </Title>
                       </Button.Container>
@@ -279,7 +286,7 @@ const Footer: Component<Footer> = (props) => {
                   appearance={"secondary"}
                 >
                   <Button.Container>
-                    <Title>{lang("task_completed")}</Title>
+                    <Title nowrap>{lang("task_completed")}</Title>
                   </Button.Container>
                 </Button>
               </Button.Group.Container>
@@ -297,7 +304,9 @@ const Footer: Component<Footer> = (props) => {
                   mode={"outline"}
                 >
                   <Button.Container>
-                    <Title>{lang(`task_type.${task.action}.check`)}</Title>
+                    <Title nowrap>
+                      {lang(`task_type.${task.action}.check`)}
+                    </Title>
                   </Button.Container>
                 </Button>
                 <Show
@@ -305,7 +314,9 @@ const Footer: Component<Footer> = (props) => {
                 >
                   <Button onClick={handlerComplete} stretched size={"large"}>
                     <Button.Container>
-                      <Title>{lang(`task_type.${task.action}.complete`)}</Title>
+                      <Title nowrap>
+                        {lang(`task_type.${task.action}.complete`)}
+                      </Title>
                     </Button.Container>
                   </Button>
                 </Show>

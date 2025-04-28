@@ -60,7 +60,7 @@ const Content: Component<Content> = (props) => {
                   )}
                 >
                   {(item, index) => (
-                    <Show keyed when={item?.[0]}>
+                    <Show keyed when={item.find((x) => x.status === "OPEN")}>
                       {(task) => (
                         <Cell
                           data-index={index()}

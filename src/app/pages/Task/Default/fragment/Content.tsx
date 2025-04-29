@@ -44,7 +44,7 @@ const Content: Component<Content> = (props) => {
 
   return (
     <For each={[taskDaily, taskEducation, taskPartners]}>
-      {(group, index) => (
+      {(group, indexGroup) => (
         <Show when={group.tasks}>
           <Group>
             <Group.Header mode={"primary"}>{group.title}</Group.Header>
@@ -79,7 +79,7 @@ const Content: Component<Content> = (props) => {
                             <IconTask
                               image={task.image}
                               type={task.type}
-                              index={index()}
+                              index={(index() + 1) * (indexGroup() + 1)}
                             />
                           </Cell.Before>
                           <Cell.Container>

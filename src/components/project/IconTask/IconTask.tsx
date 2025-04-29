@@ -2,6 +2,7 @@ import style from "./IconTask.module.css"
 
 import Avatar from "@component/default/Blocks/Avatar/Avatar"
 import Flex from "@component/default/Blocks/Flex/Flex"
+import { clamp } from "@minsize/utils"
 import { type JSX, type Component, Switch, Match } from "solid-js"
 import {
   IconAd,
@@ -30,7 +31,8 @@ const IconTask: Component<IconTask> = (props) => {
         <Flex
           class={style.IconTask__color}
           classList={{
-            [style[`IconTask__background--color_${props.index + 1}`]]: true,
+            [style[`IconTask__background--color_${clamp(props.index, 1, 22)}`]]:
+              true,
           }}
         >
           <Switch>

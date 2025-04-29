@@ -73,6 +73,8 @@
   /* overflow       : hidden; */
   z-index           : 1;
   position          : relative;
+
+  max-height: calc(100% - var(--content-safe-area-inset-top) - var(--safe-area-inset-top));
 }
 
 

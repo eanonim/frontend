@@ -11,8 +11,8 @@ export const USER_ATOM = atom<
   //   return String(options)
   // },
   default: {
-    first_name: "Иван",
-    last_name: "Иванов",
+    first_name: "User",
+    last_name: "",
     image: "https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg", //https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg
     emoji: 0,
     premium: new Date(Date.now() - 1_000),

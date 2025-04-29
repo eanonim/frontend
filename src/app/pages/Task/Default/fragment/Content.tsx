@@ -1,4 +1,4 @@
-import { Avatar, Cell, Gap, Group, SubTitle, Title } from "components"
+import { Avatar, Cell, Gap, Group, IconTask, SubTitle, Title } from "components"
 
 import { type JSX, type Component, For, Show } from "solid-js"
 import loc, { getLocale } from "engine/languages"
@@ -76,10 +76,10 @@ const Content: Component<Content> = (props) => {
                           }
                         >
                           <Cell.Before>
-                            <Avatar
-                              mode={"app"}
-                              src={task.image}
-                              size={"48px"}
+                            <IconTask
+                              image={task.image}
+                              type={task.type}
+                              index={index()}
                             />
                           </Cell.Before>
                           <Cell.Container>

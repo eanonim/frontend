@@ -36,6 +36,11 @@ export { default as IconBookmarkPlus } from "./BookmarkPlus.svg"
 export { default as IconLanguage } from "./Language.svg"
 export { default as IconStack2Filled } from "./Stack2Filled.svg"
 export { default as IconInvite } from "./Invite.svg" // в tabler icons называется по другому
+export { default as IconMessageCircleCheck } from "./MessageCircleCheck.svg"
+export { default as IconUsersGroup } from "./UsersGroup.svg"
+export { default as IconUserPlus } from "./UserPlus.svg"
+export { default as IconPhotoShare } from "./PhotoShare.svg"
+export { default as IconAd } from "./Ad.svg"
 
 export { default as IconTelegramStar } from "./TelegramStar.svg"
 export { default as IconTON } from "./TON.svg"

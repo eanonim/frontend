@@ -1,4 +1,4 @@
-import { Avatar, Plug, SubTitle, Title } from "@component/index"
+import { Avatar, IconTask, Plug, SubTitle, Title } from "@component/index"
 import { getLocale } from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import { TASK_ATOM } from "engine/state"
@@ -32,7 +32,12 @@ const Content: Component<Content> = (props) => {
       {(task) => (
         <Plug>
           <Plug.Icon>
-            <Avatar src={task.image} size={"72px"} mode={"app"} />
+            <IconTask
+              size={"72px"}
+              image={task.image}
+              type={task.type}
+              index={task.id}
+            />
           </Plug.Icon>
           <Plug.Container>
             <Title>{task.title || "Unknown"}</Title>

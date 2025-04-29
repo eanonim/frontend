@@ -79,7 +79,8 @@ const Content: Component<Content> = (props) => {
                             <IconTask
                               image={task.image}
                               type={task.type}
-                              index={(index() + 1) * (indexGroup() + 1)}
+                              index={task.id}
+                              size={"48px"}
                             />
                           </Cell.Before>
                           <Cell.Container>

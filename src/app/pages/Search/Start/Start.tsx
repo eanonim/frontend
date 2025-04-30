@@ -70,7 +70,7 @@ const Start: Component<Start> = (props) => {
       }
     }
 
-    untrack(openAds)
+    // untrack(openAds)
     console.log("ASG")
     start()
   })

@@ -199,6 +199,8 @@ export default {
     3: "ثلاثة أشهر",
     1: "شهر",
   },
+  unavailable: (time: string) => `غير متوفر حتى ${time}`,
+  purchased: "تم شراؤه",
   task_completed: "اُكملت المهمة",
   task_type: {
     referral: {

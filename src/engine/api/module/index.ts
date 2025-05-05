@@ -552,6 +552,10 @@ export type Socket = {
           key: "language"
           value: Locale
         }
+      | {
+          key: "bannerStartup"
+          value: boolean
+        }
     response: {
       result: boolean
     }
@@ -577,6 +581,7 @@ export type Socket = {
       filterYourAgeEnd?: number
       filterYourSex?: "man" | "woman" | "any"
       language?: Locale
+      bannerStartup?: boolean
     }
   }
   "user.get": {

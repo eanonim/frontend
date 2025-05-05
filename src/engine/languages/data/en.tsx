@@ -204,6 +204,8 @@ export default {
     3: "Три месяца",
     1: "Месяц",
   },
+  unavailable: (time: string) => `Unavailable until ${time}`,
+  purchased: "Purchased",
   task_completed: "Task completed",
   task_type: {
     referral: {

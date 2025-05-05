@@ -1,5 +1,6 @@
 import {
   Badge,
+  BannerProject,
   Button,
   Cell,
   Flex,
@@ -12,18 +13,27 @@ import {
   usePlatform,
 } from "components"
 import { formatNumberWithDotsRegex } from "engine"
+import { storeSet } from "engine/api"
 import { SearchInteresting } from "engine/api/module"
 import loc from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import {
   SEARCH_OPTIONS_ATOM,
+  SETTINGS_ATOM,
   STORE_INTEREST_ATOM,
   USER_ATOM,
 } from "engine/state"
 import { maxInterest } from "root/configs"
 import { modals, pushModal } from "router"
 
-import { type JSX, type Component, For, Show, createMemo } from "solid-js"
+import {
+  type JSX,
+  type Component,
+  For,
+  Show,
+  createMemo,
+  createEffect,
+} from "solid-js"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -33,6 +43,7 @@ const Content: Component<Content> = (props) => {
   const platform = usePlatform()
 
   const [user] = useAtom(USER_ATOM)
+  const [settings, setSettings] = useAtom(SETTINGS_ATOM)
   const [searchOptions, setSearchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
   const [storeInterest] = useAtom(STORE_INTEREST_ATOM)
 
@@ -97,6 +108,14 @@ const Content: Component<Content> = (props) => {
     pushModal({ modalId: modals.INTERESTS_LIST })
   }
 
+  const onCloseBanner = () => {
+    setSettings("bannerStartup", false)
+  }
+
+  createEffect(() => {
+    console.log({ settings })
+  })
+
   return (
     <Flex
       style={{
@@ -107,6 +126,16 @@ const Content: Component<Content> = (props) => {
       justifyContent={"start"}
       direction={"column"}
     >
+      <Show when={settings.bannerStartup !== false}>
+        <BannerProject
+          onClose={onCloseBanner}
+          title={"ANChat"}
+          subtitle={"здесь начинается анонимное общение"}
+          subtitle2={
+            "Настраивай интересы, выбирай собеседника - и начинай диалог!"
+          }
+        />
+      </Show>
       <Group.List>
         <Group>
           <Group.Container>

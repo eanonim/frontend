@@ -4,6 +4,7 @@ import { SEARCH_OPTIONS_ATOM, SETTINGS_ATOM } from "engine/state"
 import { setFontSize, setTheme, setThemeColor } from "engine/state/settings"
 import { maxInterest } from "root/configs"
 import { swap } from "engine/languages"
+import { unlink } from "@minsize/utils"
 
 const storeList = async (options: Socket["store.list"]["request"]) => {
   const { response, error } = await socketSend("store.list", options)
@@ -12,7 +13,7 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
     return { response, error }
   }
 
-  console.log({ response })
+  console.log({ response: unlink(response) })
 
   const notArray: (keyof Socket["store.list"]["response"])[] = [
     "fontSize",
@@ -26,16 +27,24 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
     "filterYourAgeStart",
     "filterYourSex",
     "language",
+    "bannerStartup",
   ]
 
   for (const key in response) {
     let values = (response as any)[key] as unknown[]
 
     for (let i = 0; i < values.length; i++) {
-      if (typeof Number(values[i]) === "number" && !isNaN(Number(values[i]))) {
-        values[i] = Number(values[i])
-      } else if (values[i] === "true" || values[i] === "false") {
+      if (
+        values[i] === "true" ||
+        values[i] === "false" ||
+        typeof values[i] === "boolean"
+      ) {
         values[i] = Boolean(values[i])
+      } else if (
+        typeof Number(values[i]) === "number" &&
+        !isNaN(Number(values[i]))
+      ) {
+        values[i] = Number(values[i])
       }
 
       if (notArray.includes(key as any)) {

@@ -1,0 +1,15 @@
+.BannerProject {
+  padding         : 10px;
+  background-image: linear-gradient(to bottom, #4a5197 0%, #a92c80 49%, #e71372 83%, #ff0a6c 100%);
+}
+
+.BannerProject__logo {
+  border-radius: 16px;
+  box-shadow   : 0px 0px 15px 5px rgba(0, 0, 0, 0.15);
+}
+
+.BannerProject__Close {
+  color       : white;
+  margin-right: -10px;
+  margin-top  : -30px;
+}

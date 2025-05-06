@@ -36,6 +36,7 @@ export const SETTINGS_ATOM = atom<
       "theme",
       "themeColor",
       "language",
+      "bannerStartup",
     ]
 
     ;(async () => {

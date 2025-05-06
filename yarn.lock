@@ -338,15 +338,35 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@minsize/core@^1.0.1", "@minsize/core@^1.0.53":
+  version "1.0.53"
+  resolved "https://registry.yarnpkg.com/@minsize/core/-/core-1.0.53.tgz#db32cf1b619b10a2d5d368d8d3185543496d8acf"
+  integrity sha512-95/X4Z51+5ctba6Z/JTF5/EG9DjjjtaqQ9+jXj2bXPwFfNRAMN09azBXgHhjk7Od7ho0gpDgkSRc1qlLShykig==
+  dependencies:
+    "@minsize/utils" "^0.0.19"
+
 "@minsize/mutex@^0.0.6":
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/@minsize/mutex/-/mutex-0.0.6.tgz#2085c5627014b2cc7d94b5c6b171dea30fec8793"
   integrity sha512-5P1X/tLOUNdVuE1eX3/wSVkeHUqf3Vp9lZVtNhls/+HCtXY/Xw1Kuav66z7ZWaJCyAj3JX9pgdVwTeezcQyAbg==
 
+"@minsize/plugin-utils@^1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@minsize/plugin-utils/-/plugin-utils-1.0.32.tgz#64fc0c5d442870d94172597fff33876bd30c36fc"
+  integrity sha512-lyrKrI/zaxIZ7slcEBKGLZsKMwFT2z/+Ipsy6qlyhGbP4mrk4NeUG7fNc7J1ZeSM4nOfdQmH1lNc58EPnfMmYg==
+  dependencies:
+    "@minsize/core" "^1.0.1"
+    "@minsize/utils" "^0.0.19"
+
 "@minsize/utils@^0.0.15":
   version "0.0.15"
   resolved "https://registry.yarnpkg.com/@minsize/utils/-/utils-0.0.15.tgz#eab4751b462e47756660860b091479e8b7c7f603"
   integrity sha512-6+3/gc5H4pUVdO7RGyTwGbQohYekOhFwQfYVxECzAWJpVQWr+fAercJOLLZgtVd3/YYsaYAuoar9WiC0nFRqUQ==
+
+"@minsize/utils@^0.0.19":
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/@minsize/utils/-/utils-0.0.19.tgz#04cfb7c130ee24f0001195def44586a24bd5e6f0"
+  integrity sha512-PefZDJsMcE5Or1iH7EsvOrfBxyTpxPKx0WOZF4PJluyqWY4oluqY8LhZZoJA7ySd12tILWNoUZPtK9JcmnM4yQ==
 
 "@rollup/rollup-android-arm-eabi@4.34.8":
   version "4.34.8"

@@ -25,7 +25,9 @@
   "dependencies": {
     "@apiteam/twa-bridge": "^8.0.2-beta",
     "@elum/ews": "^0.0.15",
+    "@minsize/core": "^1.0.53",
     "@minsize/mutex": "^0.0.6",
+    "@minsize/plugin-utils": "^1.0.32",
     "@minsize/utils": "^0.0.15",
     "@solid-primitives/map": "^0.6.0",
     "@solid-primitives/scheduled": "^1.5.0",

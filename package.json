@@ -27,6 +27,7 @@
     "@elum/ews": "^0.0.15",
     "@minsize/core": "^1.0.53",
     "@minsize/mutex": "^0.0.6",
+    "@minsize/plugin-i18n": "^1.0.1",
     "@minsize/plugin-utils": "^1.0.32",
     "@minsize/utils": "^0.0.15",
     "@solid-primitives/map": "^0.6.0",

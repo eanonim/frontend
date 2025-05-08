@@ -122,7 +122,8 @@ const TonConnectUIElement: Component<TonConnectUIElement> = (props) => {
       const initializeTonConnect = async () => {
         if (!tonConnectUI().ton) {
           const tonConnect = new TonConnectUI({
-            manifestUrl: HOST + "/v1/manifest.get",
+            // manifestUrl: HOST + "/v1/manifest.get",
+            manifestUrl: "/manifest.json",
             language: _language,
             uiPreferences: {
               theme: "SYSTEM",

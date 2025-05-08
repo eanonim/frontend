@@ -123,7 +123,7 @@ const TonConnectUIElement: Component<TonConnectUIElement> = (props) => {
         if (!tonConnectUI().ton) {
           const tonConnect = new TonConnectUI({
             // manifestUrl: HOST + "/v1/manifest.get",
-            manifestUrl: "/manifest.json",
+            manifestUrl: "https://opencs2.ru/manifest.json", //"/manifest.json",
             language: _language,
             uiPreferences: {
               theme: "SYSTEM",

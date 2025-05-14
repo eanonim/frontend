@@ -115,7 +115,7 @@ const Header: Component<Header> = (props) => {
           </For>
         </Cell.List>
       </Group.Container>
-      <Group.Container>
+      {/* <Group.Container>
         <Plug>
           <Plug.Icon>
             <IconStack2Filled
@@ -129,7 +129,7 @@ const Header: Component<Header> = (props) => {
             <SubTitle>{lang("task.subtitle")}</SubTitle>
           </Plug.Container>
         </Plug>
-      </Group.Container>
+      </Group.Container> */}
     </Group>
   )
 }

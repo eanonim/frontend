@@ -1,4 +1,4 @@
-import { Button, Plug, Spinner, Title } from "components"
+import { Button, Plug, Spinner, SubTitle, Title } from "components"
 import { chatSearchEnd } from "engine/api"
 import loc from "engine/languages"
 import { backPage } from "router"
@@ -27,6 +27,10 @@ const Content: Component<Content> = (props) => {
           <Spinner size={"medium"} />
         </Plug.Icon>
       </Plug.Container>
+      <Plug.Action stretched>
+        <Title>{lang("searchTitle")}</Title>
+        <SubTitle>{lang("searchSubtitle")}</SubTitle>
+      </Plug.Action>
       <Plug.Action stretched>
         <div
           id={"5fb020d610f5694a11e59430772c9eb2612cd7c9"}

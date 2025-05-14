@@ -86,6 +86,8 @@ export default {
   interests: "الاهتمامات",
   you: "أنت",
   companion: "المرافق",
+  searchTitle: "جارٍ البحث عن شريك محادثة…",
+  searchSubtitle: "في كل ثانية، يبدأ شخص ما حوارًا في ANChat. كن التالي!",
   searchInterests: {
     music: "الموسيقى",
     travel: "السفر",

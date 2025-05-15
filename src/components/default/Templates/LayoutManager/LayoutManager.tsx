@@ -115,11 +115,9 @@ const LayoutManager: ComponentLayoutManager = (props) => {
             : {}),
         })
 
-        //  setStore({
-        //    [store.lastType === "first" ? "firstVisible" : "lastVisible"]:
-        //      false,
-        //    anim: false,
-        //  })
+        setStore({
+          [store.lastType === "first" ? "firstVisible" : "lastVisible"]: false,
+        })
         // const isTabbar = getChild("first")?.tabbar && getChild("last")?.tabbar
 
         // // console.log({ isTabbar }, getChild("first"), getChild("last"))

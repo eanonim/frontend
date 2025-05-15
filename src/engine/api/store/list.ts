@@ -85,6 +85,10 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
       searchOptions.companion.male = response.filterYourSex
     }
 
+    if (response.filterLanguage) {
+      searchOptions.language = response.filterLanguage
+    }
+
     for (const key of (response.interest ?? []).slice(0, maxInterest)) {
       searchOptions.interests[key] = { isSelected: true }
     }

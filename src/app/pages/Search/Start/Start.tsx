@@ -31,7 +31,7 @@ const Start: Component<Start> = (props) => {
       }
 
       const { response, error } = await chatSearch({
-        language: "en",
+        language: searchOptions.language || "en",
         your_start: searchOptions.companion.age.from,
         your_end: searchOptions.companion.age.to,
         your_sex: getMaleOfNumber(searchOptions.companion.male),

@@ -92,7 +92,7 @@ const App: Component = () => {
       //   `${data.bottom}px`,
       // )
       // document.body.style.setProperty("--safe-area-inset-top", `${data.top}px`)
-      document.body.style.setProperty("--app-height", `${data.height}px`)
+      // document.body.style.setProperty("--app-height", `${data.height}px`)
 
       if (data.height + store.bottom < window.innerHeight) {
         /** Открытие клавиатуры */

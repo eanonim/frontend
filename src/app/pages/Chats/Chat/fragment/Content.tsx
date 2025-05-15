@@ -119,19 +119,24 @@ const Content: Component<Content> = (props) => {
   > = {
     "chat.inviteAccept": async (message) => {
       const msg = chat?.getMessageById(message.id)
-      msg?.setter("isDeleted", true)
-      chat?.setter("isFavorites", true)
       const { response, error } = await chatInviteAccept({
         dialog: params().dialog,
       })
+      if (response) {
+        msg?.setter("isDeleted", true)
+        chat?.setter("isFavorites", true)
+      }
     },
     "chat.inviteReject": async (message) => {
       const msg = chat?.getMessageById(message.id)
-      msg?.setter("isDeleted", true)
-      chat?.setter("isFavorites", false)
+
       const { response, error } = await chatInviteReject({
         dialog: params().dialog,
       })
+      if (response) {
+        msg?.setter("isDeleted", true)
+        chat?.setter("isFavorites", false)
+      }
     },
   }
 

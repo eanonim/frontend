@@ -1,3 +1,4 @@
+import handlerError from "../handlerError"
 import { Socket, socketSend } from "../module"
 
 const inviteAccept = async (
@@ -5,7 +6,7 @@ const inviteAccept = async (
 ) => {
   const { response, error } = await socketSend("chat.inviteAccept", options)
   if (error) {
-    console.log({ error })
+    handlerError(error)
     return { response, error }
   }
 

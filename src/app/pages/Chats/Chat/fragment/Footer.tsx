@@ -167,34 +167,36 @@ const Footer: Component<Footer> = (props) => {
     const items: { id: number; blob: Blob }[] = unlink(
       chat?.message?.attach || [],
     )
-    const element = document.createElement("input")
-    element.type = "file"
-    element.multiple = true
-    element.accept = "image/*"
+    const element = document.getElementById("add_image") as HTMLInputElement
+    if (element) {
+      element.type = "file"
+      element.multiple = true
+      element.accept = "image/*"
 
-    element.click()
-    element.onchange = async (e) => {
-      const data = e.target as HTMLInputElement
+      element.onchange = async (e) => {
+        const data = e.target as HTMLInputElement
 
-      for (const file of data.files || []) {
-        if (items.length >= 3) return
-        const image = await createImage(file)
-        if (image) {
-          items.push({ id: items.length, blob: image })
-          // const form = new FormData()
-          // form.append("data", image)
-          // form.append("group", chat?.id || "")
-          // const { response, error } = await imageUpload(form)
-          // if (response) {
-          //   items.type = "photo"
-          //   items.items.push({
-          //     id: response.id,
-          //   })
-          // }
+        for (const file of data.files || []) {
+          if (items.length >= 3) return
+          const image = await createImage(file)
+          if (image) {
+            items.push({ id: items.length, blob: image })
+            // const form = new FormData()
+            // form.append("data", image)
+            // form.append("group", chat?.id || "")
+            // const { response, error } = await imageUpload(form)
+            // if (response) {
+            //   items.type = "photo"
+            //   items.items.push({
+            //     id: response.id,
+            //   })
+            // }
+          }
         }
-      }
 
-      chat?.setMessage("attach", items)
+        chat?.setMessage("attach", items)
+      }
+      element.click()
     }
   }
 
@@ -323,6 +325,18 @@ const Footer: Component<Footer> = (props) => {
                 )}
               </For>
               <Show when={(chat?.message?.attach || []).length < 3}>
+                <input
+                  type={"file"}
+                  multiple
+                  id={"add_image"}
+                  style={{
+                    opacity: 0,
+                    "max-height": "0px",
+                    "max-width": "0px",
+                    overflow: "hidden",
+                    display: "none",
+                  }}
+                />
                 <Image.Preview onClick={addImage}>
                   <IconPlus color={"var(--accent_color)"} />
                 </Image.Preview>

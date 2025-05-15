@@ -20,7 +20,7 @@ import {
   on,
   For,
 } from "solid-js"
-import { modals, pages, pushModal, useParams } from "router"
+import { modals, pages, pushModal, swipeView, useParams, views } from "router"
 import {
   imageUpload,
   messageEdit,
@@ -231,6 +231,16 @@ const Footer: Component<Footer> = (props) => {
             <Plug.Container>
               <SubTitle>{lang("chat_deleted.subtitle")}</SubTitle>
             </Plug.Container>
+            <Plug.Action stretched>
+              <Button
+                size={"large"}
+                onClick={() => swipeView({ viewId: views.SEARCH })}
+              >
+                <Button.Container>
+                  <Title>{lang("search_for_an_interlocutor")}</Title>
+                </Button.Container>
+              </Button>
+            </Plug.Action>
           </Plug>
         }
       >

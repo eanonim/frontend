@@ -100,17 +100,17 @@ const App: Component = () => {
           "--safe-area-inset-bottom",
           `${store.bottom + (store.bottom ? 10 : 0)}px`,
         )
-        document.body.style.setProperty(
-          "--keyboard-safe-area-inset-bottom",
-          `${clamp(
-            window.outerHeight -
-              data.height -
-              (getter(KEYBOARD_ATOM)?.bottom || 0) -
-              (!(getter(KEYBOARD_ATOM)?.bottom || 0) ? store.bottom : 0),
-            0,
-            window.innerHeight,
-          )}px`,
-        )
+        // document.body.style.setProperty(
+        //   "--keyboard-safe-area-inset-bottom",
+        //   `${clamp(
+        //     window.outerHeight -
+        //       data.height -
+        //       (getter(KEYBOARD_ATOM)?.bottom || 0) -
+        //       (!(getter(KEYBOARD_ATOM)?.bottom || 0) ? store.bottom : 0),
+        //     0,
+        //     window.innerHeight / 3,
+        //   )}px`,
+        // )
 
         setter(KEYBOARD_ATOM, (store) => {
           store.open = true

@@ -549,6 +549,10 @@ export type Socket = {
           value: "man" | "woman" | "any"
         }
       | {
+          key: "filterLanguage"
+          value: Locale
+        }
+      | {
           key: "language"
           value: Locale
         }
@@ -581,6 +585,7 @@ export type Socket = {
       filterYourAgeEnd?: number
       filterYourSex?: "man" | "woman" | "any"
       language?: Locale
+      filterLanguage?: Locale
       bannerStartup?: boolean
     }
   }

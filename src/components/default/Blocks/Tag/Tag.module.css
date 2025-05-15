@@ -22,6 +22,7 @@
 }
 
 
+
 .Tag__circle {
   padding      : 2px;
   border-radius: 20px;
@@ -49,4 +50,12 @@
 .Tag__circle svg {
   width : 16px;
   height: 16px;
+}
+
+.Tag__mode--square {
+  border-radius: 10px;
+}
+
+.Tag__mode--square .Tag__circle {
+  border-radius: 8px;
 }

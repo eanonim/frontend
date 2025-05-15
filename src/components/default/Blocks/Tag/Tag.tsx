@@ -23,6 +23,8 @@ interface Tag<T extends ValidComponent = "span"> extends IEvents<T> {
   platform?: Platform
 
   selected?: boolean
+
+  mode?: "circle" | "square"
 }
 
 type ComponentTag = Component<Tag> & {
@@ -32,7 +34,7 @@ type ComponentTag = Component<Tag> & {
 const Tag: ComponentTag = (props) => {
   const style = useStyle(styles, props.platform)
   const merged = mergeProps(
-    { component: props.href ? "a" : "button", selected: false },
+    { component: props.href ? "a" : "button", selected: false, mode: "circle" },
     props,
   ) as Tag
   const [local, others] = splitProps(merged, [
@@ -41,6 +43,7 @@ const Tag: ComponentTag = (props) => {
     "classList",
     "children",
     "selected",
+    "mode",
   ])
 
   return (
@@ -48,6 +51,7 @@ const Tag: ComponentTag = (props) => {
       class={style.Tag}
       classList={{
         [style[`Tag--selected`]]: local.selected,
+        [style[`Tag__mode--${local.mode}`]]: !!local.mode,
 
         [`${local.class}`]: !!local.class,
         ...local.classList,

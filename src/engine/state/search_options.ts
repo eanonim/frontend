@@ -1,5 +1,6 @@
 import { storeDelete, storeList, storeSet } from "engine/api"
 import { SearchInteresting, Socket } from "engine/api/module"
+import { Locale } from "engine/languages"
 import { atom } from "engine/modules/smart-data"
 import { maxInterest } from "root/configs"
 
@@ -18,6 +19,7 @@ type SearchOptionsAtom = {
       to: number
     }
   }
+  language?: Locale
   interests: Partial<
     Record<SearchInteresting, { isSelected: boolean; isHidden?: boolean }>
   >
@@ -44,6 +46,7 @@ export const SEARCH_OPTIONS_ATOM = atom<
       },
     },
     interests: {},
+    language: "en",
   },
   updateIntervalMs: 60_000,
   onRequested: (options, key) => {
@@ -101,6 +104,10 @@ export const SEARCH_OPTIONS_ATOM = atom<
 
       if (prev.you.age.from !== next.you.age.from) {
         storeSet({ key: "filterMyAge", value: next.you.age.from })
+      }
+
+      if (prev.language !== next.language) {
+        storeSet({ key: "filterLanguage", value: next.language || "en" })
       }
     }
 

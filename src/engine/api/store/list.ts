@@ -26,6 +26,7 @@ const storeList = async (options: Socket["store.list"]["request"]) => {
     "filterYourAgeEnd",
     "filterYourAgeStart",
     "filterYourSex",
+    "filterLanguage",
     "language",
     "bannerStartup",
   ]

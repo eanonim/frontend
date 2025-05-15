@@ -15,7 +15,7 @@ import {
 import { formatNumberWithDotsRegex } from "engine"
 import { storeSet } from "engine/api"
 import { SearchInteresting } from "engine/api/module"
-import loc from "engine/languages"
+import loc, { Locale } from "engine/languages"
 import { useAtom } from "engine/modules/smart-data"
 import {
   SEARCH_OPTIONS_ATOM,
@@ -102,6 +102,10 @@ const Content: Component<Content> = (props) => {
 
   const handlerChangeInteresting = (key: SearchInteresting) => {
     setSearchOptions("interests", key, "isSelected", (bool) => !bool)
+  }
+
+  const handlerChangeLanguage = (key: Locale) => {
+    setSearchOptions("language", key)
   }
 
   const openModal = () => {
@@ -230,6 +234,31 @@ const Content: Component<Content> = (props) => {
               </Group.Container>
             )}
           </For>
+        </Group>
+        <Group>
+          <Group.Header mode={"primary"}>{lang("language")}</Group.Header>
+          <Group.Container>
+            <Tag.Group>
+              <For
+                each={
+                  Object.entries(
+                    lang(`languages`) as Record<Locale, string>,
+                  ) as unknown as [Locale, string][]
+                }
+              >
+                {([key, locale], index) => (
+                  <Tag
+                    mode={"square"}
+                    onClick={() => handlerChangeLanguage(key)}
+                    data-index={index()}
+                    selected={searchOptions.language === key}
+                  >
+                    <Title>{locale}</Title>
+                  </Tag>
+                )}
+              </For>
+            </Tag.Group>
+          </Group.Container>
         </Group>
         <Group>
           <Group.Header mode={"primary"}>{lang("interests")}</Group.Header>

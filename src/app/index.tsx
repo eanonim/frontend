@@ -64,6 +64,7 @@ const App: Component = () => {
     const onEventContentSafeAreaChanged = (
       data: EventsData[typeof EventSafeAreaChanged],
     ) => {
+      console.log({ content_top: data.top })
       document.body.style.setProperty(
         "--content-safe-area-inset-top",
         `${data.top}px`,
@@ -73,6 +74,7 @@ const App: Component = () => {
     const onEventSafeAreaChanged = (
       data: EventsData[typeof EventSafeAreaChanged],
     ) => {
+      console.log({ safe: data.top, safeBottom: data.bottom })
       if (data.bottom) {
         document.body.style.setProperty(
           "--safe-area-inset-bottom",

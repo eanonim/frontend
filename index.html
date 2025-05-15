@@ -38,10 +38,25 @@
     async
     src="https://partner.adextra.io/jt/5fb020d610f5694a11e59430772c9eb2612cd7c9.js"
   ></script>
-  <!-- <script src="https://telegram.org/js/telegram-web-app.js?57"></script> -->
+  <script src="https://telegram.org/js/telegram-web-app.js?57"></script>
   <script
     src="//zidreersatsy.com/sdk.js"
     data-zone="9214229"
     data-sdk="show_9214229"
   ></script>
+  <script
+    async
+    src="https://tganalytics.xyz/index.js"
+    onload="initAnalytics()"
+    type="text/javascript"
+  ></script>
+  <script>
+    function initAnalytics() {
+      window.telegramAnalytics.init({
+        token:
+          "eyJhcHBfbmFtZSI6ImFuY2hhdCIsImFwcF91cmwiOiJodHRwczovL3QubWUvYXBwY2hhdGFuX2JvdC9hcHAiLCJhcHBfZG9tYWluIjoiaHR0cHM6Ly9hbmZyb250LmVsdW0uc3UvIn0=!zpOn5J4LyUci3prdPdVeubSKHHkie2Iq/Zi6hd4i8h0=", // SDK Auth token received via @DataChief_bot
+        appName: "anchat", // The analytics identifier you entered in @DataChief_bot
+      })
+    }
+  </script>
 </html>

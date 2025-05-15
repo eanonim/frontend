@@ -37,9 +37,7 @@ import { getter, globalSignal, setter } from "elum-state/solid"
 import { getter as SmartGetter } from "engine/modules/smart-data"
 import { createStore } from "solid-js/store"
 import { setTheme } from "engine/state/settings"
-import telegramAnalytics from "@telegram-apps/analytics"
-
-const windowHeight = window.innerHeight
+import { clamp, unlink } from "@minsize/utils"
 
 const App: Component = () => {
   const [keyboard] = globalSignal(KEYBOARD_ATOM)
@@ -57,13 +55,6 @@ const App: Component = () => {
   })
 
   onMount(() => {
-    // telegramAnalytics.init({
-    //   token:
-    //     "eyJhcHBfbmFtZSI6ImFuY2hhdCIsImFwcF91cmwiOiJodHRwczovL3QubWUvYXBwY2hhdGFuX2JvdC9hcHAiLCJhcHBfZG9tYWluIjoiaHR0cHM6Ly9hbmZyb250LmVsdW0uc3UvIn0=!zpOn5J4LyUci3prdPdVeubSKHHkie2Iq/Zi6hd4i8h0=", // SDK Auth token received via @DataChief_bot
-    //   appName: "anchat", // The analytics identifier you entered in @DataChief_bot
-    //   env: "STG",
-    // })
-
     bridgeSetupSwipeBehavior({
       allow_vertical_swipe: false,
     })
@@ -103,28 +94,26 @@ const App: Component = () => {
       //   `${data.bottom}px`,
       // )
       // document.body.style.setProperty("--safe-area-inset-top", `${data.top}px`)
-      document.body.style.setProperty("--app-height", `${data.height}px`)
+      // document.body.style.setProperty("--app-height", `${data.height}px`)
 
-      console.log(
-        data.height,
-        { asf: window.screen.availHeight },
-        window.screen.height,
-        windowHeight,
-      )
+      if (data.height + store.bottom < window.innerHeight) {
+        // const interval = setInterval(() => {
+        //   window.document.body.scrollIntoView({
+        //     behavior: "instant",
+        //     block: "end",
+        //   })
+        // }, 1)
 
-      if (data.height < windowHeight) {
-        const interval = setInterval(() => {
-          window.document.body.scrollIntoView({
-            behavior: "instant",
-            block: "end",
-          })
-        }, 100)
+        // setTimeout(() => {
+        //   clearInterval(interval)
+        // }, 1000)
 
-        setTimeout(() => {
-          clearInterval(interval)
-        }, 1000)
-        /** Открытие клавиатуры */
         document.body.style.setProperty("--safe-area-inset-bottom", `0px`)
+        /** Открытие клавиатуры */
+        // document.body.style.setProperty(
+        //   "--safe-area-inset-bottom",
+        //   `${store.bottom + (store.bottom ? 10 : 0)}px`,
+        // )
         // document.body.style.setProperty(
         //   "--keyboard-safe-area-inset-bottom",
         //   `${clamp(
@@ -133,36 +122,29 @@ const App: Component = () => {
         //       (getter(KEYBOARD_ATOM)?.bottom || 0) -
         //       (!(getter(KEYBOARD_ATOM)?.bottom || 0) ? store.bottom : 0),
         //     0,
-        //     window.screen.height / 3,
+        //     window.innerHeight / 3,
         //   )}px`,
         // )
 
-        setter(KEYBOARD_ATOM, (store) => {
-          store.open = true
-          store.touch = false
-          store.bottom = 0
-          return { ...store }
-        })
+        // setter(KEYBOARD_ATOM, (store) => {
+        //   store.open = true
+        //   store.touch = false
+        //   store.bottom = 0
+        //   return { ...store }
+        // })
       } else {
-        setter(KEYBOARD_ATOM, (store) => {
-          store.open = false
-          store.touch = false
-          store.bottom = 0
-          return { ...store }
-        })
+        // setter(KEYBOARD_ATOM, (store) => {
+        //   store.open = false
+        //   store.touch = false
+        //   store.bottom = 0
+        //   return { ...store }
+        // })
         document.body.style.setProperty(
           "--keyboard-safe-area-inset-bottom",
           `0px`,
         )
       }
     }
-
-    // const onResize = () => {
-    //   console.log("TEST", Date.now())
-    //   onEventViewportChanged({ height: window.innerHeight } as any)
-    // }
-
-    // window.addEventListener("resize", onResize)
 
     const onEventThemeChanged = (
       data: EventsData[typeof EventThemeChanged],
@@ -200,7 +182,10 @@ const App: Component = () => {
           store.touch = true
           return { ...store }
         })
-        document.body.style.setProperty("--safe-area-inset-bottom", `0px`)
+        // document.body.style.setProperty(
+        //   "--safe-area-inset-bottom",
+        //   `${store.bottom}px`,
+        // )
       } else if (getter(KEYBOARD_ATOM).bottom !== 0) {
         setter(KEYBOARD_ATOM, (store) => {
           store.bottom = 0
@@ -210,13 +195,6 @@ const App: Component = () => {
         document.body.style.setProperty(
           "--keyboard-safe-area-inset-bottom",
           `0px`,
-        )
-      }
-
-      if (!getter(KEYBOARD_ATOM).open) {
-        document.body.style.setProperty(
-          "--safe-area-inset-bottom",
-          `${store.bottom}px`,
         )
       }
 
@@ -244,7 +222,6 @@ const App: Component = () => {
       listener.off(EventSafeAreaChanged, onEventSafeAreaChanged)
       listener.off(EventViewportChanged, onEventViewportChanged)
 
-      // window.removeEventListener("resize", onResize)
       document.removeEventListener("touchstart", onTouchStart)
       document.removeEventListener("touchend", onTouchEnd)
     })

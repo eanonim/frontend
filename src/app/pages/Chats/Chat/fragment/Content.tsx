@@ -264,7 +264,7 @@ const Content: Component<Content> = (props) => {
                                   <Title>
                                     {lang(
                                       "system.invite.title",
-                                      user.first_name,
+                                      user.first_name || "User",
                                     )}
                                   </Title>
                                   <SubTitle>

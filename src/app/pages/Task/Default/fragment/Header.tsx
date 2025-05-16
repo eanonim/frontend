@@ -61,9 +61,7 @@ const Header: Component<Header> = (props) => {
                               <span
                                 style={{ "text-decoration": "line-through" }}
                               >
-                                {(
-                                  product.price * [2, 4, 12][index()]
-                                ).toLocaleString("ru-RU", {
+                                {product.price.toLocaleString("ru-RU", {
                                   minimumFractionDigits: 2, // Минимум 2 знака после запятой
                                   maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)
                                 })}
@@ -71,8 +69,7 @@ const Header: Component<Header> = (props) => {
                             </Show>
                             <span>
                               {(
-                                (product.price - product.discount) *
-                                [2, 4, 12][index()]
+                                product.price - product.discount
                               ).toLocaleString("ru-RU", {
                                 minimumFractionDigits: 2, // Минимум 2 знака после запятой
                                 maximumFractionDigits: 9, // Максимум 9 знаков после запятой (стандарт TON)

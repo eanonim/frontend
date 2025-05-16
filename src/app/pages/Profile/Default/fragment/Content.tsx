@@ -55,28 +55,29 @@ const Content: Component<Content> = (props) => {
   const [user] = useAtom(USER_ATOM)
 
   const setAvatar = async () => {
-    const element = document.createElement("input")
-    element.type = "file"
-    element.multiple = false
-    element.accept = "image/*"
+    const element = document.getElementById("add_image") as HTMLInputElement
+    if (element) {
+      element.type = "file"
+      element.multiple = false
+      element.accept = "image/*"
+      element.onchange = async (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0]
 
-    element.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0]
+        if (!file) return
 
-      if (!file) return
-
-      const image = await createImage(file)
-      if (image) {
-        const form = new FormData()
-        form.append("data", image)
-        form.append("group", "user")
-        const { response, error } = await imageUpload(form)
-        if (response) {
-          userAvatarSet({ id: response.id })
+        const image = await createImage(file)
+        if (image) {
+          const form = new FormData()
+          form.append("data", image)
+          form.append("group", "user")
+          const { response, error } = await imageUpload(form)
+          if (response) {
+            userAvatarSet({ id: response.id })
+          }
         }
       }
+      element.click()
     }
-    element.click()
   }
 
   const elements: {
@@ -231,6 +232,18 @@ const Content: Component<Content> = (props) => {
           </Cell>
         </Group.Container>
       </Group>
+      <input
+        type={"file"}
+        multiple
+        id={"add_image_profile"}
+        style={{
+          opacity: 0,
+          "max-height": "0px",
+          "max-width": "0px",
+          overflow: "hidden",
+          display: "none",
+        }}
+      />
       <For each={elements}>
         {(group, index) => (
           <Group data-index={index()}>

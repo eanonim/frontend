@@ -34,6 +34,7 @@ import {
   createMemo,
   createEffect,
 } from "solid-js"
+import { produce } from "solid-js/store"
 
 interface Content extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -87,17 +88,20 @@ const Content: Component<Content> = (props) => {
   ) => {
     const parts = key.split("-")
 
-    setSearchOptions(from, (you) => {
-      if (type === "age") {
-        you.age = {
-          from: Number(parts[0]),
-          to: Number(parts[1]),
+    setSearchOptions(
+      from,
+      produce((you) => {
+        if (type === "age") {
+          you.age = {
+            from: Number(parts[0]),
+            to: Number(parts[1]),
+          }
+        } else {
+          you.male = key as any
         }
-      } else {
-        you.male = key as any
-      }
-      return you
-    })
+        return you
+      }),
+    )
   }
 
   const handlerChangeInteresting = (key: SearchInteresting) => {

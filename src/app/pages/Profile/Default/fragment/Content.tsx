@@ -55,7 +55,9 @@ const Content: Component<Content> = (props) => {
   const [user] = useAtom(USER_ATOM)
 
   const setAvatar = async () => {
-    const element = document.getElementById("add_image") as HTMLInputElement
+    const element = document.getElementById(
+      "add_image_profile",
+    ) as HTMLInputElement
     if (element) {
       element.type = "file"
       element.multiple = false

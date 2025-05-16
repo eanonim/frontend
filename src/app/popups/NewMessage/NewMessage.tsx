@@ -15,7 +15,15 @@ import {
   UserName,
 } from "components"
 
-import { backPage, pages, pushPage, useParams } from "router"
+import {
+  backPage,
+  modals,
+  pages,
+  pushPage,
+  swipeView,
+  useParams,
+  views,
+} from "router"
 import { Socket } from "engine/api/module"
 import { useAtom } from "engine/modules/smart-data"
 import { CHAT_LIST_ATOM } from "engine/state"
@@ -24,6 +32,7 @@ import { clamp } from "@minsize/utils"
 import { HOST_CDN } from "root/configs"
 import { Chats } from "engine/class/useChat"
 import loc from "engine/languages"
+import { clearView, pushModal } from "router/src"
 
 interface NewMessage extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -70,6 +79,23 @@ const NewMessage: Component<NewMessage> = (props) => {
           chat.isOpenGallery()
           return false
         }
+
+        if (chat?.isDeleted) {
+          swipeView({ viewId: views.SEARCH, clear: true })
+          clearView({ viewId: views.CHATS })
+        }
+
+        if (chat?.isFavorites || chat?.isDeleted) {
+          return true
+        }
+
+        pushModal({
+          modalId: modals.MODAL_LEAVE,
+          params: {
+            dialog: params().dialog,
+          },
+        })
+
         return true
       },
     })

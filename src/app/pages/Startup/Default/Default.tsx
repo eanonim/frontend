@@ -24,6 +24,7 @@ import { AUTH_TOKEN_ATOM } from "engine/state"
 import { updateSocketToken } from "engine/api/module"
 import { Chats } from "engine/class/useChat"
 import { parseStartApp } from "engine"
+import { clearView } from "router/src"
 
 interface Default extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -62,6 +63,11 @@ const Default: Component<Default> = (props) => {
           if (!!chat?.isOpenGallery) {
             chat.isOpenGallery()
             return false
+          }
+
+          if (chat?.isDeleted) {
+            swipeView({ viewId: views.SEARCH, clear: true })
+            clearView({ viewId: views.CHATS })
           }
 
           if (chat?.isFavorites || chat?.isDeleted) {

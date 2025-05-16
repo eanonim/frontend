@@ -36,6 +36,7 @@ import { AUTH_TOKEN_ATOM, USER_ATOM } from "engine/state"
 import { getter } from "elum-state/solid"
 import { unlink } from "@minsize/utils"
 import { useAtom } from "engine/modules/smart-data"
+import { clearView } from "router/src"
 
 interface Footer extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -236,7 +237,10 @@ const Footer: Component<Footer> = (props) => {
             <Plug.Action stretched>
               <Button
                 size={"large"}
-                onClick={() => swipeView({ viewId: views.SEARCH })}
+                onClick={() => {
+                  clearView({ viewId: views.CHATS })
+                  swipeView({ viewId: views.SEARCH })
+                }}
               >
                 <Button.Container>
                   <Title>{lang("search_for_an_interlocutor")}</Title>

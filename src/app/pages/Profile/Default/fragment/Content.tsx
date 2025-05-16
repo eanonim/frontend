@@ -60,7 +60,6 @@ const Content: Component<Content> = (props) => {
     element.multiple = false
     element.accept = "image/*"
 
-    element.click()
     element.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0]
 
@@ -77,6 +76,7 @@ const Content: Component<Content> = (props) => {
         }
       }
     }
+    element.click()
   }
 
   const elements: {

@@ -9,11 +9,8 @@ import { unlink } from "@minsize/utils"
 const storeList = async (options: Socket["store.list"]["request"]) => {
   const { response, error } = await socketSend("store.list", options)
   if (error) {
-    console.log({ error })
     return { response, error }
   }
-
-  console.log({ response: unlink(response) })
 
   const notArray: (keyof Socket["store.list"]["response"])[] = [
     "fontSize",

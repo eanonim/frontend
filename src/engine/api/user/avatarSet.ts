@@ -5,7 +5,6 @@ const userAvatarSet = async (options: Socket["user.avatarSet"]["request"]) => {
   const { response, error } = await socketSend("user.avatarSet", options)
 
   if (error) {
-    console.log({ error })
     return { response, error }
   }
 

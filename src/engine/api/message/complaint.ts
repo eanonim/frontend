@@ -6,7 +6,6 @@ const messageComplaint = async (
 ) => {
   const { response, error } = await socketSend("message.complaint", options)
   if (error) {
-    console.log({ error })
     return { response, error }
   }
 

@@ -6,11 +6,8 @@ import { produce } from "solid-js/store"
 const chatSearch = async (options: Socket["chat.search"]["request"]) => {
   const { response, error } = await socketSend("chat.search", options)
   if (error) {
-    console.log({ error })
     return { response, error }
   }
-
-  console.log({ response })
 
   if (response.dialog) {
     const chatList = getter(CHAT_LIST_ATOM)

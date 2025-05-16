@@ -90,10 +90,6 @@ const TonConnectUIElement: Component<TonConnectUIElement> = (props) => {
     "fallback",
   ])
 
-  createEffect(() => {
-    console.log({ f: { ...tonConnectUI() } })
-  })
-
   const handlerInit = async () => {
     const relase = await mutex.wait()
     try {

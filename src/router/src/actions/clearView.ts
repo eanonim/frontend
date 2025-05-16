@@ -14,17 +14,9 @@ import { getLastPage, setHistory, setParams } from "../utils"
 
 type Props = {
   viewId: string
-  is_back?: boolean
-  history?: boolean
-  clear?: boolean
 }
 
-const swipeView = ({
-  viewId,
-  is_back = false,
-  history = true,
-  clear = false,
-}: Props): boolean => {
+const clearView = ({ viewId }: Props): boolean => {
   const view = getter(STRUCT_ATOM).find((a) => a.viewId === viewId)
   if (!view) {
     console.error("pageId is not found of struct.")
@@ -33,12 +25,7 @@ const swipeView = ({
 
   const activeView = getter(VIEW_ATOM)
 
-  const pageId =
-    activeView !== viewId
-      ? clear
-        ? view.default
-        : getLastPage(viewId) || view.default
-      : view.default
+  const pageId = view.default
 
   const page = getter(STRUCT_ATOM).find((a) => a.panels[pageId])
   if (!page) {
@@ -51,34 +38,30 @@ const swipeView = ({
   let modalId = ""
 
   setter(HISTORY_ATOM, (value) => {
-    if (!clear) {
-      const back_view = value.view?.[activeView]?.back_view
-      if (back_view) {
-        const lastPage = value.view[activeView].array?.slice(-1)?.[0]
-        if (lastPage) {
-          lastPage.is_back = false
-          value.view[back_view].back_view = undefined
-          value.view[back_view].back_panel_id = undefined
-        }
+    const back_view = value.view?.[activeView]?.back_view
+    if (back_view) {
+      const lastPage = value.view[activeView].array?.slice(-1)?.[0]
+      if (lastPage) {
+        lastPage.is_back = false
+        value.view[back_view].back_view = undefined
+        value.view[back_view].back_panel_id = undefined
       }
+    }
 
-      const lastPage = value.view?.[activeView]?.array?.slice(-1)[0]
+    const lastPage = value.view?.[activeView]?.array?.slice(-1)[0]
 
-      if (lastPage?.popoutId) {
-        const indexToRemove = value.view?.[activeView]?.array?.indexOf(lastPage)
+    if (lastPage?.popoutId) {
+      const indexToRemove = value.view?.[activeView]?.array?.indexOf(lastPage)
 
-        if (indexToRemove !== -1) {
-          value.view?.[activeView]?.array?.splice(indexToRemove, 1)
-        }
+      if (indexToRemove !== -1) {
+        value.view?.[activeView]?.array?.splice(indexToRemove, 1)
       }
-
-      modalId = value.view[viewId]?.array?.slice(-1)?.[0]?.modalId || ""
     }
     const newHistory: HISTORY["history"][0] = {
       viewId,
       panelId,
       modalId,
-      is_back,
+      is_back: true,
     }
 
     // value.history.push(newHistory)
@@ -107,15 +90,8 @@ const swipeView = ({
     return Object.assign({ ...value })
   })
 
-  setParams({ pageId })
-
-  setter(VIEW_ATOM, page.viewId)
-  setter(PANEL_ATOM, page.panels[pageId])
-  setter(POPOUT_ATOM, "")
-  setter(MODAL_ATOM, modalId)
-
-  setHistory({ pageId }, history)
+  setHistory({ pageId }, true)
   return true
 }
 
-export { swipeView }
+export { clearView }

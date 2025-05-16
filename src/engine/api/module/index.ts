@@ -13,6 +13,7 @@ import {
   pushPage,
   pushPopout,
   replacePage,
+  swipeView,
   useParams,
   useRouter,
   useRouterPanel,
@@ -24,6 +25,7 @@ import { chatInfo, userGet } from ".."
 import { Chats } from "engine/class/useChat"
 import { bridgeOpenPopup } from "@apiteam/twa-bridge/solid"
 import { Locale } from "engine/languages"
+import { clearView } from "router/src"
 
 export type SocketError = {
   code: number
@@ -429,6 +431,7 @@ export type Socket = {
       }
 
       favorites?: boolean
+      deleted?: boolean
       /* CUSTOM */
       typing?: boolean
       loading?: boolean
@@ -781,8 +784,7 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
   )
 
   socket.onEvents(async ({ data, event }) => {
-    console.log("server socket", data, event)
-
+    console.log("[SOCKET EVENTS] ", data, " ", event)
     if (event === "connection.duplicated") {
       setStore("duplicated", true)
       replacePage({ pageId: pages.DUPLICATED, is_back: false })
@@ -920,6 +922,10 @@ export const updateSocketToken = (token: string = getter(AUTH_TOKEN_ATOM)) => {
               chat.isOpenGallery()
               return false
             }
+            if (chat?.isDeleted) {
+              swipeView({ viewId: views.SEARCH, clear: true })
+              clearView({ viewId: views.CHATS })
+            }
 
             if (chat?.isFavorites || chat?.isDeleted) {
               return true
@@ -990,6 +996,7 @@ export const socketSend = async <KEY extends keyof Socket>(
   key: KEY,
   options: Socket[KEY]["request"],
 ): Promise<Result<SocketError, Socket[KEY]["response"]>> => {
+  console.log("[SOCKER SEND] ", key, " ", options)
   await mutex.wait({ key: "lock1", limit: 1 })
   if (status()) {
     mutex.release({ key: "lock1" })
@@ -1001,9 +1008,7 @@ export const socketSend = async <KEY extends keyof Socket>(
     mutex.release({ key: "lock2" })
   }
 
-  console.log("socketSend", key, options)
   const data = await socket.send(key, options)
-  console.log({ data })
   if ([0, 1001].includes(data?.error?.code ?? -1)) {
     await sleep(1_000)
     return await socketSend(key, options)

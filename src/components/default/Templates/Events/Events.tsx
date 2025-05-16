@@ -94,7 +94,6 @@ const Events = <T extends ValidComponent>(props: IEvents<T>): JSX.Element => {
       const shiftY = coordY(event) - (gesture.startY || 0)
       const shiftXAbs = Math.abs(shiftX)
       const shiftYAbs = Math.abs(shiftY)
-      console.log({ shiftXAbs, shiftYAbs })
       gesture.isClick = !(shiftXAbs >= 10 || shiftYAbs >= 10)
     }
   }

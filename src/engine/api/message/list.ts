@@ -6,7 +6,6 @@ const messageList = async (
 ) => {
   const { response, error } = await socketSend("message.list", options)
   if (error) {
-    console.log({ error })
     return { response, error }
   }
   cbLoad?.()

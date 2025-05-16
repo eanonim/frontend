@@ -6,7 +6,6 @@ const userGet = async (options: Socket["user.get"]["request"]) => {
   const { response, error } = await socketSend("user.get", options)
 
   if (error) {
-    console.log({ error })
     return { response, error }
   }
 

@@ -51,7 +51,6 @@ const messageSend = async (
 
   if (message?.attach) {
     options.message.attach = unlink(message?.attach)
-    console.log({ ASG: options.message.attach })
   }
 
   const { response, error } = await socketSend("message.send", {
@@ -60,7 +59,6 @@ const messageSend = async (
   })
 
   if (error) {
-    console.log({ error })
     return { response, error }
   }
 

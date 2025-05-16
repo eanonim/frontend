@@ -5,7 +5,6 @@ const inviteReject = async (
 ) => {
   const { response, error } = await socketSend("chat.inviteReject", options)
   if (error) {
-    console.log({ error })
     return { response, error }
   }
 

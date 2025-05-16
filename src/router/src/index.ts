@@ -13,6 +13,7 @@ export { pushPopout } from "./actions/pushPopout"
 export { replacePage } from "./actions/replacePage"
 export { replaceParams } from "./actions/replaceParams"
 export { swipeView } from "./actions/swipeView"
+export { clearView } from "./actions/clearView"
 export { replaceModal } from "./actions/replaceModal"
 
 export { setStruct } from "./actions/setStruct"

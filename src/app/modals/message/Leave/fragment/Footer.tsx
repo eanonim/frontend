@@ -1,8 +1,9 @@
 import { Button, Title } from "components"
 import { chatClose } from "engine/api"
 import loc from "engine/languages"
-import { backPage, useParams } from "router"
-import { modals, routerParams } from "router/routerStruct"
+import { backPage, swipeView, useParams } from "router"
+import { modals, routerParams, views } from "router/routerStruct"
+import { clearView } from "router/src"
 
 import { type JSX, type Component } from "solid-js"
 
@@ -16,7 +17,8 @@ const Footer: Component<Footer> = (props) => {
   })
   const handlerYes = () => {
     chatClose({ dialog: params().dialog })
-    backPage(2)
+    swipeView({ viewId: views.SEARCH, clear: true })
+    clearView({ viewId: views.CHATS })
   }
   const handlerNo = () => {
     backPage(1)

@@ -109,7 +109,6 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
 
   createEffect(
     on([() => local.dialogs, () => local.dialogs.length], ([dialogs]) => {
-      console.log({ dialogs: unlink(dialogs) })
       setStore("dialogs", dialogs.slice(0, store.dialogs.length || 1))
     }),
   )

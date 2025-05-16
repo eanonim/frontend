@@ -189,9 +189,7 @@ const Touch: Component<Touch> = (props) => {
     gesture.cancel = false
   }
 
-  const Drag = () => {
-    console.log("drag")
-  }
+  const Drag = () => {}
 
   const mouseEvent = {
     onMouseDown: Start,

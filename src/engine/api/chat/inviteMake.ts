@@ -5,7 +5,6 @@ const chatInviteMake = async (
 ) => {
   const { response, error } = await socketSend("chat.inviteMake", options)
   if (error) {
-    console.log({ error })
     return { response, error }
   }
 

@@ -78,7 +78,6 @@ const Default: Component<Default> = (props) => {
           return false
         },
       })
-      console.log({ CHAT_LAST: response }, error)
     }
   }
 

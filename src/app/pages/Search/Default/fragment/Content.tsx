@@ -116,10 +116,6 @@ const Content: Component<Content> = (props) => {
     setSettings("bannerStartup", false)
   }
 
-  createEffect(() => {
-    console.log({ settings })
-  })
-
   return (
     <Flex
       style={{

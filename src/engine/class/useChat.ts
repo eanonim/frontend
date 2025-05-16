@@ -58,6 +58,7 @@ export const Chats = new createChats<Target, User, Keyboard, Attach, Message>({
           id: response.uuid,
           user: response.user,
           isFavorites: response.favorites,
+          isDeleted: response.deleted,
           lastMessage: response.message?.id
             ? {
                 id: response.message.id,

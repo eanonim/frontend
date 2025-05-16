@@ -8,8 +8,17 @@ import { SearchInteresting } from "engine/api/module"
 import { setter, useAtom } from "engine/modules/smart-data"
 import { ADS_ATOM, SEARCH_OPTIONS_ATOM } from "engine/state"
 import { chatSearch } from "engine/api"
-import { modals, pages, pushModal, pushPage, replacePage } from "router"
+import {
+  modals,
+  pages,
+  pushModal,
+  pushPage,
+  replacePage,
+  swipeView,
+  views,
+} from "router"
 import { Chats } from "engine/class/useChat"
+import { clearView } from "router/src"
 
 interface Start extends JSX.HTMLAttributes<HTMLDivElement> {
   nav: string
@@ -53,6 +62,11 @@ const Start: Component<Start> = (props) => {
               return false
             }
 
+            if (chat?.isDeleted) {
+              swipeView({ viewId: views.SEARCH, clear: true })
+              clearView({ viewId: views.CHATS })
+            }
+
             if (chat?.isFavorites || chat?.isDeleted) {
               return true
             }
@@ -71,7 +85,6 @@ const Start: Component<Start> = (props) => {
     }
 
     // untrack(openAds)
-    console.log("ASG")
     start()
   })
 

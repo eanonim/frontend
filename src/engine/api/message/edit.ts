@@ -13,7 +13,6 @@ const messageEdit = async (options: Socket["message.edit"]["request"]) => {
   const { response, error } = await socketSend("message.edit", options)
 
   if (error) {
-    console.log({ error })
     return { response, error }
   }
 

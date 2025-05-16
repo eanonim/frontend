@@ -5,6 +5,7 @@ import { type Component, type JSX } from "solid-js"
 import { modals, useRouter } from "router"
 
 import InterestsList from "./interests/List/List"
+import LanguageList from "./interests/Language/Language"
 import MessageControl from "./message/control/Control"
 import MessageComplaint from "./message/Complaint/Complaint"
 import MessageLeave from "./message/Leave/Leave"
@@ -23,6 +24,7 @@ const Modal: Component<Modal> = (props) => {
   return (
     <ModalRoot activeModal={activeModal()}>
       <Path nav={modals.INTERESTS_LIST} component={InterestsList} />
+      <Path nav={modals.LANGUAGE_LIST} component={LanguageList} />
       <Path nav={modals.MESSAGE_CONTROL} component={MessageControl} />
       <Path nav={modals.MESSAGE_COMPLAINT} component={MessageComplaint} />
       <Path nav={modals.MODAL_LEAVE} component={MessageLeave} />

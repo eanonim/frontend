@@ -35,6 +35,7 @@ export default {
     "Больше свободы и десятки эксклюзивных функций с подпиской.",
   search_for_an_interlocutor: "Поиск собеседника",
   change_interests: "Изменить интересы",
+  change_language: "Изменить язык",
   chats: "Чаты",
   search: "Поиск",
   cancel_search: "Отменить поиск",

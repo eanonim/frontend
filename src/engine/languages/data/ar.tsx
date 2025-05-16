@@ -33,6 +33,7 @@ export default {
   premium_subtitle: "مزيد من الحرية وعشرات الميزات الحصرية مع الاشتراك.",
   search_for_an_interlocutor: "البحث عن محاور",
   change_interests: "تغيير الاهتمامات",
+  change_language: "تغيير اللغة",
   chats: "الدردشات",
   search: "البحث",
   cancel_search: "إلغاء البحث",

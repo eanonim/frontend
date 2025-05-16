@@ -36,6 +36,7 @@ export default {
     "Plus de liberté et des dizaines de fonctionnalités exclusives avec un abonnement.",
   search_for_an_interlocutor: "Recherche d'un interlocuteur",
   change_interests: "Modifier les intérêts",
+  change_language: "Changer de langue",
   chats: "Chats",
   search: "Recherche",
   cancel_search: "Annuler la recherche",

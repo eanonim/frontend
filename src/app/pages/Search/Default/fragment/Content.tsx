@@ -112,6 +112,10 @@ const Content: Component<Content> = (props) => {
     setSearchOptions("language", key)
   }
 
+  const openModalLanguage = () => {
+    pushModal({ modalId: modals.LANGUAGE_LIST })
+  }
+
   const openModal = () => {
     pushModal({ modalId: modals.INTERESTS_LIST })
   }
@@ -236,31 +240,6 @@ const Content: Component<Content> = (props) => {
           </For>
         </Group>
         <Group>
-          <Group.Header mode={"primary"}>{lang("language")}</Group.Header>
-          <Group.Container>
-            <Tag.Group>
-              <For
-                each={
-                  Object.entries(
-                    lang(`languages`) as Record<Locale, string>,
-                  ) as unknown as [Locale, string][]
-                }
-              >
-                {([key, locale], index) => (
-                  <Tag
-                    mode={"square"}
-                    onClick={() => handlerChangeLanguage(key)}
-                    data-index={index()}
-                    selected={searchOptions.language === key}
-                  >
-                    <Title>{locale}</Title>
-                  </Tag>
-                )}
-              </For>
-            </Tag.Group>
-          </Group.Container>
-        </Group>
-        <Group>
           <Group.Header mode={"primary"}>{lang("interests")}</Group.Header>
           <Group.Container>
             <Show keyed when={Object.values(storeInterest)}>
@@ -314,6 +293,59 @@ const Content: Component<Content> = (props) => {
                         <Title>
                           {interestsCount()}/{maxInterest}
                         </Title>
+                      </Badge.Container>
+                    </Badge>
+                  </Button.Icon>
+                </Button>
+              </Button.Group.Container>
+              <Button.Group.Container>
+                <Button
+                  onClick={openModalLanguage}
+                  stretched
+                  appearance={"secondary"}
+                >
+                  <Button.Icon style={{ opacity: 0 }}>
+                    <Badge size={"small"} type={"text"}>
+                      <Badge.Container>
+                        <Show
+                          when={
+                            (
+                              Object.entries(
+                                lang(`languages`) as Record<Locale, string>,
+                              ) as unknown as [Locale, string][]
+                            ).find((x) => x[0] === searchOptions.language)?.[0]
+                          }
+                        >
+                          {(lang) => (
+                            <Title>
+                              {lang().slice(0, 2).toLocaleUpperCase()}
+                            </Title>
+                          )}
+                        </Show>
+                      </Badge.Container>
+                    </Badge>
+                  </Button.Icon>
+                  <Button.Container>
+                    <Title>{lang("change_language")}</Title>
+                  </Button.Container>
+                  <Button.Icon>
+                    <Badge size={"small"} type={"text"}>
+                      <Badge.Container>
+                        <Show
+                          when={
+                            (
+                              Object.entries(
+                                lang(`languages`) as Record<Locale, string>,
+                              ) as unknown as [Locale, string][]
+                            ).find((x) => x[0] === searchOptions.language)?.[1]
+                          }
+                        >
+                          {(lang) => (
+                            <Title>
+                              {lang().slice(0, 2).toLocaleUpperCase()}
+                            </Title>
+                          )}
+                        </Show>
                       </Badge.Container>
                     </Badge>
                   </Button.Icon>

@@ -36,6 +36,7 @@ export default {
     "Mehr Freiheit und Dutzende exklusiver Funktionen mit einem Abonnement.",
   search_for_an_interlocutor: "Nach Gesprächspartner suchen",
   change_interests: "Interessen ändern",
+  change_language: "Sprache ändern",
   chats: "Chats",
   search: "Suche",
   cancel_search: "Suche abbrechen",

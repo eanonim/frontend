@@ -71,7 +71,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    // eruda(),
+    eruda(),
     tsconfigPaths(),
     solidPlugin(),
     injectEntryChunk(),

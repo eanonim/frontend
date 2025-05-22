@@ -30,6 +30,11 @@ export default {
     title: "Histórico do chat",
     subtitle: "Para que eles apareçam, salve as conversas que te interessam.",
   },
+  banner: {
+    title: "Aqui começa a comunicação anônima",
+    subtitle:
+      "Ajuste seus interesses, escolha um interlocutor – e comece o diálogo!",
+  },
   premium: "Premium",
   premium_subtitle:
     "Mais liberdade e dezenas de funcionalidades exclusivas com uma assinatura.",

@@ -31,6 +31,11 @@ export default {
     subtitle:
       "To make them appear, save the conversations you are interested in.",
   },
+  banner: {
+    title: "This is where anonymous communication begins",
+    subtitle:
+      "Set your interests, choose a conversation partner – and start chatting!",
+  },
   premium: "Premium",
   premium_subtitle:
     "More freedom and dozens of exclusive features with a subscription.",

@@ -138,10 +138,8 @@ const Content: Component<Content> = (props) => {
         <BannerProject
           onClose={onCloseBanner}
           title={"ANChat"}
-          subtitle={"здесь начинается анонимное общение"}
-          subtitle2={
-            "Настраивай интересы, выбирай собеседника - и начинай диалог!"
-          }
+          subtitle={lang("banner.title")}
+          subtitle2={lang("banner.subtitle")}
         />
       </Show>
       <Group.List>

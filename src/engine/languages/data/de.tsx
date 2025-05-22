@@ -31,6 +31,11 @@ export default {
     subtitle:
       "Um sie erscheinen zu lassen, speichern Sie die Gespräche, die Sie interessieren.",
   },
+  banner: {
+    title: "Hier beginnt anonyme Kommunikation",
+    subtitle:
+      "Passe Interessen an, wähle einen Gesprächspartner – und starte den Dialog!",
+  },
   premium: "Premium",
   premium_subtitle:
     "Mehr Freiheit und Dutzende exklusiver Funktionen mit einem Abonnement.",

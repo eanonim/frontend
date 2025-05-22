@@ -31,6 +31,11 @@ export default {
     subtitle:
       "Pour les faire apparaître, enregistrez les conversations qui vous intéressent.",
   },
+  banner: {
+    title: "C'est ici que commence la communication anonyme",
+    subtitle:
+      "Configurez vos centres d'intérêt, choisissez un interlocuteur – et commencez le dialogue !",
+  },
   premium: "Premium",
   premium_subtitle:
     "Plus de liberté et des dizaines de fonctionnalités exclusives avec un abonnement.",

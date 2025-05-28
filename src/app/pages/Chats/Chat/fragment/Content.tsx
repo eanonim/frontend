@@ -186,124 +186,143 @@ const Content: Component<Content> = (props) => {
               hasMore={!chat.isFullLoad}
             >
               {(message, index) => (
-                <Show keyed when={message}>
-                  <Switch
-                    fallback={
-                      <Message
-                        onStatus={onStatusGallery}
-                        chat_id={chat.id}
-                        data-index={index()}
-                        data-message_id={message.id}
-                        onTouchStart={() =>
-                          !message.isLoading &&
-                          handlerContextMenu("start", message.id)
-                        }
-                        onTouchEnd={(e) => {
-                          if (isOpenModal) {
-                            e.preventDefault()
-                          }
-                          handlerContextMenu("end", message.id)
-                        }}
-                        onTouchMove={() =>
-                          handlerContextMenu("end", message.id)
-                        }
-                        onMouseMove={() =>
-                          handlerContextMenu("end", message.id)
-                        }
-                        onMouseDown={() =>
-                          !message.isLoading &&
-                          handlerContextMenu("start", message.id)
-                        }
-                        onMouseUp={() => handlerContextMenu("end", message.id)}
-                        onContextMenu={() =>
-                          handlerContextMenu("any", message.id)
-                        }
-                        reply={chat.getMessageById(message.replyId)}
-                        attach={message.attach}
-                        type={message.target === "my" ? "out" : "in"}
-                        text={message.text}
-                        //text={String(message.id)}
-                        time={message.time}
-                        isEmoji={false}
-                        isRead={chat.checkRead(message.id)}
-                        isNotRead={!chat.checkRead(message.id)}
-                        isLoading={message.isLoading}
-                        isEdit={message.isEdit}
-                        onRead={() => message.setter("isRead", true)}
-                      />
-                    }
-                  >
-                    <Match when={message.isDeleted}>
-                      <Show when={message.type === "default"}>
+                <>
+                  <Show when={index() === 0}>
+                    {" "}
+                    <Message.System>
+                      <Plug size={"small"}>
+                        <Plug.Container>
+                          <SubTitle size={"small"}>
+                            {lang("chat_onboard")}
+                          </SubTitle>
+                        </Plug.Container>
+                      </Plug>
+                    </Message.System>
+                  </Show>
+                  <Show keyed when={message}>
+                    <Switch
+                      fallback={
                         <Message
                           onStatus={onStatusGallery}
                           chat_id={chat.id}
                           data-index={index()}
                           data-message_id={message.id}
+                          onTouchStart={() =>
+                            !message.isLoading &&
+                            handlerContextMenu("start", message.id)
+                          }
+                          onTouchEnd={(e) => {
+                            if (isOpenModal) {
+                              e.preventDefault()
+                            }
+                            handlerContextMenu("end", message.id)
+                          }}
+                          onTouchMove={() =>
+                            handlerContextMenu("end", message.id)
+                          }
+                          onMouseMove={() =>
+                            handlerContextMenu("end", message.id)
+                          }
+                          onMouseDown={() =>
+                            !message.isLoading &&
+                            handlerContextMenu("start", message.id)
+                          }
+                          onMouseUp={() =>
+                            handlerContextMenu("end", message.id)
+                          }
+                          onContextMenu={() =>
+                            handlerContextMenu("any", message.id)
+                          }
+                          reply={chat.getMessageById(message.replyId)}
+                          attach={message.attach}
                           type={message.target === "my" ? "out" : "in"}
-                          text={lang("deleted")}
-                          isDeleted={true}
+                          text={message.text}
+                          //text={String(message.id)}
                           time={message.time}
                           isEmoji={false}
-                          isNew={false}
+                          isRead={chat.checkRead(message.id)}
+                          isNotRead={!chat.checkRead(message.id)}
+                          isLoading={message.isLoading}
+                          isEdit={message.isEdit}
                           onRead={() => message.setter("isRead", true)}
                         />
-                      </Show>
-                    </Match>
-                    <Match keyed when={message.type === "invite" && chat.user}>
-                      {(user) => (
-                        <Message.System>
-                          <Switch>
-                            <Match when={message.target === "my"}>
-                              <Plug size={"x-small"}>
-                                <Plug.Container>
-                                  <SubTitle size={"small"}>
-                                    {lang("system.invite.sender")}
-                                  </SubTitle>
-                                </Plug.Container>
-                              </Plug>
-                            </Match>
-                            <Match when={message.target === "you"}>
-                              <Plug size={"small"}>
-                                <Plug.Container>
-                                  <Title>
-                                    {lang(
-                                      "system.invite.title",
-                                      user.first_name || "User",
-                                    )}
-                                  </Title>
-                                  <SubTitle>
-                                    {lang("system.invite.subtitle")}
-                                  </SubTitle>
-                                </Plug.Container>
-                                <Plug.Action stretched>
-                                  <Message.Keyboard each={message.keyboard}>
-                                    {(button) => (
-                                      <Button
-                                        stretched
-                                        onClick={() =>
-                                          keyboardEvents[button.event]?.(
-                                            message,
-                                          )
-                                        }
-                                      >
-                                        <Button.Container>
-                                          <Title>
-                                            {lang(button.text) || button.text}
-                                          </Title>
-                                        </Button.Container>
-                                      </Button>
-                                    )}
-                                  </Message.Keyboard>
-                                </Plug.Action>
-                              </Plug>
-                            </Match>
-                          </Switch>
-                        </Message.System>
-                      )}
-                    </Match>
-                  </Switch>
-                </Show>
+                      }
+                    >
+                      <Match when={message.isDeleted}>
+                        <Show when={message.type === "default"}>
+                          <Message
+                            onStatus={onStatusGallery}
+                            chat_id={chat.id}
+                            data-index={index()}
+                            data-message_id={message.id}
+                            type={message.target === "my" ? "out" : "in"}
+                            text={lang("deleted")}
+                            isDeleted={true}
+                            time={message.time}
+                            isEmoji={false}
+                            isNew={false}
+                            onRead={() => message.setter("isRead", true)}
+                          />
+                        </Show>
+                      </Match>
+                      <Match
+                        keyed
+                        when={message.type === "invite" && chat.user}
+                      >
+                        {(user) => (
+                          <Message.System>
+                            <Switch>
+                              <Match when={message.target === "my"}>
+                                <Plug size={"x-small"}>
+                                  <Plug.Container>
+                                    <SubTitle size={"small"}>
+                                      {lang("system.invite.sender")}
+                                    </SubTitle>
+                                  </Plug.Container>
+                                </Plug>
+                              </Match>
+                              <Match when={message.target === "you"}>
+                                <Plug size={"small"}>
+                                  <Plug.Container>
+                                    <Title>
+                                      {lang(
+                                        "system.invite.title",
+                                        user.first_name || "User",
+                                      )}
+                                    </Title>
+                                    <SubTitle>
+                                      {lang("system.invite.subtitle")}
+                                    </SubTitle>
+                                  </Plug.Container>
+                                  <Plug.Action stretched>
+                                    <Message.Keyboard each={message.keyboard}>
+                                      {(button) => (
+                                        <Button
+                                          stretched
+                                          onClick={() =>
+                                            keyboardEvents[button.event]?.(
+                                              message,
+                                            )
+                                          }
+                                        >
+                                          <Button.Container>
+                                            <Title>
+                                              {lang(button.text) || button.text}
+                                            </Title>
+                                          </Button.Container>
+                                        </Button>
+                                      )}
+                                    </Message.Keyboard>
+                                  </Plug.Action>
+                                </Plug>
+                              </Match>
+                            </Switch>
+                          </Message.System>
+                        )}
+                      </Match>
+                    </Switch>
+                  </Show>
+                </>
               )}
             </Message.Group>
           </Flex>

@@ -6,6 +6,8 @@ export default {
     subtitle:
       "Only available on mobile devices and through the official Telegram app.",
   },
+  chat_onboard:
+    "If the interlocutor sends spam, advertisements or prohibited materials - press and hold the message, then select «Report». Anonymity is guaranteed.",
   language: "Language",
   rating: "Rating",
   tasks: "Tasks",

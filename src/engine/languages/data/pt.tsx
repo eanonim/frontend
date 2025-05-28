@@ -7,7 +7,7 @@ export default {
       "Disponível apenas em dispositivos móveis e através do aplicativo oficial do Telegram.",
   },
   chat_onboard:
-    "Se o interlocutor enviar spam, propaganda ou materiais proibidos - pressione e segure a mensagem, depois selecione «Denunciar». O anonimato é garantido.",
+    "Se o interlocutor enviar spam, propaganda ou materiais proibidos - pressione e segure a mensagem, depois selecione «Reclamar». O anonimato é garantido.",
   language: "Idioma",
   rating: "Classificação",
   tasks: "Tarefas",

@@ -7,7 +7,7 @@ export default {
       "Nur auf mobilen Geräten und über die offizielle Telegram-App verfügbar.",
   },
   chat_onboard:
-    "Wenn Ihr Gesprächspartner Spam, Werbung oder verbotene Inhalte verschickt - drücken Sie die Nachricht lange und wählen Sie «Melden». Anonymität ist garantiert.",
+    "Wenn Ihr Gesprächspartner Spam, Werbung oder verbotene Inhalte verschickt - drücken Sie die Nachricht lange und wählen Sie «Beschwerde». Anonymität ist garantiert.",
   language: "Sprache",
   rating: "Bewertung",
   tasks: "Aufgaben",

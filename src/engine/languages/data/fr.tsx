@@ -7,7 +7,7 @@ export default {
       "Disponible uniquement sur les appareils mobiles et via l'application officielle Telegram.",
   },
   chat_onboard:
-    "Si l'interlocuteur envoie du spam, de la publicité ou des contenus interdits - appuyez longuement sur le message puis sélectionnez «Signaler». L'anonymat est garanti.",
+    "Si l'interlocuteur envoie du spam, de la publicité ou des contenus interdits - appuyez longuement sur le message puis sélectionnez «Se plaindre». L'anonymat est garanti.",
   language: "Langue",
   rating: "Évaluation",
   tasks: "Tâches",

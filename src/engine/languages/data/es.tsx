@@ -7,7 +7,7 @@ export default {
       "Disponible solo en dispositivos móviles y a través de la aplicación oficial de Telegram.",
   },
   chat_onboard:
-    "Si el interlocutor envía spam, publicidad o material prohibido, mantén presionado el mensaje y selecciona «Reportar». Se garantiza el anonimato.",
+    "Si el interlocutor envía spam, publicidad o material prohibido, mantén presionado el mensaje y selecciona «Quejarse». Se garantiza el anonimato.",
   language: "Idioma",
   rating: "Calificación",
   tasks: "Tareas",

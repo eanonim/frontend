@@ -5,7 +5,7 @@ import { Content } from "./fragment"
 import { type JSX, type Component, onMount, untrack, onCleanup } from "solid-js"
 import { getMaleOfNumber, useHeaderColor } from "engine"
 import { SearchInteresting } from "engine/api/module"
-import { setter, useAtom } from "engine/modules/smart-data"
+import { getter, setter, useAtom } from "engine/modules/smart-data"
 import { ADS_ATOM, SEARCH_OPTIONS_ATOM } from "engine/state"
 import { chatSearch } from "engine/api"
 import {
@@ -26,12 +26,14 @@ interface Start extends JSX.HTMLAttributes<HTMLDivElement> {
 
 const Start: Component<Start> = (props) => {
   useHeaderColor({ iOS: "bg_color", android: "section_bg_color" })
-  const [searchOptions] = useAtom(SEARCH_OPTIONS_ATOM)
-  const [ads] = useAtom(ADS_ATOM)
+  // const [searchOptions] = useAtom(SEARCH_OPTIONS_ATOM) - Почему то при использование заставляет вызывать onMount 2 раза
+  // const [ads] = useAtom(ADS_ATOM)
 
   onMount(() => {
     console.log("START")
+
     const start = async () => {
+      const searchOptions = getter(SEARCH_OPTIONS_ATOM)
       var interests: SearchInteresting[] = []
 
       for (const [key, value] of Object.entries(searchOptions.interests)) {
@@ -89,31 +91,31 @@ const Start: Component<Start> = (props) => {
     start()
   })
 
-  const openAds = () => {
-    setter(ADS_ATOM, (store) => {
-      store.interstitial += 1
+  // const openAds = () => {
+  //   setter(ADS_ATOM, (store) => {
+  //     store.interstitial += 1
 
-      return store
-    })
+  //     return store
+  //   })
 
-    if (ads.interstitial >= 3 - 1) {
-      show_9214229?.({
-        type: "inApp",
-        inAppSettings: {
-          frequency: 2,
-          capping: 0.1,
-          interval: 30,
-          timeout: 5,
-          everyPage: false,
-        },
-      })
-      setter(ADS_ATOM, (store) => {
-        store.interstitial = 0
+  //   if (ads.interstitial >= 3 - 1) {
+  //     show_9214229?.({
+  //       type: "inApp",
+  //       inAppSettings: {
+  //         frequency: 2,
+  //         capping: 0.1,
+  //         interval: 30,
+  //         timeout: 5,
+  //         everyPage: false,
+  //       },
+  //     })
+  //     setter(ADS_ATOM, (store) => {
+  //       store.interstitial = 0
 
-        return store
-      })
-    }
-  }
+  //       return store
+  //     })
+  //   }
+  // }
 
   return (
     <Panel {...props}>

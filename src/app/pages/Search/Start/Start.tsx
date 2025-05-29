@@ -2,7 +2,7 @@ import { Panel } from "components"
 
 import { Content } from "./fragment"
 
-import { type JSX, type Component, onMount, untrack } from "solid-js"
+import { type JSX, type Component, onMount, untrack, onCleanup } from "solid-js"
 import { getMaleOfNumber, useHeaderColor } from "engine"
 import { SearchInteresting } from "engine/api/module"
 import { setter, useAtom } from "engine/modules/smart-data"
@@ -30,6 +30,7 @@ const Start: Component<Start> = (props) => {
   const [ads] = useAtom(ADS_ATOM)
 
   onMount(() => {
+    console.log("START")
     const start = async () => {
       var interests: SearchInteresting[] = []
 

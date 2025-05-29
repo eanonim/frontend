@@ -11,8 +11,8 @@ const Content: Component<Content> = (props) => {
   const [lang] = loc()
 
   const handlerEnd = async () => {
-    chatSearchEnd({})
     backPage()
+    chatSearchEnd({})
   }
 
   onMount(() => {

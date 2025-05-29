@@ -115,9 +115,9 @@ const LayoutManager: ComponentLayoutManager = (props) => {
             : {}),
         })
 
-        // setStore({
-        //   [store.lastType === "first" ? "firstVisible" : "lastVisible"]: false,
-        // })
+        setStore({
+          [store.lastType === "first" ? "firstVisible" : "lastVisible"]: false,
+        })
         // const isTabbar = getChild("first")?.tabbar && getChild("last")?.tabbar
 
         // // console.log({ isTabbar }, getChild("first"), getChild("last"))
@@ -167,10 +167,10 @@ const LayoutManager: ComponentLayoutManager = (props) => {
 
   const onAnimationEnd = (type: "last" | "first") => {
     setStore("animEnd", type, true)
-    // console.log({ type }, "ANIM")
+
     if (store.animEnd.first && store.animEnd.last) {
       setStore({
-        [store.lastType !== "first" ? "firstVisible" : "lastVisible"]: false,
+        [store.lastType === "first" ? "firstVisible" : "lastVisible"]: false,
         anim: false,
       })
     }

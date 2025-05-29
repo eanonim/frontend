@@ -184,21 +184,18 @@ const Content: Component<Content> = (props) => {
               dialogs={chat.getHistory()}
               onNext={chat.uploadChatHistory}
               hasMore={!chat.isFullLoad}
+              header={
+                <Message.System style={{ position: "relative" }}>
+                  <Plug size={"small"}>
+                    <Plug.Container>
+                      <SubTitle size={"small"}>{lang("chat_onboard")}</SubTitle>
+                    </Plug.Container>
+                  </Plug>
+                </Message.System>
+              }
             >
               {(message, index) => (
                 <>
-                  <Show when={index() === 0}>
-                    {" "}
-                    <Message.System>
-                      <Plug size={"small"}>
-                        <Plug.Container>
-                          <SubTitle size={"small"}>
-                            {lang("chat_onboard")}
-                          </SubTitle>
-                        </Plug.Container>
-                      </Plug>
-                    </Message.System>
-                  </Show>
                   <Show keyed when={message}>
                     <Switch
                       fallback={

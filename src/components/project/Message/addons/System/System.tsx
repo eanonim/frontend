@@ -15,10 +15,19 @@ interface System<T extends ValidComponent = "span"> extends TypeFlex<T> {}
 
 const System: Component<System> = (props) => {
   const merged = mergeProps({}, props)
-  const [local, others] = splitProps(merged, ["class", "classList", "children"])
+  const [local, others] = splitProps(merged, [
+    "class",
+    "classList",
+    "children",
+    "style",
+  ])
 
   return (
-    <FixedLayout position={"top"} class={style.System__FixedLayout}>
+    <FixedLayout
+      position={"top"}
+      class={style.System__FixedLayout}
+      style={local.style}
+    >
       <Flex
         class={style.System}
         classList={{

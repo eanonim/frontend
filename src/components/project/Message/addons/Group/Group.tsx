@@ -24,7 +24,7 @@ interface Group<Message extends unknown>
   dialogs: [string, Message[][]][]
   onNext: () => Promise<boolean>
   hasMore?: boolean
-
+  header?: JSX.Element
   children: (item: Message, index: Accessor<number>) => JSX.Element
 }
 
@@ -52,6 +52,7 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
     "dialogs",
     "onNext",
     "hasMore",
+    "header",
   ])
 
   let ref: HTMLDivElement
@@ -187,6 +188,7 @@ const Group = <Message extends unknown>(props: Group<Message>) => {
               />
             )}
           </For>
+          {local.header}
         </ContextGroup.Provider>
       </div>
     </div>

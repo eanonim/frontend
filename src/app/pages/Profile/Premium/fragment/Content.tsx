@@ -7,6 +7,7 @@ import {
   SegmentedControl,
   SubTitle,
   Title,
+  usePlatform,
 } from "components"
 
 import {
@@ -59,6 +60,8 @@ const Content: Component<Content> = (props) => {
   >("XTR")
   const [selected, setSelected] = createSignal("")
   const [lang] = loc()
+
+  const platform = usePlatform()
 
   const [product] = useAtom(PRODUCT_ATOM, () => ({
     lang: getLocale(),
@@ -208,30 +211,32 @@ const Content: Component<Content> = (props) => {
             </For>
           </Cell.List>
         </Group.Container>
-        <Group.Container>
-          <SegmentedControl
-            selected={selectedPrice()}
-            onSelected={(key) =>
-              setSelectedPrice(key as "XTR" | "TON" | "COIN")
-            }
-          >
-            <For each={["XTR", "TON"]}>
-              {(type, index) => (
-                <SegmentedControl.Button
-                  data-index={index()}
-                  stretched
-                  key={type}
-                >
-                  <SegmentedControl.Button.Container>
-                    <Title overflow nowrap>
-                      {lang(type as "XTR" | "TON" | "COIN")}
-                    </Title>
-                  </SegmentedControl.Button.Container>
-                </SegmentedControl.Button>
-              )}
-            </For>
-          </SegmentedControl>
-        </Group.Container>
+        <Show when={platform() !== "iOS"}>
+          <Group.Container>
+            <SegmentedControl
+              selected={selectedPrice()}
+              onSelected={(key) =>
+                setSelectedPrice(key as "XTR" | "TON" | "COIN")
+              }
+            >
+              <For each={["XTR", "TON"]}>
+                {(type, index) => (
+                  <SegmentedControl.Button
+                    data-index={index()}
+                    stretched
+                    key={type}
+                  >
+                    <SegmentedControl.Button.Container>
+                      <Title overflow nowrap>
+                        {lang(type as "XTR" | "TON" | "COIN")}
+                      </Title>
+                    </SegmentedControl.Button.Container>
+                  </SegmentedControl.Button>
+                )}
+              </For>
+            </SegmentedControl>
+          </Group.Container>
+        </Show>
       </Group>
       <Group>
         <Group.Header mode={"primary"}>

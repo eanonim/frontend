@@ -145,23 +145,23 @@ const Content: Component<Content> = (props) => {
         handler: () => pushPage({ pageId: pages.LANGUAGE }),
       },
     ],
-    [
-      {
-        icon: IconDiamondFilled,
-        title: "cooperation",
-        color: "#FEC319",
-      },
-      {
-        icon: IconAlignBoxLeftTopFilled,
-        title: "privacy_policy",
-        color: "#33C6DA",
-      },
-      {
-        icon: IconBugFilled,
-        title: "help",
-        color: "#FF0000",
-      },
-    ],
+    // [
+    //   {
+    //     icon: IconDiamondFilled,
+    //     title: "cooperation",
+    //     color: "#FEC319",
+    //   },
+    //   {
+    //     icon: IconAlignBoxLeftTopFilled,
+    //     title: "privacy_policy",
+    //     color: "#33C6DA",
+    //   },
+    //   {
+    //     icon: IconBugFilled,
+    //     title: "help",
+    //     color: "#FF0000",
+    //   },
+    // ],
   ]
 
   const goPremium = () => {
